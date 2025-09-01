@@ -1,0 +1,116 @@
+/* home.css */
+
+/* Reset some default styles */
+body, h1, h2, h3, p, ul, li {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #ffffff;
+    color: #222;
+    min-height: 100vh;
+}
+
+/* Header styling */
+header {
+    background-color: #2d3e50;
+    color: #fff;
+    padding: 32px 0;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+}
+
+/* Main content area */
+main {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+}
+
+
+
+.caixa {
+    padding: 15px;
+    border: 3px solid #2121213b;
+    border-radius: 25px;
+    background-color: #ffffff;
+    position: relative;
+ 
+}
+
+#email{
+    padding: 12px 15px;
+    border: 3px solid #00000075;
+    border-radius: 25px;
+    width: 25%;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+        background-color: #f5f5f5;
+
+}
+
+#senha{
+    padding: 12px 15px;
+    border: 3px solid #00000075;
+    border-radius: 25px;
+    width: 25%;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+    background-color: #f5f5f5;
+}
+
+#ButtonEntrar { /* O botão de entrar */
+    display: inline-block;
+    padding: 15px 28px;
+    background: #000000;
+    color: #f5f1f2;
+    border: none;
+    border-radius: 35px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-right: 35px;
+}
+
+#ButtonEntrar:hover {/* O botão de entrar */
+    background: #31313185;
+}
+
+
+#ButtonCriarConta {/* O botão de criar conta */
+    display: inline-block;
+    padding: 15px 28px;
+    background: #212121;
+    color: #f5f1f2;
+    border: none;
+    border-radius: 35px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#ButtonCriarConta:hover {/* O botão de criar conta */
+    background: #31313185;
+}
+
+
+/* Responsive design */
+@media (max-width: 600px) {
+    main {
+        padding: 12px;
+    }
+    header h1 {
+        font-size: 1.5rem;
+    }
+}
