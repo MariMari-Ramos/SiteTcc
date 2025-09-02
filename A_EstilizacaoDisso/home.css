@@ -1,0 +1,199 @@
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+         url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+         url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body { 
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif; 
+    background-color: #ffffff; 
+    color: #222; 
+    min-height: 100vh; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+} 
+
+header { 
+    background-color: #2d3e50; 
+    color: #fff; 
+    padding: 2rem 0; 
+    text-align: center; 
+}
+
+header h1 { 
+    font-size: 2.5rem; 
+    letter-spacing: 2px; 
+}
+
+main { 
+    max-width: 900px; 
+    margin: 40px auto; 
+    padding: 24px; 
+    background: #fff; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08); 
+}
+
+.CaixaLogin { 
+    padding: 4vw 3vw;
+    border-radius: 2vw;
+    background-color: #ffffff;
+    height: auto;
+    width: 90vw;
+    max-width: 350px;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: rgb(75, 75, 75) 0px 5px 15px;
+    font-size: 1.1rem;
+}
+
+.CaixaLoginImg {
+    max-width: 80%;
+    height: auto;
+    margin-bottom: 2vw;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#email {
+    padding: 0.8em 1em;
+    border: 3px solid #00000075;
+    border-radius: 2em;
+    width: 90%;
+    box-sizing: border-box;
+    margin-bottom: 1.5em;
+    background-color: #f5f5f5;
+    font-size: 1em;
+}
+
+#senha {
+    padding: 0.8em 1em;
+    border: 3px solid #00000075;
+    border-radius: 2em;
+    width: 90%;
+    box-sizing: border-box;
+    margin-bottom: 1.5em;
+    background-color: #f5f5f5;
+    font-size: 1em;
+}
+
+#ButtonEntrar {
+    display: inline-block;
+    padding: 0.8em 0;
+    width: 48%;
+    background: #000000;
+    color: #f5f1f2;
+    border: none;
+    border-radius: 2em;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+    margin: 0;
+}
+
+#ButtonEntrar:hover {
+    background: #31313185;
+}
+
+#ButtonCriarConta {
+    display: inline-block;
+    padding: 0.8em 0;
+    width: 48%;
+    background: #212121;
+    color: #f5f1f2;
+    border: none;
+    border-radius: 2em;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 0;
+    text-align: center;
+}
+
+#ButtonCriarConta:hover {
+    background: #31313185;
+}
+
+.form-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4%;
+    margin: 0;
+    text-align: center;
+    white-space: normal;
+}
+
+/* Responsividade para tablets */
+@media (max-width: 760px) {
+    .CaixaLogin {
+        padding: 3vw 2vw;
+        width: 96vw;
+        font-size: 1rem;
+    }
+    .CaixaLoginImg {
+        max-width: 80%;
+    }
+    .CaixaLogin h2 {
+        font-size: 1.2em;
+    }
+    #email,
+    #senha {
+        font-size: 0.95em;
+        padding: 0.7em 0.9em;
+    }
+    #ButtonEntrar {
+        font-size: 0.95em;
+        padding: 0.7em 0;
+        width: 49%;
+    }
+    #ButtonCriarConta {
+        font-size: 0.9em;
+        padding: 0.7em 0;
+        width: 49%;
+    }
+}
+
+/* Responsividade para celulares */
+@media (max-width: 480px) {
+    .CaixaLogin {
+        padding: 2vw 1vw;
+        width: 100vw;
+        font-size: 0.95rem;
+    }
+    .CaixaLoginImg {
+        max-width: 70%;
+    }
+    .CaixaLogin h2 {
+        font-size: 1em;
+    }
+    #email,
+    #senha {
+        font-size: 0.9em;
+        padding: 0.6em 0.8em;
+    }
+    #ButtonEntrar {
+        font-size: 0.9em;
+        padding: 0.6em 0;
+        width: 100%;
+        margin-bottom: 0.5em;
+    }
+    #ButtonCriarConta {
+        font-size: 0.9em;
+        padding: 0.6em 0;
+        width: 100%;
+    }
+    .form-buttons {
+        flex-direction: column;
+        gap: 0.5em;
+    }
+}
