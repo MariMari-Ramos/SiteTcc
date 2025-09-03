@@ -3,59 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="home.js" defer></script>
-    <link rel="stylesheet" href="home.css">
+    <script src="login.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="A_EstilizacaoDisso/home.css">
+
     <title>Document</title>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <a href="home.html">
-                <img src="img/PETO E BANCO.png" alt="Logo">
-            </a>
+    <section>
+        <div class="CaixaLogin">
+        <div class="login">
+            <img src="img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
+            <h2>Login</h2>
+            <form >
+                <h3>Nome de usuário ou Email:</h3>
+                <input type="email" id="email" name="email" placeholder="Digite seu email ou perfil" required>
+                <h3>Senha:</h3>
+                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                
+                   <div class="form-buttons">
+                <button type="button" onclick="LoginProvisorio(); abrirModal()" id="ButtonEntrar">Entrar</button>
+                <button type="submit" id="ButtonCriarConta">Não possui uma conta?</button>
+                 </div>
+                <div class="overlay" id="overlay">
+                    <div class="modal">
+                      <h2>Aviso:</h2>
+                      <p>Esse é o meu alerta personalizado!</p>
+                      <button onclick="fecharModal()">Fechar</button>
+                    </div>
+                  </div>                
+            </form>
         </div>
-        <nav class="menu">
-            <a href="guia.html">
-                <img src="img/MascoteVesgo.png" alt="Mascote">
-                <span>Guia</span>
-            </a>
-            <a href="config.html">
-                <img src="img/" alt="configurações">
-                <span>Configurações</span>
-            </a>
-            <a href="login.html">
-                <span>Perfil</span>
-            </a>
-        </nav>
-    </header>
-    <h3>Sistemas</h3>
-    <section class="carrossel">
-        <div class="slides">
-            <div class="card">
-                <div>
-                    <img src="img/1-8d3a9a38.png" alt="Tormenta 20">
-                    <p>Tormenta 20</p>
-                </div>
-                <div>
-                    <img src="img/cthulhu.png" alt="Call of the Cthulhu">
-                    <p>Call of the Cthulhu</p>
-                </div>
-                <div>
-                    <img src="img/icons8-cyberpunk-512.png" alt="Cyberpunk">
-                    <p>Cyberpunk</p>
-                </div>
-                <div>
-                    <img src="img/icons8-dungeons-and-dragons-256.png" alt="Dungeons and Dragons">
-                    <p>Dungeons and Dragons</p>
-                </div>
-                <div>
-                    <img src="img/icons8-vampire-100.png" alt="Vampiro a Mascara">
-                    <p>Vampiro a Mascara</p>
-                </div>
-            </div>
-        </div>
-        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+    </div>
     </section>
     <
 </body>
