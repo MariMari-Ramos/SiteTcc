@@ -5,29 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="login.js" defer></script>
     <link rel="stylesheet" href="style.css">
-    
+        <link rel="stylesheet" href="A_EstilizacaoDisso/home.css">
+
     <title>Document</title>
 </head>
 <body>
     <section>
+        <div class="CaixaLogin">
         <div class="login">
-            <h2>Entrar</h2>
+            <img src="img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
+            <h2>Login</h2>
             <form >
-                <h3>Nome de usuário ou Email</h3>
-                <input type="email" id="email" name="email" placeholder="Digite seu nome de usuário" required>
-                <h3>Senha</h3>
+                <h3>Nome de usuário ou Email:</h3>
+                <input type="email" id="email" name="email" placeholder="Digite seu email ou perfil" required>
+                <h3>Senha:</h3>
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
-                <button type="button" onclick="LoginProvisorio(); abrirModal()">Entrar</button>
-                <button type="submit">Não possui uma conta?</button>
+                
+                   <div class="form-buttons">
+                <button type="button" onclick="LoginProvisorio(); abrirModal()" id="ButtonEntrar">Entrar</button>
+                <button type="submit" id="ButtonCriarConta">Não possui uma conta?</button>
+                 </div>
                 <div class="overlay" id="overlay">
                     <div class="modal">
-                      <h2>Aviso</h2>
+                      <h2>Aviso:</h2>
                       <p>Esse é o meu alerta personalizado!</p>
                       <button onclick="fecharModal()">Fechar</button>
                     </div>
                   </div>                
             </form>
         </div>
+    </div>
     </section>
 </body>
 </html>
