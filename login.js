@@ -3,7 +3,7 @@ function LoginProvisorio(){
     let senha=document.getElementById("senha").value.trim();
 
     if (email === "teste@exemplo.com" && senha === "12345"){
-        window.location.href = "home.html";
+        window.location.href = "index.html";
         
     }else{
         
