@@ -4,27 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="login.js" defer></script>
-    <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="A_EstilizacaoDisso/home.css">
+    <link rel="stylesheet" href="../A_EstilizacaoDisso/style.css">
+    <link rel="stylesheet" href="../A_EstilizacaoDisso/Login.css">
 
     <title>Login</title>
 </head>
 <body>
+    
     <section>
         <div class="CaixaLogin">
         <div class="login">
-            <img src="img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
-            <h2>Login</h2>
+            <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
+            <h1>Login</h1>
             <form >
-                <h3>Nome de usuário ou Email:</h3>
-                <input type="email" id="email" name="email" placeholder="Digite seu email ou perfil" required>
-                <h3>Senha:</h3>
+                <h5>Nome do Perfil ou E-mail:</h5>
+                <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou E-mail" required>
+                <h5>Senha:</h5>
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
                 
                    <div class="form-buttons">
                 <button type="button" onclick="LoginProvisorio(); abrirModal()" id="ButtonEntrar">Entrar</button>
-                <button type="submit" id="ButtonCriarConta">Não possui uma conta?</button>
+                <button type="submit" id="ButtonCriarConta" onclick="window.location.href='../Cadastro_E_Perfil/Cadastro.html'">Não possui uma conta?</button>
                  </div>
+
+                 <span class="nao-quebrar-linha">
+                 <h5>Esqueceu sua senha?
+                 <a href="#">Recuperar</a></h5>
+                 </span>
+
                 <div class="overlay" id="overlay">
                     <div class="modal">
                       <h2>Aviso:</h2>
@@ -36,5 +43,8 @@
         </div>
     </div>
     </section>
+
+
+    
 </body>
 </html>
