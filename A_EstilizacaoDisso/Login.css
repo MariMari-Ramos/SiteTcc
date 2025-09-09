@@ -46,6 +46,8 @@ main {
     margin-top: 0.5em;
 }
 
+
+
 .CaixaLogin{ 
     padding: 0.4vw 1vw;
     border-radius: 2vw;
@@ -95,9 +97,10 @@ margin-bottom: 0;
 }
 
 #ButtonEntrar {
+    
     display: inline-block;
     padding: 0.8em 0;
-    width: 48%;
+    width: 45%;
     background: #000000;
     color: #f5f1f2;
     border: none;
@@ -108,7 +111,7 @@ margin-bottom: 0;
     text-align: center;
     margin: 0;
     vertical-align: middle;
-font-weight: bold;
+    font-family: 'OpenDyslexic';
 }
 
 #ButtonEntrar:hover {
@@ -118,7 +121,7 @@ font-weight: bold;
 #ButtonCriarConta {
     display: inline-block;
     padding: 0.8em 0;
-    width: 48%;
+    width: 45%;
     background: #212121;
     color: #f5f1f2;
     border: none;
@@ -132,7 +135,7 @@ font-weight: bold;
     word-break: break-word;   /* quebra a palavra se necessário */  
     line-height: 1.2;         /* altura da linha mais compacta */
             vertical-align: middle;
-            font-weight: bold;
+            font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
 
 }
 
@@ -142,7 +145,7 @@ font-weight: bold;
 #email::placeholder,
 #senha::placeholder {   
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-    font-size: 0.8em; /* opcional, ajuste o tamanho se quiser */
+    font-size: 0.7em; /* opcional, ajuste o tamanho se quiser */
     color: #a3a3a3;
 }
 
