@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -10,13 +11,22 @@
     <title>Login</title>
 </head>
 <body>
-    
+     <!-- Mensagem de erro aqui dentro -->
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="erro-msg">
+                <?= $_SESSION['error']; ?>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+         <?php endif; ?>
     <section>
         <div class="CaixaLogin">
         <div class="login">
+
+           
+
             <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
             <h1>Login</h1>
-            <form >
+            <form method="POST" action="../Login/login.php">
                 <h5>Nome do Perfil ou E-mail:</h5>
                 <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou E-mail" required>
                 <h5>Senha:</h5>
@@ -24,8 +34,8 @@
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
                 </div>
                    <div class="form-buttons">
-                <button type="button" onclick="LoginProvisorio(); abrirModal()" id="ButtonEntrar">Entrar</button>
-                <button type="submit" id="ButtonCriarConta" onclick="window.location.href='../Cadastro_E_Perfil/Cadastro.html'">Criar Conta</button>
+                <button type="submit" onclick=" abrirModal()" id="ButtonEntrar">Entrar</button>
+                <button  id="ButtonCriarConta" onclick="window.location.href='../Cadastro_E_Perfil/Cadastro.html'">Criar Conta</button>
                  </div>
 
                  <span class="nao-quebrar-linha">
@@ -44,8 +54,5 @@
         </div>
     </div>
     </section>
-
-
-    
 </body>
 </html>
