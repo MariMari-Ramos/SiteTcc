@@ -9,25 +9,32 @@
 </head>
 <body>
 
+<section>
 <div class="CaixaCriarPerfil">
+Criação do Perfil
+    <form>
 
-    <section>
-        <label for="NomePerfil">Nome de Perfil:</label>
-        <input type="text" id="NomePerfil" name="NomePerfil" placeholder="Digite o nome do perfil" required><br><br>
+<label for="NomePerfil">Nome de Perfil:</label>
+<input type="text" id="NomePerfil" name="NomePerfil" placeholder="Digite o nome do perfil" required>
 
 ou</p>
 
 
-<label for="NomeSugerido">Nome Sugerido:</label>
-<input type="text" id="NomeSugerido" name="NomeSugerido" placeholder="Digite o nome sugerido" required><br><br>
+<label for="NomeSugerido">Nomes Sugeridos:</label>
+<input type="text" id="NomesSugerido" name="NomeSugerido" placeholder="Digite o nome sugerido" required>
 
 
 <label for="FotoPerfil">Foto de Perfil:</label>
-<input type="file" id="FotoPerfil" name="FotoPerfil" accept="image/*" required><br><br>
+<input type="file" id="FotoPerfil" name="FotoPerfil" accept="image/*" required> 
 
+ou<br>
+<label for="IconePerfil">Nossos Avatares:</label>
+<input type="file" id="AvatarProprio" name="NossoAvatar" accept="image/*" required>
 
-<input type="submit" value="Criar Perfil" > 
-</div>
+<input type="submit" id="ButtonCriarPerfil" value="Criar Perfil" >
+ </div>
+</form>
 </section>
+
 </body>
 </html>
