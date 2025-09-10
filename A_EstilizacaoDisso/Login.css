@@ -9,7 +9,7 @@
 
 body { 
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif; 
-    background-color: #ffffff; 
+    background-color: #d3d3d38f; 
     color: #222; 
     min-height: 100vh; 
     display: flex; 
@@ -117,11 +117,24 @@ main {
 .CaixaLoginImg {
     max-width: 80%;
     height: auto;
-    margin-bottom: 2vw;
+    margin-bottom: 0.1vw;
     display: block;
     margin-left: auto;
     margin-right: auto;
     position: relative;
+}
+
+label[for="TituloLogin"]{
+    font-family: 'OpenDyslexic';
+    font-size: 1.95em;
+    font-weight: bold;
+    color: #212121;
+    margin-bottom: 0.20em;
+    margin-top: 0.01em ;
+    margin-left: 0;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
 }
 
 label[for="Subtitulo"]{
@@ -164,7 +177,7 @@ i{
     position: absolute;
     right: 5%;
     color: #474747;
-    bottom: 20%;
+    bottom: 30%;
 }
 
 #senha {
@@ -228,7 +241,7 @@ i{
 #email::placeholder,
 #senha::placeholder {   
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-    font-size: 0.7em; /* opcional, ajuste o tamanho se quiser */
+    font-size: 0.7em;
     color: #a3a3a3;
 }
 

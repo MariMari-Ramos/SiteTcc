@@ -9,7 +9,7 @@
 
 body { 
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif; 
-    background-color: #ffffff; 
+    background-color: #d3d3d38f; 
     color: #222; 
     min-height: 100vh; 
     display: flex; 
@@ -38,11 +38,18 @@ main {
     box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08); 
 }
 
-#CaixaCriarPerfil{
+#NomePerfil::placeholder,
+#NomesSugerido::placeholder {
+   font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.7em; 
+    color: #a3a3a3;
+}
 
-      padding: 0.4vw 1vw;
+.CaixaCriarPerfil{
+
+     padding: 0.4vw 1vw;
     border-radius: 2vw;
-    background-color: #ffffff;
+    background-color: #f3f3f3;
     height: auto;
     width: 90vw;
     max-width: 350px;
@@ -54,7 +61,6 @@ main {
     font-size: 1.1rem;
     margin-bottom: 0.7vw;
     position: relative;
-
 }
 
 #NomePerfil{

@@ -1,47 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../A_EstilizacaoDisso/StylesCadastro.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-<script src="Cadastro.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <script src="Cadastro.js" defer></script>
     <title>Criando uma Conta</title>
 </head>
 <body>
     
 <div class="CaixaCadastro">
-<span class="nao-quebrar-linha">
-<label for="CriandoConta">Criando a Conta</label>
-</span>
 
+  <div class="formulario">
+    <label for="CriandoConta">Criando a Conta</label>
 
-<form>
+    <!-- IMPORTANTE: prevenir submit automático -->
+    <form onsubmit="event.preventDefault(); CadastroProvisorio();">
 
+      <label for="Subtitulo">E-mail:</label>
+      <input type="email" id="CadastroEmail" name="email" placeholder="Digite seu e-mail" required>
+
+      <div class="OlhoVerSenha">
+        <div class="password-container">
+          <label for="Subtitulo">Senha:</label>
+          <input type="password" id="SenhaCadastro" name="password" placeholder="Digite sua senha" required>
+          <i class="bi bi-eye-fill" id="BtnVerSenha" onclick="MostrarSenha()"></i>
+        </div>
+      </div>
       
-<label for="Subtitulo">Email:</label>
-<input type="email" id="CadastroEmail" name="email" placeholder="Digite seu email" required>
+      <div class="OlhoVerSenha">
+        <div class="password-container">
+          <label for="Subtitulo">Confirme sua senha:</label>
+          <input type="password" id="ConfirmSenhaCadastro" name="confirm-password"  placeholder="Confirme sua senha" required>
+          <i class="bi bi-eye-fill" id="BtnConfirmVerSenha" onclick="ConfirmMostrarSenha()"></i>
+        </div>
+      </div>
 
-<div class="OlhoVerSenha">
-<div class="password-container">
+      <input type="submit" id="ButtonCriarCadastro" value="Criar Conta">
+    </form>
+  </div>
 
-<label for="Subtitulo">Senha:</label>
+  <div class="imagem">
+    <img src="../img/bigorna.png" alt="Bigorna">
+  </div>
 
-<input type="password" id="SenhaCadastro" name="password" placeholder="Digite sua senha" required>
-<i class="bi bi-eye-fill " id="BtnVerSenha" onclick="MostrarSenha()"></i>
-</div>
-</div>
-    
-<div class="OlhoVerSenha">
-<div class="password-container">
-<label for="Subtitulo">Confirmar Senha:</label>
-<input type="password" id="ConfirmSenhaCadastro" name="confirm-password" placeholder="Confirme sua senha" required>
-<i class="bi bi-eye-fill" id="BtnConfirmVerSenha" onclick="ConfirmMostrarSenha()"></i>
-</div>
 </div>
 
-<input type="submit" id="ButtonCriarCadastro" value="Criar Conta" onclick="window.location.href='CPerfil.html'">
-</form>
+<!-- Modal de alerta -->
+<div class="overlay" id="overlay" style="display:none;">
+  <div class="modal">
+    <h2>Aviso</h2>
+    <p></p>
+    <button onclick="fecharModal()">X</button>
+  </div>
+</div>
 
 </body>
 </html>
