@@ -1,45 +1,32 @@
 <?php
 session_start();
 include("../conexao.php");
-?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <script src="../login.js" defer></script>
-</head>
-<body>
-<?php
-$email = $_POST['email'] ?? '';
-$senha = $_POST['senha'] ?? '';
+
+header('Content-Type: application/json; charset=utf-8');
+
+$email = isset($_POST['email']) ? trim($_POST['email']) : '';
+$senha = isset($_POST['senha']) ? $_POST['senha'] : '';
 
 if (empty($email) || empty($senha)) {
-    echo "<script>mostrarAlerta('Preencha todos os campos!');</script>";
+    echo json_encode(["status"=>"error","message"=>"Preencha todos os campos!"]);
     exit;
 }
 
-// Busca usuário no banco
 $sql = "SELECT * FROM usuarios WHERE email = '$email' LIMIT 1";
 $result = $conn->query($sql);
 
 if ($result && $result->num_rows > 0) {
     $user = $result->fetch_assoc();
 
-    // Se você ainda usa MD5:
     if ($user['senha'] === md5($senha)) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['email'] = $user['email'];
 
-        // Sucesso → mostra modal e redireciona
-        echo "<script>
-                mostrarAlerta('Login realizado com sucesso!');
-                setTimeout(()=>{window.location.href='../A_TelaPrincipal/index.html';},1500);
-              </script>";
+        echo json_encode(["status"=>"success","message"=>"Login realizado com sucesso!"]);
     } else {
-        echo "<script>mostrarAlerta('Senha incorreta!');</script>";
+        echo json_encode(["status"=>"error","message"=>"Senha incorreta!"]);
     }
 } else {
-    echo "<script>mostrarAlerta('Email não encontrado!');</script>";
+    echo json_encode(["status"=>"error","message"=>"Email não encontrado!"]);
 }
-?>
+

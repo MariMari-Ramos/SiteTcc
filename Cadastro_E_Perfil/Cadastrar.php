@@ -2,36 +2,46 @@
 session_start();
 include("../conexao.php");
 
-// Pega os dados do formulário
-$email = $_POST['email'] ?? '';
-$senha = $_POST['password'] ?? '';
-$confirma_senha = $_POST['confirm-password'] ?? '';
+header('Content-Type: application/json; charset=utf-8');
 
-if (empty($email) || empty($senha) || empty($confirma_senha)) {
-    die("Preencha todos os campos!");
+$email = isset($_POST['email']) ? trim($_POST['email']) : '';
+$senha = isset($_POST['password']) ? $_POST['password'] : '';
+$confirma_senha = isset($_POST['confirm-password']) ? $_POST['confirm-password'] : '';
+
+if ($email === '' || $senha === '' || $confirma_senha === '') {
+    echo json_encode(["status" => "error", "message" => "Preencha todos os campos!"]);
+    exit;
 }
 
 if ($senha !== $confirma_senha) {
-    die("As senhas não coincidem!");
+    echo json_encode(["status" => "error", "message" => "As senhas não coincidem!"]);
+    exit;
 }
 
 // Verifica se o email já existe
-// Verifica se o email já existe
-// Verifica se o email já existe
-$sql_check = "SELECT id FROM usuarios WHERE email = '$email'";
-$result = $conn->query($sql_check);
+$sql_check = "SELECT id FROM usuarios WHERE email = ?";
+$stmt = $conn->prepare($sql_check);
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$stmt->store_result();
 
-if ($result && $result->num_rows > 0) {
-    die("Email já cadastrado!");
+if ($stmt->num_rows > 0) {
+    echo json_encode(["status" => "error", "message" => "Email já cadastrado!"]);
+    exit;
 }
+$stmt->close();
 
-// Cria o usuário no banco, senha com hash
-$senha_hash = md5($senha); // pra compatibilidade com seu banco atual
-$sql_insert = "INSERT INTO usuarios (email, senha, active) VALUES ('$email', '$senha_hash', 0)";
+// Cria o usuário
+$senha_hash = md5($senha); // compatibilidade
+$sql_insert = "INSERT INTO usuarios (email, senha, active) VALUES (?, ?, 0)";
+$stmt = $conn->prepare($sql_insert);
+$stmt->bind_param("ss", $email, $senha_hash);
 
-if ($conn->query($sql_insert) === TRUE) {
-    echo "Usuário criado com sucesso! Verifique seu e-mail para ativar a conta.";
+if ($stmt->execute()) {
+    echo json_encode(["status" => "success", "message" => "Usuário criado com sucesso! Verifique seu e-mail."]);
 } else {
-    echo "Erro ao criar usuário: " . $conn->error;
+    echo json_encode(["status" => "error", "message" => "Erro ao criar usuário: " . $conn->error]);
 }
 
+$stmt->close();
+$conn->close();

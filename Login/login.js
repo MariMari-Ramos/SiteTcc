@@ -42,3 +42,36 @@ inputSenha.setAttribute('type','password')
 btnMostrarSenha.classList.replace('bi-eye-slash-fill','bi-eye-fill');
 }
 }
+
+async function fazerLogin() {
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+
+    if(email === "" || senha === ""){
+        mostrarAlerta("Preencha todos os campos!");
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append("email", email);
+    formData.append("senha", senha);
+
+    try {
+        const response = await fetch("login.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json(); // login.php precisa retornar JSON
+
+        if(result.status === "success"){
+            mostrarAlerta(result.message);
+            setTimeout(()=>{ window.location.href="../A_TelaPrincipal/index.html"; },1500);
+        } else {
+            mostrarAlerta(result.message);
+        }
+
+    } catch (error) {
+        mostrarAlerta("Erro inesperado: " + error);
+    }
+}

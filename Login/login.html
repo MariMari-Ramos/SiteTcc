@@ -17,7 +17,8 @@
         <div class="login">
         <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
         <label for="TituloLogin">Login</label>
-        <form>
+        <form method="POST" action="http://localhost:8080/SiteTCC/Login/login.php">
+
             
                 <label for="Subtitulo">Nome do Perfil ou E-mail:</label>
                 <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou E-mail" required>
@@ -28,7 +29,7 @@
                 <i class="bi bi-eye-fill " id="BtnVerSenha" onclick="MostrarSenha()"></i>
                 </div>
                    <div class="form-buttons">
-                <button type="submit" onclick=" abrirModal()" id="ButtonEntrar">Entrar</button>
+                    <button type="submit" id="ButtonEntrar">Entrar</button>
                 <button  id="ButtonCriarConta" onclick="window.location.href='../Cadastro_E_Perfil/Cadastro.html'">Criar Conta</button>
                  </div>
 

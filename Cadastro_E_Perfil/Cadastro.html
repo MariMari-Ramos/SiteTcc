@@ -16,7 +16,7 @@
     <label for="CriandoConta">Criando a Conta</label>
 
     <!-- IMPORTANTE: prevenir submit automático -->
-    <form onsubmit="event.preventDefault(); CadastroProvisorio();">
+    <form id="formCadastro" method="http://localhost:8080/SiteTCC/Cadastro_E_Perfil/Cadastro.html   ">>
 
       <label for="Subtitulo">E-mail:</label>
       <input type="email" id="CadastroEmail" name="email" placeholder="Digite seu e-mail" required>
@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <input type="submit" id="ButtonCriarCadastro" value="Criar Conta">
+      <button type="submit" id="ButtonCriarCadastro" value="Criar Conta">Criar Conta</button>
     </form>
   </div>
 

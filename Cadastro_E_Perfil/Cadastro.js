@@ -24,6 +24,13 @@ function ConfirmMostrarSenha(){
     }
 }
 
+function mostrarAlerta(mensagem){
+    const overlay = document.getElementById("overlay");
+    const texto = overlay.querySelector("p");
+    texto.textContent = mensagem;
+    overlay.style.display = "flex"; // 👈 precisa ser flex ou block
+}
+
 function CadastroProvisorio(){
     let email = document.getElementById("CadastroEmail").value.trim();
     let senha = document.getElementById("SenhaCadastro").value.trim();
@@ -45,15 +52,44 @@ function CadastroProvisorio(){
     window.location.href = "CPerfil.html";
 }
 
-// Função para mostrar o modal com mensagem personalizada
-function mostrarAlerta(mensagem){
+function fecharModal(){
     const overlay = document.getElementById("overlay");
-    const texto = overlay.querySelector("p");
-    texto.textContent = mensagem;
-    overlay.style.display = "flex";
+    overlay.style.display = "none";
 }
 
-// Função para fechar o modal
-function fecharModal() {
-    document.getElementById("overlay").style.display = "none";
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("formCadastro");
+    const overlay = document.getElementById("overlay");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault(); // não deixa recarregar a página
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch("Cadastrar.php", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            mostrarAlerta(data.message);
+
+            // Se sucesso, trocar comportamento do modal
+            if (data.status === "success") {
+                overlay.onclick = () => {
+                    fecharModal();
+                    window.location.href = "../Login/login.html";
+                };
+            } else {
+                overlay.onclick = () => {
+                    fecharModal();
+                };
+            }
+
+        } catch (err) {
+            mostrarAlerta("Erro inesperado: " + err);
+        }
+    });
+});
