@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="login.js" defer></script>
-    <link rel="stylesheet" href="../A_EstilizacaoDisso/style.css">
     <link rel="stylesheet" href="../A_EstilizacaoDisso/Login.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
     <title>Login</title>
 </head>
@@ -14,19 +14,22 @@
     <section>
         <div class="CaixaLogin">
         <div class="login">
-            <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
-            <h1>Login</h1>
-            <form >
-                <h5>Nome do Perfil ou E-mail:</h5>
+        <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
+        <h1>Login</h1>
+        <form >
+                <label for="Subtitulo">Nome do Perfil ou E-mail:</label>
                 <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou E-mail" required>
-                <h5>Senha:</h5>
+
+                <label for="Subtitulo">Senha:</label>
                 <div class="password-container">
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                <i class="bi bi-eye-fill " id="BtnVerSenha" onclick="MostrarSenha()"></i>
                 </div>
-                   <div class="form-buttons">
-                <button type="button" onclick="LoginProvisorio(); abrirModal()" id="ButtonEntrar">Entrar</button>
+
+                <div class="form-buttons">
+                <button type="button" onclick="LoginProvisorio(); abrirModal()" id="ButtonEntrar" >Entrar</button>
                 <button type="submit" id="ButtonCriarConta" onclick="window.location.href='../Cadastro_E_Perfil/Cadastro.html'">Criar Conta</button>
-                 </div>
+                </div>
 
                  <span class="nao-quebrar-linha">
                  <h5>Esqueceu sua senha?
@@ -34,10 +37,10 @@
                  </span>
 
                 <div class="overlay" id="overlay">
-                    <div class="modal">
-                      <h2>Aviso:</h2>
-                      <p>Esse é o meu alerta personalizado!</p>
-                      <button onclick="fecharModal()">Fechar</button>
+                 <div class="modal">
+                      <h2>Alerta:</h2>
+                      <p>Preencha todos os campos!</p>
+                      <button onclick="fecharModal()">X</button>
                     </div>
                   </div>                
             </form>

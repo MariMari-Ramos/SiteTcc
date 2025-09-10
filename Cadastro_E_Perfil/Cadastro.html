@@ -4,33 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../A_EstilizacaoDisso/StylesCadastro.css">
-    
-    <title>Criando um login</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<script src="Cadastro.js" defer></script>
+    <title>Criando uma Conta</title>
 </head>
 <body>
     
 <div class="CaixaCadastro">
 <span class="nao-quebrar-linha">
-<h1>Criando a Conta</h1>
+<label for="CriandoConta">Criando a Conta</label>
 </span>
+
 
 <form>
 
-       
-        <label for="email">Email:</label>
-        <input type="email" id="CadastroEmail" name="email" placeholder="Digite seu email" required><br><br>
+      
+<label for="Subtitulo">Email:</label>
+<input type="email" id="CadastroEmail" name="email" placeholder="Digite seu email" required>
 
-        <label for="password">Senha:</label>
-        <input type="password" id="SenhaCadastro" name="password" placeholder="Digite sua senha" required><br><br>
+<div class="OlhoVerSenha">
+<div class="password-container">
 
-<label for="confirm-password">Confirmar Senha:</label>
-<input type="password" id="ConfirmSenhaCadastro" name="confirm-password" placeholder="Confirme sua senha" required><br><br>
+<label for="Subtitulo">Senha:</label>
 
+<input type="password" id="SenhaCadastro" name="password" placeholder="Digite sua senha" required>
+<i class="bi bi-eye-fill " id="BtnVerSenha" onclick="MostrarSenha()"></i>
+</div>
+</div>
+    
+<div class="OlhoVerSenha">
+<div class="password-container">
+<label for="Subtitulo">Confirmar Senha:</label>
+<input type="password" id="ConfirmSenhaCadastro" name="confirm-password" placeholder="Confirme sua senha" required>
+<i class="bi bi-eye-fill" id="BtnConfirmVerSenha" onclick="ConfirmMostrarSenha()"></i>
+</div>
+</div>
 
+<input type="submit" id="ButtonCriarCadastro" value="Criar Conta" onclick="window.location.href='CPerfil.html'">
+</form>
 
-
-        <input type="submit" id="ButtonCriarCadastro" value="Criar Cadastro" onclick="window.location.href='CPerfil.html'">
-    </form>
-    </div>
 </body>
 </html>
