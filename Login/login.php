@@ -1,42 +1,45 @@
 <?php
 session_start();
-require '../conexao.php';
-echo "teste";
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
+include("../conexao.php");
+?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <script src="../login.js" defer></script>
+</head>
+<body>
+<?php
+$email = $_POST['email'] ?? '';
+$senha = $_POST['senha'] ?? '';
 
-    // Buscar usuário pelo email
-    $stmt = $conn->prepare("SELECT id, senha, active FROM usuarios WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 0) {
-        $_SESSION['error'] = "Usuário não encontrado.";
-        header("Location: ../Login/login.html");
-        exit;
-    }
-
-    $user = $result->fetch_assoc();
-
-    if ($user['active'] == 0) {
-        $_SESSION['error'] = "Conta não ativada. Verifique seu e-mail.";
-        header("Location: ../Login/login.html");
-        exit;
-    }
-
-    // Verificação da senha
-    if (password_verify($senha, $user['senha'])) {
-        $_SESSION['user_id'] = $user['id'];
-        header("Location: painel.php"); // redireciona após login
-        exit;
-    } else {
-        $_SESSION['error'] = "Senha incorreta.";
-        header("Location: ../Login/login.html");
-        exit;
-    }
-} else {
-    header("Location: ../Login/login.html");
+if (empty($email) || empty($senha)) {
+    echo "<script>mostrarAlerta('Preencha todos os campos!');</script>";
     exit;
 }
+
+// Busca usuário no banco
+$sql = "SELECT * FROM usuarios WHERE email = '$email' LIMIT 1";
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+
+    // Se você ainda usa MD5:
+    if ($user['senha'] === md5($senha)) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['email'] = $user['email'];
+
+        // Sucesso → mostra modal e redireciona
+        echo "<script>
+                mostrarAlerta('Login realizado com sucesso!');
+                setTimeout(()=>{window.location.href='../A_TelaPrincipal/index.html';},1500);
+              </script>";
+    } else {
+        echo "<script>mostrarAlerta('Senha incorreta!');</script>";
+    }
+} else {
+    echo "<script>mostrarAlerta('Email não encontrado!');</script>";
+}
+?>
