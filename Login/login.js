@@ -13,7 +13,7 @@
     } else {
         mostrarAlerta("Email ou senha incorretos!");
     }
-}
+
 
 // Função para mostrar o modal com mensagem personalizada
 function mostrarAlerta(mensagem){

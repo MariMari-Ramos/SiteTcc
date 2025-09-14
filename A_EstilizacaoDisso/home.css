@@ -1,0 +1,132 @@
+/* home.css */
+
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+         url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+         url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f5f2f0;
+    border-bottom: 1px solid #e0d4c8;
+}
+
+header .logo img {
+    height: 50px;
+}
+
+header .menu {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+header .menu a {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+
+header .menu img {
+    width: 24px;
+    height: 24px;
+}
+
+h3 {
+    font-family: 'OpenDyslexic';
+    text-align: center;
+    margin: 20px 0;
+    background-color: #ffd9b3;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 5px;
+}
+.carrossel {
+    position: relative;
+    width: 90%;
+    margin: 0 auto 30px;
+    overflow: hidden;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.card {
+    display: flex;
+    gap: 15px;
+}
+
+.card > div {
+    min-width: 150px;
+    border: 2px solid #ffd9b3;
+    border-radius: 8px;
+    text-align: center;
+    padding: 10px;
+    background-color: #fff7f0;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.card > div:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-weight: bold;
+    color: #000;
+}
+
+/* Botões de navegação */
+button.prev,
+button.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 217, 179, 0.8);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 20px;
+}
+
+button.prev {
+    left: 5px;
+}
+
+button.next {
+    right: 5px;
+}
+
+button.prev:hover,
+button.next:hover {
+    background-color: #ffd9b3;
+}
