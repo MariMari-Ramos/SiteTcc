@@ -6,48 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="login.js" defer></script>
     <link rel="stylesheet" href="../A_EstilizacaoDisso/Login.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title>Login</title>
 </head>
 <body>
-     
+
+    <!-- Canvas das ondas -->
+    <canvas id="waveCanvas"></canvas>
+
     <section>
         <div class="CaixaLogin">
-        <div class="login">
-        <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
-        <label for="TituloLogin">Login</label>
-        <form method="POST" action="http://localhost:8080/SiteTCC/Login/login.php">
+            <div class="login">
+                <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
+                <label for="TituloLogin">Login</label>
+                <form method="POST" action="http://localhost:8080/SiteTCC/Login/login.php">
 
-            
-                <label for="Subtitulo">Nome do Perfil ou E-mail:</label>
-                <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou E-mail" required>
+                    <label for="Subtitulo">Nome do Perfil ou E-mail:</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou E-mail" required>
 
-                <label for="Subtitulo">Senha:</label>
-                <div class="password-container">
-                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
-                <i class="bi bi-eye-fill " id="BtnVerSenha" onclick="MostrarSenha()"></i>
-                </div>
-                   <div class="form-buttons">
-                    <button type="submit" id="ButtonEntrar">Entrar</button>
-                <button  id="ButtonCriarConta" onclick="window.location.href='../Cadastro_E_Perfil/Cadastro.html'">Criar Conta</button>
-                 </div>
-
-                 <span class="nao-quebrar-linha">
-                 <h5>Esqueceu sua senha?
-                 <a href="#">Recuperar</a></h5>
-                 </span>
-
-                <div class="overlay" id="overlay">
-                 <div class="modal">
-                      <h2>Alerta:</h2>
-                        <p></p>
-                      <button onclick="fecharModal()">X</button>
+                    <label for="Subtitulo">Senha:</label>
+                    <div class="password-container">
+                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                        <i class="bi bi-eye-fill" id="BtnVerSenha" onclick="MostrarSenha()"></i>
                     </div>
-                  </div>                
-            </form>
+
+                    <div class="form-buttons">
+                        <button type="submit" id="ButtonEntrar">Entrar</button>
+                        <button id="ButtonCriarConta" type="button"
+                            onclick="window.location.href='../Cadastro_E_Perfil/Cadastro.html'">Criar Conta</button>
+                    </div>
+
+                    <span class="nao-quebrar-linha">
+                        <h5>Esqueceu sua senha?
+                            <a href="#">Recuperar</a>
+                        </h5>
+                    </span>
+
+                    <div class="overlay" id="overlay">
+                        <div class="modal">
+                            <h2>Alerta:</h2>
+                            <p></p>
+                            <button onclick="fecharModal()">X</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
     </section>
+
+    <!-- Script das ondas -->
 </body>
 </html>
