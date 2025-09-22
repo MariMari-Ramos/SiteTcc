@@ -1,100 +1,128 @@
-    let email = document.getElementById("email").value.trim();
-    let senha = document.getElementById("senha").value.trim();
+/* login.js  — controla modal/login e as waves.
+   Inicializa só após DOMContentLoaded para garantir elementos disponíveis.
+*/
 
-    // Verifica se algum campo está vazio
-    if(email === "" || senha === ""){
-        mostrarAlerta("Preencha todos os campos!");
-        return; // Sai da função
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('[login.js] DOM pronto — iniciando scripts');
 
-    // Verifica se os dados estão corretos
-    if (email === "teste@exemplo.com" && senha === "12345"){
-        window.location.href = "../A_TelaPrincipal/index.html";
-    } else {
-        mostrarAlerta("Email ou senha incorretos!");
-    }
-
-
-// Função para mostrar o modal com mensagem personalizada
-function mostrarAlerta(mensagem){
+    /* ---------- Referências DOM ---------- */
     const overlay = document.getElementById("overlay");
-    const texto = overlay.querySelector("p");
-    texto.textContent = mensagem;
-    overlay.style.display = "flex";
-}
+    const textoModal = overlay ? overlay.querySelector("p") : null;
+    const btnEntrar = document.getElementById("ButtonEntrar");
+    const btnVerSenha = document.getElementById("BtnVerSenha");
+    const btnFecharModal = document.getElementById("fecharModal");
+    const formLogin = document.getElementById("formLogin");
 
-// Função para fechar o modal
-function fecharModal() {
-    document.getElementById("overlay").style.display = "none";
-}
-
-
-  function MostrarSenha(){
-var inputSenha = document.getElementById('senha');  
-var btnMostrarSenha = document.getElementById('BtnVerSenha');
-
-if(inputSenha.type === 'password'){
-inputSenha.setAttribute('type', 'text');
-btnMostrarSenha.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');
-}else{
-inputSenha.setAttribute('type','password')
-btnMostrarSenha.classList.replace('bi-eye-slash-fill','bi-eye-fill');
-}
-}
-
-async function fazerLogin() {
-    const email = document.getElementById("email").value.trim();
-    const senha = document.getElementById("senha").value.trim();
-
-    if(email === "" || senha === ""){
-        mostrarAlerta("Preencha todos os campos!");
-        return;
+    if(!overlay || !textoModal || !btnEntrar || !btnVerSenha || !formLogin) {
+        console.warn('[login.js] Alguns elementos não foram encontrados no DOM. Verifique IDs.');
+    } else {
+        console.log('[login.js] Elementos do formulário encontrados');
     }
 
-    let formData = new FormData();
-    formData.append("email", email);
-    formData.append("senha", senha);
+    function mostrarAlerta(mensagem){
+        if(!overlay || !textoModal) return console.warn('overlay/textoModal ausentes');
+        textoModal.textContent = mensagem;
+        overlay.style.display = "flex";
+    }
 
-    try {
-        const response = await fetch("login.php", {
-            method: "POST",
-            body: formData
-        });
+    function fecharModal(){
+        if(!overlay) return;
+        overlay.style.display = "none";
+    }
 
-        const result = await response.json(); // login.php precisa retornar JSON
+    if(btnFecharModal) btnFecharModal.addEventListener('click', fecharModal);
 
-        if(result.status === "success"){
-            mostrarAlerta(result.message);
-            setTimeout(()=>{ window.location.href="../A_TelaPrincipal/index.html"; },1500);
+    // Mostrar/ocultar senha
+    btnVerSenha && btnVerSenha.addEventListener('click', () => {
+        const input = document.getElementById('senha');
+        if(!input) return;
+        if(input.type === 'password'){
+            input.type = 'text';
+            btnVerSenha.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');
         } else {
-            mostrarAlerta(result.message);
+            input.type = 'password';
+            btnVerSenha.classList.replace('bi-eye-slash-fill','bi-eye-fill');
+        }
+    });
+
+    // Intercepta o clique do botão Entrar
+    btnEntrar && btnEntrar.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        fazerLogin();
+    });
+
+    // implementação de login (tenta fazer fetch para o action do form)
+    async function fazerLogin(){
+        const email = (document.getElementById("email") || {}).value || "";
+        const senha = (document.getElementById("senha") || {}).value || "";
+
+        if(email.trim() === "" || senha.trim() === ""){
+            mostrarAlerta("Preencha todos os campos!");
+            return;
         }
 
-    } catch (error) {
-        mostrarAlerta("Erro inesperado: " + error);
-    }
-}
+        // tenta enviar via fetch para o action do form (se o servidor responder JSON)
+        try {
+            const actionUrl = formLogin.getAttribute('action') || 'login.php';
+            const formData = new FormData();
+            formData.append('email', email.trim());
+            formData.append('senha', senha.trim());
 
+            const res = await fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            });
+
+            // tenta ler JSON; se não for JSON, exibe texto
+            const text = await res.text();
+            try {
+                const json = JSON.parse(text);
+                if(json.status === 'success'){
+                    mostrarAlerta(json.message || 'Login OK');
+                    setTimeout(()=>location.href = json.redirect || '../A_TelaPrincipal/index.html', 1300);
+                } else {
+                    mostrarAlerta(json.message || 'Credenciais inválidas');
+                }
+            } catch(e){
+                // não era JSON — usa resposta textual
+                if(res.ok){
+                    mostrarAlerta('Resposta do servidor recebida. Verifique rota.');
+                    console.log('[login.js] resposta (texto):', text);
+                } else {
+                    mostrarAlerta('Erro no login: ' + res.status);
+                    console.error('[login.js] erro fetch:', res.status, text);
+                }
+            }
+        } catch (err) {
+            mostrarAlerta("Erro inesperado: " + err);
+            console.error('[login.js] fetch erro:', err);
+        }
+    }
+
+    
 const canvas = document.getElementById('waveCanvas');
 const ctx = canvas.getContext('2d');
 
-let w = canvas.width = window.innerWidth;
-let h = canvas.height = window.innerHeight;
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+}
 
-let mouseX = w / 2;
-let mouseY = h / 2;
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-window.addEventListener('resize', () => {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-});
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
 
 window.addEventListener('mousemove', e => {
     mouseX = e.clientX;
     mouseY = e.clientY;
 });
 
-// Paleta de tons rosa/salmão
+// Paleta de cores
 const cores = [
     'rgba(255,192,192,0.6)',
     'rgba(255,170,150,0.5)',
@@ -114,31 +142,54 @@ for (let i = 0; i < 3; i++) {
 }
 
 function desenhar() {
-    ctx.clearRect(0, 0, w, h);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ondas.forEach((o, idx) => {
+        // === ONDAS DE BAIXO ===
         ctx.beginPath();
-        for (let x = 0; x <= w; x += 10) {
+        for (let x = 0; x <= canvas.width; x += 10) {
             const y = Math.sin(x * o.freq + o.fase) * o.amp
-                + h / 2
-                + (mouseY - h / 2) * 0.05 * (idx + 1);
-            if (x === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
+                + canvas.height / 2
+                + (mouseY - canvas.height / 2) * 0.05 * (idx + 1);
+            x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
         }
-        ctx.lineTo(w, h);
-        ctx.lineTo(0, h);
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.lineTo(0, canvas.height);
         ctx.closePath();
 
-        const grad = ctx.createLinearGradient(0, 0, 0, h);
-        grad.addColorStop(0, o.cor);
-        grad.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = grad;
+        const gradBottom = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradBottom.addColorStop(0, o.cor);
+        gradBottom.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = gradBottom;
         ctx.fill();
 
-        o.fase += o.vel * (mouseX / w * 4);
+        // === ONDAS DE CIMA === (espelhadas)
+        ctx.beginPath();
+        for (let x = 0; x <= canvas.width; x += 10) {
+            const y = Math.sin(x * o.freq + o.fase) * o.amp
+                + canvas.height / 2
+                + (mouseY - canvas.height / 2) * 0.05 * (idx + 1);
+
+            // espelha em relação ao meio da tela
+            const yTop = canvas.height - y;
+            x === 0 ? ctx.moveTo(x, yTop) : ctx.lineTo(x, yTop);
+        }
+        ctx.lineTo(canvas.width, 0);
+        ctx.lineTo(0, 0);
+        ctx.closePath();
+
+        const gradTop = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradTop.addColorStop(0, o.cor);
+        gradTop.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = gradTop;
+        ctx.fill();
+
+        // atualiza fase para animação
+        o.fase += o.vel * (mouseX / canvas.width * 4);
     });
 
     requestAnimationFrame(desenhar);
 }
 
 desenhar();
+});

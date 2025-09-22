@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="login.js" defer></script>
+    <!-- estilo principal (mantive o caminho que você já usava) -->
     <link rel="stylesheet" href="../A_EstilizacaoDisso/Login.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title>Login</title>
@@ -12,14 +12,14 @@
 <body>
 
     <!-- Canvas das ondas -->
-    <canvas id="waveCanvas"></canvas>
+    <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
     <section>
         <div class="CaixaLogin">
             <div class="login">
                 <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
                 <label for="TituloLogin">Login</label>
-                <form method="POST" action="http://localhost:8080/SiteTCC/Login/login.php">
+                <form id="formLogin" method="POST" action="http://localhost:8080/SiteTCC/Login/login.php">
 
                     <label for="Subtitulo">Nome do Perfil ou E-mail:</label>
                     <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou E-mail" required>
@@ -27,11 +27,12 @@
                     <label for="Subtitulo">Senha:</label>
                     <div class="password-container">
                         <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
-                        <i class="bi bi-eye-fill" id="BtnVerSenha" onclick="MostrarSenha()"></i>
+                        <i class="bi bi-eye-fill" id="BtnVerSenha" title="Mostrar/ocultar senha"></i>
                     </div>
 
                     <div class="form-buttons">
-                        <button type="submit" id="ButtonEntrar">Entrar</button>
+                        <!-- botão convertido para type="button" para que o JS controle o envio -->
+                        <button type="button" id="ButtonEntrar">Entrar</button>
                         <button id="ButtonCriarConta" type="button"
                             onclick="window.location.href='../Cadastro_E_Perfil/Cadastro.html'">Criar Conta</button>
                     </div>
@@ -46,7 +47,7 @@
                         <div class="modal">
                             <h2>Alerta:</h2>
                             <p></p>
-                            <button onclick="fecharModal()">X</button>
+                            <button id="fecharModal">X</button>
                         </div>
                     </div>
                 </form>
@@ -54,6 +55,7 @@
         </div>
     </section>
 
-    <!-- Script das ondas -->
+    <!-- carrega todo o JS no final (script unificado: login + waves) -->
+    <script src="login.js"></script>
 </body>
 </html>
