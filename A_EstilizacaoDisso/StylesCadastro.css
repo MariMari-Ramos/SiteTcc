@@ -9,8 +9,7 @@
 
 body { 
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif; 
-    background-color: #d3d3d38f; 
-    color: #222; 
+    background-color: #fffffff6; 
     min-height: 100vh; 
     display: flex; 
     justify-content: center; 
@@ -83,18 +82,18 @@ body {
     align-items: center;
     padding: 1.5em;
     border-radius: 2vw;
-    background: transparent;
+    background:  #ffffff;
     width: 90vw;
     max-width: 700px; 
     min-width: 220px;
     box-shadow: rgb(75, 75, 75) 0px 5px 15px;
     font-size: 1.1rem;
     gap: 2em;
-    flex-wrap: wrap; /* permite quebrar itens em telas menores */
+    flex-wrap: wrap; 
 }
 
 .formulario {
-    flex: 1 1 250px; /* flexível, mínimo 250px */
+    flex: 1 1 250px; 
 }
 
 .imagem img {
@@ -146,6 +145,58 @@ label[for="Subtitulo"] {
     font-size: 0.9em;
 }
 
+/* ====== Estilos do bloco de termos (alinhamento) ====== */
+.terms-row {
+    display: flex;
+    gap: 12px;                 /* espaço entre checkbox e texto */
+    align-items: flex-start;   /* alinha o topo do texto com o topo do checkbox */
+    margin-top: 1.2em;
+    line-height: 1.45;         /* legibilidade das linhas */
+}
+
+/* checkbox: pequeno ajuste para ficar alinhado com o topo do texto */
+.terms-row input[type="checkbox"] {
+    margin: 4px 0 0 0;         /* ajuste fino */
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+/* texto dos termos (quebra de linha controlada, ocupa todo o espaço restante) */
+.terms-row .terms-text {
+    display: block;
+    color: #000000;               /* cor base do texto; links terão outra cor */
+    font-size: 0.98rem;
+    text-align: left;
+    word-break: break-word;
+}
+
+/* links dentro do texto (mantive seu tom vermelho) */
+.terms-row .terms-text a {
+    color: #3f3f3f;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 700;
+}
+
+/* Se preferir que o texto fique mais vermelho sem sublinhado, ajuste aqui:
+.terms-row .terms-text a { text-decoration: none; } 
+*/
+
+/* Remove o estilo antigo aplicado diretamente no ID (substituído pelo bloco acima) */
+#CheckBoxTermosPoliticasPrivadas {
+    /* margem original removida para não atrapalhar o novo layout */
+    margin-left: 1.5em;
+    cursor: pointer;
+}
+
+/* mantendo a estilização das labels individuais caso ainda existam em outra parte */
+label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
+    word-break: break-all;
+}
+
+/* botão criar */
 #ButtonCriarCadastro {
     background-color: #212121;
     color: #f5f1f2;
@@ -153,9 +204,11 @@ label[for="Subtitulo"] {
     border-radius: 2em;
     cursor: pointer;
     font-size: 1em;
-    width: 100%;
+    width: 75%;
     padding: 0.3em 2em;
+    position: relative;
     margin-top: 1em;
+    margin-left: 2.5em;
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
     letter-spacing: 1px;
 }
@@ -224,6 +277,10 @@ i {
         margin-left: 0;
         font-size: 0.7em;
     }
+
+    /* ajusta gap do bloco de termos em telas pequenas */
+    .terms-row { gap: 10px; }
+    .terms-row .terms-text { font-size: 0.95rem; }
 }
 
 @media (max-width: 400px) {

@@ -101,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     
+// login.js (substituir por este arquivo)
+
 const canvas = document.getElementById('waveCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -114,12 +116,19 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
+// posição do mouse (valores iniciais centrados)
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
+// flag para controlar se a interatividade com o mouse está habilitada
+let interactive = true;
+
+// Atualiza mouse apenas quando interactive == true
 window.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+    if (interactive) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    }
 });
 
 // Paleta de cores
@@ -133,7 +142,7 @@ const cores = [
 const ondas = [];
 for (let i = 0; i < 3; i++) {
     ondas.push({
-        amp: 60 + i * 20,
+        amp: 60 + i * 0.5,
         freq: 0.002 + i * 0.001,
         vel: 0.002 + i * 0.0015,
         fase: Math.random() * 1000,
@@ -141,16 +150,52 @@ for (let i = 0; i < 3; i++) {
     });
 }
 
+// Escolhe a "caixa de login" onde queremos desativar a interatividade
+const loginBox = document.querySelector('.CaixaLogin') || document.querySelector('.login');
+
+if (loginBox) {
+    // mouse entra na caixa -> desativa interatividade
+    loginBox.addEventListener('mouseenter', () => {
+        interactive = false;
+    });
+    // mouse sai da caixa -> ativa interatividade
+    loginBox.addEventListener('mouseleave', () => {
+        interactive = true;
+    });
+
+    // se o usuário tabular para dentro do formulário (teclado), também desativa (evita distração)
+    loginBox.addEventListener('focusin', () => {
+        interactive = false;
+    }, true);
+    loginBox.addEventListener('focusout', () => {
+        interactive = true;
+    }, true);
+
+    // toque em dispositivos móveis: quando tocar na caixa, desativa interação; quando soltar, reativa
+    loginBox.addEventListener('touchstart', () => {
+        interactive = false;
+    }, { passive: true });
+    loginBox.addEventListener('touchend', () => {
+        interactive = true;
+    }, { passive: true });
+}
+
+// Função de desenho/loop
 function desenhar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ondas.forEach((o, idx) => {
+        // cálculo de deslocamento vertical: só aplica se interactive == true
+        const verticalInfluence = interactive
+            ? (mouseY - canvas.height / 2) * 0.05 * (idx + 1)
+            : 0;
+
         // === ONDAS DE BAIXO ===
         ctx.beginPath();
         for (let x = 0; x <= canvas.width; x += 10) {
             const y = Math.sin(x * o.freq + o.fase) * o.amp
                 + canvas.height / 2
-                + (mouseY - canvas.height / 2) * 0.05 * (idx + 1);
+                + verticalInfluence;
             x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
         }
         ctx.lineTo(canvas.width, canvas.height);
@@ -168,9 +213,7 @@ function desenhar() {
         for (let x = 0; x <= canvas.width; x += 10) {
             const y = Math.sin(x * o.freq + o.fase) * o.amp
                 + canvas.height / 2
-                + (mouseY - canvas.height / 2) * 0.05 * (idx + 1);
-
-            // espelha em relação ao meio da tela
+                + verticalInfluence;
             const yTop = canvas.height - y;
             x === 0 ? ctx.moveTo(x, yTop) : ctx.lineTo(x, yTop);
         }
@@ -185,11 +228,15 @@ function desenhar() {
         ctx.fill();
 
         // atualiza fase para animação
-        o.fase += o.vel * (mouseX / canvas.width * 4);
+        // quando interactive == false, usamos um multiplicador constante (1) para manter animação suave,
+        // quando true, a velocidade é influenciada pelo mouseX (maior movimento -> variação maior)
+        const speedMultiplier = interactive ? (mouseX / canvas.width * 4) : 1;
+        o.fase += o.vel * speedMultiplier;
     });
 
     requestAnimationFrame(desenhar);
 }
 
 desenhar();
+
 });
