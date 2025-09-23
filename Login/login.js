@@ -204,33 +204,16 @@ function desenhar() {
 
         const gradBottom = ctx.createLinearGradient(0, 0, 0, canvas.height);
         gradBottom.addColorStop(0, o.cor);
-        gradBottom.addColorStop(1, 'rgba(255,255,255,0)');
+        gradBottom.addColorStop(1, 'rgba(197, 69, 10, 0.15)');
         ctx.fillStyle = gradBottom;
         ctx.fill();
 
-        // === ONDAS DE CIMA === (espelhadas)
-        ctx.beginPath();
-        for (let x = 0; x <= canvas.width; x += 10) {
-            const y = Math.sin(x * o.freq + o.fase) * o.amp
-                + canvas.height / 2
-                + verticalInfluence;
-            const yTop = canvas.height - y;
-            x === 0 ? ctx.moveTo(x, yTop) : ctx.lineTo(x, yTop);
-        }
-        ctx.lineTo(canvas.width, 0);
-        ctx.lineTo(0, 0);
-        ctx.closePath();
-
-        const gradTop = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        gradTop.addColorStop(0, o.cor);
-        gradTop.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = gradTop;
-        ctx.fill();
-
+      
+      
         // atualiza fase para animação
         // quando interactive == false, usamos um multiplicador constante (1) para manter animação suave,
         // quando true, a velocidade é influenciada pelo mouseX (maior movimento -> variação maior)
-        const speedMultiplier = interactive ? (mouseX / canvas.width * 4) : 1;
+        const speedMultiplier = interactive ? (mouseX / canvas.width * 2) : 1;
         o.fase += o.vel * speedMultiplier;
     });
 
