@@ -51,15 +51,57 @@ header .menu img {
     height: 24px;
 }
 
-h3 {
+label[for="System"] {
     font-family: 'OpenDyslexic';
     text-align: center;
     margin: 20px 0;
+    margin-left: 40em;
     background-color: #ffd9b3;
     display: inline-block;
     padding: 5px 15px;
     border-radius: 5px;
 }
+
+label[for="MinhasFichas"]{
+
+font-family: 'OpenDyslexic';
+text-align: center;
+margin: 20px 0;
+margin-left: 40em;
+background-color: #ffd9b3;
+display: inline-block;
+padding: 5px 15px;
+border-radius: 5px;
+}
+
+.CaixaMinhasFichas{
+    padding: 0.4vw 1vw;
+    border-radius: 2vw;
+    background-color: #ffffff;
+    height: auto;
+    width: 90vw;
+    max-width: 350px;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(117, 117, 117, 0.493);
+    font-size: 1.1rem;
+    margin-bottom: 0.7vw;
+    position: relative;
+    z-index: 2; 
+}
+
+label[for="MinhasFichasRandomicas"]{
+font-family: 'OpenDyslexic';
+text-align: center;
+margin: 20px 0;
+margin-left: 40em;  
+background-color: #ffd9b3;
+display: inline-block;
+padding: 5px 15px;
+}
+
 .carrossel {
     position: relative;
     width: 90%;
