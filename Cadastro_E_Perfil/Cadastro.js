@@ -31,26 +31,7 @@ function mostrarAlerta(mensagem){
     overlay.style.display = "flex"; // 👈 precisa ser flex ou block
 }
 
-function CadastroProvisorio(){
-    let email = document.getElementById("CadastroEmail").value.trim();
-    let senha = document.getElementById("SenhaCadastro").value.trim();
-    let confirmarSenha = document.getElementById("ConfirmSenhaCadastro").value.trim();
 
-    // Verifica se os campos estão preenchidos
-    if(email === "" || senha === "" || confirmarSenha === ""){
-        mostrarAlerta("Preencha todos os campos!");
-        return;
-    }
-
-    // Verifica se as senhas coincidem
-    if(senha !== confirmarSenha){
-        mostrarAlerta("As senhas não coincidem!");
-        return;
-    }
-
-    // Se tudo certo, segue
-    window.location.href = "CPerfil.html";
-}
 
 function fecharModal(){
     const overlay = document.getElementById("overlay");
