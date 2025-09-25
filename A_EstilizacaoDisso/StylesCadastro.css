@@ -97,9 +97,13 @@ body {
 }
 
 .imagem img {
-    max-width: 180px;
+    max-width: 250px;
     width: 100%;
     height: auto;
+    border-color: rgba(75, 75, 75, 0.534);
+    border-style:solid;
+    border-radius: 100%;
+    margin-bottom:1em ;
 }
 
 label[for="CriandoConta"] {
@@ -152,6 +156,7 @@ label[for="Subtitulo"] {
     align-items: flex-start;   /* alinha o topo do texto com o topo do checkbox */
     margin-top: 1.2em;
     line-height: 1.45;         /* legibilidade das linhas */
+    word-break: break-word;
 }
 
 /* checkbox: pequeno ajuste para ficar alinhado com o topo do texto */
@@ -174,10 +179,12 @@ label[for="Subtitulo"] {
 
 /* links dentro do texto (mantive seu tom vermelho) */
 .terms-row .terms-text a {
-    color: #3f3f3f;
+    color: #f0530b;
     text-decoration: underline;
     text-underline-offset: 2px;
     font-weight: 700;
+    word-break: break-word;
+
 }
 
 /* Se preferir que o texto fique mais vermelho sem sublinhado, ajuste aqui:
