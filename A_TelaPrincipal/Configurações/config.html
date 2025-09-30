@@ -1,37 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="Configuracao.js" defer></script>
     <link rel="stylesheet" href="stylesConfiguracao.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title>Configurações</title>
 </head>
 <body>
-   <center><h1>Configurações</h1></center>
+    <h1 data-translate="title">Configurações</h1>
 
-<section>
-<div class="CaixaConfig">
-<div class="OptionsCofiguration">
-<div class="option-item">
-                    <span>Modo escuro</span>
+    <section>
+        <div class="CaixaConfig">
+            <div class="OptionsConfiguration">
+                <!-- Modo Escuro -->
+                <div class="option-item">
+                    <span data-translate="darkMode">Modo escuro</span>
                     <label class="switch">
                         <input type="checkbox" id="darkModeToggle">
                         <span class="slider round"></span>
                     </label>
                 </div>
-Animação do carrossel:
-guia
-alertas
-idioma
-fonte e acessibilidade
-</div>    
-</div>
+                
+                <!-- Animação do Carrossel -->
+                <div class="option-item">
+                    <span data-translate="carousel">Animação do carrossel</span>
+                    <label class="switch">
+                        <input type="checkbox" id="carouselToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
 
-salvar alterações
-voltar para como estava antes
-voltar para a tela principal
-</section>
+                <!-- Guia -->
+                <div class="option-item">
+                    <span data-translate="guide">Guia</span>
+                    <label class="switch">
+                        <input type="checkbox" id="guideToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
 
+                <!-- Alertas -->
+                <div class="option-item">
+                    <span data-translate="alerts">Alertas</span>
+                    <label class="switch">
+                        <input type="checkbox" id="alertsToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <!-- Idioma -->
+                <div class="option-item">
+                    <span data-translate="language">Idioma</span>
+                    <button id="openLanguageModal" class="language-button">
+                        <span id="currentLanguage">Português</span>
+                        <i class="bi bi-globe"></i>
+                    </button>
+                </div>
+
+                <!-- Acessibilidade -->
+                <div class="option-item">
+                    <span data-translate="accessibility">Fonte e acessibilidade</span>
+                    <label class="switch">
+                        <input type="checkbox" id="accessibilityToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>    
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="action-buttons">
+            <button id="saveChanges" class="primary-button" data-translate="saveChanges">Salvar alterações</button>
+            <button id="restoreChanges" class="secondary-button" data-translate="restoreChanges">Voltar para como estava antes</button>
+            <button id="backToMain" class="secondary-button" data-translate="backToMain">Voltar para a tela principal</button>
+        </div>
+
+        <!-- Modal de Idiomas -->
+        <div id="languageModal" class="modal">
+            <div class="modal-content">
+                <h2 data-translate="selectLanguage">Selecione o idioma</h2>
+                <div class="language-options">
+                    <button data-lang="pt-BR" class="lang-option selected">Português</button>
+                    <button data-lang="en-US" class="lang-option">English</button>
+                    <button data-lang="es" class="lang-option">Español</button>
+                    <button data-lang="fr" class="lang-option">Français</button>
+                    <button data-lang="de" class="lang-option">Deutsch</button>
+                </div>
+                <div class="modal-buttons">
+                    <button id="saveLanguage" data-translate="save">Salvar</button>
+                    <button id="closeModal" data-translate="cancel">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 </html>

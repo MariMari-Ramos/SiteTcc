@@ -1,4 +1,3 @@
-
 @font-face {
     font-family: 'OpenDyslexic';
     src: url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
@@ -7,12 +6,15 @@
     font-weight: normal;
     font-style: normal;
 }
-/* Variáveis de cores */
+
 :root[data-theme="light"] {
     --bg-color: #ffeee4;
     --text-color: #333;
     --box-bg: #fff;
     --border-color: #ddd;
+    --button-primary: #2196F3;
+    --button-secondary: #f5f5f5;
+    --button-hover: rgba(33, 150, 243, 0.1);
 }
 
 :root[data-theme="dark"] {
@@ -20,6 +22,9 @@
     --text-color: #fff;
     --box-bg: #2d2d2d;
     --border-color: #444;
+    --button-primary: #1976D2;
+    --button-secondary: #424242;
+    --button-hover: rgba(25, 118, 210, 0.1);
 }
 
 body {
@@ -28,13 +33,23 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: all 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 .CaixaConfig {
     background-color: var(--box-bg);
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 15px;
+    padding: 25px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .option-item {
@@ -45,7 +60,7 @@ body {
     border-bottom: 1px solid var(--border-color);
 }
 
-/* Estilo do Switch */
+/* Estilos dos switches */
 .switch {
     position: relative;
     display: inline-block;
@@ -82,7 +97,7 @@ body {
 }
 
 input:checked + .slider {
-    background-color: #2196F3;
+    background-color: var(--button-primary);
 }
 
 input:checked + .slider:before {
@@ -95,4 +110,188 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+/* Estilos do botão de idioma */
+.language-button {
+    padding: 8px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--box-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.language-button:hover {
+    background: var(--button-hover);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--box-bg);
+    margin: 15% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.language-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.lang-option {
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--box-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.lang-option:hover {
+    background: var(--button-hover);
+}
+
+.lang-option.selected {
+    border-color: var(--button-primary);
+    background: var(--button-hover);
+}
+
+/* Botões de ação */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.primary-button,
+.secondary-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.primary-button {
+    background: var(--button-primary);
+    color: white;
+}
+
+.secondary-button {
+    background: var(--button-secondary);
+    color: var(--text-color);
+}
+
+.primary-button:hover,
+.secondary-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+
+/* ...existing code... */
+
+/* Mensagens de feedback */
+.message-modal {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--box-bg);
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease-out;
+    z-index: 1001;
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.message-content button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    background: var(--button-primary);
+    color: white;
+    cursor: pointer;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Melhorias nos botões */
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#saveLanguage {
+    background: var(--button-primary);
+    color: white;
+}
+
+#closeModal {
+    background: var(--button-secondary);
+    color: var(--text-color);
+}
+/* Responsividade */
+@media (max-width: 768px) {
+    .CaixaConfig {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .action-buttons {
+        margin: 20px 10px;
+    }
+
+    .language-options {
+        grid-template-columns: 1fr;
+    }
 }
