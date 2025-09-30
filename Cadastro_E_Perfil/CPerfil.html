@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/A_EstilizacaoDisso/StylesCPerfil.css">
+    <script src="CriarPerfil.js" defer></script>
     <title>Criar Perfil</title>
 </head>
 <body>
-
+<canvas id="waveCanvas" aria-hidden="true"></canvas>
 <section class="CaixaCriarPerfil">
 
     <h2>Criação do Perfil</h2>
@@ -18,7 +19,7 @@
         <div class="Coluna">
             <label for="NomePerfil">Nome do Perfil:</label>
             <input type="text" id="NomePerfil" name="NomePerfil" placeholder="Digite o nome do seu perfil" required>
-
+            <hr> </hr>
             <p class="ou">ou</p>
 
             <label for="NomesSugerido">Nomes Sugeridos:</label>
@@ -33,10 +34,10 @@
                 <option value="Avatar2">Naafiri</option>
 
             </select>
-
+            <hr></hr>
             <input type="submit" id="ButtonCriarPerfil" value="Criar Perfil">
         </div>
-
+        <div class="divisor"></div>
         <!-- Coluna da direita -->
         <div class="Coluna">
             <label>Foto do Perfil:</label>

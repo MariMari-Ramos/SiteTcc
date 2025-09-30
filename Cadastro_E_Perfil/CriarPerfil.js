@@ -1,3 +1,5 @@
+// Cadastro.js - canvas waves com interatividade DESATIVADA enquanto o usuário estiver mexendo na caixa
+
 const canvas = document.getElementById('waveCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -98,29 +100,11 @@ function desenhar() {
 
         const gradBottom = ctx.createLinearGradient(0, 0, 0, H);
         gradBottom.addColorStop(0, o.cor);
-        gradBottom.addColorStop(1, 'rgba(255,255,255,0)');
+        gradBottom.addColorStop(1, 'rgba(197, 69, 10, 0.15)');
         ctx.fillStyle = gradBottom;
         ctx.fill();
 
-        // === ONDAS DE CIMA (espelhadas) ===
-        ctx.beginPath();
-        for (let x = 0; x <= W; x += 10) {
-            const y = Math.sin(x * o.freq + o.fase) * o.amp
-                + H / 2
-                + verticalInfluence;
-            const yTop = H - y;
-            x === 0 ? ctx.moveTo(x, yTop) : ctx.lineTo(x, yTop);
-        }
-        ctx.lineTo(W, 0);
-        ctx.lineTo(0, 0);
-        ctx.closePath();
-
-        const gradTop = ctx.createLinearGradient(0, 0, 0, H);
-        gradTop.addColorStop(0, o.cor);
-        gradTop.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = gradTop;
-        ctx.fill();
-
+        
         // atualiza fase para animação
         const speedMultiplier = interactive ? (mouseX / W * 4) : 1;
         o.fase += o.vel * speedMultiplier;
@@ -130,4 +114,3 @@ function desenhar() {
 }
 
 desenhar();
-

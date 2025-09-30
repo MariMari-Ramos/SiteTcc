@@ -1,3 +1,12 @@
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+         url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+         url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
     background-color: #f0f0f0;
@@ -6,6 +15,17 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
+}
+
+#waveCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: -1;              
+    pointer-events: none;   
 }
 
 .CaixaCriarPerfil {
@@ -36,6 +56,13 @@ body {
     flex-direction: column;
 }
 
+.divisor {
+    height: auto;
+    width: 2px;               /* Espessura da barra */
+    background-color: rgb(153, 153, 153);  /* Cor da barra */
+    margin: 0 15px;           /* Espaço entre colunas */
+  }
+
 label {
     font-weight: 600;
     margin-bottom: 0.3rem;
@@ -62,6 +89,16 @@ select {
     cursor: pointer;
 }
 
+#NomePerfil {
+   width: 100%; 
+   height: 50px;
+}
+#NomesSugerido {
+    width: 100%;
+    height: 50px;
+}
+
+
 .ou {
     text-align: center;
     margin: 0.8rem 0;
@@ -79,6 +116,7 @@ select {
     font-size: 1rem;
     cursor: pointer;
     font-weight: 600;
+    height: 50px;
 }
 
 #ButtonCriarPerfil:hover {
