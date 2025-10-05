@@ -1,20 +1,28 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redefinir Senha</title>
+    <link rel="stylesheet" href="RedefinicaoDeSenha.css">
 </head>
 <body>
-    
-<section>
-
-    Bomba com os campos para a pessoa colocar a nova senha e confirmar a nova senha.
-    <input type="password" placeholder="Insira sua nova senha" id="NovaSenha">
-    <input type="password" placeholder="Confirme a sua nova senha" id="CofirmarNovaSenha">
-<input type="submit" value="Redefinir Senha" id="btnRedefinirSenha">
-
-</section>
+    <div class="CaixaRedefinirSenha">
+        <h1>Redefinir Senha</h1>
+        <p class="SubtituloRedefinir">
+            Insira sua nova senha e confirme para redefinir o acesso à sua conta.
+        </p>
+        <form class="redefinir-form" autocomplete="off">
+            <div class="input-group">
+                <input type="password" placeholder="Insira sua nova senha" id="NovaSenha" required>
+            </div>
+            <div class="input-group">
+                <input type="password" placeholder="Confirme a sua nova senha" id="ConfirmarNovaSenha" required>
+            </div>
+            <div class="button-container">
+                <button type="submit" id="btnRedefinirSenha">Redefinir Senha</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

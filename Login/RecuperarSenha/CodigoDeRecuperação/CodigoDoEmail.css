@@ -17,7 +17,7 @@ body {
     font-family: 'OpenDyslexic', Arial, sans-serif;
 }
 
-.CaixaRedefinirSenha {
+.CaixaDoCodigo {
     background-color: #fff;
     padding: 2.5rem;
     border-radius: 30px;
@@ -34,7 +34,7 @@ h1 {
     font-weight: 600;
 }
 
-.SubtituloRedefinir {
+.SubtituloCodigo {
     color: #333;
     font-size: 1rem;
     margin-bottom: 1.5rem;
@@ -42,29 +42,31 @@ h1 {
     padding: 0 1rem;
 }
 
-.redefinir-form {
+.codigo-form {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.input-group {
-    width: 100%;
-    margin-bottom: 1.2rem;
+.codigo-inputs {
+    display: flex;
+    gap: 0.7rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
 }
 
-input[type="password"] {
-    width: 100%;
-    padding: 1rem;
+.codigo-inputs input {
+    width: 2.5rem;
+    height: 2.5rem;
+    text-align: center;
+    font-size: 1.3rem;
     border: 1.5px solid #e0e0e0;
-    border-radius: 20px;
-    font-size: 1rem;
+    border-radius: 12px;
     background: #fafafa;
     transition: border-color 0.2s;
-    box-sizing: border-box;
 }
 
-input[type="password"]:focus {
+.codigo-inputs input:focus {
     outline: none;
     border-color: #000;
     background: #fff;
@@ -72,28 +74,50 @@ input[type="password"]:focus {
 
 .button-container {
     display: flex;
+    gap: 0.8rem;
     justify-content: center;
+    margin-bottom: 1rem;
 }
 
-#btnRedefinirSenha {
-    background-color: #000;
-    color: #fff;
+button {
+    padding: 0.7rem 1.5rem;
     border: none;
     border-radius: 20px;
-    padding: 0.9rem 2rem;
     font-size: 1rem;
-    font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    font-weight: 600;
+    min-width: 120px;
 }
 
-#btnRedefinirSenha:hover {
+#btnValidarCodigo {
+    background-color: #000;
+    color: #fff;
+}
+
+#btnReenviarCodigo {
+    background-color: #8e8e8e;
+    color: #fff;
+}
+
+#btnValidarCodigo:hover {
     background-color: #222;
+}
+
+#btnReenviarCodigo:hover {
+    background-color: #777;
+}
+
+.info-codigo {
+    color: #666;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+    padding: 0 1rem;
 }
 
 /* Responsividade */
 @media (max-width: 480px) {
-    .CaixaRedefinirSenha {
+    .CaixaDoCodigo {
         padding: 1.5rem;
         margin: 1rem;
         border-radius: 22px;
@@ -101,11 +125,17 @@ input[type="password"]:focus {
     h1 {
         font-size: 1.3rem;
     }
+    .codigo-inputs input {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.1rem;
+    }
     .button-container {
         flex-direction: column;
+        gap: 0.6rem;
     }
-    #btnRedefinirSenha {
+    button {
         width: 100%;
-        padding: 1rem;
+        min-width: unset;
     }
 }
