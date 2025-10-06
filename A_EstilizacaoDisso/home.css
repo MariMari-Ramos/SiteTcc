@@ -185,144 +185,108 @@ height: 60vh;
   --color-neutral-40:#f5f5f5;
 }
 
+/* Footer Styles */
 footer {
-    width: 100%;
-    color: var(--color-neutral-10);
+    background-color: #ffeee4;
+    padding: 2rem 4rem;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
 }
 
-.footer-link {
-    text-decoration: none;
-    color: var(--color-neutral-10);
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-#footer_content {
-    background-color: var(--color-neutral-10);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    padding: 3rem 3.5rem; 
-}
-
-#footer_contact h1 {
-    margin-bottom: 0.75rem;
-} 
-
-#footer_social_media {
+.footer-content {
     display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
     gap: 2rem;
-    margin-top: 1.5rem;
 }
 
-/* Corrigido para .footer-link */
-#footer_social_media .footer-link {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    height: 2.5rem;
-    width: 2.5rem;
-    color: var(--color-neutral-40);
-    border-radius: 50%;
-    transition: all 0.4s;
-}
-
-#footer_social_media .footer-link i {
-    font-size: 1.25rem;
-}
-
-#footer_social_media .footer-link:hover {
-    opacity: 0.8;
-}
-
-#instagram {
-    background: linear-gradient(#7f37c9,#ff2992,#ff9807);
-}
-
-#facebook {
-    background:#4267b3;
-}
-
-#whatsapp {
-    background: #25d366;
-}
-
-.footer-list {
+.footer-links {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    list-style: none;
+    gap: 0.5rem;
 }
 
-.footer-list .footer-link {
-    color: var(--color-neutral-30);
-    transition: all 0.4s;
+.footer-links span {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
 }
 
-.footer-list .footer-link:hover {
-    color: #7f37c9;
-}
-
-#footer_subscribe {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-#footer_subscribe p {
-    color: var(--color-neutral-30);
-}
-
-#input_group {
-    display: flex;
-    align-items: center;
-    background-color: var(--color-neutral-0);
-    border-radius: 4px;
-}
-
-#input_group input {
-    all: unset;
-    padding: 0.75rem;
-    width: 100%;
-}
-
-#input_group button {
-    background-color: #7f37c9;
-    border: none;
-    color: var(--color-neutral-40);
-    padding: 0 1.25rem;
-    font-size: 1.25rem;
-    height: 100%;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    transition: all 0.4s;
-}
-
-#input_group button:hover {
-    opacity: 0.8;
-}
-
-#footer_copyright {
-    background-color: var(--color-neutral-0);
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    padding: 1.5rem;
+.footer-links a {
+    color: #666;
+    text-decoration: none;
     font-size: 0.9rem;
-    font-weight: 100;
+    transition: color 0.3s ease;
 }
 
-/* Corrigido espaço nas media queries */
+.footer-links a:hover {
+    color: #333;
+}
+
+.footer-bottom {
+    border-top: 1px solid #e0d4c8;
+    padding-top: 1rem;
+}
+
+.social-media {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.social-icon {
+    color: #666;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #333;
+}
+
+.footer-legal {
+    text-align: center;
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.legal-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.legal-links a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.legal-links a:hover {
+    color: #333;
+}
+
+/* Responsividade do Footer */
 @media screen and (max-width: 768px) {
-    #footer_content {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
+    footer {
+        padding: 2rem;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .legal-links {
+        flex-wrap: wrap;
+        gap: 1rem;
     }
 }
 
-@media screen and (max-width: 426px) {
-    #footer_content {
-        grid-template-columns: 1fr;
-        padding: 3rem 2rem;
+@media screen and (max-width: 480px) {
+    .legal-links {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }
