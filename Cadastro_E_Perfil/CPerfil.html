@@ -3,63 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/A_EstilizacaoDisso/StylesCPerfil.css">
+    <link rel="stylesheet" href="../A_EstilizacaoDisso/StylesCPerfil.css">
     <script src="CriarPerfil.js" defer></script>
+    <script src="avatarSelection.js" defer></script>
     <title>Criar Perfil</title>
 </head>
 <body>
-<canvas id="waveCanvas" aria-hidden="true"></canvas>
-<section class="CaixaCriarPerfil">
+    <canvas id="waveCanvas" aria-hidden="true"></canvas>
+    <section class="CaixaCriarPerfil">
+        <h2>Criação do Perfil</h2>
+        <div class="Colunas">
+            <div class="Coluna">
+                <label for="NomePerfil">Nome do Perfil:</label>
+                <input type="text" id="NomePerfil" name="NomePerfil" placeholder="Digite o nome do seu perfil" required>
+                <hr>
+                <p class="ou">ou</p>
+                <label for="NomesSugerido">Nomes Sugeridos:</label>
+                <select id="NomesSugerido" name="NomesSugerido">
+                    <option value="">Clique para ver os nomes sugeridos</option>
+                    <option value="Avatar1">Optimus Oprime</option>
+                    <option value="Avatar2">Vladimir Putinks</option>
+                    <option value="Avatar2">Valdemar Glaive</option>
+                    <option value="Avatar2">Vaarus</option>
+                    <option value="Avatar2">Aatrox</option>
+                    <option value="Avatar2">Rhaast</option>
+                    <option value="Avatar2">Naafiri</option>
+                </select>
+                <hr>
+                <input type="submit" id="ButtonCriarPerfil" value="Criar Perfil">
+            </div>
 
-    <h2>Criação do Perfil</h2>
-
-    <div class="Colunas">
-
-        <!-- Coluna da esquerda -->
-        <div class="Coluna">
-            <label for="NomePerfil">Nome do Perfil:</label>
-            <input type="text" id="NomePerfil" name="NomePerfil" placeholder="Digite o nome do seu perfil" required>
-            <hr> </hr>
-            <p class="ou">ou</p>
-
-            <label for="NomesSugerido">Nomes Sugeridos:</label>
-            <select id="NomesSugerido" name="NomesSugerido">
-                <option value="">Clique para ver os nomes sugeridos</option>
-                <option value="Avatar1">Optimus Oprime</option>
-                <option value="Avatar2">Vladimir Putinks</option>
-                <option value="Avatar2">Valdemar Glaive</option>
-                <option value="Avatar2">Vaarus</option>
-                <option value="Avatar2">Aatrox</option>
-                <option value="Avatar2">Rhaast</option>
-                <option value="Avatar2">Naafiri</option>
-
-            </select>
-            <hr></hr>
-            <input type="submit" id="ButtonCriarPerfil" value="Criar Perfil">
+            <div class="divisor"></div>
+            <div class="Coluna">
+                <label for="FotoDoPerfil">Foto do Perfil:</label>
+                <label class="CustomFile">
+                    <input type="file" id="FotoPerfil" name="FotoPerfil" accept="image/*">
+                    Escolha um arquivo
+                </label>
+                <p class="ou">ou</p>
+                <label for="NossosAvatares">Nossos Avatares:</label>
+                <button class="CustomFile" id="chooseAvatar">
+                    <label for="SubtituloDoAvatar">Escolher Avatar</label>
+                </button>
+                <p class="Aviso">Aviso: A foto do perfil é um elemento opcional na criação do perfil, podendo ser criado agora mesmo ou posteriormente.</p>
+            </div>
         </div>
-        <div class="divisor"></div>
-        <!-- Coluna da direita -->
-        <div class="Coluna">
-            <label>Foto do Perfil:</label>
-            <label class="CustomFile">
-                <input type="file" id="FotoPerfil" name="FotoPerfil" accept="image/*">
-                Escolha um arquivo
-            </label>
+    </section>
 
-            <p class="ou">ou</p>
-
-            <label>Nossos Avatares:</label>
-            <label class="CustomFile">
-                <input type="file" id="AvatarProprio" name="AvatarProprio" accept="image/*">
-                Escolha um de nossos avatares
-            </label>
-
-            <p class="Aviso">Aviso: A foto do perfil é um elemento opcional na criação do perfil, podendo ser criado agora mesmo ou posteriormente.</p>
+    <div id="avatarModal" class="avatar-modal">
+        <div class="avatar-modal-content">
+            <h3>Escolha seu Avatar</h3>
+            <div class="avatar-grid">
+                <div class="avatar-option">
+                    <img src="../img/bigorna.png" alt="Avatar 1">
+                </div>
+                <div class="avatar-option">
+                    <img src="../img/MascoteVesgo.png" alt="Avatar 2">
+                </div>
+                <div class="avatar-option">
+                    <img src="../img/cthulhu.png" alt="Avatar 3">
+                </div>
+                
+            </div>
+            <button id="confirmAvatar" class="confirm-button">Confirmar</button>
         </div>
-
     </div>
-
-</section>
-
 </body>
 </html>

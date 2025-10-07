@@ -68,6 +68,29 @@ label {
     margin-bottom: 0.3rem;
     margin-top: 0.8rem;
 }
+label[for="NomesSugerido"] {
+    margin-top: 1.5rem;
+    margin-left: 1rem;
+}
+
+label[for="NomePerfil"] {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    margin-left: 1rem;
+}
+
+label[for="FotoDoPerfil"] {
+    margin-top: 1.5rem;
+    margin-left: 1rem;
+}
+
+label[for="NossosAvatares"]{
+
+ margin-top: 1.5rem;
+    margin-left: 1rem;
+
+}
+
 
 input[type="text"], select {
     padding: 0.5em 1em;
@@ -92,10 +115,15 @@ select {
 #NomePerfil {
    width: 100%; 
    height: 50px;
+   font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+   font-size: 1rem;
 }
 #NomesSugerido {
     width: 100%;
     height: 50px;
+       font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+         margin-top: 0.5rem;
+            font-size: 0.75rem;
 }
 
 
@@ -104,6 +132,10 @@ select {
     margin: 0.8rem 0;
     font-weight: bold;
     color: #555555;
+}
+
+#FotoPerfil{
+    
 }
 
 #ButtonCriarPerfil {
@@ -117,6 +149,7 @@ select {
     cursor: pointer;
     font-weight: 600;
     height: 50px;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
 }
 
 #ButtonCriarPerfil:hover {
@@ -124,15 +157,22 @@ select {
 }
 
 /* Botões customizados para arquivos */
-.CustomFile {
+.CustomFile{
     display: inline-block;
     border: 2px solid #555555;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     padding: 0.5em 1em;
+    border-color: #e9720248;
     text-align: center;
     cursor: pointer;
     font-size: 0.95rem;
     margin-bottom: 0.5rem;
+}
+
+
+label[for="SubtituloDoAvatar"]{
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+
 }
 
 .CustomFile input[type="file"] {
@@ -143,4 +183,316 @@ select {
     font-size: 0.75rem;
     color: #888888;
     margin-top: 0.5rem;
+    text-align: justify;
+    display: flex;
+}
+
+.avatar-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.avatar-modal-content {
+    position: relative;
+    background-color: #ffffff;
+    margin: 15% auto;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.avatar-modal-content h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #212121;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+    justify-items: center;
+}
+
+.avatar-option {
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+}
+
+.avatar-option img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-option.selected {
+    background-color: #e9720248;
+    transform: scale(1.1);
+    
+}
+
+.confirm-button {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 1rem auto 0;
+    padding: 0.8rem 1.5rem;
+    background-color: #212121;
+    color: #fff;
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-button:hover {
+    background-color: #313131;
+}
+
+.avatar-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+
+}
+
+/* ...existing code... */
+
+/* Estilos do botão de avatar */
+.avatar-button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.avatar-text {
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.95rem;
+    color: #212121;
+}
+
+.avatar-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Ajuste do z-index do modal */
+.avatar-modal {
+    z-index: 1000;
+    pointer-events: auto;
+}
+
+/* Ajuste do z-index do canvas */
+#waveCanvas {
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* ...rest of existing code... */
+/* Responsividade do Modal */
+@media (max-width: 480px) {
+    .avatar-modal-content {
+        margin: 10% auto;
+        padding: 1.5rem;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        gap: 0.8rem;
+    }
+
+    .avatar-option {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+
+/* ...existing code... */
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .CaixaCriarPerfil {
+        width: 95%;
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .Colunas {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .divisor {
+        display: none;
+    }
+
+    .Coluna {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .CaixaCriarPerfil h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    label {
+        margin-left: 0.5rem;
+    }
+
+    #NomePerfil, 
+    #NomesSugerido {
+        height: 45px;
+        font-size: 0.9rem;
+    }
+
+    .CustomFile {
+        width: 100%;
+        padding: 0.8em;
+    }
+
+    #ButtonCriarPerfil {
+        width: 100%;
+        height: 45px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .CaixaCriarPerfil {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0.8rem;
+    }
+
+    .CaixaCriarPerfil h2 {
+        font-size: 1.3rem;
+    }
+
+    label {
+        font-size: 0.9rem;
+        margin-left: 0.3rem;
+    }
+
+    #NomePerfil, 
+    #NomesSugerido {
+        height: 40px;
+        font-size: 0.85rem;
+    }
+
+    .ou {
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+    }
+
+    .CustomFile {
+        font-size: 0.85rem;
+        padding: 0.7em;
+    }
+
+    .Aviso {
+        font-size: 0.7rem;
+        margin-top: 0.3rem;
+    }
+
+    /* Ajustes do Modal para Mobile */
+    .avatar-modal-content {
+        margin: 5% auto;
+        padding: 1rem;
+        width: 95%;
+    }
+
+    .avatar-modal-content h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+
+    .avatar-option {
+        width: 50px;
+        height: 50px;
+        padding: 0.3rem;
+    }
+
+    .confirm-button {
+        max-width: none;
+        width: 100%;
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .avatar-preview {
+        width: 25px;
+        height: 25px;
+    }
+
+    .avatar-text {
+        font-size: 0.85rem;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 320px) {
+    .CaixaCriarPerfil {
+        padding: 0.8rem;
+    }
+
+    .CaixaCriarPerfil h2 {
+        font-size: 1.2rem;
+    }
+
+    label {
+        font-size: 0.85rem;
+    }
+
+    #NomePerfil, 
+    #NomesSugerido {
+        height: 38px;
+        font-size: 0.8rem;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .Aviso {
+        font-size: 0.65rem;
+    }
 }

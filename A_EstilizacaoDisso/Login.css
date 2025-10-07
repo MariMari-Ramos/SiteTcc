@@ -310,30 +310,64 @@ label[for="LembrarSenhaSubtitulo"]{
     color: #4e4e4e;
 }
 
-/* Responsividade fluida usando clamp() */
-@media (max-width: 1200px) {
-    .CaixaLogin { font-size: clamp(1rem, 2vw, 1.1rem); }
-}
+/* ...existing code... */
 
-@media (max-width: 760px) {
-    .CaixaLogin {
-        padding: clamp(2vw, 3vw, 3vw) clamp(2vw, 3vw, 3vw);
-        width: 96vw;
-        font-size: clamp(0.95rem, 2.5vw, 1rem);
-    }
-    .CaixaLoginImg { max-width: 80%; }
-    #email, #senha { font-size: clamp(0.9rem, 2.5vw, 0.95rem); padding: clamp(0.6rem,1.5vw,0.7rem) clamp(0.9rem,2vw,1em); }
-    #ButtonEntrar, #ButtonCriarConta { font-size: clamp(0.9rem,2.5vw,0.95rem); padding: clamp(0.6rem,1.5vw,0.7rem) 0; width: 49%; }
-}
-
+/* Responsividade Mobile (até 480px) */
 @media (max-width: 480px) {
     .CaixaLogin {
-        padding: clamp(1.5vw,3vw,2vw);
-        width: 100vw;
-        font-size: clamp(0.85rem,2.5vw,0.95rem);
+        width: 100%;
+        padding: 1.5rem;
+        margin: 1rem;
+        border-radius: 1rem;
     }
-    .CaixaLoginImg { max-width: 70%; }
-    #email, #senha { font-size: clamp(0.8rem,2.5vw,0.9rem); padding: 0.6em 0.8em; }
-    #ButtonEntrar, #ButtonCriarConta { width: 100%; font-size: clamp(0.85rem,2.5vw,0.9rem); padding: 0.6em 0; margin-bottom: 0.5em; }
-    .form-buttons { flex-direction: column; gap: 0.5em; }
+
+    
+    .CaixaLoginImg {
+        max-width: 70%;
+    }
+
+    label[for="TituloLogin"] {
+        font-size: 1.5rem;
+        margin-left: 1.5em;
+    }
+
+    label[for="Subtitulo"] {
+        font-size: 0.8rem;
+    }
+
+    #email, 
+    #senha {
+        font-size: 0.9rem;
+        padding: 0.6em 1em;
+    }
+
+    .password-container i {
+        font-size: 20px;
+        right: 8%;
+    }
+
+    #CBXLembrarSenha {
+        margin-left: 1em;
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+        width: 100%;
+    }
+
+    #ButtonEntrar, 
+    #ButtonCriarConta {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 0.8em 0;
+    }
+
+    .nao-quebrar-linha {
+        font-size: 0.8rem;
+    }
+
+    
 }

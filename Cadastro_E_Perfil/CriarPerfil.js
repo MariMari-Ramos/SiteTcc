@@ -114,3 +114,82 @@ function desenhar() {
 }
 
 desenhar();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('avatarModal');
+    const avatarButton = document.getElementById('chooseAvatar');
+    const confirmButton = document.getElementById('confirmAvatar');
+    const avatarOptions = document.querySelectorAll('.avatar-option');
+    let selectedAvatar = null;
+
+    // Desativa a interatividade das waves quando o modal está aberto
+    function toggleWavesInteractive(isInteractive) {
+        window.interactive = isInteractive;
+    }
+
+    // Abrir modal
+    avatarButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        modal.style.display = 'block';
+        toggleWavesInteractive(false);
+    });
+
+    // Fechar modal ao clicar fora
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            toggleWavesInteractive(true);
+        }
+    });
+
+    // Selecionar avatar
+    avatarOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            avatarOptions.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            selectedAvatar = option.querySelector('img').src;
+        });
+    });
+
+    // Confirmar seleção
+    confirmButton.addEventListener('click', () => {
+        if (selectedAvatar) {
+            const container = document.createElement('div');
+            container.className = 'avatar-button-content';
+            
+            const preview = document.createElement('img');
+            preview.src = selectedAvatar;
+            preview.className = 'avatar-preview';
+            
+            const text = document.createElement('span');
+            text.textContent = 'Mudar Avatar';
+            text.className = 'avatar-text';
+            
+            container.appendChild(preview);
+            container.appendChild(text);
+            
+            avatarButton.innerHTML = '';
+            avatarButton.appendChild(container);
+            
+            modal.style.display = 'none';
+            toggleWavesInteractive(true);
+        }
+    });
+
+    // Fechar com ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            modal.style.display = 'none';
+            toggleWavesInteractive(true);
+        }
+    });
+
+    // Desativa waves ao interagir com a caixa
+    const caixaCriarPerfil = document.querySelector('.CaixaCriarPerfil');
+    if (caixaCriarPerfil) {
+        caixaCriarPerfil.addEventListener('mouseenter', () => toggleWavesInteractive(false));
+        caixaCriarPerfil.addEventListener('mouseleave', () => toggleWavesInteractive(true));
+        caixaCriarPerfil.addEventListener('focusin', () => toggleWavesInteractive(false), true);
+        caixaCriarPerfil.addEventListener('focusout', () => toggleWavesInteractive(true), true);
+    }
+});

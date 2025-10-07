@@ -149,35 +149,31 @@ label[for="Subtitulo"] {
     font-size: 0.9em;
 }
 
-/* ====== Estilos do bloco de termos (alinhamento) ====== */
 .terms-row {
     display: flex;
-    gap: 12px;                 /* espaço entre checkbox e texto */
-    align-items: flex-start;   /* alinha o topo do texto com o topo do checkbox */
+    gap: 12px;                 
+    align-items: flex-start;   
     margin-top: 1.2em;
-    line-height: 1.45;         /* legibilidade das linhas */
+    line-height: 1.45;        
     word-break: break-word;
 }
 
-/* checkbox: pequeno ajuste para ficar alinhado com o topo do texto */
 .terms-row input[type="checkbox"] {
-    margin: 4px 0 0 0;         /* ajuste fino */
+    margin: 4px 0 0 0;        
     width: 18px;
     height: 18px;
     flex: 0 0 auto;
     cursor: pointer;
 }
 
-/* texto dos termos (quebra de linha controlada, ocupa todo o espaço restante) */
 .terms-row .terms-text {
     display: block;
-    color: #000000;               /* cor base do texto; links terão outra cor */
+    color: #000000;            
     font-size: 0.98rem;
     text-align: left;
     word-break: break-word;
 }
 
-/* links dentro do texto (mantive seu tom vermelho) */
 .terms-row .terms-text a {
     color: #f0530b;
     text-decoration: underline;
@@ -187,18 +183,12 @@ label[for="Subtitulo"] {
 
 }
 
-/* Se preferir que o texto fique mais vermelho sem sublinhado, ajuste aqui:
-.terms-row .terms-text a { text-decoration: none; } 
-*/
 
-/* Remove o estilo antigo aplicado diretamente no ID (substituído pelo bloco acima) */
 #CheckBoxTermosPoliticasPrivadas {
-    /* margem original removida para não atrapalhar o novo layout */
     margin-left: 1.5em;
     cursor: pointer;
 }
 
-/* mantendo a estilização das labels individuais caso ainda existam em outra parte */
 label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
     word-break: break-all;
 }
@@ -289,10 +279,111 @@ i {
     .terms-row { gap: 10px; }
     .terms-row .terms-text { font-size: 0.95rem; }
 }
+/* ...existing code... */
 
-@media (max-width: 400px) {
+/* Tablet Responsiveness (601px - 900px) */
+@media (max-width: 900px) {
     .CaixaCadastro {
-        width: 95vw;
+        padding: 1.5em;
+        gap: 1.5em;
+    }
+
+    label[for="CriandoConta"] {
+        font-size: 1.4em;
+    }
+
+    .imagem img {
+        max-width: 200px;
+    }
+}
+
+/* Mobile Responsiveness (480px and below) */
+@media (max-width: 480px) {
+    .CaixaCadastro {
+        width: 95%;
+        padding: 1rem;
+        gap: 1rem;
+        flex-direction: column;
+        border-radius: 15px;
+    }
+
+    .formulario {
+        width: 100%;
+        order: 1;
+    }
+
+    .imagem {
+        order: 0;
+        margin-bottom: 1rem;
+    }
+
+    .imagem img {
+        max-width: 120px;
+        margin: 0.5em auto;
+    }
+
+    label[for="CriandoConta"] {
+        font-size: 1.2em;
+        margin-bottom: 1em;
+    }
+
+    label[for="Subtitulo"] {
+        font-size: 0.8em;
+        margin-left: 5%;
+    }
+
+    #CadastroEmail,
+    #SenhaCadastro,
+    #ConfirmSenhaCadastro {
+        padding: 0.8em 1em;
+        font-size: 0.9em;
+        margin-bottom: 0.5em;
+    }
+
+    .password-container i {
+        font-size: 20px;
+        right: 4%;
+        top: 40%;
+    }
+
+    .terms-row {
+        margin-top: 1em;
+        gap: 8px;
+    }
+
+    .terms-row input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+
+    .terms-row .terms-text {
+        font-size: 0.85rem;
+    }
+
+    #ButtonCriarCadastro {
+        width: 100%;
+        margin: 1em 0;
+        padding: 0.8em;
+        font-size: 0.9em;
+    }
+
+    /* Modal adjustments for mobile */
+    .modal {
+        width: 85%;
+        padding: 20px;
+        font-size: 0.9rem;
+    }
+
+    .modal button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Small Mobile Devices (320px and below) */
+@media (max-width: 320px) {
+    .CaixaCadastro {
+        width: 100%;
         padding: 0.8em;
     }
 
@@ -300,12 +391,21 @@ i {
         font-size: 1.1em;
     }
 
+    .imagem img {
+        max-width: 100px;
+    }
+
+    .terms-row .terms-text {
+        font-size: 0.8rem;
+    }
+
     #ButtonCriarCadastro {
         font-size: 0.85em;
     }
 
-    i {
-        font-size: 22px;
-        right: 3%;
+    .modal {
+        width: 90%;
+        padding: 15px;
+        font-size: 0.85rem;
     }
 }
