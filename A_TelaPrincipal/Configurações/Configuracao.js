@@ -231,8 +231,19 @@ const CONFIG = {
             selectLanguage: 'Select language',
             save: 'Save',
             cancel: 'Cancel'
-        }
+        },
+
+        'es-ES':{
+title:'Ajustes',
+darkMode:'Modo oscuro',
+carousel:'Animación carrusel',
+guide:'Guía',
+alerts:'Alertas',
+language:'Idioma',
+
+        },
     }
+    
 };
 
 // Inicialização

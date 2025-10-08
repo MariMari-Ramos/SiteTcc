@@ -28,7 +28,7 @@ function mostrarAlerta(mensagem){
     const overlay = document.getElementById("overlay");
     const texto = overlay.querySelector("p");
     texto.textContent = mensagem;
-    overlay.style.display = "flex"; // 👈 precisa ser flex ou block
+    overlay.style.display = "flex"; 
 }
 
 

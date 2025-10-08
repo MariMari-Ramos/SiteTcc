@@ -34,12 +34,16 @@ h1 {
     font-weight: 600;
 }
 
+
+
 .SubtituloRedefinir {
     color: #333;
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-    line-height: 1.4;
+    font-size: 0.75rem;
+    margin-top:1rem;
+    margin-bottom: 2rem;
+    line-height: 2;
     padding: 0 1rem;
+    
 }
 
 .redefinir-form {
@@ -64,6 +68,9 @@ input[type="password"] {
     box-sizing: border-box;
 }
 
+
+
+
 input[type="password"]:focus {
     outline: none;
     border-color: #000;
@@ -83,13 +90,27 @@ input[type="password"]:focus {
     padding: 0.9rem 2rem;
     font-size: 1rem;
     font-weight: 600;
+    font-family: 'Open';
     cursor: pointer;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+
     transition: background 0.2s;
 }
 
 #btnRedefinirSenha:hover {
-    background-color: #222;
+    background-color: #747474;
 }
+
+#ConfirmarNovaSenha::placeholder,
+#NovaSenha::placeholder{
+
+
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+}
+
+
+
+
 
 /* Responsividade */
 @media (max-width: 480px) {
