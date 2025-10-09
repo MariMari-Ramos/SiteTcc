@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
@@ -24,7 +26,7 @@
                 <i class="bi bi-gear-fill" id="ConfiguraçõesButton" name="Configurações"></i>
                 <span data-translate="configuracoes">Configurações</span>
             </a>
-            <a href="./Perfil_ConfiguracaoDePerfil/Perfil.html">
+            <a href="./Perfil_ConfiguracaoDePerfil/Perfil.php">
                 <i class="bi bi-person-circle"></i>
                 <span data-translate="perfil">Perfil</span>
             </a>

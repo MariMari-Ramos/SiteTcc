@@ -68,6 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('email', email.trim());
             formData.append('senha', senha.trim());
 
+            const lembrar = (document.getElementById("CBXLembrarSenha") || {}).checked || false;
+            formData.append('CBXLembrarSenha', lembrar ? '1' : '0');
+
             const res = await fetch(actionUrl, {
                 method: 'POST',
                 body: formData,
@@ -80,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const json = JSON.parse(text);
                 if(json.status === 'success'){
                     mostrarAlerta(json.message || 'Login OK');
-                    setTimeout(()=>location.href = json.redirect || '../A_TelaPrincipal/index.html', 1300);
+                    setTimeout(()=>location.href = json.redirect || '../A_TelaPrincipal/index.php', 1300);
                 } else {
                     mostrarAlerta(json.message || 'Credenciais inválidas');
                 }
