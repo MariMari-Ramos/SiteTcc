@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+         url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+         url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+    background-color: #fffffff6;
+    margin: 0;
+    padding: 0;
+}
+
