@@ -2,8 +2,8 @@
 <?php
 $servername = "localhost";
 $username = "root"; 
-$password = "usbw"; // ou sua senha do MySQL
-$dbname = "bancotcc";    // senha SQL
+$password = "usbw"; 
+$dbname = "bancotcc";  
 
 
 try {

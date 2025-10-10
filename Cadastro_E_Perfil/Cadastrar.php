@@ -33,7 +33,7 @@ $stmt->close();
 
 // Cria o usuário
 $senha_hash = md5($senha); // compatibilidade
-$sql_insert = "INSERT INTO usuarios (email, senha, active) VALUES (?, ?, 0)";
+$sql_insert = "INSERT INTO usuarios (email, senha) VALUES (?, ?)";
 $stmt = $conn->prepare($sql_insert);
 $stmt->bind_param("ss", $email, $senha_hash);
 

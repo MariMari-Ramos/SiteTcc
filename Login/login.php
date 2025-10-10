@@ -2,18 +2,7 @@
 session_start();
 include("../conexao.php");
 
-//tentativa de um login automatico via cookie
-if(!isset($_SESSION['user_id']) && isset($_COOKIE['usuario'])) {
-    $email_cookie = $_COOKIE['usuario'];
-    $sql = "SELECT * FROM usuarios WHERE email='$email_cookie' LIMIT 1";
-    $result = $conn->query($sql);
 
-    if($result && $result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['email'] = $user['email'];
-    }
-}
 
 header('Content-Type: application/json; charset=utf-8');
 

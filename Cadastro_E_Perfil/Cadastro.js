@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (data.status === "success") {
                 overlay.onclick = () => {
                     fecharModal();
-                    window.location.href = "../Login/login.html";
+                    window.location.href = "../Login/loginhtml.php";
                 };
             } else {
                 overlay.onclick = () => {
