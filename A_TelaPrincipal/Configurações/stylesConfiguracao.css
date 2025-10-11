@@ -15,6 +15,9 @@
     --button-primary: #2196F3;
     --button-secondary: #f5f5f5;
     --button-hover: rgba(33, 150, 243, 0.1);
+    --danger-color: #f44336;
+    --warning-bg: #fff3cd;
+    --warning-border: #ffeaa7;
 }
 
 :root[data-theme="dark"] {
@@ -25,6 +28,9 @@
     --button-primary: #1976D2;
     --button-secondary: #424242;
     --button-hover: rgba(25, 118, 210, 0.1);
+    --danger-color: #f44336;
+    --warning-bg: #3e2723;
+    --warning-border: #ff8f00;
 }
 
 body {
@@ -34,8 +40,6 @@ body {
     color: var(--text-color);
     transition: all 0.3s ease;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
 h1 {
@@ -60,7 +64,7 @@ h1 {
     border-bottom: 1px solid var(--border-color);
 }
 
-/* Estilos dos switches */
+/* Switches */
 .switch {
     position: relative;
     display: inline-block;
@@ -112,8 +116,8 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-/* Estilos do botão de idioma */
-.language-button {
+/* Botões */
+.language-button, .accessibility-button {
     padding: 8px 16px;
     border: 2px solid var(--border-color);
     border-radius: 8px;
@@ -124,10 +128,55 @@ input:checked + .slider:before {
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
 }
 
-.language-button:hover {
+.language-button:hover, .accessibility-button:hover {
     background: var(--button-hover);
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.primary-button, .secondary-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+.primary-button {
+    background: var(--button-primary);
+    color: white;
+}
+
+.secondary-button {
+    background: var(--button-secondary);
+    color: var(--text-color);
+}
+
+.danger-button {
+    background: var(--danger-color);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+.primary-button:hover, .secondary-button:hover, .danger-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 /* Modal */
@@ -153,11 +202,43 @@ input:checked + .slider:before {
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
+.warning-modal {
+    border-left: 5px solid var(--danger-color);
+    background: var(--warning-bg);
+    border: 2px solid var(--warning-border);
+}
+
+.warning-modal h2 {
+    color: var(--danger-color);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.warning-content {
+    margin: 1.5rem 0;
+}
+
+.warning-content p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.warning-content ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.warning-content li {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
 .language-options {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 10px;
     margin: 20px 0;
+    justify-items: center;
 }
 
 .lang-option {
@@ -168,6 +249,9 @@ input:checked + .slider:before {
     color: var(--text-color);
     cursor: pointer;
     transition: all 0.3s ease;
+    min-width: 120px;
+    text-align: center;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
 }
 
 .lang-option:hover {
@@ -179,45 +263,93 @@ input:checked + .slider:before {
     background: var(--button-hover);
 }
 
-/* Botões de ação */
-.action-buttons {
+.accessibility-options {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    max-width: 800px;
-    margin: 20px auto;
+    gap: 1.2rem;
+    margin: 1.5rem 0;
 }
 
-.primary-button,
-.secondary-button {
-    padding: 12px 24px;
-    border: none;
+.accessibility-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.accessibility-group label {
+    min-width: 160px;
+    font-weight: bold;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+.accessibility-group select,
+.contrast-toggle,
+.auto-read-toggle {
+    padding: 8px 16px;
     border-radius: 8px;
-    cursor: pointer;
+    border: 2px solid var(--border-color);
+    background: var(--box-bg);
+    color: var(--text-color);
     font-size: 1em;
+    cursor: pointer;
     transition: all 0.3s ease;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
 }
 
-.primary-button {
+.contrast-toggle.active,
+.auto-read-toggle.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-buttons.center {
+    justify-content: center;
+}
+
+.modal-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+#saveLanguage, #saveAccessibility {
     background: var(--button-primary);
     color: white;
 }
 
-.secondary-button {
+#closeModal, #closeAccessibilityModal, #cancelDisableAlerts {
     background: var(--button-secondary);
     color: var(--text-color);
 }
 
-.primary-button:hover,
-.secondary-button:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+#confirmDisableAlerts {
+    background: var(--danger-color);
+    color: white;
 }
 
+.modal-warning {
+    color: #f44336;
+    background: #fff0f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.95em;
+    display: none;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+}
 
-/* ...existing code... */
-
-/* Mensagens de feedback */
+/* Correções para mensagens de alerta */
 .message-modal {
     position: fixed;
     top: 20px;
@@ -228,12 +360,19 @@ input:checked + .slider:before {
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     animation: slideIn 0.3s ease-out;
     z-index: 1001;
+    border: 2px solid var(--border-color);
 }
 
 .message-content {
     display: flex;
     align-items: center;
     gap: 10px;
+    color: var(--text-color);
+}
+
+.message-content p {
+    margin: 0;
+    color: var(--text-color);
 }
 
 .message-content button {
@@ -243,6 +382,25 @@ input:checked + .slider:before {
     background: var(--button-primary);
     color: white;
     cursor: pointer;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+/* Estilo especial para mensagem final de sucesso */
+.message-modal.final-alert {
+    background: #4CAF50 !important;
+    color: white !important;
+    border: 2px solid #45a049 !important;
+}
+
+.final-alert .message-content,
+.final-alert .message-content p {
+    color: white !important;
+}
+
+.final-alert .message-content button {
+    background: white !important;
+    color: #4CAF50 !important;
+    border: 2px solid white !important;
 }
 
 @keyframes slideIn {
@@ -256,42 +414,166 @@ input:checked + .slider:before {
     }
 }
 
-/* Melhorias nos botões */
-.modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
+/* Alto contraste - Correções completas */
+.high-contrast {
+    background: #000 !important;
+    color: #fff !important;
 }
 
-.modal-buttons button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+.high-contrast .CaixaConfig,
+.high-contrast .modal-content {
+    background: #111 !important;
+    color: #fff !important;
+    border: 3px solid #fff !important;
 }
 
-#saveLanguage {
-    background: var(--button-primary);
-    color: white;
+.high-contrast .primary-button,
+.high-contrast .contrast-toggle.active {
+    background: #fff !important;
+    color: #000 !important;
+    border-color: #fff !important;
 }
 
-#closeModal {
-    background: var(--button-secondary);
-    color: var(--text-color);
+.high-contrast .secondary-button {
+    background: #222 !important;
+    color: #fff !important;
+    border-color: #fff !important;
 }
-/* Responsividade */
+
+.high-contrast .lang-option.selected {
+    background: #fff !important;
+    color: #000 !important;
+    border-color: #fff !important;
+}
+
+/* Correções específicas para mensagens em alto contraste */
+.high-contrast .message-modal {
+    background: #fff !important;
+    color: #000 !important;
+    border: 3px solid #000 !important;
+}
+
+.high-contrast .message-content,
+.high-contrast .message-content p {
+    color: #000 !important;
+}
+
+.high-contrast .message-content button {
+    background: #000 !important;
+    color: #fff !important;
+    border: 2px solid #000 !important;
+}
+
+.high-contrast .message-content button:hover {
+    background: #333 !important;
+}
+
+/* Alto contraste para modais de aviso */
+.high-contrast .warning-modal {
+    background: #fff !important;
+    color: #000 !important;
+    border: 3px solid #f44336 !important;
+}
+
+.high-contrast .warning-modal h2 {
+    color: #000 !important;
+}
+
+.high-contrast .warning-content p,
+.high-contrast .warning-content li {
+    color: #000 !important;
+}
+
+/* Alto contraste para mensagem final */
+.high-contrast .message-modal.final-alert {
+    background: #000 !important;
+    color: #fff !important;
+    border: 3px solid #fff !important;
+}
+
+.high-contrast .final-alert .message-content,
+.high-contrast .final-alert .message-content p {
+    color: #fff !important;
+}
+
+.high-contrast .final-alert .message-content button {
+    background: #fff !important;
+    color: #000 !important;
+    border: 2px solid #fff !important;
+}
+
+/* Classe para quando alertas estão desabilitados */
+.alerts-disabled .message-modal:not(.final-alert) {
+    display: none !important;
+}
+
+/* Responsivo */
 @media (max-width: 768px) {
     .CaixaConfig {
         margin: 10px;
         padding: 15px;
     }
-
-    .action-buttons {
-        margin: 20px 10px;
+    
+    .accessibility-group {
+        flex-direction: column;
+        align-items: flex-start;
     }
-
+    
+    .accessibility-group label {
+        min-width: auto;
+    }
+    
     .language-options {
         grid-template-columns: 1fr;
+    }
+    
+    .modal-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .warning-content ul {
+        padding-left: 1rem;
+    }
+    
+    /* Responsividade das mensagens */
+    .message-modal {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .message-content {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .accessibility-options {
+        gap: 0.8rem;
+    }
+    
+    .accessibility-group label {
+        min-width: 120px;
+        font-size: 0.95em;
+    }
+    
+    .accessibility-group select,
+    .contrast-toggle,
+    .auto-read-toggle {
+        font-size: 0.95em;
+        padding: 6px 12px;
+    }
+    
+    .modal-buttons.center {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .lang-option {
+        min-width: 100px;
     }
 }
