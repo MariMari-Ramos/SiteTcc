@@ -29,3 +29,28 @@ function ConfirmarMostrarSenha(){
         
     }
 }
+
+document.addEventListenner('DOMContentLoaded', function() {
+const form = document.getElementById('resetPasswordForm');
+const senha = Document.getElementById('NovaSenha');
+const confirmarSenha = document.getElementById('ConfirmarNovaSenha');
+
+form.addEventListenner('submit', function(e){
+
+if(senha.value !== confirmarSenha.value){
+alert('As senhas não coincidem. Por favor, tente novamente.');
+return;
+
+}
+
+if(senha.value.leghth < 5){
+alert('A senha deve ter pelo menos 5 caracteres.');
+return;
+}
+consele.log('Senha redefinida com sucesso!');
+
+alert('Senha redefinida com sucesso!');
+form.submit();
+});
+
+});

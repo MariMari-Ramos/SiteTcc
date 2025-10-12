@@ -21,7 +21,7 @@ if (!isset($_SESSION['user_id'])) {
         <p>Esta seção permite que você visualize e edite as configurações do seu perfil de usuário.</p>
 
 Nome de usuário: 
-Email vinculado:
+Email vinculado:sadasdasdasda
 Foto de perfil:
 Excluir conta:
 Alterar senha:

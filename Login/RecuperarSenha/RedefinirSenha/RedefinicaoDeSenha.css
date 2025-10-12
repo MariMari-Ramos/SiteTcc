@@ -9,124 +9,139 @@
 
 body {
     margin: 0;
+    padding: 0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #fff;
+    background-color: #ffeee4;
     font-family: 'OpenDyslexic', Arial, sans-serif;
 }
 
 .CaixaRedefinirSenha {
-    background-color: #fff;
-    padding: 2.5rem;
-    border-radius: 30px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.08);
-    width: 95%;
-    max-width: 430px;
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
     text-align: center;
 }
 
 h1 {
-    color: #000;
-    font-size: 1.7rem;
+    color: #212121;
+    font-size: clamp(1.5rem, 5vw, 2rem);
     margin-bottom: 1rem;
-    font-weight: 600;
+    font-family: 'OpenDyslexic';
 }
 
-
-
 .SubtituloRedefinir {
-    color: #333;
-    font-size: 0.75rem;
-    margin-top:1rem;
+    color: #666;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
     margin-bottom: 2rem;
-    line-height: 2;
-    padding: 0 1rem;
-    
+    line-height: 1.5;
+}
+
+.TextoSobreOsCampos {
+    font-family: 'OpenDyslexic';
+    font-size: clamp(0.6rem, 2.5vw, 0.75rem);
+    font-weight: bold;
+    color: #212121;
+    margin-bottom: 0.20em;
+    margin-top: 1em;
+    padding-left: 1.5rem; /* Alterado de margin-left para padding-left */
+    white-space: nowrap;
+    display: block; /* Alterado de flex para block */
+    text-align: left; /* Adicionado para alinhar o texto à esquerda */
+    width: 100%; /* Adicionado para ocupar toda a largura */
 }
 
 .redefinir-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    width: 100%;
+    padding: 0 1rem;
+    align-items: center; /* Adicionado para centralizar os elementos do form */
 }
 
 .input-group {
     width: 100%;
     margin-bottom: 1.2rem;
+    position: relative;
 }
 
-input[type="password"] {
+.input-group input {
     width: 100%;
-    padding: 1rem;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 20px;
-    font-size: 1rem;
-    background: #fafafa;
-    transition: border-color 0.2s;
+    padding: 0.6em 2em;
+    border: 3px solid #00000075;
+    border-radius: 2em;
     box-sizing: border-box;
+    margin-bottom: 0;
+    background-color: #f5f5f5;
+    font-size: 1em;
+    font-family: 'OpenDyslexic';
 }
 
-
-
-
-input[type="password"]:focus {
+.input-group input:focus {
     outline: none;
-    border-color: #000;
-    background: #fff;
+    border-color: #2196F3;
+}
+
+.input-group i {
+    font-size: clamp(20px, 4vw, 30px);
+    cursor: pointer;
+    position: absolute;
+    right: 5%;
+    color: #474747;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: color 0.3s ease;
+}
+
+.input-group i:hover {
+    color: #2196F3;
 }
 
 .button-container {
+    margin-top: 1.5rem;
     display: flex;
     justify-content: center;
+    width: 100%; /* Adicionado para ocupar toda a largura */
 }
 
 #btnRedefinirSenha {
-    background-color: #000;
-    color: #fff;
+    background-color: #2196F3;
+    color: white;
     border: none;
-    border-radius: 20px;
-    padding: 0.9rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
-    font-family: 'Open';
+    padding: 0.8em 2em;
+    border-radius: 2em;
     cursor: pointer;
-    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-
-    transition: background 0.2s;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    font-family: 'OpenDyslexic';
 }
 
 #btnRedefinirSenha:hover {
-    background-color: #747474;
+    background-color: #1976D2;
 }
 
-#ConfirmarNovaSenha::placeholder,
-#NovaSenha::placeholder{
-
-
-    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-}
-
-
-
-
-
-/* Responsividade */
 @media (max-width: 480px) {
     .CaixaRedefinirSenha {
         padding: 1.5rem;
         margin: 1rem;
-        border-radius: 22px;
     }
-    h1 {
-        font-size: 1.3rem;
+
+    .input-group i {
+        font-size: 20px;
+        right: 8%;
     }
-    .button-container {
-        flex-direction: column;
+
+    .TextoSobreOsCampos {
+        font-size: 0.8rem;
+        padding-left: 1.2rem; /* Alterado de margin-left para padding-left */
     }
+
     #btnRedefinirSenha {
         width: 100%;
-        padding: 1rem;
     }
 }

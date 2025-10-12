@@ -34,7 +34,7 @@
 }
 
 body {
-    font-family: 'OpenDyslexic', Arial, sans-serif;
+    font-family: 'OpenDyslexic';
     margin: 20px;
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -61,6 +61,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
     border-bottom: 1px solid var(--border-color);
 }
 

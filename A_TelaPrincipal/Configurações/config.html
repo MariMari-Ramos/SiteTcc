@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="stylesConfiguracao.css">
+     <script src="Configuracao.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title>Configurações</title>
 </head>
@@ -13,7 +14,7 @@
         <div class="CaixaConfig">
             <div class="OptionsConfiguration">
                 <div class="option-item">
-                    <span data-translate="darkMode">Modo escuro</span>
+                    <span data-translate="darkMode">Modo escuro:</span>
                     <label class="switch">
                         <input type="checkbox" id="darkModeToggle">
                         <span class="slider round"></span>
@@ -21,7 +22,7 @@
                 </div>
                 
                 <div class="option-item">
-                    <span data-translate="carousel">Animação do carrossel</span>
+                    <span data-translate="carousel">Animação do carrossel:</span>
                     <label class="switch">
                         <input type="checkbox" id="carouselToggle">
                         <span class="slider round"></span>
@@ -29,7 +30,7 @@
                 </div>
 
                 <div class="option-item">
-                    <span data-translate="guide">Guia</span>
+                    <span data-translate="guide">Guia:</span>
                     <label class="switch">
                         <input type="checkbox" id="guideToggle">
                         <span class="slider round"></span>
@@ -37,7 +38,7 @@
                 </div>
 
                 <div class="option-item">
-                    <span data-translate="alerts">Alertas</span>
+                    <span data-translate="alerts">Alertas:</span>
                     <label class="switch">
                         <input type="checkbox" id="alertsToggle">
                         <span class="slider round"></span>
@@ -53,7 +54,7 @@
                 </div>
 
                 <div class="option-item">
-                    <span data-translate="accessibility">Fonte e Acessibilidade</span>
+                    <span data-translate="accessibility">Fonte e Acessibilidade:</span>
                     <button id="openAccessibilityModal" class="accessibility-button">
                         <i class="bi bi-universal-access"></i>
                     </button>
@@ -62,8 +63,8 @@
 
             <div class="action-buttons">
                 <button id="saveChanges" class="primary-button" data-translate="saveChanges">Salvar alterações</button>
-                <button id="restoreChanges" class="secondary-button" data-translate="restoreChanges">Voltar para como estava antes</button>
-                <button id="backToMain" class="secondary-button" data-translate="backToMain">Voltar para a tela principal</button>
+                <button id="restoreChanges" class="secondary-button" data-translate="restoreChanges">Voltar para os padrões inicias</button>
+                <button id="backToMain" class="secondary-button" data-translate="backToMain">Retornar para o lobby</button>
             </div>
         </div>
     </section>
@@ -141,10 +142,10 @@
                     Ao desativar os alertas, você não receberá mais notificações importantes do sistema, incluindo:
                 </p>
                 <ul>
-                    <li data-translate="alertsWarningItem1">• Avisos de segurança</li>
-                    <li data-translate="alertsWarningItem2">• Notificações de erro</li>
-                    <li data-translate="alertsWarningItem3">• Confirmações de ações importantes</li>
-                    <li data-translate="alertsWarningItem4">• Mensagens de validação</li>
+                    <li data-translate="alertsWarningItem1">Avisos de segurança</li>
+                    <li data-translate="alertsWarningItem2">Notificações de erro</li>
+                    <li data-translate="alertsWarningItem3">Confirmações de ações importantes</li>
+                    <li data-translate="alertsWarningItem4">Mensagens de validação</li>
                 </ul>
                 <p data-translate="alertsWarningQuestion">
                     <strong>Isso pode ser prejudicial para sua experiência no site. Tem certeza que deseja continuar?</strong>
@@ -157,6 +158,5 @@
         </div>
     </div>
 
-    <script src="Configuracao.js"></script>
 </body>
 </html>
