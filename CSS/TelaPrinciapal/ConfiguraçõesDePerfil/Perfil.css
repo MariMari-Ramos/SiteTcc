@@ -1,3 +1,4 @@
+/* Fonte personalizada */
 @font-face {
     font-family: 'OpenDyslexic';
     src: url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
@@ -7,10 +8,74 @@
     font-style: normal;
 }
 
+/* Estilo geral */
 body {
     font-family: 'OpenDyslexic', Arial, sans-serif;
-    background-color: #fffffff6;
+    background-color: #f4f4f9;
     margin: 0;
     padding: 0;
+    color: #333;
 }
 
+/* Caixa principal */
+.CaixaEditarPerfil {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+/* Título */
+.CaixaEditarPerfil h1 {
+    font-size: 24px;
+    color: #444;
+    margin-bottom: 20px;
+}
+
+/* Parágrafo */
+.CaixaEditarPerfil p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Botões */
+.CaixaEditarPerfil input[type="button"] {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.CaixaEditarPerfil input[type="button"]:hover {
+    background-color: #0056b3;
+}
+
+/* Inputs de texto */
+.CaixaEditarPerfil input[type="text"],
+.CaixaEditarPerfil input[type="email"] {
+    width: calc(100% - 40px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Foto de perfil */
+.CaixaEditarPerfil img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 20px 0;
+    object-fit: cover;
+    border: 2px solid #007BFF;
+}

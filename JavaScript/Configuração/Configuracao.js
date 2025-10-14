@@ -216,7 +216,7 @@ class SettingsManager {
                 opt.classList.toggle('selected', opt.dataset.lang === this.savedSettings.language);
             });
         });
-
+                    
         closeBtn.addEventListener('click', () => modal.style.display = 'none');
 
         langOptions.forEach(option => {

@@ -30,6 +30,9 @@ Alterar senha:
 
 <input type ="button" value="Salvar alterações" onclick="alert('Alterações salvas com sucesso!')">
 <input type="button" value="Voltar" onclick="window.location.href='../index.html'">
+
+
+
     </div>
     </section>
 </body>
