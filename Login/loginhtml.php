@@ -63,6 +63,6 @@
         </div>
     </section>
 
-    <script src="../JavaScript/Login/login.js"></script>
+    <script src="../JavaScript/Login/login.js" defer></script>
 </body>
 </html>

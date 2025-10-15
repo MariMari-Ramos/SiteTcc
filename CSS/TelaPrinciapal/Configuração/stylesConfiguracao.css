@@ -1,10 +1,11 @@
 @font-face {
     font-family: 'OpenDyslexic';
-    src: url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
-         url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
-         url('../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+    src: url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+         url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+         url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 :root[data-theme="light"] {

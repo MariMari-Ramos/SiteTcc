@@ -6,8 +6,8 @@
          url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
-
 /* Estilo geral */
 body {
     font-family: 'OpenDyslexic', Arial, sans-serif;
