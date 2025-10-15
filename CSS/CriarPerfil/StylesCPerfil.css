@@ -55,14 +55,15 @@ body {
     min-width: 280px;
     display: flex;
     flex-direction: column;
+    min-width: 0; /* evita overflow horizontal em telas estreitas */
 }
 
 .divisor {
     height: auto;
-    width: 2px;               /* Espessura da barra */
-    background-color: rgb(153, 153, 153);  /* Cor da barra */
-    margin: 0 15px;           /* Espaço entre colunas */
-  }
+    width: 2px;               
+    background-color: rgb(153, 153, 153);  
+    margin: 0 15px;           
+}
 
 label {
     font-weight: 600;
@@ -86,12 +87,9 @@ label[for="FotoDoPerfil"] {
 }
 
 label[for="NossosAvatares"]{
-
- margin-top: 1.5rem;
+    margin-top: 1.5rem;
     margin-left: 1rem;
-
 }
-
 
 input[type="text"], select {
     padding: 0.5em 1em;
@@ -122,11 +120,10 @@ select {
 #NomesSugerido {
     width: 100%;
     height: 50px;
-       font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-         margin-top: 0.5rem;
-            font-size: 0.75rem;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
 }
-
 
 .ou {
     text-align: center;
@@ -168,12 +165,16 @@ select {
     cursor: pointer;
     font-size: 0.95rem;
     margin-bottom: 0.5rem;
+    /* Correções de overflow/borda */
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
-
 
 label[for="SubtituloDoAvatar"]{
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-
 }
 
 .CustomFile input[type="file"] {
@@ -250,7 +251,6 @@ label[for="SubtituloDoAvatar"]{
 .avatar-option.selected {
     background-color: #e9720248;
     transform: scale(1.1);
-    
 }
 
 .confirm-button {
@@ -280,10 +280,7 @@ label[for="SubtituloDoAvatar"]{
     margin-right: 10px;
     vertical-align: middle;
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-
 }
-
-/* ...existing code... */
 
 /* Estilos do botão de avatar */
 .avatar-button-content {
@@ -319,7 +316,6 @@ label[for="SubtituloDoAvatar"]{
     pointer-events: none;
 }
 
-/* ...rest of existing code... */
 /* Responsividade do Modal */
 @media (max-width: 480px) {
     .avatar-modal-content {
@@ -337,9 +333,6 @@ label[for="SubtituloDoAvatar"]{
         height: 60px;
     }
 }
-
-
-/* ...existing code... */
 
 /* Responsividade */
 @media (max-width: 768px) {
@@ -421,6 +414,8 @@ label[for="SubtituloDoAvatar"]{
     .CustomFile {
         font-size: 0.85rem;
         padding: 0.7em;
+        width: 100%;        /* garante largura total no mobile */
+        overflow: hidden;   /* evita vazamento da borda/conteúdo */
     }
 
     .Aviso {

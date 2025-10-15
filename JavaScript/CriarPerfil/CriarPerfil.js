@@ -1,5 +1,3 @@
-// Cadastro.js - canvas waves com interatividade DESATIVADA enquanto o usuário estiver mexendo na caixa
-
 const canvas = document.getElementById('waveCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -39,7 +37,7 @@ const cores = [
     'rgba(255,210,180,0.4)'
 ];
 
-// Configuração das ondas (amplitude mantida; se quiser mais fina, me diz que eu reduzo)
+// Configuração das ondas
 const ondas = [];
 for (let i = 0; i < 3; i++) {
     ondas.push({
@@ -52,23 +50,36 @@ for (let i = 0; i < 3; i++) {
 }
 
 // Seleciona a "caixa" onde a gente quer que a interatividade seja desativada
-// pode ser .CaixaCadastro ou .formulario — damos suporte às duas.
-const caixa = document.querySelector('.CaixaCadastro') || document.querySelector('.formulario');
+const caixa = document.querySelector('.CaixaCriarPerfil');
 
 if (caixa) {
     // mouse entra -> desativa interatividade
-    caixa.addEventListener('mouseenter', () => { interactive = false; });
+    caixa.addEventListener('mouseenter', () => { 
+        interactive = false; 
+    });
 
     // mouse sai -> ativa interatividade
-    caixa.addEventListener('mouseleave', () => { interactive = true; });
+    caixa.addEventListener('mouseleave', () => { 
+        interactive = true; 
+    });
 
     // focus via teclado (tab) -> desativa quando foco dentro do elemento
-    caixa.addEventListener('focusin', () => { interactive = false; }, true);
-    caixa.addEventListener('focusout', () => { interactive = true; }, true);
+    caixa.addEventListener('focusin', () => { 
+        interactive = false; 
+    }, true);
+    
+    caixa.addEventListener('focusout', () => { 
+        interactive = true; 
+    }, true);
 
     // touch devices: desativa enquanto o usuário toca a caixa
-    caixa.addEventListener('touchstart', () => { interactive = false; }, { passive: true });
-    caixa.addEventListener('touchend', () => { interactive = true; }, { passive: true });
+    caixa.addEventListener('touchstart', () => { 
+        interactive = false; 
+    }, { passive: true });
+    
+    caixa.addEventListener('touchend', () => { 
+        interactive = true; 
+    }, { passive: true });
 }
 
 // Função de desenho/loop
@@ -104,7 +115,6 @@ function desenhar() {
         ctx.fillStyle = gradBottom;
         ctx.fill();
 
-        
         // atualiza fase para animação
         const speedMultiplier = interactive ? (mouseX / W * 4) : 1;
         o.fase += o.vel * speedMultiplier;
@@ -115,6 +125,7 @@ function desenhar() {
 
 desenhar();
 
+// Modal de avatares
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('avatarModal');
     const avatarButton = document.getElementById('chooseAvatar');
@@ -122,23 +133,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const avatarOptions = document.querySelectorAll('.avatar-option');
     let selectedAvatar = null;
 
-    // Desativa a interatividade das waves quando o modal está aberto
-    function toggleWavesInteractive(isInteractive) {
-        window.interactive = isInteractive;
-    }
-
-    // Abrir modal
+    // Abrir modal - também desativa waves
     avatarButton.addEventListener('click', (e) => {
         e.preventDefault();
         modal.style.display = 'block';
-        toggleWavesInteractive(false);
+        interactive = false;
     });
 
-    // Fechar modal ao clicar fora
+    // Fechar modal ao clicar fora - reativa waves
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.style.display = 'none';
-            toggleWavesInteractive(true);
+            interactive = true;
         }
     });
 
@@ -151,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Confirmar seleção
+    // Confirmar seleção - reativa waves
     confirmButton.addEventListener('click', () => {
         if (selectedAvatar) {
             const container = document.createElement('div');
@@ -172,24 +178,15 @@ document.addEventListener('DOMContentLoaded', () => {
             avatarButton.appendChild(container);
             
             modal.style.display = 'none';
-            toggleWavesInteractive(true);
+            interactive = true;
         }
     });
 
-    // Fechar com ESC
+    // Fechar com ESC - reativa waves
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.style.display === 'block') {
             modal.style.display = 'none';
-            toggleWavesInteractive(true);
+            interactive = true;
         }
     });
-
-    // Desativa waves ao interagir com a caixa
-    const caixaCriarPerfil = document.querySelector('.CaixaCriarPerfil');
-    if (caixaCriarPerfil) {
-        caixaCriarPerfil.addEventListener('mouseenter', () => toggleWavesInteractive(false));
-        caixaCriarPerfil.addEventListener('mouseleave', () => toggleWavesInteractive(true));
-        caixaCriarPerfil.addEventListener('focusin', () => toggleWavesInteractive(false), true);
-        caixaCriarPerfil.addEventListener('focusout', () => toggleWavesInteractive(true), true);
-    }
 });
