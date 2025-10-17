@@ -1,12 +1,10 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="GlobalConfig.js" defer></script>
     <link rel="stylesheet" href="../CSS/TelaPrinciapal/home.css">
+    <script src="../JavaScript/PrincipalTela/index.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <title data-translate="title">SystemForge - Início</title>
 </head>
@@ -37,23 +35,23 @@
     <section class="carrossel">
         <div class="slides">
             <div class="card">
-                <div>
+                <div onclick="openModal('Tormenta 20')">
                     <img src="../img/1-8d3a9a38.png" alt="Tormenta 20">
                     <p>Tormenta 20</p>
                 </div>
-                <div>
+                <div onclick="openModal('Call of the Cthulhu')">
                     <img src="../img/cthulhu.png" alt="Call of the Cthulhu">
                     <p>Call of the Cthulhu</p>
                 </div>
-                <div>
+                <div onclick="openModal('Cyberpunk')">
                     <img src="../img/icons8-cyberpunk-512.png" alt="Cyberpunk">
                     <p>Cyberpunk</p>
                 </div>
-                <div>
+                <div onclick="openModal('Dungeons and Dragons')">
                     <img src="../img/icons8-dungeons-and-dragons-256.png" alt="Dungeons and Dragons">
                     <p>Dungeons and Dragons</p>
                 </div>
-                <div>
+                <div onclick="openModal('Vampiro a Mascara')">
                     <img src="../img/icons8-vampire-100.png" alt="Vampiro a Mascara">
                     <p>Vampiro a Mascara</p>
                 </div>
@@ -118,6 +116,47 @@
     </div>
 </footer>
 
-    <script src="home.js"></script>
+    <!-- Modal do Mapa Mental -->
+    <div id="mindmapOverlay" class="overlay" aria-hidden="true" onclick="closeModal()">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mindmapTitle" onclick="event.stopPropagation()">
+        <svg class="connections" aria-hidden="true" focusable="false">
+          <line class="connection-line" x1="42%" y1="35%" x2="25%" y2="35%"></line>
+          <line class="connection-line" x1="58%" y1="35%" x2="75%" y2="35%"></line>
+          <line class="connection-line" x1="42%" y1="65%" x2="25%" y2="65%"></line>
+          <line class="connection-line" x1="58%" y1="65%" x2="75%" y2="65%"></line>
+        </svg>
+
+        <div class="section top-left" data-action="create-sheet" onclick="selectSection(event, 'create-sheet')">
+          <div class="section-icon">📝</div>
+          <div class="section-title">Criar Ficha</div>
+          <div class="section-description">Criar nova ficha de personagem</div>
+        </div>
+
+        <div class="section top-right" data-action="system-summary" onclick="selectSection(event, 'system-summary')">
+          <div class="section-icon">📋</div>
+          <div class="section-title">Resumo do Sistema</div>
+          <div class="section-description">Guia completo do sistema</div>
+        </div>
+
+        <div class="section center">
+          <div id="mindmapTitle" class="section-icon">🎲</div>
+          <div id="mindmapSystemName" class="section-title">Sistema</div>
+        </div>
+
+        <div class="section bottom-left" data-action="random-sheets" onclick="selectSection(event, 'random-sheets')">
+          <div class="section-icon">🎯</div>
+          <div class="section-title">Fichas Randômicas</div>
+          <div class="section-description">Gerador aleatório</div>
+        </div>
+
+        <div class="section bottom-right" data-action="resources" onclick="selectSection(event, 'resources')">
+          <div class="section-icon">🧪</div>
+          <div class="section-title">Recursos Presentes</div>
+          <div class="section-description">Materiais disponíveis</div>
+        </div>
+
+        <button class="close-button" onclick="closeModal()">← Voltar</button>
+      </div>
+    </div>
 </body>
 </html>
