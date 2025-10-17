@@ -2,6 +2,9 @@
 session_start();
 include("../conexao.php");
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+header('Content-Type: text/plain; charset=utf-8');
 
 
 header('Content-Type: application/json; charset=utf-8');
@@ -26,8 +29,10 @@ if ($result && $result->num_rows > 0) {
     $_SESSION['email'] = $user['email'];
 
     if($lembrar){
-        $tolken=bin2hex(random_bytes(32));
-        setcookie('lembrar_tolken')
+        $token = bin2hex(random_bytes(32));
+        setcookie('lembrar_tolken', $tolken, time() + (60), "/", "", false, true);
+        $sqlTolken = "UPDATE usuarios SET token_login = '$token' WHERE id = " . $usuario['id'];
+        mysqli_query($conexao, $sqlTolken);
     }
 
     echo json_encode(["status"=>"success","message"=>"Login realizado com sucesso!"]);
