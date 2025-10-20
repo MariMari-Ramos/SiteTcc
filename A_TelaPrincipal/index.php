@@ -46,9 +46,9 @@
       Olá, aventureiro! 👋 Sou seu guia nesta interface. Estou aqui para ajudá-lo a navegar e entender todos os elementos e funcionalidades disponíveis. Por onde iremos começar?
     </div>
     <div class="guide-speech-options">
-      <button class="guide-option" onclick="showGuideInfo('modal')">📋 O que são os sitemas?</button>
+      <button class="guide-option" onclick="showGuideInfo('modal')">📋 O que são os sistemas?</button>
       <button class="guide-option" onclick="showGuideInfo('ficha')">📝 O que são as minhas fichas? E onde estão elas?</button>
-      <button class="guide-option" onclick="showGuideInfo('recursos')">🧪 O são as fichas randômicas? E onde estão elas?</button>
+      <button class="guide-option" onclick="showGuideInfo('recursos')">🧪 O que são as fichas randômicas? E onde estão elas?</button>
       <button class="guide-option" onclick="showGuideInfo('dicas')">💡 Dicas para iniciantes</button>
     </div>
   </div>
@@ -57,30 +57,52 @@
   <section class="carrossel">
     <div class="slides">
       <div class="card">
-        <div onclick="openModal('Tormenta 20')">
+        <!-- Tormenta 20 -->
+        <div class="has-hover-video" tabindex="0" onclick="openModal('Tormenta 20')">
+          <video class="hover-video" muted loop playsinline preload="auto">
+            <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
+          </video>
           <img src="../img/1-8d3a9a38.png" alt="Tormenta 20" />
           <p>Tormenta 20</p>
         </div>
-        <div onclick="openModal('Call of the Cthulhu')">
+
+        <!-- Call of the Cthulhu -->
+        <div class="has-hover-video" tabindex="0" onclick="openModal('Call of the Cthulhu')">
+          <video class="hover-video" muted loop playsinline preload="auto">
+            <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
+          </video>
           <img src="../img/cthulhu.png" alt="Call of the Cthulhu" />
           <p>Call of the Cthulhu</p>
         </div>
-        <div onclick="openModal('Cyberpunk')">
+
+        <!-- Cyberpunk -->
+        <div class="has-hover-video" tabindex="0" onclick="openModal('Cyberpunk')">
+          <video class="hover-video" muted loop playsinline preload="auto">
+            <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
+          </video>
           <img src="../img/icons8-cyberpunk-512.png" alt="Cyberpunk" />
           <p>Cyberpunk</p>
         </div>
-        <div onclick="openModal('Dungeons and Dragons')">
+
+        <!-- Dungeons and Dragons -->
+        <div class="has-hover-video" tabindex="0" onclick="openModal('Dungeons and Dragons')">
+          <video class="hover-video" muted loop playsinline preload="auto">
+            <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
+          </video>
           <img src="../img/icons8-dungeons-and-dragons-256.png" alt="Dungeons and Dragons" />
           <p>Dungeons and Dragons</p>
         </div>
-        <div onclick="openModal('Vampiro a Mascara')">
+
+        <!-- Vampiro a Mascara -->
+        <div class="has-hover-video" tabindex="0" onclick="openModal('Vampiro a Mascara')">
+          <video class="hover-video" muted loop playsinline preload="auto">
+            <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
+          </video>
           <img src="../img/icons8-vampire-100.png" alt="Vampiro a Mascara" />
           <p>Vampiro a Mascara</p>
         </div>
       </div>
     </div>
-    <button class="prev" type="button" aria-label="Anterior">‹</button>
-    <button class="next" type="button" aria-label="Próximo">›</button>
   </section>
 
   <label for="MinhasFichas" data-translate="minhasFichas">Minhas Fichas</label>

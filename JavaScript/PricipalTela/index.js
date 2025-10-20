@@ -1,248 +1,134 @@
 (function () {
   const linesSelector = '.connection-line';
 
-  function getOverlay() { return document.getElementById('mindmapOverlay'); }
-  function getSystemNameEl() { return document.getElementById('mindmapSystemName'); }
+  function getOverlay() {
+    return document.getElementById('mindmapOverlay');
+  }
 
+  function getSystemNameEl() {
+    return document.getElementById('mindmapSystemName');
+  }
+
+  // Modal: abrir
   window.openModal = function (systemName) {
     const overlay = getOverlay();
-    const systemNameEl = getSystemNameEl();
     if (!overlay) return;
-    if (systemNameEl) systemNameEl.textContent = systemName;
+    const nameEl = getSystemNameEl();
+    if (nameEl) nameEl.textContent = systemName || 'Sistema';
 
-    overlay.style.display = 'flex';
     overlay.classList.remove('closing');
-    requestAnimationFrame(() => {
-      overlay.classList.add('active');
-      overlay.setAttribute('aria-hidden', 'false');
-    });
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     restartLineAnimations();
   };
 
+  // Modal: fechar (com animação)
   window.closeModal = function () {
     const overlay = getOverlay();
     if (!overlay) return;
-    overlay.classList.remove('active');
     overlay.classList.add('closing');
+    overlay.classList.remove('active');
+
     setTimeout(() => {
       overlay.classList.remove('closing');
-      overlay.style.display = 'none';
       overlay.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-    }, 350);
+    }, 300);
   };
 
   function restartLineAnimations() {
-    const lines = document.querySelectorAll(linesSelector);
-    lines.forEach((line, i) => {
+    const overlay = getOverlay();
+    if (!overlay) return;
+    const lines = overlay.querySelectorAll(linesSelector);
+    lines.forEach((line) => {
       line.style.animation = 'none';
-      void line.offsetWidth;
-      line.style.animation = `dash 2s linear infinite ${i * 0.08}s`;
+      // Força reflow
+      // eslint-disable-next-line no-unused-expressions
+      line.offsetHeight;
+      line.style.animation = '';
     });
   }
 
+  // Ações do mapa mental
   window.selectSection = function (evt, action) {
-    const target = evt?.currentTarget || evt?.target;
-    const icon = target?.querySelector?.('.section-icon');
-    if (icon) {
-      icon.style.transform = 'scale(0.9)';
-      setTimeout(() => (icon.style.transform = ''), 140);
-    }
+    if (evt && typeof evt.stopPropagation === 'function') evt.stopPropagation();
     switch (action) {
-      case 'create-sheet': alert('Abrir: Criar nova ficha (básico)'); break;
-      case 'system-summary': alert('Abrir: Resumo do sistema selecionado'); break;
-      case 'random-sheets': alert('Abrir: Gerador de fichas aleatórias'); break;
-      case 'resources': alert('Abrir: Recursos e materiais do sistema'); break;
-      default: console.log('Ação desconhecida:', action);
+      case 'create-sheet':
+        console.log('Criar ficha');
+        break;
+      case 'system-summary':
+        console.log('Resumo do sistema');
+        break;
+      case 'random-sheets':
+        console.log('Fichas randômicas');
+        break;
+      case 'resources':
+        console.log('Recursos');
+        break;
+      default:
+        break;
     }
+    closeModal();
   };
 
   // ===== Guia (balão) =====
-  let guideOpened = false;
-
   window.toggleGuide = function () {
     const speech = document.getElementById('guideSpeech');
+    const trigger = document.querySelector('.guide-trigger');
     if (!speech) return;
-
-    const isActive = speech.classList.toggle('active');
-    speech.setAttribute('aria-hidden', isActive ? 'false' : 'true');
-
-    // esconde o badge de notificação na primeira abertura
-    if (!guideOpened && isActive) {
-      guideOpened = true;
-      const headerGuide = document.querySelector('a.guide-trigger');
-      if (headerGuide) headerGuide.classList.add('viewed');
-      try { localStorage.setItem('guideViewed', '1'); } catch (_) {}
-    }
+    const willOpen = !speech.classList.contains('active');
+    speech.classList.toggle('active', willOpen);
+    if (willOpen) trigger && trigger.classList.add('viewed');
   };
 
   window.closeGuide = function () {
     const speech = document.getElementById('guideSpeech');
-    if (speech) {
-      speech.classList.remove('active');
-      speech.setAttribute('aria-hidden', 'true');
-    }
-    try { localStorage.setItem('guideViewed', '1'); } catch (_) {}
-    const headerGuide = document.querySelector('a.guide-trigger');
-    if (headerGuide) headerGuide.classList.add('viewed');
+    if (speech) speech.classList.remove('active');
   };
 
   window.showGuideInfo = function (key) {
-    const guideContent = document.getElementById('guideContent');
-    if (!guideContent) return;
-
+    const el = document.getElementById('guideContent');
+    if (!el) return;
     const texts = {
-      ficha: 'Como você pode ver, não há nenhuma ficha criada ainda. Quando você futuramente criar uma, ela aparecerá aqui para fácil acesso, e as fichas serão divididas por sistemas e cores que condizem com o determinado sistema.',
-      recursos: 'O mesmo vale para as fichas randomicas, quando você criar uma, ela aparecerá aqui para fácil acesso.',
-      dicas: '💡 Dicas: comece simples, defina um objetivo para o personagem e evolua a partir das sessões.',
+      modal: 'Os sistemas são agrupamentos com recursos, fichas e guias específicos. Clique em um para abrir o mapa mental.',
+      ficha: 'Minhas fichas mostra suas fichas salvas. Você pode criar, editar e duplicar.',
+      recursos: 'Fichas randômicas geram personagens automaticamente com base no sistema.',
+      dicas: 'Dica: passe o mouse nos cards para ver a prévia em vídeo. Use Tab para navegar por teclado.'
+    };
+    el.textContent = texts[key] || texts.modal;
+  };
+
+  // ===== Vídeo no hover dos cards =====
+  function bindCardHover(card) {
+    const video = card.querySelector('.hover-video');
+    if (!video) return;
+
+    const play = () => {
+      try {
+        video.muted = true;
+        video.playsInline = true;
+        if (video.readyState < 2) video.load();
+        video.currentTime = 0;
+        const p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      } catch {}
     };
 
-    if (key === 'modal') {
-      closeGuide();
-      openModal('Mapa Mental');
-      return;
-    }
+    const stop = () => {
+      try {
+        video.pause();
+        video.currentTime = 0;
+      } catch {}
+    };
 
-    guideContent.textContent = texts[key] || 'Selecione uma das opções para saber mais.';
-  };
-
-  // Restaura estado do badge no load
-  document.addEventListener('DOMContentLoaded', () => {
-    const viewed = (() => { try { return localStorage.getItem('guideViewed') === '1'; } catch (_) { return false; }})();
-    const headerGuide = document.querySelector('a.guide-trigger');
-    if (headerGuide && viewed) headerGuide.classList.add('viewed');
-  });
-
-  // Acessibilidade: ESC fecha guia e modal
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      window.closeModal();
-      window.closeGuide();
-    }
-  });
-})();
-(function () {
-  const linesSelector = '.connection-line';
-
-  function getOverlay() { return document.getElementById('mindmapOverlay'); }
-  function getSystemNameEl() { return document.getElementById('mindmapSystemName'); }
-
-  window.openModal = function (systemName) {
-    const overlay = getOverlay();
-    const systemNameEl = getSystemNameEl();
-    if (!overlay) return;
-    if (systemNameEl) systemNameEl.textContent = systemName;
-
-    overlay.style.display = 'flex';
-    overlay.classList.remove('closing');
-    requestAnimationFrame(() => {
-      overlay.classList.add('active');
-      overlay.setAttribute('aria-hidden', 'false');
-    });
-    document.body.style.overflow = 'hidden';
-    restartLineAnimations();
-  };
-
-  window.closeModal = function () {
-    const overlay = getOverlay();
-    if (!overlay) return;
-    overlay.classList.remove('active');
-    overlay.classList.add('closing');
-    setTimeout(() => {
-      overlay.classList.remove('closing');
-      overlay.style.display = 'none';
-      overlay.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }, 350);
-  };
-
-  function restartLineAnimations() {
-    const lines = document.querySelectorAll(linesSelector);
-    lines.forEach((line, i) => {
-      line.style.animation = 'none';
-      void line.offsetWidth;
-      line.style.animation = `dash 2s linear infinite ${i * 0.08}s`;
-    });
+    card.addEventListener('mouseenter', play, { passive: true });
+    card.addEventListener('mouseleave', stop, { passive: true });
+    card.addEventListener('focusin', play);
+    card.addEventListener('focusout', stop);
   }
 
-  window.selectSection = function (evt, action) {
-    const target = evt?.currentTarget || evt?.target;
-    const icon = target?.querySelector?.('.section-icon');
-    if (icon) {
-      icon.style.transform = 'scale(0.9)';
-      setTimeout(() => (icon.style.transform = ''), 140);
-    }
-    switch (action) {
-      case 'create-sheet': alert('Abrir: Criar nova ficha (básico)'); break;
-      case 'system-summary': alert('Abrir: Resumo do sistema selecionado'); break;
-      case 'random-sheets': alert('Abrir: Gerador de fichas aleatórias'); break;
-      case 'resources': alert('Abrir: Recursos e materiais do sistema'); break;
-      default: console.log('Ação desconhecida:', action);
-    }
-  };
-
-  // ===== Guia (balão) =====
-  let guideOpened = false;
-
-  window.toggleGuide = function () {
-    const speech = document.getElementById('guideSpeech');
-    if (!speech) return;
-
-    const isActive = speech.classList.toggle('active');
-    speech.setAttribute('aria-hidden', isActive ? 'false' : 'true');
-
-    // esconde o badge de notificação na primeira abertura
-    if (!guideOpened && isActive) {
-      guideOpened = true;
-      const headerGuide = document.querySelector('a.guide-trigger');
-      if (headerGuide) headerGuide.classList.add('viewed');
-      try { localStorage.setItem('guideViewed', '1'); } catch (_) {}
-    }
-  };
-
-  window.closeGuide = function () {
-    const speech = document.getElementById('guideSpeech');
-    if (speech) {
-      speech.classList.remove('active');
-      speech.setAttribute('aria-hidden', 'true');
-    }
-    try { localStorage.setItem('guideViewed', '1'); } catch (_) {}
-    const headerGuide = document.querySelector('a.guide-trigger');
-    if (headerGuide) headerGuide.classList.add('viewed');
-  };
-
-  window.showGuideInfo = function (key) {
-    const guideContent = document.getElementById('guideContent');
-    if (!guideContent) return;
-
-    const texts = {
-      ficha: 'Como você pode ver, não há nenhuma ficha criada ainda. Quando você futuramente criar uma, ela aparecerá aqui para fácil acesso, e as fichas serão divididas por sistemas e cores que condizem com o determinado sistema.',
-      recursos: 'O mesmo vale para as fichas randomicas, quando você criar uma, ela aparecerá aqui para fácil acesso.',
-      dicas: '💡 Dicas: comece simples, defina um objetivo para o personagem e evolua a partir das sessões.',
-    };
-
-    if (key === 'modal') {
-      closeGuide();
-      openModal('Mapa Mental');
-      return;
-    }
-
-    guideContent.textContent = texts[key] || 'Selecione uma das opções para saber mais.';
-  };
-
-  // Restaura estado do badge no load
   document.addEventListener('DOMContentLoaded', () => {
-    const viewed = (() => { try { return localStorage.getItem('guideViewed') === '1'; } catch (_) { return false; }})();
-    const headerGuide = document.querySelector('a.guide-trigger');
-    if (headerGuide && viewed) headerGuide.classList.add('viewed');
-  });
-
-  // Acessibilidade: ESC fecha guia e modal
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      window.closeModal();
-      window.closeGuide();
-    }
+    document.querySelectorAll('.has-hover-video').forEach(bindCardHover);
   });
 })();
