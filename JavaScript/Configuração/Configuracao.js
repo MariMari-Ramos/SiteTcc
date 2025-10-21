@@ -2,7 +2,7 @@ class SettingsManager {
     constructor() {
         this.savedSettings = this.loadSettings();
         this.unsavedChanges = false;
-        this.originalAlert = window.alert; // Salva as funções originais
+        this.originalAlert = window.alert;
         this.originalConfirm = window.confirm;
         this.originalConsoleWarn = console.warn;
         this.originalConsoleError = console.error;
@@ -13,9 +13,9 @@ class SettingsManager {
         return {
             theme: localStorage.getItem('theme') || 'light',
             language: localStorage.getItem('language') || 'pt-BR',
-            carousel: localStorage.getItem('carousel') !== 'false',
-            guide: localStorage.getItem('guide') !== 'false',
-            alerts: localStorage.getItem('alerts') !== 'false',
+            carousel: localStorage.getItem('carouselHoverEnabled') !== 'false',
+            guide: localStorage.getItem('guideEnabled') !== 'false',
+            alerts: localStorage.getItem('alertsEnabled') !== 'false',
             fontSize: localStorage.getItem('fontSize') || '16',
             fontType: localStorage.getItem('fontType') || 'OpenDyslexic',
             lineSpacing: localStorage.getItem('lineSpacing') || '1.5',
@@ -25,10 +25,25 @@ class SettingsManager {
     }
 
     saveSettings() {
-        Object.entries(this.savedSettings).forEach(([key, value]) => {
-            localStorage.setItem(key, value.toString());
-        });
+        // Salva com as chaves corretas do sistema global
+        localStorage.setItem('theme', this.savedSettings.theme);
+        localStorage.setItem('language', this.savedSettings.language);
+        localStorage.setItem('carouselHoverEnabled', this.savedSettings.carousel.toString());
+        localStorage.setItem('guideEnabled', this.savedSettings.guide.toString());
+        localStorage.setItem('alertsEnabled', this.savedSettings.alerts.toString());
+        localStorage.setItem('fontSize', this.savedSettings.fontSize);
+        localStorage.setItem('fontType', this.savedSettings.fontType);
+        localStorage.setItem('lineSpacing', this.savedSettings.lineSpacing);
+        localStorage.setItem('highContrast', this.savedSettings.highContrast.toString());
+        localStorage.setItem('autoRead', this.savedSettings.autoRead.toString());
+        
         this.unsavedChanges = false;
+        
+        // Atualiza as configurações globais imediatamente
+        if (window.updateGlobalSettings) {
+            window.updateGlobalSettings();
+        }
+        
         this.showMessage('Configurações salvas com sucesso!');
     }
 
@@ -43,21 +58,47 @@ class SettingsManager {
     }
 
     setupToggles() {
-        const toggles = {
-            carouselToggle: 'carousel',
-            guideToggle: 'guide'
-        };
+        // Toggle do Carrossel
+        const carouselToggle = document.getElementById('carouselToggle');
+        if (carouselToggle) {
+            carouselToggle.checked = this.savedSettings.carousel;
+            carouselToggle.addEventListener('change', () => {
+                this.savedSettings.carousel = carouselToggle.checked;
+                this.unsavedChanges = true;
+                this.applyCarouselSettings();
+            });
+        }
 
-        Object.entries(toggles).forEach(([toggleId, settingKey]) => {
-            const toggle = document.getElementById(toggleId);
-            if (toggle) {
-                toggle.checked = this.savedSettings[settingKey];
-                toggle.addEventListener('change', () => {
-                    this.savedSettings[settingKey] = toggle.checked;
-                    this.unsavedChanges = true;
-                });
-            }
-        });
+        // Toggle do Guia
+        const guideToggle = document.getElementById('guideToggle');
+        if (guideToggle) {
+            guideToggle.checked = this.savedSettings.guide;
+            guideToggle.addEventListener('change', () => {
+                this.savedSettings.guide = guideToggle.checked;
+                this.unsavedChanges = true;
+                this.applyGuideSettings();
+            });
+        }
+    }
+
+    applyCarouselSettings() {
+        if (this.savedSettings.carousel) {
+            document.body.classList.remove('carousel-hover-disabled');
+            this.showMessage('Animação do carrossel ativada!');
+        } else {
+            document.body.classList.add('carousel-hover-disabled');
+            this.showMessage('Animação do carrossel desativada!');
+        }
+    }
+
+    applyGuideSettings() {
+        if (this.savedSettings.guide) {
+            document.body.classList.remove('guide-disabled');
+            this.showMessage('Guia ativado!');
+        } else {
+            document.body.classList.add('guide-disabled');
+            this.showMessage('Guia desativado!');
+        }
     }
 
     setupAlertsWarning() {
@@ -68,18 +109,13 @@ class SettingsManager {
 
         if (!alertsToggle || !alertsModal || !confirmBtn || !cancelBtn) return;
 
-        // Define o estado inicial
         alertsToggle.checked = this.savedSettings.alerts;
 
         alertsToggle.addEventListener('change', (e) => {
-            // Se está tentando DESATIVAR os alertas (de true para false)
             if (!e.target.checked && this.savedSettings.alerts) {
-                // Reverte o toggle temporariamente
                 e.target.checked = true;
-                // Mostra o modal de aviso
                 alertsModal.style.display = 'block';
             } else if (e.target.checked && !this.savedSettings.alerts) {
-                // Se está ativando os alertas, permite normalmente
                 this.savedSettings.alerts = true;
                 this.unsavedChanges = true;
                 this.applyAlertsSettings();
@@ -87,77 +123,50 @@ class SettingsManager {
             }
         });
 
-        // Confirmar desativação dos alertas
         confirmBtn.addEventListener('click', () => {
             this.savedSettings.alerts = false;
             alertsToggle.checked = false;
             this.unsavedChanges = true;
             alertsModal.style.display = 'none';
-            
-            // Aplica a configuração globalmente PRIMEIRO
             this.applyAlertsSettings();
-            
-            // Mostra mensagem final (será a última)
             this.showFinalAlertMessage('Alertas desativados! Você não receberá mais notificações do sistema.');
         });
 
-        // Cancelar desativação
         cancelBtn.addEventListener('click', () => {
-            alertsToggle.checked = true; // Mantém ativado
+            alertsToggle.checked = true;
             alertsModal.style.display = 'none';
         });
 
-        // Fechar modal clicando fora
         window.addEventListener('click', (e) => {
             if (e.target === alertsModal) {
-                alertsToggle.checked = true; // Mantém ativado
+                alertsToggle.checked = true;
                 alertsModal.style.display = 'none';
             }
         });
     }
 
-    // Função para aplicar configurações de alertas globalmente
     applyAlertsSettings() {
         const alertsEnabled = this.savedSettings.alerts;
-        
-        // Define uma variável global para controlar alertas
         window.SITE_ALERTS_ENABLED = alertsEnabled;
         
-        // Armazena no localStorage para outras páginas
-        localStorage.setItem('alertsEnabled', alertsEnabled.toString());
-        
         if (!alertsEnabled) {
-            // Desabilita alert nativo
             window.alert = function() {
                 console.log('[ALERT BLOQUEADO]:', arguments[0]);
             };
-            
-            // Desabilita confirm nativo (sempre retorna true)
             window.confirm = function() { 
                 console.log('[CONFIRM BLOQUEADO]:', arguments[0]);
                 return true; 
             };
-            
-            // Desabilita console.warn e console.error
-            console.warn = function() {
-                // Silencioso
-            };
-            console.error = function() {
-                // Silencioso
-            };
-            
-            // Adiciona classe ao body para CSS
+            console.warn = function() {};
+            console.error = function() {};
             document.body.classList.add('alerts-disabled');
             
-            // Desabilita também as notificações do sistema
             if ('Notification' in window) {
                 Notification.requestPermission = function() {
                     return Promise.resolve('denied');
                 };
             }
-            
         } else {
-            // Reabilita funcionalidades
             window.alert = this.originalAlert;
             window.confirm = this.originalConfirm;
             console.warn = this.originalConsoleWarn;
@@ -166,7 +175,6 @@ class SettingsManager {
         }
     }
 
-    // Função especial para mostrar mensagem final antes de desativar
     showFinalAlertMessage(message) {
         const modal = document.createElement('div');
         modal.className = 'message-modal final-alert';
@@ -364,7 +372,7 @@ class SettingsManager {
                     this.showMessage('Você não salvou as configurações! Deseja sair mesmo assim?');
                     return;
                 }
-                window.location.href = '../index.html';
+                window.location.href = '../index.php';
             });
         }
     }
@@ -377,7 +385,7 @@ class SettingsManager {
     }
 
     applyAccessibilitySettings() {
-        document.body.style.fontSize = this.savedSettings.fontSize + 'px';
+        document.documentElement.style.fontSize = this.savedSettings.fontSize + 'px';
         document.body.style.fontFamily = this.savedSettings.fontType + ', Arial, sans-serif';
         document.body.style.lineHeight = this.savedSettings.lineSpacing;
         
@@ -385,6 +393,12 @@ class SettingsManager {
             document.body.classList.add('high-contrast');
         } else {
             document.body.classList.remove('high-contrast');
+        }
+        
+        if (this.savedSettings.autoRead) {
+            document.body.classList.add('auto-read');
+        } else {
+            document.body.classList.remove('auto-read');
         }
     }
 
@@ -422,6 +436,8 @@ class SettingsManager {
         this.applyTheme(this.savedSettings.theme);
         this.applyAccessibilitySettings();
         this.applyAlertsSettings();
+        this.applyCarouselSettings();
+        this.applyGuideSettings();
         this.updatePageTexts();
         
         const darkToggle = document.getElementById('darkModeToggle');
@@ -436,10 +452,9 @@ class SettingsManager {
     }
 
     showMessage(message) {
-        // Verifica se os alertas estão habilitados
         if (!this.savedSettings.alerts && !document.querySelector('.final-alert')) {
             console.log('[MENSAGEM BLOQUEADA]:', message);
-            return; // Não mostra mensagem se alertas estão desabilitados
+            return;
         }
         
         document.querySelectorAll('.message-modal:not(.final-alert)').forEach(modal => modal.remove());
@@ -462,7 +477,6 @@ class SettingsManager {
     }
 }
 
-// Sistema global de controle de alertas - MELHORADO
 window.showAlert = function(message) {
     const alertsEnabled = localStorage.getItem('alertsEnabled') !== 'false';
     if (alertsEnabled && window.SITE_ALERTS_ENABLED !== false) {
@@ -478,20 +492,15 @@ window.showConfirm = function(message) {
         return confirm(message);
     } else {
         console.log('[CONFIRM GLOBAL BLOQUEADO]:', message);
-        return true; // Se alertas desabilitados, assume confirmação
+        return true;
     }
 };
 
-// Aplica configurações de alertas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     const alertsEnabled = localStorage.getItem('alertsEnabled') !== 'false';
     window.SITE_ALERTS_ENABLED = alertsEnabled;
     
     if (!alertsEnabled) {
-        // Bloqueia alertas imediatamente ao carregar
-        const originalAlert = window.alert;
-        const originalConfirm = window.confirm;
-        
         window.alert = function() {
             console.log('[ALERT BLOQUEADO NO LOAD]:', arguments[0]);
         };
@@ -510,7 +519,6 @@ document.addEventListener('DOMContentLoaded', () => {
     new SettingsManager();
 });
 
-// Configurações de tradução (mantidas iguais)
 const CONFIG = {
     translations: {
         'pt-BR': {
@@ -522,8 +530,8 @@ const CONFIG = {
             language: 'Idioma',
             accessibility: 'Fonte e Acessibilidade',
             saveChanges: 'Salvar alterações',
-            restoreChanges: 'Voltar para como estava antes',
-            backToMain: 'Voltar para a tela principal',
+            restoreChanges: 'Voltar para os padrões iniciais',
+            backToMain: 'Retornar para o lobby',
             selectLanguage: 'Selecione o idioma',
             save: 'Salvar',
             cancel: 'Cancelar',
@@ -533,12 +541,12 @@ const CONFIG = {
             lineSpacing: 'Espaçamento entre linhas:',
             highContrast: 'Modo alto contraste:',
             autoRead: 'Modo de leitura automática:',
-            alertsWarningTitle: 'Aviso Importante',
+            alertsWarningTitle: '⚠️ Aviso Importante',
             alertsWarningMessage: 'Ao desativar os alertas, você não receberá mais notificações importantes do sistema, incluindo:',
-            alertsWarningItem1: '• Avisos de segurança',
-            alertsWarningItem2: '• Notificações de erro',
-            alertsWarningItem3: '• Confirmações de ações importantes',
-            alertsWarningItem4: '• Mensagens de validação',
+            alertsWarningItem1: 'Avisos de segurança',
+            alertsWarningItem2: 'Notificações de erro',
+            alertsWarningItem3: 'Confirmações de ações importantes',
+            alertsWarningItem4: 'Mensagens de validação',
             alertsWarningQuestion: 'Isso pode ser prejudicial para sua experiência no site. Tem certeza que deseja continuar?',
             confirmDisable: 'Sim, desativar alertas'
         },
@@ -551,8 +559,8 @@ const CONFIG = {
             language: 'Language',
             accessibility: 'Font and Accessibility',
             saveChanges: 'Save changes',
-            restoreChanges: 'Restore previous settings',
-            backToMain: 'Back to main screen',
+            restoreChanges: 'Restore to defaults',
+            backToMain: 'Return to lobby',
             selectLanguage: 'Select language',
             save: 'Save',
             cancel: 'Cancel',
@@ -562,12 +570,12 @@ const CONFIG = {
             lineSpacing: 'Line spacing:',
             highContrast: 'High contrast mode:',
             autoRead: 'Auto reading mode:',
-            alertsWarningTitle: 'Important Warning',
+            alertsWarningTitle: '⚠️ Important Warning',
             alertsWarningMessage: 'By disabling alerts, you will no longer receive important system notifications, including:',
-            alertsWarningItem1: '• Security warnings',
-            alertsWarningItem2: '• Error notifications',
-            alertsWarningItem3: '• Important action confirmations',
-            alertsWarningItem4: '• Validation messages',
+            alertsWarningItem1: 'Security warnings',
+            alertsWarningItem2: 'Error notifications',
+            alertsWarningItem3: 'Important action confirmations',
+            alertsWarningItem4: 'Validation messages',
             alertsWarningQuestion: 'This can be harmful to your site experience. Are you sure you want to continue?',
             confirmDisable: 'Yes, disable alerts'
         },
@@ -580,8 +588,8 @@ const CONFIG = {
             language: 'Idioma',
             accessibility: 'Fuente y Accesibilidad',
             saveChanges: 'Guardar cambios',
-            restoreChanges: 'Restaurar configuración',
-            backToMain: 'Volver a la pantalla principal',
+            restoreChanges: 'Restaurar valores predeterminados',
+            backToMain: 'Volver al lobby',
             selectLanguage: 'Selecciona el idioma',
             save: 'Guardar',
             cancel: 'Cancelar',
@@ -591,12 +599,12 @@ const CONFIG = {
             lineSpacing: 'Espaciado entre líneas:',
             highContrast: 'Modo alto contraste:',
             autoRead: 'Modo de lectura automática:',
-            alertsWarningTitle: 'Advertencia Importante',
+            alertsWarningTitle: '⚠️ Advertencia Importante',
             alertsWarningMessage: 'Al desactivar las alertas, ya no recibirás notificaciones importantes del sistema, incluyendo:',
-            alertsWarningItem1: '• Advertencias de seguridad',
-            alertsWarningItem2: '• Notificaciones de error',
-            alertsWarningItem3: '• Confirmaciones de acciones importantes',
-            alertsWarningItem4: '• Mensajes de validación',
+            alertsWarningItem1: 'Advertencias de seguridad',
+            alertsWarningItem2: 'Notificaciones de error',
+            alertsWarningItem3: 'Confirmaciones de acciones importantes',
+            alertsWarningItem4: 'Mensajes de validación',
             alertsWarningQuestion: 'Esto puede ser perjudicial para tu experiencia en el sitio. ¿Estás seguro de que quieres continuar?',
             confirmDisable: 'Sí, desactivar alertas'
         }

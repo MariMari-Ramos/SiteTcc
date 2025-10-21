@@ -3,160 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- CSS Global (SEMPRE PRIMEIRO) -->
+    <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
+    
+    <!-- CSS da página -->
     <link rel="stylesheet" href="../../CSS/TelaPrinciapal/Configuração/stylesConfiguracao.css">
-    <script src="../../JavaScript/Configuração/Configuracao.js" defer></script>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <title>Configurações</title>
+    
+    <!-- JavaScript Global (SEMPRE PRIMEIRO - sem defer) -->
+    <script src="../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
+    
+    <!-- JavaScript da página -->
+    <script src="../../JavaScript/Configuração/Configuracao.js" defer></script>
+    
+    <title data-translate="title">Configurações</title>
 </head>
 <body>
     <h1 data-translate="title">Configurações</h1>
-    <section>
-        <div class="CaixaConfig">
-            <div class="OptionsConfiguration">
-                <div class="option-item">
-                    <span data-translate="darkMode">Modo escuro:</span>
-                    <label class="switch">
-                        <input type="checkbox" id="darkModeToggle">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                
-                <div class="option-item">
-                    <span data-translate="carousel">Animação do carrossel:</span>
-                    <label class="switch">
-                        <input type="checkbox" id="carouselToggle">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
 
-                <div class="option-item">
-                    <span data-translate="guide">Guia:</span>
-                    <label class="switch">
-                        <input type="checkbox" id="guideToggle">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-
-                <div class="option-item">
-                    <span data-translate="alerts">Alertas:</span>
-                    <label class="switch">
-                        <input type="checkbox" id="alertsToggle">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-
-                <div class="option-item">
-                    <span data-translate="language">Idioma</span>
-                    <button id="openLanguageModal" class="language-button">
-                        <span id="currentLanguage">Português</span>
-                        <i class="bi bi-globe"></i>
-                    </button>
-                </div>
-
-                <div class="option-item">
-                    <span data-translate="accessibility">Fonte e Acessibilidade:</span>
-                    <button id="openAccessibilityModal" class="accessibility-button">
-                        <i class="bi bi-universal-access"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="action-buttons">
-                <button id="saveChanges" class="primary-button" data-translate="saveChanges">Salvar alterações</button>
-                <button id="restoreChanges" class="secondary-button" data-translate="restoreChanges">Voltar para os padrões inicias</button>
-                <button id="backToMain" class="secondary-button" data-translate="backToMain">Retornar para o lobby</button>
-            </div>
+    <div class="CaixaConfig">
+        <!-- Modo Escuro -->
+        <div class="option-item">
+            <span data-translate="darkMode">Modo escuro</span>
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
         </div>
-    </section>
+
+        <!-- Animação do Carrossel -->
+        <div class="option-item">
+            <span data-translate="carousel">Animação do carrossel</span>
+            <label class="switch">
+                <input type="checkbox" id="carouselToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Guia -->
+        <div class="option-item">
+            <span data-translate="guide">Guia</span>
+            <label class="switch">
+                <input type="checkbox" id="guideToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Alertas -->
+        <div class="option-item">
+            <span data-translate="alerts">Alertas</span>
+            <label class="switch">
+                <input type="checkbox" id="alertsToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Idioma -->
+        <div class="option-item">
+            <span data-translate="language">Idioma</span>
+            <button id="openLanguageModal" class="config-button">
+                <span id="currentLanguage">Português (BR)</span>
+            </button>
+        </div>
+
+        <!-- Fonte e Acessibilidade -->
+        <div class="option-item">
+            <span data-translate="accessibility">Fonte e Acessibilidade</span>
+            <button id="openAccessibilityModal" class="config-button">
+                Configurar
+            </button>
+        </div>
+
+        <!-- Botões de Ação -->
+        <button id="saveChanges" class="action-button save" data-translate="saveChanges">
+            Salvar alterações
+        </button>
+        <button id="restoreChanges" class="action-button restore" data-translate="restoreChanges">
+            Voltar para os padrões iniciais
+        </button>
+        <button id="backToMain" class="action-button back" data-translate="backToMain">
+            Retornar para o lobby
+        </button>
+    </div>
 
     <!-- Modal de Idioma -->
     <div id="languageModal" class="modal">
         <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
             <h2 data-translate="selectLanguage">Selecione o idioma</h2>
-            <div class="language-options">
-                <button data-lang="pt-BR" class="lang-option selected">Português</button>
-                <button data-lang="en-US" class="lang-option">English</button>
-                <button data-lang="es-ES" class="lang-option">Español</button>
+            <div class="lang-options">
+                <div class="lang-option" data-lang="pt-BR">Português (BR)</div>
+                <div class="lang-option" data-lang="en-US">English (US)</div>
+                <div class="lang-option" data-lang="es-ES">Español (ES)</div>
             </div>
-            <div class="modal-buttons center">
-                <button id="saveLanguage" data-translate="save">Salvar</button>
-                <button id="closeModal" data-translate="cancel">Cancelar</button>
-            </div>
+            <button id="saveLanguage" class="modal-button" data-translate="save">Salvar</button>
         </div>
     </div>
 
     <!-- Modal de Acessibilidade -->
     <div id="accessibilityModal" class="modal">
         <div class="modal-content">
+            <span class="close" id="closeAccessibilityModal">&times;</span>
             <h2 data-translate="fontAccessibilityTitle">Fonte e Acessibilidade</h2>
+            
             <div class="accessibility-options">
-                <div class="accessibility-group">
-                    <label for="fontSizeSelect" data-translate="fontSize">Tamanho da fonte:</label>
+                <div class="accessibility-item">
+                    <label data-translate="fontSize">Tamanho da fonte:</label>
                     <select id="fontSizeSelect">
-                        <option value="14">Pequeno</option>
-                        <option value="16">Padrão</option>
-                        <option value="18">Grande</option>
-                        <option value="20">Muito Grande</option>
+                        <option value="14">Pequena (14px)</option>
+                        <option value="16" selected>Média (16px)</option>
+                        <option value="18">Grande (18px)</option>
+                        <option value="20">Muito Grande (20px)</option>
                     </select>
                 </div>
-                <div class="accessibility-group">
-                    <label for="fontTypeSelect" data-translate="fontType">Tipo da fonte:</label>
+
+                <div class="accessibility-item">
+                    <label data-translate="fontType">Tipo da fonte:</label>
                     <select id="fontTypeSelect">
-                        <option value="OpenDyslexic">OpenDyslexic</option>
+                        <option value="OpenDyslexic" selected>OpenDyslexic (Dislexia)</option>
                         <option value="Arial">Arial</option>
                         <option value="Verdana">Verdana</option>
+                        <option value="Georgia">Georgia</option>
                     </select>
                 </div>
-                <div class="accessibility-group">
-                    <label for="lineSpacingSelect" data-translate="lineSpacing">Espaçamento entre linhas:</label>
+
+                <div class="accessibility-item">
+                    <label data-translate="lineSpacing">Espaçamento entre linhas:</label>
                     <select id="lineSpacingSelect">
-                        <option value="1.2">Pequeno</option>
-                        <option value="1.5">Normal</option>
-                        <option value="2">Médio</option>
-                        <option value="2.5">Grande</option>
+                        <option value="1.2">Pequeno (1.2)</option>
+                        <option value="1.5" selected>Médio (1.5)</option>
+                        <option value="1.8">Grande (1.8)</option>
+                        <option value="2.0">Muito Grande (2.0)</option>
                     </select>
                 </div>
-                <div class="accessibility-group">
+
+                <div class="accessibility-item">
                     <label data-translate="highContrast">Modo alto contraste:</label>
-                    <button id="toggleContrast" class="contrast-toggle">Ativar</button>
+                    <button id="toggleContrast" class="toggle-button">Ativar</button>
                 </div>
-                <div class="accessibility-group">
+
+                <div class="accessibility-item">
                     <label data-translate="autoRead">Modo de leitura automática:</label>
-                    <button id="toggleAutoRead" class="auto-read-toggle">Ativar</button>
+                    <button id="toggleAutoRead" class="toggle-button">Ativar</button>
                 </div>
+
+                <div id="accessibilityWarning" class="warning-message" style="display: none;"></div>
             </div>
-            <div id="accessibilityWarning" class="modal-warning"></div>
-            <div class="modal-buttons center">
-                <button id="saveAccessibility" data-translate="save">Salvar</button>
-                <button id="closeAccessibilityModal" data-translate="cancel">Cancelar</button>
-            </div>
+
+            <button id="saveAccessibility" class="modal-button" data-translate="save">Salvar</button>
         </div>
     </div>
 
     <!-- Modal de Aviso de Alertas -->
-    <div id="alertsWarningModal" class="modal">
-        <div class="modal-content warning-modal">
+    <div id="alertsWarningModal" class="modal alerts-warning-modal">
+        <div class="modal-content warning-content">
             <h2 data-translate="alertsWarningTitle">⚠️ Aviso Importante</h2>
-            <div class="warning-content">
-                <p data-translate="alertsWarningMessage">
-                    Ao desativar os alertas, você não receberá mais notificações importantes do sistema, incluindo:
-                </p>
-                <ul>
-                    <li data-translate="alertsWarningItem1">Avisos de segurança</li>
-                    <li data-translate="alertsWarningItem2">Notificações de erro</li>
-                    <li data-translate="alertsWarningItem3">Confirmações de ações importantes</li>
-                    <li data-translate="alertsWarningItem4">Mensagens de validação</li>
-                </ul>
-                <p data-translate="alertsWarningQuestion">
-                    <strong>Isso pode ser prejudicial para sua experiência no site. Tem certeza que deseja continuar?</strong>
-                </p>
-            </div>
-            <div class="modal-buttons center">
-                <button id="confirmDisableAlerts" class="danger-button" data-translate="confirmDisable">Sim, desativar alertas</button>
-                <button id="cancelDisableAlerts" class="secondary-button" data-translate="cancel">Cancelar</button>
+            
+            <p data-translate="alertsWarningMessage">
+                Ao desativar os alertas, você não receberá mais notificações importantes do sistema, incluindo:
+            </p>
+            
+            <ul class="warning-list">
+                <li data-translate="alertsWarningItem1">Avisos de segurança</li>
+                <li data-translate="alertsWarningItem2">Notificações de erro</li>
+                <li data-translate="alertsWarningItem3">Confirmações de ações importantes</li>
+                <li data-translate="alertsWarningItem4">Mensagens de validação</li>
+            </ul>
+            
+            <p class="warning-question" data-translate="alertsWarningQuestion">
+                Isso pode ser prejudicial para sua experiência no site. Tem certeza que deseja continuar?
+            </p>
+            
+            <div class="warning-buttons">
+                <button id="confirmDisableAlerts" class="modal-button danger" data-translate="confirmDisable">
+                    Sim, desativar alertas
+                </button>
+                <button id="cancelDisableAlerts" class="modal-button" data-translate="cancel">
+                    Cancelar
+                </button>
             </div>
         </div>
     </div>
-
 </body>
 </html>

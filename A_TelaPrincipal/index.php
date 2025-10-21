@@ -5,8 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title data-translate="title">SystemForge - Início</title>
 
+  <!-- CSS Global (SEMPRE PRIMEIRO) -->
+  <link rel="stylesheet" href="../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css" />
+  
+  <!-- CSS Específico da página -->
   <link rel="stylesheet" href="../CSS/TelaPrinciapal/home.css" />
+  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+  
+  <!-- JavaScript Global (SEMPRE PRIMEIRO - sem defer) -->
+  <script src="../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
+  
+  <!-- JavaScript Específico da página -->
   <script src="../JavaScript/PrincipalTela/index.js" defer></script>
 </head>
 <body>
@@ -57,8 +67,8 @@
   <section class="carrossel">
     <div class="slides">
       <div class="card">
-        <!-- Tormenta 20 -->
-        <div class="has-hover-video" tabindex="0" onclick="openModal('Tormenta 20')">
+        <!-- Tormenta 20 - Verde -->
+        <div class="has-hover-video system-tormenta" tabindex="0" onclick="openModal('Tormenta 20','../img/1-8d3a9a38.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
             <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
           </video>
@@ -66,8 +76,8 @@
           <p>Tormenta 20</p>
         </div>
 
-        <!-- Call of the Cthulhu -->
-        <div class="has-hover-video" tabindex="0" onclick="openModal('Call of the Cthulhu')">
+        <!-- Call of the Cthulhu - Roxo -->
+        <div class="has-hover-video system-cthulhu" tabindex="0" onclick="openModal('Call of the Cthulhu','../img/cthulhu.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
             <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
           </video>
@@ -75,8 +85,8 @@
           <p>Call of the Cthulhu</p>
         </div>
 
-        <!-- Cyberpunk -->
-        <div class="has-hover-video" tabindex="0" onclick="openModal('Cyberpunk')">
+        <!-- Cyberpunk - Azul Neon -->
+        <div class="has-hover-video system-cyberpunk" tabindex="0" onclick="openModal('Cyberpunk','../img/icons8-cyberpunk-512.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
             <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
           </video>
@@ -84,8 +94,8 @@
           <p>Cyberpunk</p>
         </div>
 
-        <!-- Dungeons and Dragons -->
-        <div class="has-hover-video" tabindex="0" onclick="openModal('Dungeons and Dragons')">
+        <!-- Dungeons and Dragons - Vermelho -->
+        <div class="has-hover-video system-dnd" tabindex="0" onclick="openModal('Dungeons and Dragons','../img/icons8-dungeons-and-dragons-256.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
             <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
           </video>
@@ -93,8 +103,8 @@
           <p>Dungeons and Dragons</p>
         </div>
 
-        <!-- Vampiro a Mascara -->
-        <div class="has-hover-video" tabindex="0" onclick="openModal('Vampiro a Mascara')">
+        <!-- Vampiro a Mascara - Vermelho Escuro -->
+        <div class="has-hover-video system-vampiro" tabindex="0" onclick="openModal('Vampiro a Mascara','../img/icons8-vampire-100.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
             <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
           </video>
@@ -157,7 +167,7 @@
 
   <!-- Modal / Mapa Mental -->
   <div id="mindmapOverlay" class="overlay" aria-hidden="true" onclick="closeModal()">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mindmapTitle" onclick="event.stopPropagation()">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mindmapSystemName" onclick="event.stopPropagation()">
       <svg class="connections" aria-hidden="true" focusable="false">
         <line class="connection-line" x1="42%" y1="35%" x2="25%" y2="35%"></line>
         <line class="connection-line" x1="58%" y1="35%" x2="75%" y2="35%"></line>
@@ -177,8 +187,9 @@
         <div class="section-description">Guia completo do sistema</div>
       </div>
 
+      <!-- Centro: ícone do sistema + nome -->
       <div class="section center">
-        <div id="mindmapTitle" class="section-icon">🎲</div>
+        <img id="modalCenterIcon" alt="Ícone do Sistema" />
         <div id="mindmapSystemName" class="section-title">Sistema</div>
       </div>
 

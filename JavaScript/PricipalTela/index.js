@@ -9,12 +9,29 @@
     return document.getElementById('mindmapSystemName');
   }
 
-  // Modal: abrir
-  window.openModal = function (systemName) {
+  function getCenterIconEl() {
+    return document.getElementById('modalCenterIcon');
+  }
+
+  // Modal: abrir (recebe o nome e o ícone do sistema)
+  window.openModal = function (systemName, iconUrl) {
     const overlay = getOverlay();
     if (!overlay) return;
+
     const nameEl = getSystemNameEl();
     if (nameEl) nameEl.textContent = systemName || 'Sistema';
+
+    const iconEl = getCenterIconEl();
+    if (iconEl) {
+      if (iconUrl) {
+        iconEl.src = iconUrl;
+        iconEl.alt = systemName ? `Ícone de ${systemName}` : 'Ícone do Sistema';
+        iconEl.style.display = 'block';
+      } else {
+        iconEl.removeAttribute('src');
+        iconEl.style.display = 'none';
+      }
+    }
 
     overlay.classList.remove('closing');
     overlay.classList.add('active');
@@ -23,18 +40,21 @@
     restartLineAnimations();
   };
 
-  // Modal: fechar (com animação)
+  // Modal: fechar (com animação inversa - ordem contrária da abertura)
   window.closeModal = function () {
     const overlay = getOverlay();
     if (!overlay) return;
+    
+    // Adiciona a classe closing (ativa as animações de saída)
     overlay.classList.add('closing');
-    overlay.classList.remove('active');
-
+    
+    // Aguarda o término de TODAS as animações (600ms para incluir delays)
     setTimeout(() => {
+      overlay.classList.remove('active');
       overlay.classList.remove('closing');
       overlay.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-    }, 300);
+    }, 600);
   };
 
   function restartLineAnimations() {
@@ -130,5 +150,9 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.has-hover-video').forEach(bindCardHover);
+
+    // Evita ícone quebrado no load do modal
+    const iconEl = getCenterIconEl();
+    if (iconEl) iconEl.style.display = 'none';
   });
 })();
