@@ -22,7 +22,7 @@ if (!isset($_SESSION['user_id'])) {
             <p>Esta seção permite que você visualize e edite as configurações do seu perfil de usuário.</p>
 
             <div class="perfil-info">
-                <label>Nome de usuário:</label>
+            <label>Nome de usuário:</label>
                 <input type="text" value="<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>" />
 
                 <label>Email vinculado:</label>
