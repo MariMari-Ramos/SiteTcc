@@ -1,9 +1,4 @@
-/**
- * Estilos Globais de Configurações
- * Aplicados em todas as páginas do site
- */
 
-/* ==================== TEMAS ==================== */
 :root[data-theme="light"] {
     --bg-primary: #ffffff;
     --bg-secondary: #f5f2f0;
