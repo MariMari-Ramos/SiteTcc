@@ -11,9 +11,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 $email = isset($_POST['email']) ? trim($_POST['email']) : '';
 $senha = isset($_POST['senha']) ? $_POST['senha'] : '';
-$lembrar = isset($_POST["CBXLembrarSenha"]) ? true : false;
-var_dump($_POST);
-exit;
+
 
 if (empty($email) || empty($senha)) {
     echo json_encode(["status"=>"error","message"=>"Preencha todos os campos!"]);
@@ -31,9 +29,7 @@ if ($result && $result->num_rows > 0) {
     $_SESSION['email'] = $user['email'];
 
 
-        $sql = "UPDATE usuarios SET active = 1 WHERE id = " . $user['id'];
-        mysqli_query($conexao, $sql);
-
+        
 
     echo json_encode(["status"=>"success","message"=>"Login realizado com sucesso!"]);
     } else {

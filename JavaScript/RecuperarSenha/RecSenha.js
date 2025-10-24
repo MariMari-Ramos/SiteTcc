@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('.CaixaRecuperarSenha');
-    const input = document.getElementById('CampoEmailOuUsuario');
+    const input = document.getElementById('email');
     const btnEnviar = document.getElementById('btnEnviar');
 
     btnEnviar.addEventListener('click', function(e) {
@@ -9,6 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Por favor, preencha o campo com seu email ou nome de usuário.');
             return;
         }
-        window.location.href = '../CodigoDeRecuperação/CodigoDoEmail.html';
+       
     });
 });
