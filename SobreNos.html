@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nós</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .section {
+            padding: 60px 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section h2 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #667eea;
+        }
+        
+        .section p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .card p {
+            margin-bottom: 0;
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sobre Nós</h1>
+        <p>Conheça nossa história, missão e valores</p>
+    </header>
+    
+    <div class="container">
+        <section class="section">
+            <h2>Nossa História</h2>
+            <p>Somos uma empresa dedicada a entregar soluções inovadoras e de qualidade. Desde nossa fundação, trabalhos com paixão e comprometimento para atender as necessidades dos nossos clientes.</p>
+            <p>Com uma equipe qualificada e experiente, buscamos sempre evoluir e oferecer o melhor serviço possível no mercado.</p>
+        </section>
+        
+        <section class="section">
+            <h2>Nossa Missão</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>🎯 Missão</h3>
+                    <p>Fornecer soluções de excelência que agreguem valor aos negócios de nossos clientes.</p>
+                </div>
+                <div class="card">
+                    <h3>👁️ Visão</h3>
+                    <p>Ser referência no mercado como empresa inovadora e confiável.</p>
+                </div>
+                <div class="card">
+                    <h3>💎 Valores</h3>
+                    <p>Integridade, qualidade, inovação e satisfação do cliente acima de tudo.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>Nossa Equipe</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Especialistas em Tecnologia</h3>
+                    <p>Profissionais experientes prontos para resolver seus desafios técnicos.</p>
+                </div>
+                <div class="card">
+                    <h3>Atendimento ao Cliente</h3>
+                    <p>Equipe dedicada a proporcionar excelente experiência de atendimento.</p>
+                </div>
+                <div class="card">
+                    <h3>Inovação Contínua</h3>
+                    <p>Sempre buscamos novas formas de melhorar nossos serviços.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2024 Nossa Empresa. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>
