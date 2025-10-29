@@ -43,7 +43,7 @@
   <!-- Balão de fala do guia -->
   <div id="guideSpeech" class="guide-speech" role="dialog" aria-modal="true" aria-labelledby="guideTitle" aria-hidden="true">
     <div class="guide-speech-header">
-      <div class="guide-speech-title" id="guideTitle" data-translate="guide_title">Hefelio, o Guia</div>
+      <div class="guide-speech-title" id="guideTitle" data-translate="guide_title">Hefélio, o Guia</div>
       <button class="guide-speech-close" onclick="closeGuide()" aria-label="Fechar" data-translate="close" data-translate-attr="aria-label">×</button>
     </div>
     <div class="guide-speech-content" id="guideContent" data-translate="guide_intro">
@@ -61,22 +61,22 @@
   <section class="carrossel">
     <div class="slides">
       <div class="card">
-        <!-- Tormenta 20 -->
-        <div class="has-hover-video system-tormenta" tabindex="0" onclick="openModal('Tormenta 20','../img/1-8d3a9a38.png')">
+        <!-- 3DeT Victory  -->
+        <div class="has-hover-video system-3DeT" tabindex="0" onclick="openModal('3DeT Victory','../img/Logo3DeT.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
             <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
           </video>
-          <img src="../img/1-8d3a9a38.png" alt="Tormenta 20" />
-          <p>Tormenta 20</p>
+          <img src="../img/Logo3DeT.png" alt="3DeT" />
+          <p>3DeT Victory</p>
         </div>
 
-        <!-- Call of the Cthulhu -->
-        <div class="has-hover-video system-cthulhu" tabindex="0" onclick="openModal('Call of the Cthulhu','../img/cthulhu.png')">
+        <!-- Feiticeiros e Maldições -->
+        <div class="has-hover-video system-FM" tabindex="0" onclick="openModal('Feiticeiros e Maldições','../img/LogoJujutsuKaisen.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
             <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
           </video>
-          <img src="../img/cthulhu.png" alt="Call of the Cthulhu" />
-          <p>Call of the Cthulhu</p>
+          <img src="../img/LogoJujutsuKaisen.png" alt="Feiticeiros e Maldições" />
+          <p>Feiticeiros e Maldições</p>
         </div>
 
         <!-- Cyberpunk -->

@@ -13,10 +13,16 @@
     return document.getElementById('modalCenterIcon');
   }
 
+  // Variável para armazenar o sistema atual selecionado
+  let currentSystem = null;
+
   // Modal: abrir (recebe o nome e o ícone do sistema)
   window.openModal = function (systemName, iconUrl) {
     const overlay = getOverlay();
     if (!overlay) return;
+
+    // Armazena o sistema atual
+    currentSystem = systemName;
 
     const nameEl = getSystemNameEl();
     if (nameEl) nameEl.textContent = systemName || 'Sistema';
@@ -54,6 +60,7 @@
       overlay.classList.remove('closing');
       overlay.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      currentSystem = null; // Limpa o sistema atual
     }, 600);
   };
 
@@ -73,23 +80,44 @@
   // Ações do mapa mental
   window.selectSection = function (evt, action) {
     if (evt && typeof evt.stopPropagation === 'function') evt.stopPropagation();
+    
     switch (action) {
       case 'create-sheet':
-        console.log('Criar ficha');
+        console.log('Criar ficha para:', currentSystem);
+        
+        // Redireciona para a página da ficha do 3DeT
+        // Ajuste o caminho conforme necessário
+        if (currentSystem === '3DeT Victory') {
+          window.location.href = '../Pasta3DeT/Ficha_3DeT.html';
+        } else {
+          // Para outros sistemas, você pode adicionar mais lógica aqui
+          alert(`Criação de ficha para ${currentSystem} ainda não implementada.`);
+          closeModal();
+        }
         break;
+        
       case 'system-summary':
-        console.log('Resumo do sistema');
+        console.log('Resumo do sistema:', currentSystem);
+        alert(`Resumo do sistema ${currentSystem} em desenvolvimento.`);
+        closeModal();
         break;
+        
       case 'random-sheets':
-        console.log('Fichas randômicas');
+        console.log('Fichas randômicas:', currentSystem);
+        alert(`Gerador de fichas randômicas para ${currentSystem} em desenvolvimento.`);
+        closeModal();
         break;
+        
       case 'resources':
-        console.log('Recursos');
+        console.log('Recursos:', currentSystem);
+        alert(`Recursos para ${currentSystem} em desenvolvimento.`);
+        closeModal();
         break;
+        
       default:
+        closeModal();
         break;
     }
-    closeModal();
   };
 
   // ===== Guia (balão) =====
