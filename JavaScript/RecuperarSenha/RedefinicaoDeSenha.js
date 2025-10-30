@@ -43,8 +43,8 @@ return;
 
 }
 
-if(senha.value.leghth < 5){
-alert('A senha deve ter pelo menos 5 caracteres.');
+if(senha.value.leghth < 8){
+alert('A senha deve ter pelo menos 8 caracteres.');
 return;
 }
 consele.log('Senha redefinida com sucesso!');
@@ -54,3 +54,17 @@ form.submit();
 });
 
 });
+
+function mostrarAlerta(mensagem){
+    const overlay = document.getElementById("overlay");
+    const texto = overlay.querySelector("p");
+    texto.textContent = mensagem;
+    overlay.style.display = "flex"; 
+}
+
+function fecharModal(){
+    const overlay = document.getElementById("overlay");
+    overlay.style.display = "none";
+}
+
+
