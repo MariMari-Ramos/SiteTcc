@@ -47,7 +47,7 @@
 
                     <span class="nao-quebrar-linha">
                         <h5>Esqueceu sua senha?
-                            <a href="RecuperarSenha/RecuperarSenha/RecuperarSenha.html">Recuperar</a>
+                            <a href="RecuperarSenha/InfoEmail.html">Recuperar</a>
                         </h5>
                     </span>
 
