@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+// Redireciona para login se não estiver autenticado
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../../Login/loginhtml.php');
+    exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
