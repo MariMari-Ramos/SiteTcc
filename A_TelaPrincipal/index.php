@@ -73,7 +73,7 @@
         <!-- Feiticeiros e Maldições -->
         <div class="has-hover-video system-FM" tabindex="0" onclick="openModal('Feiticeiros e Maldições','../img/LogoJujutsuKaisen.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
-            <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
+            <source src="../videos/FeiticeirosEMaldiçõesHoover.mp4" type="video/mp4" />
           </video>
           <img src="../img/LogoJujutsuKaisen.png" alt="Feiticeiros e Maldições" />
           <p>Feiticeiros e Maldições</p>
@@ -82,7 +82,7 @@
         <!-- Cyberpunk -->
         <div class="has-hover-video system-cyberpunk" tabindex="0" onclick="openModal('Cyberpunk','../img/icons8-cyberpunk-512.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
-            <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
+            <source src="../videos/GojoVsSukuna2.mp4" type="video/mp4" />
           </video>
           <img src="../img/icons8-cyberpunk-512.png" alt="Cyberpunk" />
           <p>Cyberpunk</p>
