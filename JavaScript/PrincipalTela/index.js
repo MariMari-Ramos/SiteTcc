@@ -21,7 +21,6 @@
     const overlay = getOverlay();
     if (!overlay) return;
 
-    // Armazena o sistema atual
     currentSystem = systemName;
 
     const nameEl = getSystemNameEl();
@@ -51,16 +50,14 @@
     const overlay = getOverlay();
     if (!overlay) return;
     
-    // Adiciona a classe closing (ativa as animações de saída)
     overlay.classList.add('closing');
     
-    // Aguarda o término de TODAS as animações (600ms para incluir delays)
     setTimeout(() => {
       overlay.classList.remove('active');
       overlay.classList.remove('closing');
       overlay.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-      currentSystem = null; // Limpa o sistema atual
+      currentSystem = null;
     }, 600);
   };
 
@@ -84,38 +81,30 @@
     switch (action) {
       case 'create-sheet':
         console.log('Criar ficha para:', currentSystem);
-        
-        // Redireciona para a página da ficha do 3DeT
-        // Ajuste o caminho conforme necessário
-        if (currentSystem === '3DeT Victory') {
-          window.location.href = '../Pasta3DeT/Ficha_3DeT.html';
-        } else {
-          // Para outros sistemas, você pode adicionar mais lógica aqui
-          alert(`Criação de ficha para ${currentSystem} ainda não implementada.`);
-          closeModal();
-        }
+        alert(`Criação de ficha para ${currentSystem} em desenvolvimento.`);
+        window.closeModal();
         break;
         
       case 'system-summary':
         console.log('Resumo do sistema:', currentSystem);
         alert(`Resumo do sistema ${currentSystem} em desenvolvimento.`);
-        closeModal();
+        window.closeModal();
         break;
         
       case 'random-sheets':
         console.log('Fichas randômicas:', currentSystem);
         alert(`Gerador de fichas randômicas para ${currentSystem} em desenvolvimento.`);
-        closeModal();
+        window.closeModal();
         break;
         
       case 'resources':
         console.log('Recursos:', currentSystem);
         alert(`Recursos para ${currentSystem} em desenvolvimento.`);
-        closeModal();
+        window.closeModal();
         break;
         
       default:
-        closeModal();
+        window.closeModal();
         break;
     }
   };
@@ -147,9 +136,11 @@
     el.textContent = texts[key] || texts.modal;
   };
 
-  // ===== Vídeo no hover dos cards =====
+  // ===== Vídeo no hover dos cards (com transition suave - 0.5s) =====
   function bindCardHover(card) {
     const video = card.querySelector('.hover-video');
+    const img = card.querySelector('img');
+    
     if (!video) return;
 
     const play = () => {
@@ -176,11 +167,29 @@
     card.addEventListener('focusout', stop);
   }
 
+  // Previne navegação acidental com clique duplo
+  document.addEventListener('dblclick', function(e) {
+    if (e.target.closest('.has-hover-video')) {
+      e.preventDefault();
+    }
+  });
+
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.has-hover-video').forEach(bindCardHover);
 
-    // Evita ícone quebrado no load do modal
     const iconEl = getCenterIconEl();
     if (iconEl) iconEl.style.display = 'none';
+
+    console.log('Script da página inicial carregado com sucesso');
+  });
+
+  // Fechar modal com ESC
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      const overlay = getOverlay();
+      if (overlay && overlay.classList.contains('active')) {
+        window.closeModal();
+      }
+    }
   });
 })();

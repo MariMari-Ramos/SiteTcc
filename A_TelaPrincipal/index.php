@@ -57,8 +57,8 @@
     </div>
   </div>
 
-  <label for="System" data-translate="sistemas">Sistemas</label>
-  <section class="carrossel">
+<label for="System"><span class="highlight-word" data-translate="sistemas">Sistemas</span></label>
+<section class="carrossel">
     <div class="slides">
       <div class="card">
         <!-- 3DeT Victory  -->
@@ -116,7 +116,7 @@
 
   <label for="MinhasFichasRandomicas" data-translate="minhasFichasRandomicas">Minhas Fichas Randômicas</label>
 
-<section>
+  <section>
     <div class="CaixaMinhasFichas"></div>
   </section>
 
