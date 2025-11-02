@@ -34,10 +34,7 @@
                     <input type="checkbox" id="enableWaves" checked>
                     <span>Ativar Ondas Animadas</span>
                 </div>
-                <div class="settings-option">
-                    <input type="checkbox" id="enableSoundFX">
-                    <span>Efeitos Sonoros</span>
-                </div>
+                
             </div>
 
             <div class="settings-divider"></div>
@@ -61,16 +58,16 @@
 
             <div class="settings-divider"></div>
 
-            <!-- Grupo: Performance -->
+            <!-- Grupo: Efeitos de Clique -->
             <div class="settings-group">
-                <label>⚡ Performance</label>
+                <label>✨ Efeitos de Clique</label>
                 <div class="settings-option">
-                    <input type="checkbox" id="reduceMotion">
-                    <span>Reduzir Movimento</span>
+                    <input type="checkbox" id="enableClickEffect" checked>
+                    <span>Efeito ao Clicar</span>
                 </div>
                 <div class="settings-option">
-                    <input type="checkbox" id="enableAnimations" checked>
-                    <span>Animações</span>
+                    <input type="checkbox" id="enableHoldEffect" checked>
+                    <span>Efeito ao Segurar</span>
                 </div>
             </div>
 
@@ -90,21 +87,16 @@
             </div>
 
             <div class="settings-divider"></div>
-
-            <!-- Botões de Ação -->
-            <button class="settings-button" id="resetSettings">
-                <i class="bi bi-arrow-counterclockwise"></i> Restaurar Padrões
-            </button>
-            <button class="settings-button" id="closeSettingsBtn">
-                <i class="bi bi-check-circle"></i> Salvar e Fechar
-            </button>
+            
+            <button id="resetSettings" class="settings-btn settings-btn-secondary">Restaurar Padrões</button>
+            <button id="closeSettingsBtn" class="settings-btn settings-btn-primary">Salvar e Fechar</button>
         </div>
     </div>
 
     <section>
         <div class="CaixaLogin">
             <div class="login">
-                <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
+                <img src="../img/PETO E BANCO-Photoroom.png" alt="Logo" class="CaixaLoginImg">
                 <label for="TituloLogin">Login</label>
                <form id="formLogin" method="POST" action="login.php" onsubmit="event.preventDefault()">
 

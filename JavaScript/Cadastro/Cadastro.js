@@ -84,6 +84,22 @@ document.addEventListener("DOMContentLoaded", () => {
 const canvas = document.getElementById('waveCanvas');
 const ctx = canvas.getContext('2d');
 
+// Configurações padrão (declaradas antes de serem usadas)
+const defaultSettings = {
+    enableWaves: true,
+    theme: 'light',
+    enableClickEffect: true,
+    enableHoldEffect: true,
+    highContrast: false,
+    largerText: false
+};
+
+// Carregar configurações do localStorage
+function loadSettings() {
+    const saved = localStorage.getItem('cadastroPageSettings');
+    return saved ? JSON.parse(saved) : defaultSettings;
+}
+
 function resizeCanvas() {
     const dpr = window.devicePixelRatio || 1;
     const w = window.innerWidth;
@@ -107,6 +123,7 @@ const easeAmount = 0.08;
 // Flag para controlar interatividade
 let interactive = true;
 let isFormFocused = false;
+let isSettingsOpen = false;
 let interactiveTransition = 1;
 const transitionSpeed = 0.06;
 
@@ -212,13 +229,19 @@ window.addEventListener('mousedown', (e) => {
     if (e.button === 0) {
         isMousePressed = true;
         
-        if (!isFormFocused && interactive) {
+        // Só aplica o efeito de clique se estiver habilitado nas configurações
+        const settings = loadSettings();
+        if (!isFormFocused && interactive && settings.enableClickEffect) {
             heatIntensity = 1.0;
             clickAmplitude = maxClickAmplitude;
             targetClickHeight = -(window.innerHeight / 2 - e.clientY);
             console.log('[waves-cadastro] Clique nas ondas — efeito de labareda ativado');
         }
-        console.log('[waves-cadastro] Mouse pressionado — BOOST começando a aumentar');
+        
+        // Log para o boost (efeito de segurar)
+        if (settings.enableHoldEffect) {
+            console.log('[waves-cadastro] Mouse pressionado — BOOST começando a aumentar');
+        }
     }
 });
 
@@ -289,8 +312,8 @@ function desenhar() {
     const W = window.innerWidth;
     const H = window.innerHeight;
 
-    // Suavizar transição entre ativo/inativo
-    const targetTransition = interactive ? 1 : 0;
+    // Suavizar transição entre ativo/inativo - considera se o modal está aberto
+    const targetTransition = (interactive && !isSettingsOpen) ? 1 : 0;
     interactiveTransition += (targetTransition - interactiveTransition) * transitionSpeed;
 
     // Suavizar movimento do mouse
@@ -302,13 +325,19 @@ function desenhar() {
 
     const smoothMouseY = H / 2 + (mouseY - H / 2) * interactiveTransition;
 
-    // Atualizar boost
-    if (isMousePressed && speedBoost < maxSpeedBoost) {
-        speedBoost += boostBuildRate;
-        if (speedBoost > maxSpeedBoost) speedBoost = maxSpeedBoost;
-    } else if (!isMousePressed && speedBoost > 0) {
-        speedBoost *= boostDecayRate;
-        if (speedBoost < 0.01) speedBoost = 0;
+    // Atualizar boost - só se estiver habilitado
+    const settings = loadSettings();
+    if (settings.enableHoldEffect) {
+        if (isMousePressed && speedBoost < maxSpeedBoost) {
+            speedBoost += boostBuildRate;
+            if (speedBoost > maxSpeedBoost) speedBoost = maxSpeedBoost;
+        } else if (!isMousePressed && speedBoost > 0) {
+            speedBoost *= boostDecayRate;
+            if (speedBoost < 0.01) speedBoost = 0;
+        }
+    } else {
+        // Se desabilitado, mantém o boost em 0
+        speedBoost = 0;
     }
 
     // Atualizar intensidade de calor
@@ -380,3 +409,275 @@ function desenhar() {
 }
 
 desenhar();
+
+/* ========== CONFIGURAÇÕES DA PÁGINA ========== */
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsModal = document.getElementById('settingsModal');
+const closeSettings = document.getElementById('closeSettings');
+const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+const resetSettings = document.getElementById('resetSettings');
+
+// Botão de configurações - desativa interatividade das waves
+if (settingsBtn) {
+    settingsBtn.addEventListener('mouseenter', () => {
+        interactive = false;
+        console.log('[waves-cadastro] Mouse sobre botão config — interactive OFF');
+    });
+    
+    settingsBtn.addEventListener('mouseleave', () => {
+        if (!isFormFocused && !isSettingsOpen) {
+            interactive = true;
+            console.log('[waves-cadastro] Mouse saiu do botão config — interactive ON');
+        }
+    });
+}
+
+// Salvar configurações no localStorage
+function saveSettings() {
+    const enableWavesEl = document.getElementById('enableWaves');
+    const themeEl = document.querySelector('input[name="theme"]:checked');
+    const enableClickEffectEl = document.getElementById('enableClickEffect');
+    const enableHoldEffectEl = document.getElementById('enableHoldEffect');
+    const highContrastEl = document.getElementById('highContrast');
+    const largerTextEl = document.getElementById('largerText');
+
+    if (!enableWavesEl || !themeEl || !enableClickEffectEl || !enableHoldEffectEl || !highContrastEl || !largerTextEl) {
+        console.warn('[Configurações-Cadastro] Elementos não encontrados');
+        return;
+    }
+
+    const settings = {
+        enableWaves: enableWavesEl.checked,
+        theme: themeEl.value,
+        enableClickEffect: enableClickEffectEl.checked,
+        enableHoldEffect: enableHoldEffectEl.checked,
+        highContrast: highContrastEl.checked,
+        largerText: largerTextEl.checked
+    };
+    localStorage.setItem('cadastroPageSettings', JSON.stringify(settings));
+    applySettings(settings);
+    console.log('[Configurações-Cadastro] Salvas:', settings);
+}
+
+// Aplicar configurações
+function applySettings(settings) {
+    // Limpa classes anteriores
+    document.body.classList.remove('light-theme', 'dark-theme', 'large-text', 'high-contrast', 'reduce-motion');
+    document.documentElement.classList.remove('light-theme', 'dark-theme', 'large-text', 'high-contrast', 'reduce-motion');
+
+    // Ondas
+    let wavesEnabled = settings.enableWaves;
+    if (canvas) {
+        if (settings.enableWaves) {
+            canvas.style.transition = 'opacity 1.5s ease-out';
+            canvas.style.display = 'block';
+            setTimeout(() => {
+                canvas.style.opacity = '1';
+            }, 10);
+        } else {
+            canvas.style.transition = 'opacity 1.5s ease-out';
+            canvas.style.opacity = '0';
+            setTimeout(() => {
+                if (!settings.enableWaves) {
+                    canvas.style.display = 'none';
+                }
+            }, 1500);
+        }
+    }
+
+    // Tema
+    if (settings.theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        document.documentElement.classList.add('dark-theme');
+    } else if (settings.theme === 'auto') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+            document.body.classList.add('dark-theme');
+            document.documentElement.classList.add('dark-theme');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (settings.theme === 'auto') {
+                if (e.matches) {
+                    document.body.classList.add('dark-theme');
+                    document.documentElement.classList.add('dark-theme');
+                } else {
+                    document.body.classList.remove('dark-theme');
+                    document.documentElement.classList.remove('dark-theme');
+                }
+                setWavePalettesFromCSS();
+            }
+        });
+    }
+
+    // Atualiza cores das waves
+    setWavePalettesFromCSS();
+
+    // Texto maior
+    if (settings.largerText) {
+        document.body.classList.add('large-text');
+        document.documentElement.classList.add('large-text');
+    }
+
+    // Alto contraste
+    if (settings.highContrast) {
+        document.body.classList.add('high-contrast');
+        document.documentElement.classList.add('high-contrast');
+    }
+
+    console.log('[Configurações-Cadastro] Efeito ao clicar:', settings.enableClickEffect ? 'ATIVADO' : 'DESATIVADO');
+    console.log('[Configurações-Cadastro] Efeito ao segurar:', settings.enableHoldEffect ? 'ATIVADO' : 'DESATIVADO');
+}
+
+// Função para atualizar paletas de cores das waves
+function setWavePalettesFromCSS() {
+    function getCssVar(name) {
+        const sourceEl = document.body || document.documentElement;
+        const cs = getComputedStyle(sourceEl);
+        let val = cs.getPropertyValue(name).trim();
+        if (!val) {
+            const rootVal = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+            return rootVal;
+        }
+        return val;
+    }
+
+    const coresBase = [
+        getCssVar('--wave1') || 'rgba(255,192,192,0.7)',
+        getCssVar('--wave2') || 'rgba(255,170,150,0.6)',
+        getCssVar('--wave3') || 'rgba(255,210,180,0.5)'
+    ];
+    const coresQuentes = [
+        getCssVar('--waveHot1') || 'rgba(255,200,0,0.9)',
+        getCssVar('--waveHot2') || 'rgba(255,140,0,0.85)',
+        getCssVar('--waveHot3') || 'rgba(255,69,0,0.8)'
+    ];
+
+    ondas.forEach((o, i) => {
+        o.corBase = coresBase[i % coresBase.length];
+        o.corQuente = coresQuentes[i % coresQuentes.length];
+    });
+}
+
+// Restaurar padrões
+function restoreDefaults() {
+    if (confirm('Tem certeza que deseja restaurar as configurações padrão?')) {
+        const enableWavesEl = document.getElementById('enableWaves');
+        const enableClickEffectEl = document.getElementById('enableClickEffect');
+        const enableHoldEffectEl = document.getElementById('enableHoldEffect');
+        const highContrastEl = document.getElementById('highContrast');
+        const largerTextEl = document.getElementById('largerText');
+        const themeEl = document.querySelector('input[value="light"]');
+
+        if (enableWavesEl) enableWavesEl.checked = defaultSettings.enableWaves;
+        if (enableClickEffectEl) enableClickEffectEl.checked = defaultSettings.enableClickEffect;
+        if (enableHoldEffectEl) enableHoldEffectEl.checked = defaultSettings.enableHoldEffect;
+        if (highContrastEl) highContrastEl.checked = defaultSettings.highContrast;
+        if (largerTextEl) largerTextEl.checked = defaultSettings.largerText;
+        if (themeEl) themeEl.checked = true;
+
+        saveSettings();
+        console.log('[Configurações-Cadastro] Restauradas para padrão');
+    }
+}
+
+// Abrir modal
+if (settingsBtn) {
+    settingsBtn.addEventListener('click', () => {
+        if (settingsModal) {
+            settingsModal.classList.add('active');
+            isSettingsOpen = true;
+            interactive = false;
+            console.log('[Configurações-Cadastro] Modal aberto — interactive OFF');
+        }
+    });
+}
+
+// Fechar modal com animação
+function closeModalSettings() {
+    const settingsContent = settingsModal.querySelector('.settings-content');
+    
+    settingsModal.classList.add('closing');
+    if (settingsContent) {
+        settingsContent.classList.add('closing');
+    }
+    
+    setTimeout(() => {
+        settingsModal.classList.remove('active', 'closing');
+        if (settingsContent) {
+            settingsContent.classList.remove('closing');
+        }
+        isSettingsOpen = false;
+        
+        if (!isFormFocused && !caixa.matches(':hover') && !settingsBtn.matches(':hover')) {
+            interactive = true;
+            console.log('[Configurações-Cadastro] Modal fechado — interactive ON');
+        }
+    }, 300);
+}
+
+if (closeSettings) {
+    closeSettings.addEventListener('click', closeModalSettings);
+}
+
+if (closeSettingsBtn) {
+    closeSettingsBtn.addEventListener('click', () => {
+        saveSettings();
+        closeModalSettings();
+    });
+}
+
+// Fechar ao clicar fora
+if (settingsModal) {
+    settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) {
+            closeModalSettings();
+        }
+    });
+}
+
+// Restaurar padrões
+if (resetSettings) {
+    resetSettings.addEventListener('click', restoreDefaults);
+}
+
+// Salvar ao mudar qualquer opção
+document.querySelectorAll('.settings-option input').forEach(input => {
+    input.addEventListener('change', saveSettings);
+});
+
+// Permitir clicar na caixa toda para marcar/desmarcar
+document.querySelectorAll('.settings-option').forEach(option => {
+    option.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL' && e.target.tagName !== 'SPAN') {
+            const input = option.querySelector('input');
+            if (input) {
+                if (input.type === 'checkbox') {
+                    input.checked = !input.checked;
+                    saveSettings();
+                } else if (input.type === 'radio') {
+                    input.checked = true;
+                    saveSettings();
+                }
+            }
+        }
+    });
+});
+
+// Carregar configurações ao iniciar
+const currentSettings = loadSettings();
+const enableWavesEl = document.getElementById('enableWaves');
+const enableClickEffectEl = document.getElementById('enableClickEffect');
+const enableHoldEffectEl = document.getElementById('enableHoldEffect');
+const highContrastEl = document.getElementById('highContrast');
+const largerTextEl = document.getElementById('largerText');
+const themeEl = document.querySelector(`input[value="${currentSettings.theme}"]`);
+
+if (enableWavesEl) enableWavesEl.checked = currentSettings.enableWaves;
+if (enableClickEffectEl) enableClickEffectEl.checked = currentSettings.enableClickEffect;
+if (enableHoldEffectEl) enableHoldEffectEl.checked = currentSettings.enableHoldEffect;
+if (highContrastEl) highContrastEl.checked = currentSettings.highContrast;
+if (largerTextEl) largerTextEl.checked = currentSettings.largerText;
+if (themeEl) themeEl.checked = true;
+
+applySettings(currentSettings);

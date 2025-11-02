@@ -8,14 +8,100 @@
     font-display: swap;
 }
 
+/* ==================== VARIÁVEIS E TEMA ==================== */
+:root {
+    /* Tema claro (modo escuro DESLIGADO) */
+    --bg: #f0f0f0;
+    --text: #222222;
+    --panel-bg: #ffffff;
+    --panel-border: #e5e7eb;
+    --overlay: rgba(0,0,0,0.7);
+
+    /* Acento LARANJA no modo claro */
+    --accent: #ff6432;
+    --accent-2: #ff8351;
+    --accent-soft: rgba(255,100,50,0.15);
+
+    /* Waves (modo claro - quentes) */
+    --wave1: rgba(255,192,192,0.5);
+    --wave2: rgba(255,170,150,0.45);
+    --wave3: rgba(255,210,180,0.4);
+    /* Efeito de clique (quentes) */
+    --waveHot1: rgba(255,200,0,0.7);
+    --waveHot2: rgba(255,140,0,0.65);
+    --waveHot3: rgba(255,69,0,0.6);
+
+    /* Inputs e botões - claro */
+    --input-bg: #fafafa;
+    --input-border: #cccccc;
+    --input-placeholder: #a3a3a3;
+
+    --btn-primary: #212121;
+    --btn-primary-hover: #313131;
+    --btn-secondary: #212121;
+    --btn-secondary-hover: #313131;
+
+    --modal-btn-bg: #444444;
+    --modal-btn-hover: #ac0000;
+
+    --divider-color: rgb(153, 153, 153);
+}
+
+body.dark-theme {
+    /* Tema escuro aplicado a tudo */
+    --bg: #1a1a1a;
+    --text: #e0e0e0;
+    --panel-bg: #2d2d2d;
+    --panel-border: #444;
+    --overlay: rgba(0,0,0,0.7);
+
+    /* Acento AZUL SUAVE no modo escuro */
+    --accent: #4a90e2;
+    --accent-2: #2f78e5;
+    --accent-soft: rgba(74,144,226,0.15);
+
+    /* Waves (modo escuro - azuis suaves) */
+    --wave1: rgba(140,185,250,0.60);
+    --wave2: rgba(110,160,245,0.52);
+    --wave3: rgba(70,130,235,0.42);
+    /* Efeito de clique (azulados) */
+    --waveHot1: rgba(70,135,235,0.9);
+    --waveHot2: rgba(55,120,225,0.85);
+    --waveHot3: rgba(45,105,210,0.8);
+
+    /* Inputs e botões - escuro */
+    --input-bg: #3a3a3a;
+    --input-border: #555555;
+    --input-placeholder: #a3a3a3;
+
+    --btn-primary: var(--accent);
+    --btn-primary-hover: var(--accent-2);
+    --btn-secondary: color-mix(in srgb, var(--accent) 70%, #333333);
+    --btn-secondary-hover: var(--accent-2);
+
+    --modal-btn-bg: #555555;
+    --modal-btn-hover: var(--accent);
+
+    --divider-color: #555555;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-    background-color: #f0f0f0;
+    background: var(--bg);
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    filter: none !important;
+    transition: all 0.3s ease;
 }
 
 #waveCanvas {
@@ -26,22 +112,28 @@ body {
     height: 100%;
     display: block;
     z-index: -1;              
-    pointer-events: none;   
+    pointer-events: none;
+    transition: opacity 1.5s ease-out;
 }
 
 .CaixaCriarPerfil {
-    background-color: #ffffff;
+    background: var(--panel-bg);
     border-radius: 1rem;
     padding: 2rem;
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     width: 90%;
     max-width: 800px;
+    filter: none !important;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10;
 }
 
 .CaixaCriarPerfil h2 {
     text-align: center;
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
+    color: var(--text);
 }
 
 .Colunas {
@@ -61,7 +153,7 @@ body {
 .divisor {
     height: auto;
     width: 2px;               
-    background-color: rgb(153, 153, 153);  
+    background-color: var(--divider-color);
     margin: 0 15px;           
 }
 
@@ -69,6 +161,7 @@ label {
     font-weight: 600;
     margin-bottom: 0.3rem;
     margin-top: 0.8rem;
+    color: var(--text);
 }
 label[for="NomesSugerido"] {
     margin-top: 1.5rem;
@@ -93,17 +186,25 @@ label[for="NossosAvatares"]{
 
 input[type="text"], select {
     padding: 0.5em 1em;
-    border: 2px solid #cccccc;
+    border: 2px solid var(--input-border);
     border-radius: 1.5rem;
     font-size: 0.95rem;
-    background-color: #fafafa;
+    background-color: var(--input-bg);
+    color: var(--text);
     outline: none;
     width: 100%;
     box-sizing: border-box;
+    transition: all 0.2s ease;
 }
 
 input[type="text"]::placeholder {
-    color: #a3a3a3;
+    color: var(--input-placeholder);
+}
+
+input[type="text"]:focus,
+select:focus {
+    border-color: var(--accent);
+    background-color: color-mix(in srgb, var(--input-bg) 95%, var(--accent));
 }
 
 select {
@@ -129,16 +230,13 @@ select {
     text-align: center;
     margin: 0.8rem 0;
     font-weight: bold;
-    color: #555555;
-}
-
-#FotoPerfil{
-    
+    color: var(--text);
+    opacity: 0.7;
 }
 
 #ButtonCriarPerfil {
     margin-top: 1rem;
-    background-color: #212121;
+    background: var(--btn-primary);
     color: #fff;
     border: none;
     border-radius: 2rem;
@@ -148,29 +246,41 @@ select {
     font-weight: 600;
     height: 50px;
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+    transition: all 0.2s ease;
 }
 
 #ButtonCriarPerfil:hover {
-    background-color: #313131;
+    background: var(--btn-primary-hover);
+    transform: translateY(-2px);
+}
+
+#ButtonCriarPerfil:active {
+    transform: translateY(0);
 }
 
 /* Botões customizados para arquivos */
 .CustomFile{
     display: inline-block;
-    border: 2px solid #555555;
+    border: 2px solid var(--accent);
+    background: var(--input-bg);
+    color: var(--text);
     border-radius: 0.75rem;
     padding: 0.5em 1em;
-    border-color: #e9720248;
     text-align: center;
     cursor: pointer;
     font-size: 0.95rem;
     margin-bottom: 0.5rem;
-    /* Correções de overflow/borda */
     max-width: 100%;
     box-sizing: border-box;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    transition: all 0.2s ease;
+}
+
+.CustomFile:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-2);
 }
 
 label[for="SubtituloDoAvatar"]{
@@ -181,9 +291,36 @@ label[for="SubtituloDoAvatar"]{
     display: none;
 }
 
+.file-preview-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.file-preview-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+}
+
+.file-name-text {
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    flex: 1;
+}
+
 .Aviso {
     font-size: 0.75rem;
-    color: #888888;
+    color: var(--text);
+    opacity: 0.7;
     margin-top: 0.5rem;
     text-align: justify;
     display: flex;
@@ -196,27 +333,28 @@ label[for="SubtituloDoAvatar"]{
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--overlay);
     z-index: 1000;
     backdrop-filter: blur(5px);
 }
 
 .avatar-modal-content {
     position: relative;
-    background-color: #ffffff;
+    background: var(--panel-bg);
     margin: 15% auto;
     padding: 2rem;
     border-radius: 20px;
     width: 90%;
     max-width: 600px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    filter: none !important;
 }
 
 .avatar-modal-content h3 {
     text-align: center;
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
-    color: #212121;
+    color: var(--text);
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
 }
 
@@ -249,7 +387,8 @@ label[for="SubtituloDoAvatar"]{
 }
 
 .avatar-option.selected {
-    background-color: #e9720248;
+    background-color: var(--accent-soft);
+    border: 2px solid var(--accent);
     transform: scale(1.1);
 }
 
@@ -259,18 +398,19 @@ label[for="SubtituloDoAvatar"]{
     max-width: 200px;
     margin: 1rem auto 0;
     padding: 0.8rem 1.5rem;
-    background-color: #212121;
+    background: var(--btn-primary);
     color: #fff;
     border: none;
     border-radius: 2rem;
     cursor: pointer;
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .confirm-button:hover {
-    background-color: #313131;
+    background: var(--btn-primary-hover);
+    transform: translateY(-2px);
 }
 
 .avatar-preview {
@@ -294,7 +434,7 @@ label[for="SubtituloDoAvatar"]{
 .avatar-text {
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
     font-size: 0.95rem;
-    color: #212121;
+    color: var(--text);
 }
 
 .avatar-preview {
@@ -491,4 +631,313 @@ label[for="SubtituloDoAvatar"]{
     .Aviso {
         font-size: 0.65rem;
     }
+}
+
+/* ==================== BOTÃO DE CONFIGURAÇÕES ==================== */
+.settings-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: color-mix(in srgb, var(--accent) 90%, transparent);
+    border: 2px solid color-mix(in srgb, var(--accent-2) 80%, transparent);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 40%, transparent);
+    z-index: 999;
+    filter: none !important;
+}
+
+.settings-btn i {
+    position: static;
+    transform: none;
+    margin: 0;
+    line-height: 1;
+}
+
+.settings-btn:hover {
+    background: var(--accent-2);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.settings-btn:active {
+    transform: scale(0.95) rotate(90deg);
+}
+
+/* ==================== MODAL DE CONFIGURAÇÕES ==================== */
+.settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay);
+    z-index: 1000;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.settings-modal.active {
+    display: flex;
+    animation: slideIn 0.3s ease;
+}
+
+.settings-modal.closing {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+}
+
+.settings-content {
+    background: var(--panel-bg);
+    width: 280px;
+    height: auto;
+    max-height: 100vh;
+    padding: 25px 18px;
+    border-left: 3px solid var(--accent);
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    animation: slideInRight 0.3s ease;
+    overflow-y: auto;
+    filter: none !important;
+    position: relative;
+}
+
+.settings-content.closing {
+    animation: slideOutRight 0.3s ease forwards;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.settings-content h2 {
+    color: var(--accent-2);
+    font-size: 20px;
+    margin: 0;
+    text-align: center;
+}
+
+.close-settings {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--accent-2);
+    transition: all 0.2s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.close-settings i {
+    position: static;
+    transform: none;
+    color: var(--accent-2);
+}
+
+.close-settings:hover {
+    color: var(--accent);
+    transform: rotate(90deg);
+}
+
+.close-settings:hover i {
+    color: var(--accent);
+}
+
+/* ==================== GRUPOS DE CONFIGURAÇÕES ==================== */
+.settings-group {
+    margin-bottom: 15px;
+}
+
+.settings-group > label {
+    display: block;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.settings-divider {
+    height: 1px;
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+    margin: 15px 0;
+}
+
+.settings-option {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: color-mix(in srgb, var(--panel-bg) 80%, #ffffff);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.settings-option:hover {
+    background: var(--panel-bg);
+    border-color: var(--accent);
+    transform: translateX(-5px);
+}
+
+body.dark-theme .settings-option {
+    background: rgba(80, 80, 80, 0.9);
+    border-color: var(--accent);
+}
+
+body.dark-theme .settings-option:hover {
+    background: rgba(100, 100, 100, 1);
+    border-color: var(--accent-2);
+}
+
+.settings-option input[type="checkbox"],
+.settings-option input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+}
+
+.settings-option label,
+.settings-option span {
+    color: var(--accent-2);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    margin: 0;
+}
+
+body.dark-theme .settings-option label,
+body.dark-theme .settings-option span {
+    color: var(--accent);
+}
+
+/* ==================== BOTÕES DO MODAL ==================== */
+.settings-btn-primary,
+.settings-btn-secondary {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+}
+
+.settings-btn-primary {
+    background: var(--accent);
+    color: white;
+    margin-bottom: 8px;
+}
+
+.settings-btn-primary:hover {
+    background: var(--accent-2);
+    transform: translateY(-2px);
+}
+
+.settings-btn-secondary {
+    background: color-mix(in srgb, var(--panel-bg) 80%, var(--accent));
+    color: var(--accent-2);
+    border: 1px solid var(--accent);
+}
+
+.settings-btn-secondary:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* ==================== SCROLLBAR CUSTOMIZADO ==================== */
+.settings-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.settings-content::-webkit-scrollbar-track {
+    background: color-mix(in srgb, var(--panel-bg) 90%, transparent);
+    border-radius: 4px;
+}
+
+.settings-content::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.settings-content::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-2);
+}
+
+/* ==================== ACESSIBILIDADE ==================== */
+body.high-contrast {
+    --bg: #000000;
+    --text: #ffffff;
+    --panel-bg: #1a1a1a;
+    --input-bg: #2a2a2a;
+}
+
+body.high-contrast.dark-theme {
+    --accent: #5ba3ff;
+    --accent-2: #409cff;
+    --panel-bg: #0a0a0a;
+    --input-bg: #1a1a1a;
+    --input-border: #777777;
+}
+
+body.high-contrast .CaixaCriarPerfil {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+body.large-text {
+    font-size: 1.25rem;
+}
+
+body.large-text input[type="text"],
+body.large-text select {
+    font-size: 1.1em;
+}
+
+body.reduce-motion * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
 }

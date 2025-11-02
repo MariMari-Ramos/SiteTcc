@@ -8,6 +8,16 @@
 <body>
     <h1>Teste</h1>
 
+
+<?php
+session_start();
+include("../conexao.php");
+
+if(!isset($_COOKIE['lembrar_tolken'])){
+    $tolken =$_COOKIE['lembrar_tolken'];
+}
+?>
+
 Aqui vai ser onde irei testar a maioria dos codigos do front end.
 Em breve ele estara sumido.
 </body>

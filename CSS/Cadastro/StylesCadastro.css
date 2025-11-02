@@ -7,17 +7,99 @@
     font-style: normal;
     font-display: swap;
 }
+
+/* ==================== VARIÁVEIS E TEMA ==================== */
+:root {
+    /* Tema claro (modo escuro DESLIGADO) */
+    --bg: #ffffff;
+    --text: #222222;
+    --panel-bg: #ffffff;
+    --panel-border: #e5e7eb;
+    --overlay: rgba(0,0,0,0.7);
+
+    /* Acento LARANJA no modo claro */
+    --accent: #ff6432;
+    --accent-2: #ff8351;
+    --accent-soft: rgba(255,100,50,0.15);
+
+    /* Waves (modo claro - quentes) */
+    --wave1: rgba(255,192,192,0.5);
+    --wave2: rgba(255,170,150,0.45);
+    --wave3: rgba(255,210,180,0.4);
+    /* Efeito de clique (quentes) */
+    --waveHot1: rgba(255,200,0,0.7);
+    --waveHot2: rgba(255,140,0,0.65);
+    --waveHot3: rgba(255,69,0,0.6);
+
+    /* Inputs e botões - claro */
+    --input-bg: #f5f5f5;
+    --input-border: #00000075;
+    --input-placeholder: #a3a3a3;
+
+    --btn-primary: #000000;
+    --btn-primary-hover: #31313185;
+    --btn-secondary: #212121;
+    --btn-secondary-hover: #88888888;
+
+    --modal-btn-bg: #444444;
+    --modal-btn-hover: #ac0000;
+}
+
+body.dark-theme {
+    /* Tema escuro aplicado a tudo */
+    --bg: #1a1a1a;
+    --text: #e0e0e0;
+    --panel-bg: #2d2d2d;
+    --panel-border: #444;
+    --overlay: rgba(0,0,0,0.7);
+
+    /* Acento AZUL SUAVE no modo escuro */
+    --accent: #4a90e2;
+    --accent-2: #2f78e5;
+    --accent-soft: rgba(74,144,226,0.15);
+
+    /* Waves (modo escuro - azuis suaves) */
+    --wave1: rgba(140,185,250,0.60);
+    --wave2: rgba(110,160,245,0.52);
+    --wave3: rgba(70,130,235,0.42);
+    /* Efeito de clique (azulados) */
+    --waveHot1: rgba(70,135,235,0.9);
+    --waveHot2: rgba(55,120,225,0.85);
+    --waveHot3: rgba(45,105,210,0.8);
+
+    /* Inputs e botões - escuro */
+    --input-bg: #3a3a3a;
+    --input-border: #555555;
+    --input-placeholder: #a3a3a3;
+
+    --btn-primary: var(--accent);
+    --btn-primary-hover: var(--accent-2);
+    --btn-secondary: color-mix(in srgb, var(--accent) 70%, #333333);
+    --btn-secondary-hover: var(--accent-2);
+
+    --modal-btn-bg: #555555;
+    --modal-btn-hover: var(--accent);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 /* ...existing code... */
 
 body { 
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif; 
-    background-color: #fffffff6; 
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
     margin: 0;
     padding: 0;
+    filter: none !important;
 } 
 
 #waveCanvas {
@@ -28,7 +110,8 @@ body {
     height: 100%;
     display: block;
     z-index: 0;              
-    pointer-events: none;   
+    pointer-events: none;
+    transition: opacity 1.5s ease-out;
 }
 
 .overlay {
@@ -40,13 +123,13 @@ body {
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 1000; 
-    background: rgba(0, 0, 0, 0.4);
+    z-index: 1001; 
+    background: var(--overlay);
     backdrop-filter: blur(5px);
 }
 
 .modal {
-    background-color: #ffffff;
+    background-color: var(--panel-bg);
     padding: 30px 40px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -55,20 +138,22 @@ body {
     width: 90%;
     font-size: 1.1rem;
     animation: fadeIn 0.3s ease-in-out;
+    filter: none !important;
 }
 
 .modal button {
     margin-top: 20px;
     padding: 10px 20px;
     border: none;
-    background-color: #444;
+    background-color: var(--modal-btn-bg);
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
 .modal button:hover {
-    background-color: #ac0000;
+    background-color: var(--modal-btn-hover);
 }
 
 @keyframes fadeIn {
@@ -84,14 +169,16 @@ body {
     align-items: center;
     padding: 1.5em;
     border-radius: 2vw;
-    background:  #ffffff;
+    background: var(--panel-bg);
     width: 90vw;
     max-width: 700px; 
     min-width: 220px;
-    box-shadow: rgb(75, 75, 75) 0px 5px 15px;
+    box-shadow: 0 4px 10px rgba(117, 117, 117, 0.493);
     font-size: 1.1rem;
     gap: 2em;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
+    filter: none !important;
+    transition: all 0.3s ease;
 }
 
 .formulario {
@@ -112,7 +199,7 @@ label[for="CriandoConta"] {
     font-family: 'OpenDyslexic';
     font-size: 1.5em;
     font-weight: bold;
-    color: #212121;
+    color: var(--text);
     margin-bottom: 0.5em;
     display: flex;
     justify-content: center;
@@ -123,7 +210,7 @@ label[for="Subtitulo"] {
     font-family: 'OpenDyslexic';
     font-size: 0.75em;
     font-weight: bold;
-    color: #212121;
+    color: var(--text);
     margin-bottom: 0.2em;
     margin-top: 2em;
     margin-left: 7%;
@@ -134,21 +221,31 @@ label[for="Subtitulo"] {
 #SenhaCadastro,
 #ConfirmSenhaCadastro {
     padding: 0.6em 2em;
-    border: 3px solid #00000075;
+    border: 3px solid var(--input-border);
     border-radius: 2em;
     width: 100%;
     box-sizing: border-box;
     margin-bottom: 0;
-    background-color: #f5f5f5;
+    background-color: var(--input-bg);
+    color: var(--text);
     font-size: 1em;
+    transition: all 0.2s ease;
 }
 
 #CadastroEmail::placeholder,
 #SenhaCadastro::placeholder,
 #ConfirmSenhaCadastro::placeholder {
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-    color: #a9a9a9;
+    color: var(--input-placeholder);
     font-size: 0.9em;
+}
+
+#CadastroEmail:focus,
+#SenhaCadastro:focus,
+#ConfirmSenhaCadastro:focus {
+    outline: none;
+    border-color: var(--accent);
+    background-color: color-mix(in srgb, var(--input-bg) 95%, var(--accent));
 }
 
 .terms-row {
@@ -170,19 +267,23 @@ label[for="Subtitulo"] {
 
 .terms-row .terms-text {
     display: block;
-    color: #000000;            
+    color: var(--text);
     font-size: 0.98rem;
     text-align: left;
     word-break: break-word;
 }
 
 .terms-row .terms-text a {
-    color: #f0530b;
+    color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 2px;
     font-weight: 700;
     word-break: break-word;
+    transition: all 0.2s ease;
+}
 
+.terms-row .terms-text a:hover {
+    color: var(--accent-2);
 }
 
 
@@ -197,7 +298,7 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
 
 /* botão criar */
 #ButtonCriarCadastro {
-    background-color: #212121;
+    background: var(--btn-secondary);
     color: #f5f1f2;
     border: none;
     border-radius: 2em;
@@ -210,24 +311,51 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
     margin-left: 2.5em;
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
     letter-spacing: 1px;
+    transition: all 0.2s ease;
 }
 
 #ButtonCriarCadastro:hover {
-    background: #31313185;
+    background: var(--btn-secondary-hover);
+    transform: translateY(-2px);
 }
 
-.OlhoVerSenha,
+#ButtonCriarCadastro:active {
+    transform: translateY(0);
+}
+
+#SenhaCadastro,
+#ConfirmSenhaCadastro {
+    padding: 0.6em 2em;
+    padding-right: 3em;
+}
+
 .password-container {
     position: relative;
 }
 
-i {
-    font-size: 30px;
+.password-container label {
+    position: relative;
+}
+
+.password-container input {
+    position: relative;
+}
+
+.password-container i {
+    font-size: clamp(20px, 4vw, 30px);
     cursor: pointer;
     position: absolute;
     right: 5%;
-    color: #474747;
-    top: 35%;
+    top: 50%;
+    transform: translateY(calc(-50% + 1.1em));
+    color: color-mix(in srgb, var(--text) 80%, transparent);
+    transition: all 0.2s ease;
+    pointer-events: auto;
+}
+
+.password-container i:hover {
+    color: var(--accent);
+    transform: translateY(calc(-50% + 1.1em)) scale(1.1);
 }
 
 /* Responsividade geral */
@@ -410,4 +538,325 @@ i {
         padding: 15px;
         font-size: 0.85rem;
     }
+}
+
+/* ==================== BOTÃO DE CONFIGURAÇÕES ==================== */
+.settings-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: color-mix(in srgb, var(--accent) 90%, transparent);
+    border: 2px solid color-mix(in srgb, var(--accent-2) 80%, transparent);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 40%, transparent);
+    z-index: 999;
+    filter: none !important;
+}
+
+.settings-btn i {
+    position: static;
+    transform: none;
+    margin: 0;
+    line-height: 1;
+}
+
+.settings-btn:hover {
+    background: var(--accent-2);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.settings-btn:active {
+    transform: scale(0.95) rotate(90deg);
+}
+
+/* ==================== MODAL DE CONFIGURAÇÕES ==================== */
+.settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay);
+    z-index: 1000;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.settings-modal.active {
+    display: flex;
+    animation: slideIn 0.3s ease;
+}
+
+.settings-modal.closing {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+}
+
+.settings-content {
+    background: var(--panel-bg);
+    width: 280px;
+    height: auto;
+    max-height: 100vh;
+    padding: 25px 18px;
+    border-left: 3px solid var(--accent);
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    animation: slideInRight 0.3s ease;
+    overflow-y: auto;
+    filter: none !important;
+    position: relative;
+}
+
+.settings-content.closing {
+    animation: slideOutRight 0.3s ease forwards;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.settings-content h2 {
+    color: var(--accent-2);
+    font-size: 20px;
+    margin: 0;
+    text-align: center;
+}
+
+.close-settings {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--accent-2);
+    transition: all 0.2s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.close-settings i {
+    position: static;
+    transform: none;
+    color: var(--accent-2);
+}
+
+.close-settings:hover {
+    color: var(--accent);
+    transform: rotate(90deg);
+}
+
+.close-settings:hover i {
+    color: var(--accent);
+}
+
+/* ==================== GRUPOS DE CONFIGURAÇÕES ==================== */
+.settings-group {
+    margin-bottom: 15px;
+}
+
+.settings-group > label {
+    display: block;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.settings-divider {
+    height: 1px;
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+    margin: 15px 0;
+}
+
+.settings-option {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: color-mix(in srgb, var(--panel-bg) 80%, #ffffff);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.settings-option:hover {
+    background: var(--panel-bg);
+    border-color: var(--accent);
+    transform: translateX(-5px);
+}
+
+body.dark-theme .settings-option {
+    background: rgba(80, 80, 80, 0.9);
+    border-color: var(--accent);
+}
+
+body.dark-theme .settings-option:hover {
+    background: rgba(100, 100, 100, 1);
+    border-color: var(--accent-2);
+}
+
+.settings-option input[type="checkbox"],
+.settings-option input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+}
+
+.settings-option label,
+.settings-option span {
+    color: var(--accent-2);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    margin: 0;
+}
+
+body.dark-theme .settings-option label,
+body.dark-theme .settings-option span {
+    color: var(--accent);
+}
+
+/* ==================== BOTÕES DO MODAL ==================== */
+.settings-btn-primary,
+.settings-btn-secondary {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+}
+
+.settings-btn-primary {
+    background: var(--accent);
+    color: white;
+    margin-bottom: 8px;
+}
+
+.settings-btn-primary:hover {
+    background: var(--accent-2);
+    transform: translateY(-2px);
+}
+
+.settings-btn-secondary {
+    background: color-mix(in srgb, var(--panel-bg) 80%, var(--accent));
+    color: var(--accent-2);
+    border: 1px solid var(--accent);
+}
+
+.settings-btn-secondary:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* ==================== SCROLLBAR CUSTOMIZADO ==================== */
+.settings-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.settings-content::-webkit-scrollbar-track {
+    background: color-mix(in srgb, var(--panel-bg) 90%, transparent);
+    border-radius: 4px;
+}
+
+.settings-content::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.settings-content::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-2);
+}
+
+/* ==================== TEMA ESCURO - AJUSTES EXTRAS ==================== */
+body.dark-theme .imagem img {
+    filter: brightness(0.9) contrast(1.1);
+}
+
+/* ==================== ACESSIBILIDADE ==================== */
+body.high-contrast {
+    --bg: #000000;
+    --text: #ffffff;
+    --panel-bg: #1a1a1a;
+    --input-bg: #2a2a2a;
+}
+
+body.high-contrast.dark-theme {
+    --accent: #5ba3ff;
+    --accent-2: #409cff;
+    --panel-bg: #0a0a0a;
+    --input-bg: #1a1a1a;
+    --input-border: #777777;
+}
+
+body.high-contrast .CaixaCadastro {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+body.high-contrast #CadastroEmail,
+body.high-contrast #SenhaCadastro,
+body.high-contrast #ConfirmSenhaCadastro {
+    border-width: 2px;
+}
+
+body.large-text {
+    font-size: 1.25rem;
+}
+
+body.large-text #CadastroEmail,
+body.large-text #SenhaCadastro,
+body.large-text #ConfirmSenhaCadastro {
+    font-size: 1.1em;
+}
+
+body.reduce-motion * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
 }

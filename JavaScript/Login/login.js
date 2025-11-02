@@ -129,15 +129,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Flag para controlar se a interatividade com o mouse está habilitada
     let interactive = true;
     let isFormFocused = false;
+    // Flag para indicar se o modal de configurações está aberto (bloqueia interatividade das waves)
+    let isSettingsOpen = false;
     let interactiveTransition = 1;
     const transitionSpeed = 0.06;
 
     // Controle de pressão do mouse (mouse press boost)
     let isMousePressed = false;
     let speedBoost = 0;
-    const maxSpeedBoost = 2.5;
+    const maxSpeedBoost = 4.0;        // Aumentado de 2.5 para 4.0 (60% mais rápido)
     const boostDecayRate = 0.95;
-    const boostBuildRate = 0.08;
+    const boostBuildRate = 0.15;      // Aumentado de 0.08 para 0.15 (quase 2x mais rápido)
 
     // Controle de direção das ondas
     let waveDirection = 1;
@@ -158,19 +160,41 @@ document.addEventListener('DOMContentLoaded', () => {
     let targetClickHeight = 0;
     const clickHeightEaseAmount = 0.12;
 
-    // Paleta de cores base (frio)
-    const coresBase = [
-        'rgba(255,192,192,0.7)',
-        'rgba(255,170,150,0.6)',
-        'rgba(255,210,180,0.5)'
-    ];
+    // Paletas de cores das waves lidas de variáveis CSS para seguir o tema
+    let coresBase = [];
+    let coresQuentes = [];
 
-    // Paleta de cores quentes
-    const coresQuentes = [
-        'rgba(255,200,0,0.9)',
-        'rgba(255,140,0,0.85)',
-        'rgba(255,69,0,0.8)'
-    ];
+    function getCssVar(name) {
+        // Importante: as variáveis do tema escuro estão definidas em body.dark-theme.
+        // Ler do body garante que pegamos os valores atuais do tema.
+        const sourceEl = document.body || document.documentElement;
+        const cs = getComputedStyle(sourceEl);
+        let val = cs.getPropertyValue(name).trim();
+        if (!val) {
+            // Fallback para :root caso alguma variável não esteja no body
+            const rootVal = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+            return rootVal;
+        }
+        return val;
+    }
+
+    function setWavePalettesFromCSS() {
+        coresBase = [
+            getCssVar('--wave1') || 'rgba(173,216,230,0.7)',
+            getCssVar('--wave2') || 'rgba(135,206,235,0.6)',
+            getCssVar('--wave3') || 'rgba(30,144,255,0.5)'
+        ];
+        coresQuentes = [
+            getCssVar('--waveHot1') || 'rgba(0,170,255,0.9)',
+            getCssVar('--waveHot2') || 'rgba(0,140,255,0.85)',
+            getCssVar('--waveHot3') || 'rgba(0,100,255,0.8)'
+        ];
+        // Atualiza cores nas ondas existentes
+        ondas.forEach((o, i) => {
+            o.corBase = coresBase[i % coresBase.length];
+            o.corQuente = coresQuentes[i % coresQuentes.length];
+        });
+    }
 
     // Função para interpolar cores
     function interpolarCor(frio, quente, t) {
@@ -208,13 +232,21 @@ document.addEventListener('DOMContentLoaded', () => {
             freq: 0.0018 + i * 0.0008,
             vel: 0.0015 + i * 0.0012,
             fase: Math.random() * 1000,
-            corBase: coresBase[i],
-            corQuente: coresQuentes[i],
-            corAtual: coresBase[i],
+            corBase: '#000000',
+            corQuente: '#000000',
+            corAtual: '#000000',
             targetAmp: 45 + i * 8,
             ampEase: 0.05
         });
     }
+
+    // Inicializa as paletas com base nas variáveis CSS
+    setWavePalettesFromCSS();
+    ondas.forEach((o, i) => {
+        o.corBase = coresBase[i];
+        o.corQuente = coresQuentes[i];
+        o.corAtual = o.corBase;
+    });
 
     // Atualiza posição alvo do mouse
     window.addEventListener('mousemove', e => {
@@ -234,13 +266,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.button === 0) {
             isMousePressed = true;
             
-            if (!isFormFocused && interactive && wavesEnabled) {
+            // Só aplica o efeito de clique se estiver habilitado nas configurações
+            const settings = loadSettings();
+            if (!isFormFocused && interactive && wavesEnabled && settings.enableClickEffect) {
                 heatIntensity = 1.0;
                 clickAmplitude = maxClickAmplitude;
                 targetClickHeight = -(canvas.height / 2 - e.clientY);
                 console.log('[waves] Clique nas ondas — efeito de labareda ativado');
             }
-            console.log('[waves] Mouse pressionado — BOOST começando a aumentar');
+            
+            // Log para o boost (efeito de segurar)
+            if (settings.enableHoldEffect) {
+                console.log('[waves] Mouse pressionado — BOOST começando a aumentar');
+            }
         }
     });
 
@@ -316,7 +354,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const deltaTime = (currentTime - lastFrameTime) / 1000;
         lastFrameTime = currentTime;
 
-        const targetTransition = interactive ? 1 : 0;
+    // Quando o modal de configurações estiver aberto, força a transição para estado não interativo
+    const targetTransition = (interactive && !isSettingsOpen) ? 1 : 0;
         interactiveTransition += (targetTransition - interactiveTransition) * transitionSpeed;
 
         mouseX += (targetMouseX - mouseX) * easeAmount;
@@ -326,12 +365,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const smoothMouseY = window.innerHeight / 2 + (mouseY - window.innerHeight / 2) * interactiveTransition;
 
-        if (isMousePressed && speedBoost < maxSpeedBoost) {
-            speedBoost += boostBuildRate;
-            if (speedBoost > maxSpeedBoost) speedBoost = maxSpeedBoost;
-        } else if (!isMousePressed && speedBoost > 0) {
-            speedBoost *= boostDecayRate;
-            if (speedBoost < 0.01) speedBoost = 0;
+        // Só aplica o boost (efeito de segurar) se estiver habilitado
+        const settings = loadSettings();
+        if (settings.enableHoldEffect) {
+            if (isMousePressed && speedBoost < maxSpeedBoost) {
+                speedBoost += boostBuildRate;
+                if (speedBoost > maxSpeedBoost) speedBoost = maxSpeedBoost;
+            } else if (!isMousePressed && speedBoost > 0) {
+                speedBoost *= boostDecayRate;
+                if (speedBoost < 0.01) speedBoost = 0;
+            }
+        } else {
+            // Se desabilitado, mantém o boost em 0
+            speedBoost = 0;
         }
 
         if (heatIntensity > 0) {
@@ -377,8 +423,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const gradBottom = ctx.createLinearGradient(0, 0, 0, canvas.height);
             
-            const corMeio = interpolarCor(o.corBase, 'rgba(255,140,0,0.85)', heatIntensity);
-            const corBorda = interpolarCor(o.corBase, 'rgba(255,69,0,0.9)', heatIntensity);
+            const corMeio = interpolarCor(o.corBase, coresQuentes[1] || o.corBase, heatIntensity);
+            const corBorda = interpolarCor(o.corBase, coresQuentes[2] || o.corBase, heatIntensity);
             
             gradBottom.addColorStop(0, o.corBase);
             gradBottom.addColorStop(0.5, corMeio);
@@ -403,15 +449,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsModal = document.getElementById('settingsModal');
     const closeSettings = document.getElementById('closeSettings');
-    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-    const resetSettings = document.getElementById('resetSettings');
+
+    // Botão de configurações - desativa interatividade das waves ao passar o mouse
+    if (settingsBtn) {
+        settingsBtn.addEventListener('mouseenter', () => {
+            interactive = false;
+            console.log('[waves] Mouse entrou no botão de configurações — interactive OFF');
+        });
+        
+        settingsBtn.addEventListener('mouseleave', () => {
+            if (!isFormFocused && !isSettingsOpen) {
+                interactive = true;
+                console.log('[waves] Mouse saiu do botão de configurações — interactive ON');
+            }
+        });
+    }
 
     // Configurações padrão
     const defaultSettings = {
         enableWaves: true,
         theme: 'light',
-        reduceMotion: false,
-        enableAnimations: true,
+        enableClickEffect: true,
+        enableHoldEffect: true,
         highContrast: false,
         largerText: false
     };
@@ -424,13 +483,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Salvar configurações no localStorage
     function saveSettings() {
+        const enableWavesEl = document.getElementById('enableWaves');
+        const themeEl = document.querySelector('input[name="theme"]:checked');
+        const enableClickEffectEl = document.getElementById('enableClickEffect');
+        const enableHoldEffectEl = document.getElementById('enableHoldEffect');
+        const highContrastEl = document.getElementById('highContrast');
+        const largerTextEl = document.getElementById('largerText');
+
+        if (!enableWavesEl || !themeEl || !enableClickEffectEl || !enableHoldEffectEl || !highContrastEl || !largerTextEl) {
+            console.error('[login.js] Alguns elementos de configuração não foram encontrados');
+            return;
+        }
+
         const settings = {
-            enableWaves: document.getElementById('enableWaves').checked,
-            theme: document.querySelector('input[name="theme"]:checked').value,
-            reduceMotion: document.getElementById('reduceMotion').checked,
-            enableAnimations: document.getElementById('enableAnimations').checked,
-            highContrast: document.getElementById('highContrast').checked,
-            largerText: document.getElementById('largerText').checked
+            enableWaves: enableWavesEl.checked,
+            theme: themeEl.value,
+            enableClickEffect: enableClickEffectEl.checked,
+            enableHoldEffect: enableHoldEffectEl.checked,
+            highContrast: highContrastEl.checked,
+            largerText: largerTextEl.checked
         };
         localStorage.setItem('loginPageSettings', JSON.stringify(settings));
         applySettings(settings);
@@ -439,72 +510,113 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Aplicar configurações
     function applySettings(settings) {
-        // Ondas - Desaparece completamente
+        // Limpa classes anteriores
+        document.body.classList.remove('light-theme', 'dark-theme', 'large-text', 'high-contrast');
+        document.documentElement.classList.remove('light-theme', 'dark-theme', 'large-text', 'high-contrast');
+
+        // Ondas
         wavesEnabled = settings.enableWaves;
         if (canvas) {
             if (settings.enableWaves) {
-                canvas.style.opacity = '1';
-                canvas.style.pointerEvents = 'none';
+                // Transição suave ao ativar (mesma duração que desativar)
+                canvas.style.transition = 'opacity 1.5s ease-out';
                 canvas.style.display = 'block';
+                // Pequeno delay para garantir que display:block seja aplicado antes do fade
+                setTimeout(() => {
+                    canvas.style.opacity = '1';
+                }, 10);
                 console.log('[Configurações-Login] Ondas ATIVADAS');
             } else {
+                // Transição suave ao desativar (mesma duração que ativar)
+                canvas.style.transition = 'opacity 1.5s ease-out';
                 canvas.style.opacity = '0';
-                canvas.style.pointerEvents = 'none';
-                canvas.style.display = 'none';
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Aguarda a transição terminar antes de esconder
+                setTimeout(() => {
+                    if (!wavesEnabled) {
+                        canvas.style.display = 'none';
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Reseta todos os efeitos para estado inicial
+                        heatIntensity = 0;
+                        clickAmplitude = 0;
+                        clickHeight = 0;
+                        targetClickHeight = 0;
+                        speedBoost = 0;
+                    }
+                }, 1500); // 1.5 segundos = duração da transição
                 console.log('[Configurações-Login] Ondas DESATIVADAS');
             }
         }
 
         // Tema
         if (settings.theme === 'dark') {
-            document.body.style.filter = 'invert(1)';
-            document.documentElement.style.filter = 'invert(1)';
+            document.body.classList.add('dark-theme');
+            document.documentElement.classList.add('dark-theme');
+            console.log('[Configurações-Login] Tema ESCURO ativado');
         } else if (settings.theme === 'auto') {
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (prefersDark) {
-                document.body.style.filter = 'invert(1)';
-                document.documentElement.style.filter = 'invert(1)';
+                document.body.classList.add('dark-theme');
+                document.documentElement.classList.add('dark-theme');
+                console.log('[Configurações-Login] Tema AUTOMÁTICO — ESCURO');
             } else {
-                document.body.style.filter = 'none';
-                document.documentElement.style.filter = 'none';
+                document.body.classList.add('light-theme');
+                document.documentElement.classList.add('light-theme');
+                console.log('[Configurações-Login] Tema AUTOMÁTICO — CLARO');
             }
         } else {
-            document.body.style.filter = 'none';
-            document.documentElement.style.filter = 'none';
+            document.body.classList.add('light-theme');
+            document.documentElement.classList.add('light-theme');
+            console.log('[Configurações-Login] Tema CLARO ativado');
         }
 
-        // Reduzir movimento
-        if (settings.reduceMotion) {
-            document.documentElement.style.setProperty('--animation-duration', '0s');
-            document.body.style.animation = 'none';
-        } else {
-            document.documentElement.style.setProperty('--animation-duration', '0.3s');
-        }
+        // Sempre que o tema mudar, atualiza as cores das waves a partir das variáveis CSS
+        setWavePalettesFromCSS();
 
         // Texto maior
         if (settings.largerText) {
-            document.body.style.fontSize = '18px';
+            document.body.classList.add('large-text');
+            document.documentElement.classList.add('large-text');
+            console.log('[Configurações-Login] Texto AUMENTADO');
         } else {
-            document.body.style.fontSize = '16px';
+            console.log('[Configurações-Login] Texto NORMAL');
         }
 
         // Alto contraste
-        if (settings.highContrast && settings.theme === 'light') {
-            document.body.style.filter = 'contrast(1.3)';
+        if (settings.highContrast) {
+            document.body.classList.add('high-contrast');
+            document.documentElement.classList.add('high-contrast');
+            console.log('[Configurações-Login] Alto contraste ATIVADO');
+        } else {
+            console.log('[Configurações-Login] Alto contraste DESATIVADO');
         }
+
+        // Efeitos de clique (controla se os efeitos visuais ao clicar estão ativos)
+        // Essas flags são consultadas nos event listeners de mouse
+        console.log('[Configurações-Login] Efeito ao clicar:', settings.enableClickEffect ? 'ATIVADO' : 'DESATIVADO');
+        console.log('[Configurações-Login] Efeito ao segurar:', settings.enableHoldEffect ? 'ATIVADO' : 'DESATIVADO');
     }
 
     // Restaurar padrões
     function restoreDefaults() {
         if (confirm('Tem certeza que deseja restaurar as configurações padrão?')) {
             localStorage.removeItem('loginPageSettings');
-            document.getElementById('enableWaves').checked = defaultSettings.enableWaves;
-            document.getElementById('reduceMotion').checked = defaultSettings.reduceMotion;
-            document.getElementById('enableAnimations').checked = defaultSettings.enableAnimations;
-            document.getElementById('highContrast').checked = defaultSettings.highContrast;
-            document.getElementById('largerText').checked = defaultSettings.largerText;
-            document.querySelector(`input[value="${defaultSettings.theme}"]`).checked = true;
+            
+            const enableWavesEl = document.getElementById('enableWaves');
+            const enableClickEffectEl = document.getElementById('enableClickEffect');
+            const enableHoldEffectEl = document.getElementById('enableHoldEffect');
+            const highContrastEl = document.getElementById('highContrast');
+            const largerTextEl = document.getElementById('largerText');
+            const themeLightEl = document.querySelector('input[value="light"]');
+
+            if (enableWavesEl) enableWavesEl.checked = defaultSettings.enableWaves;
+            if (enableClickEffectEl) enableClickEffectEl.checked = defaultSettings.enableClickEffect;
+            if (enableHoldEffectEl) enableHoldEffectEl.checked = defaultSettings.enableHoldEffect;
+            if (highContrastEl) highContrastEl.checked = defaultSettings.highContrast;
+            if (largerTextEl) largerTextEl.checked = defaultSettings.largerText;
+            if (themeLightEl) themeLightEl.checked = true;
+
             saveSettings();
             alert('Configurações restauradas!');
             console.log('[Configurações-Login] Padrões restaurados');
@@ -515,14 +627,47 @@ document.addEventListener('DOMContentLoaded', () => {
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => {
             settingsModal.classList.add('active');
-            console.log('[Configurações-Login] Modal aberto');
+            // Bloqueia interatividade das waves enquanto o modal estiver aberto
+            isSettingsOpen = true;
+            interactive = false;
+            // Zera efeitos transitórios das waves ao abrir o modal
+            isMousePressed = false;
+            speedBoost = 0;
+            heatIntensity = 0;
+            clickAmplitude = 0;
+            targetClickHeight = 0;
+            console.log('[Configurações-Login] Modal aberto — interatividade das waves DESATIVADA');
         });
     }
 
-    // Fechar modal
+    // Fechar modal com animação
     function closeModal() {
-        settingsModal.classList.remove('active');
-        console.log('[Configurações-Login] Modal fechado');
+        const settingsContent = settingsModal.querySelector('.settings-content');
+        
+        // Adiciona classes de fechamento para trigger das animações
+        settingsModal.classList.add('closing');
+        if (settingsContent) {
+            settingsContent.classList.add('closing');
+        }
+        
+        // Aguarda a animação terminar antes de remover completamente
+        setTimeout(() => {
+            settingsModal.classList.remove('active', 'closing');
+            if (settingsContent) {
+                settingsContent.classList.remove('closing');
+            }
+            
+            isSettingsOpen = false;
+            // Restaura a interatividade somente se o formulário não estiver focado
+            // e o mouse não estiver sobre a caixa de login
+            if (!isFormFocused) {
+                const loginBox = document.querySelector('.CaixaLogin') || document.querySelector('.login');
+                if (!(loginBox && loginBox.matches(':hover'))) {
+                    interactive = true;
+                }
+            }
+            console.log('[Configurações-Login] Modal fechado — interatividade das waves conforme contexto');
+        }, 300); // 300ms = duração da animação
     }
 
     if (closeSettings) {
@@ -555,13 +700,40 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('change', saveSettings);
     });
 
+    // Permitir clicar na caixa toda para marcar/desmarcar checkbox
+    document.querySelectorAll('.settings-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+            // Evita duplo clique se já clicou diretamente no input
+            if (e.target.tagName === 'INPUT') return;
+            
+            const input = option.querySelector('input[type="checkbox"], input[type="radio"]');
+            if (input) {
+                if (input.type === 'checkbox') {
+                    input.checked = !input.checked;
+                    input.dispatchEvent(new Event('change'));
+                } else if (input.type === 'radio') {
+                    input.checked = true;
+                    input.dispatchEvent(new Event('change'));
+                }
+            }
+        });
+    });
+
     // Carregar configurações ao iniciar
     const currentSettings = loadSettings();
-    document.getElementById('enableWaves').checked = currentSettings.enableWaves;
-    document.getElementById('reduceMotion').checked = currentSettings.reduceMotion;
-    document.getElementById('enableAnimations').checked = currentSettings.enableAnimations;
-    document.getElementById('highContrast').checked = currentSettings.highContrast;
-    document.getElementById('largerText').checked = currentSettings.largerText;
-    document.querySelector(`input[value="${currentSettings.theme}"]`).checked = true;
+    const enableWavesEl = document.getElementById('enableWaves');
+    const enableClickEffectEl = document.getElementById('enableClickEffect');
+    const enableHoldEffectEl = document.getElementById('enableHoldEffect');
+    const highContrastEl = document.getElementById('highContrast');
+    const largerTextEl = document.getElementById('largerText');
+    const themeEl = document.querySelector(`input[value="${currentSettings.theme}"]`);
+
+    if (enableWavesEl) enableWavesEl.checked = currentSettings.enableWaves;
+    if (enableClickEffectEl) enableClickEffectEl.checked = currentSettings.enableClickEffect;
+    if (enableHoldEffectEl) enableHoldEffectEl.checked = currentSettings.enableHoldEffect;
+    if (highContrastEl) highContrastEl.checked = currentSettings.highContrast;
+    if (largerTextEl) largerTextEl.checked = currentSettings.largerText;
+    if (themeEl) themeEl.checked = true;
+
     applySettings(currentSettings);
 });
