@@ -1,3 +1,4 @@
+/* ==================== FONTES E RESET ==================== */
 @font-face {
     font-family: 'OpenDyslexic';
     src: url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
@@ -8,63 +9,37 @@
     font-display: swap;
 }
 
-html, body {
-    height: 100%;
-    margin: 0;
-    background: transparent; /* permite ver o canvas atrás */
-    background-color:  #fffffff6; ;
-    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif; 
-    color: #222; 
-    min-height: 100vh; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    
-}
-
-
-#waveCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    display: block;
-    z-index: 0;              
-    pointer-events: none;   
-}
-
-
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-header { 
-    background-color: #2d3e50; 
-    color: #fff; 
-    padding: 2rem 0; 
-    text-align: center; 
+html, body {
+    height: 100%;
+    background: #fffffff6;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif; 
+    color: #222; 
+    min-height: 100vh; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    filter: none !important;
 }
 
-header h1 { 
-    font-size: clamp(2rem, 4vw, 2.5rem); 
-    letter-spacing: 2px; 
+/* ==================== CANVAS WAVES ==================== */
+#waveCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;              
+    pointer-events: none;   
 }
 
-main { 
-    max-width: 900px; 
-    width: 90%;
-    margin: 40px auto; 
-    padding: 24px; 
-    background: #fff; 
-    border-radius: 12px; 
-    box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08); 
-}
-
+/* ==================== MODAL DE LOGIN ==================== */
 .overlay {
     position: fixed;
     top: 0; 
@@ -89,6 +64,7 @@ main {
     width: 90%;
     font-size: 1.1rem;
     animation: fadeIn 0.3s ease-in-out;
+    filter: none !important;
 }
 
 .modal button {
@@ -99,6 +75,7 @@ main {
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
 .modal button:hover {
@@ -106,20 +83,12 @@ main {
 }
 
 @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(-20px);}
-    to {opacity: 1; transform: translateY(0);}
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.CaixaLogin h5 {
-    margin-bottom: 0.1em;
-    margin-top: 1em;
-}
-
-.CaixaLogin h1{
-    margin-top: 0.5em;
-}
-
-.CaixaLogin{ 
+/* ==================== CAIXA DE LOGIN ==================== */
+.CaixaLogin { 
     padding: 0.4vw 1vw;
     border-radius: 2vw;
     background-color: #ffffff;
@@ -134,7 +103,9 @@ main {
     font-size: 1.1rem;
     margin-bottom: 0.7vw;
     position: relative;
-    z-index: 2; 
+    z-index: 2;
+    filter: none !important;
+    transition: all 0.3s ease;
 }
 
 .CaixaLoginImg {
@@ -147,57 +118,52 @@ main {
     position: relative;
 }
 
-label[for="TituloLogin"]{
+.CaixaLogin h5 {
+    margin-bottom: 0.1em;
+    margin-top: 1em;
+}
+
+.CaixaLogin h1 {
+    margin-top: 0.5em;
+}
+
+/* ==================== LABELS ==================== */
+label[for="TituloLogin"] {
     font-family: 'OpenDyslexic';
     font-size: clamp(1.5rem, 5vw, 1.95rem);
     font-weight: bold;
     color: #212121;
     margin-bottom: 0.20em;
-    margin-top: 0.01em ;
+    margin-top: 0.01em;
     margin-left: 3.0em;
     white-space: nowrap;
     display: flex;
     align-items: center;
 }
 
-label[for="Subtitulo"]{
+label[for="Subtitulo"] {
     font-family: 'OpenDyslexic';
     font-size: clamp(0.6rem, 2.5vw, 0.75rem);
     font-weight: bold;
     color: #212121;
     margin-bottom: 0.20em;
-    margin-top: 1em ;
+    margin-top: 1em;
     margin-left: 7%;
     white-space: nowrap;
     display: flex;
     align-items: center;
 }
 
-#email {
-    padding: 0.6em 2em;
-    border: 3px solid #00000075;
-    border-radius: 2em;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 0;
-    background-color: #f5f5f5;
-    font-size: 1em;
-    position: relative;
+label[for="LembrarSenhaSubtitulo"] {
+    font-family: 'OpenDyslexic';
+    font-size: clamp(0.6rem, 2.5vw, 0.75rem);
+    font-weight: bold;
+    color: #212121;
+    align-items: center;
 }
 
-.password-container {
-    position: relative;
-}
-
-i{
-    font-size: clamp(20px, 4vw, 30px);
-    cursor: pointer;
-    position: absolute;
-    right: 5%;
-    color: #474747;
-    bottom: 0.01em;
-}
-
+/* ==================== INPUTS ==================== */
+#email,
 #senha {
     padding: 0.6em 2em;
     border: 3px solid #00000075;
@@ -208,81 +174,9 @@ i{
     background-color: #f5f5f5;
     font-size: 1em;
     position: relative;
-}
-
-
-label[for="LembrarSenhaSubtitulo"]{
-    font-family: 'OpenDyslexic';
-    font-size: clamp(0.6rem, 2.5vw, 0.75rem);
-    font-weight: bold;
-    color: #212121;
-    align-items: center;
-    margin-left: none;
-
-    
-}
-
-#CBXLembrarSenha {
-    
-    margin-left: 1.5em;
-    width: 1.5em;
-    height: 1.5em;
-    cursor: pointer;
-    margin-top: auto;
-    margin-top: 0.3em;
-    margin-bottom: 1.5em;
-    border-radius: 2em;
-    accent-color: #ff8351;
-    margin-right: none;
-}
-
-
-
-#ButtonEntrar {
-    display: inline-block;
-    padding: 0.8em 0;
-    width: 50%;
-    background: #000000;
-    color: #f5f1f2;
-    border: none;
-    border-radius: 2em;
-    font-size: 0.85em;
-    cursor: pointer;
-    transition: background 0.2s;
-    text-align: center;
-    margin: 0;
-    vertical-align: middle;
-    font-family: 'OpenDyslexic';
-    z-index: 3;
-}
-
-#ButtonEntrar:hover {
-    background: #31313185;
-}
-
-#ButtonCriarConta {
-    display: inline-block;
-    padding: 0.8em 0;
-    width: 50%;
-    background: #212121;
-    color: #f5f1f2;
-    border: none;
-    border-radius: 2em;
-    font-size: 0.97em;
-    cursor: pointer;
-    transition: background 0.2s;
-    margin: 0;
-    text-align: center;
-    white-space: normal;
-    word-break: break-word;
-    line-height: 1.2;
-    vertical-align: middle;
-    font-family: 'OpenDyslexic';
-    z-index: 3;
-}
-
-#ButtonCriarConta:hover {
-    background: #88888888;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+    transition: all 0.2s ease;
+    color: #222;
 }
 
 #email::placeholder,
@@ -292,8 +186,104 @@ label[for="LembrarSenhaSubtitulo"]{
     color: #a3a3a3;
 }
 
+#email:focus,
+#senha:focus {
+    outline: none;
+    border-color: #ff6432;
+    background-color: #fff;
+}
+
+/* ==================== PASSWORD CONTAINER ==================== */
+.password-container {
+    position: relative;
+}
+
+i {
+    font-size: clamp(20px, 4vw, 30px);
+    cursor: pointer;
+    position: absolute;
+    right: 5%;
+    color: #474747;
+    bottom: 0.01em;
+    transition: all 0.2s ease;
+}
+
+i:hover {
+    color: #ff6432;
+    transform: scale(1.1);
+}
+
+/* ==================== CHECKBOXES ==================== */
+#CBXLembrarSenha {
+    margin-left: 1.5em;
+    width: 1.5em;
+    height: 1.5em;
+    cursor: pointer;
+    margin-top: auto;
+    margin-bottom: 1.5em;
+    border-radius: 2em;
+    accent-color: #ff8351;
+    transition: all 0.2s ease;
+}
+
+#CBXLembrarSenha:hover {
+    transform: scale(1.1);
+}
+
+.LembrarMeContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: 0.3em;
+    color: #222;
+}
+
+/* ==================== BOTÕES ==================== */
+#ButtonEntrar,
+#ButtonCriarConta {
+    display: inline-block;
+    padding: 0.8em 0;
+    width: 50%;
+    border: none;
+    border-radius: 2em;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    font-family: 'OpenDyslexic';
+    z-index: 3;
+    font-weight: 600;
+    color: #f5f1f2;
+}
+
+#ButtonEntrar {
+    background: #000000;
+}
+
+#ButtonEntrar:hover {
+    background: #31313185;
+    transform: translateY(-2px);
+}
+
+#ButtonEntrar:active {
+    transform: translateY(0);
+}
+
+#ButtonCriarConta {
+    background: #212121;
+}
+
+#ButtonCriarConta:hover {
+    background: #88888888;
+    transform: translateY(-2px);
+}
+
+#ButtonCriarConta:active {
+    transform: translateY(0);
+}
+
 .form-buttons {
-    width: auto ;
+    width: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -303,17 +293,403 @@ label[for="LembrarSenhaSubtitulo"]{
     white-space: normal;
 }
 
+/* ==================== LINKS ==================== */
 .nao-quebrar-linha {
     white-space: nowrap;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #4e4e4e;
+    font-size: 0.9rem;
 }
 
-/* ...existing code... */
+.nao-quebrar-linha a {
+    color: #ff6432;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin-left: 0.3em;
+}
 
-/* Responsividade Mobile (até 480px) */
+.nao-quebrar-linha a:hover {
+    text-decoration: underline;
+    color: #ff8351;
+}
+
+/* ==================== BOTÃO DE CONFIGURAÇÕES ==================== */
+.settings-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 100, 50, 0.9);
+    border: 2px solid rgba(255, 150, 100, 0.8);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 100, 50, 0.4);
+    z-index: 999;
+    filter: none !important;
+}
+
+.settings-btn:hover {
+    background: rgba(255, 69, 0, 1);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 20px rgba(255, 100, 50, 0.6);
+}
+
+.settings-btn:active {
+    transform: scale(0.95) rotate(90deg);
+}
+
+/* ==================== MODAL DE CONFIGURAÇÕES ==================== */
+.settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: flex-end;
+    animation: slideIn 0.3s ease;
+}
+
+.settings-modal.active {
+    display: flex;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.settings-content {
+    background: linear-gradient(135deg, rgba(255, 192, 192, 0.95) 0%, rgba(255, 170, 150, 0.95) 100%);
+    width: 320px;
+    height: 100%;
+    padding: 30px 20px;
+    border-left: 3px solid rgba(255, 100, 50, 0.8);
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    animation: slideInRight 0.3s ease;
+    overflow-y: auto;
+    filter: none !important;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid rgba(255, 100, 50, 0.4);
+    padding-bottom: 15px;
+}
+
+.settings-header h2 {
+    color: rgba(255, 69, 0, 0.9);
+    font-size: 22px;
+    margin: 0;
+}
+
+.close-settings {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: rgba(255, 69, 0, 0.8);
+    transition: all 0.2s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-settings:hover {
+    color: rgba(255, 69, 0, 1);
+    transform: rotate(90deg);
+}
+
+/* ==================== GRUPOS DE CONFIGURAÇÕES ==================== */
+.settings-group {
+    margin-bottom: 20px;
+}
+
+.settings-group label {
+    display: block;
+    color: rgba(255, 69, 0, 0.9);
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.settings-option {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 150, 100, 0.3);
+}
+
+.settings-option:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 100, 50, 0.6);
+    transform: translateX(-5px);
+}
+
+.settings-option input[type="checkbox"],
+.settings-option input[type="radio"] {
+    margin-right: 12px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: rgba(255, 100, 50, 0.9);
+}
+
+.settings-option span {
+    color: rgba(255, 69, 0, 0.85);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.settings-divider {
+    height: 1px;
+    background: rgba(255, 150, 100, 0.3);
+    margin: 20px 0;
+}
+
+/* ==================== BOTÕES DE CONFIGURAÇÕES ==================== */
+.settings-button {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 100, 50, 0.85);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.settings-button:hover {
+    background: rgba(255, 69, 0, 1);
+    box-shadow: 0 4px 12px rgba(255, 100, 50, 0.5);
+    transform: translateY(-2px);
+}
+
+.settings-button:active {
+    transform: scale(0.98);
+}
+
+/* ==================== TEMAS ==================== */
+
+/* Tema Claro (padrão) */
+html, body.light-theme {
+    background: #fffffff6;
+    color: #222;
+}
+
+body.light-theme .CaixaLogin {
+    background-color: #ffffff;
+    color: #222;
+    box-shadow: 0 4px 10px rgba(117, 117, 117, 0.493);
+}
+
+body.light-theme #email,
+body.light-theme #senha {
+    background-color: #f5f5f5;
+    color: #222;
+    border-color: #00000075;
+}
+
+body.light-theme #email:focus,
+body.light-theme #senha:focus {
+    background-color: #fff;
+    border-color: #ff6432;
+}
+
+body.light-theme #email::placeholder,
+body.light-theme #senha::placeholder {
+    color: #a3a3a3;
+}
+
+body.light-theme label,
+body.light-theme .LembrarMeContainer {
+    color: #222;
+}
+
+body.light-theme i {
+    color: #474747;
+}
+
+body.light-theme i:hover {
+    color: #ff6432;
+}
+
+body.light-theme .nao-quebrar-linha {
+    color: #4e4e4e;
+}
+
+body.light-theme .nao-quebrar-linha a {
+    color: #ff6432;
+}
+
+body.light-theme .nao-quebrar-linha a:hover {
+    color: #ff8351;
+}
+
+body.light-theme .modal {
+    background-color: #ffffff;
+    color: #222;
+}
+
+body.light-theme .modal h2 {
+    color: #222;
+}
+
+body.light-theme .modal button {
+    background-color: #444;
+    color: #fff;
+}
+
+body.light-theme .modal button:hover {
+    background-color: #ac0000;
+}
+
+/* Tema Escuro */
+body.dark-theme {
+    background: #1a1a1a;
+    color: #e0e0e0;
+}
+
+body.dark-theme .CaixaLogin {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-theme #email,
+body.dark-theme #senha {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border-color: #555555;
+}
+
+body.dark-theme #email::placeholder,
+body.dark-theme #senha::placeholder {
+    color: #888888;
+}
+
+body.dark-theme #email:focus,
+body.dark-theme #senha:focus {
+    background-color: #444444;
+    border-color: #ff8351;
+}
+
+body.dark-theme label,
+body.dark-theme .LembrarMeContainer {
+    color: #e0e0e0;
+}
+
+body.dark-theme i {
+    color: #b0b0b0;
+}
+
+body.dark-theme i:hover {
+    color: #ff8351;
+}
+
+body.dark-theme .nao-quebrar-linha {
+    color: #b0b0b0;
+}
+
+body.dark-theme .nao-quebrar-linha a {
+    color: #ff8351;
+}
+
+body.dark-theme .nao-quebrar-linha a:hover {
+    color: #ffaa80;
+}
+
+body.dark-theme .modal {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+body.dark-theme .modal h2 {
+    color: #e0e0e0;
+}
+
+body.dark-theme .modal button {
+    background-color: #555555;
+    color: #e0e0e0;
+}
+
+body.dark-theme .modal button:hover {
+    background-color: #ff6432;
+}
+
+/* Alto Contraste */
+body.high-contrast {
+    filter: contrast(1.5);
+}
+
+/* Texto Maior */
+body.large-text {
+    font-size: 18px !important;
+}
+
+body.large-text #email,
+body.large-text #senha {
+    font-size: 1.1em;
+}
+
+body.large-text label[for="TituloLogin"] {
+    font-size: 2.2rem;
+}
+
+body.large-text label[for="Subtitulo"] {
+    font-size: 0.95rem;
+}
+
+body.large-text .nao-quebrar-linha {
+    font-size: 1rem;
+}
+
+/* Reduzir Movimento */
+body.reduce-motion * {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+}
+
+body.reduce-motion .settings-btn,
+body.reduce-motion #ButtonEntrar,
+body.reduce-motion #ButtonCriarConta,
+body.reduce-motion i {
+    transition: none !important;
+}
+
+/* ==================== RESPONSIVIDADE ==================== */
 @media (max-width: 480px) {
     .CaixaLogin {
         width: 100%;
@@ -322,7 +698,6 @@ label[for="LembrarSenhaSubtitulo"]{
         border-radius: 1rem;
     }
 
-    
     .CaixaLoginImg {
         max-width: 70%;
     }
@@ -363,12 +738,37 @@ label[for="LembrarSenhaSubtitulo"]{
     #ButtonCriarConta {
         width: 100%;
         font-size: 0.9rem;
-        padding: 0.8em 0;
     }
 
     .nao-quebrar-linha {
         font-size: 0.8rem;
     }
 
-    
+    .settings-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+        top: 15px;
+        left: 15px;
+    }
+
+    .settings-content {
+        width: 100%;
+    }
+
+    .modal {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .CaixaLogin {
+        max-width: 90%;
+        width: 90%;
+    }
+
+    .settings-content {
+        width: 280px;
+    }
 }

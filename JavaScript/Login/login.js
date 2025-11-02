@@ -1,11 +1,11 @@
-/* login.js  — controla modal/login e as waves.
+/* login.js  — controla modal/login, waves e configurações.
    Inicializa só após DOMContentLoaded para garantir elementos disponíveis.
 */
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('[login.js] DOM pronto — iniciando scripts');
 
-    /* ---------- Referências DOM ---------- */
+    /* ========== REFERÊNCIAS DOM - LOGIN ========== */
     const overlay = document.getElementById("overlay");
     const textoModal = overlay ? overlay.querySelector("p") : null;
     const btnEntrar = document.getElementById("ButtonEntrar");
@@ -103,9 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /* ==================== CANVAS WAVES ==================== */
+    /* ========== CANVAS WAVES ==================== */
     const canvas = document.getElementById('waveCanvas');
     const ctx = canvas.getContext('2d');
+    let wavesEnabled = true;
+    let animationFrameId = null;
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -122,39 +124,39 @@ document.addEventListener('DOMContentLoaded', () => {
     let mouseY = window.innerHeight / 2;
     let targetMouseX = window.innerWidth / 2;
     let targetMouseY = window.innerHeight / 2;
-    const easeAmount = 0.08; // Quanto menor, mais suave (0.01 a 0.2)
+    const easeAmount = 0.08;
 
     // Flag para controlar se a interatividade com o mouse está habilitada
     let interactive = true;
     let isFormFocused = false;
-    let interactiveTransition = 1; // Transição suave entre ativo/inativo (0 a 1)
-    const transitionSpeed = 0.06; // Velocidade da transição (quanto menor, mais lenta)
+    let interactiveTransition = 1;
+    const transitionSpeed = 0.06;
 
     // Controle de pressão do mouse (mouse press boost)
     let isMousePressed = false;
-    let speedBoost = 0; // 0 a 1 (0 = sem boost, 1 = boost máximo)
-    const maxSpeedBoost = 2.5; // Multiplicador máximo de velocidade (quanto maior, mais rápido)
-    const boostDecayRate = 0.95; // Taxa de decay do boost (quanto menor, mais rápido decai)
-    const boostBuildRate = 0.08; // Taxa de construção do boost (suavização do aumento)
+    let speedBoost = 0;
+    const maxSpeedBoost = 2.5;
+    const boostDecayRate = 0.95;
+    const boostBuildRate = 0.08;
 
     // Controle de direção das ondas
-    let waveDirection = 1; // 1 = direita, -1 = esquerda
+    let waveDirection = 1;
     let targetWaveDirection = 1;
-    const directionEaseAmount = 0.1; // Suavização da mudança de direção
+    const directionEaseAmount = 0.1;
 
     // Sistema de cores quentes ao clicar nas ondas
-    let heatIntensity = 0; // 0 a 1 (0 = frio, 1 = quente)
-    const heatDecayRate = 0.96; // Taxa de decay do calor (mais lento agora)
+    let heatIntensity = 0;
+    const heatDecayRate = 0.96;
     
     // Sistema de amplitude do clique (labaredas)
-    let clickAmplitude = 0; // 0 a 1 - amplitude extra ao clicar
-    const maxClickAmplitude = 1.5; // Amplificação máxima
-    const clickAmplitudeDecayRate = 0.93; // Taxa de decay da amplitude do clique
+    let clickAmplitude = 0;
+    const maxClickAmplitude = 1.5;
+    const clickAmplitudeDecayRate = 0.93;
     
     // Sistema de altura das ondas ao clicar
-    let clickHeight = 0; // Sobe até a altura do mouse
+    let clickHeight = 0;
     let targetClickHeight = 0;
-    const clickHeightEaseAmount = 0.12; // Suavização da mudança de altura
+    const clickHeightEaseAmount = 0.12;
 
     // Paleta de cores base (frio)
     const coresBase = [
@@ -163,16 +165,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'rgba(255,210,180,0.5)'
     ];
 
-    // Paleta de cores quentes (com gradiente de fogo: amarelo > laranja > vermelho)
+    // Paleta de cores quentes
     const coresQuentes = [
-        'rgba(255,200,0,0.9)',      // Amarelo quente
-        'rgba(255,140,0,0.85)',     // Laranja
-        'rgba(255,69,0,0.8)'        // Vermelho-laranja
+        'rgba(255,200,0,0.9)',
+        'rgba(255,140,0,0.85)',
+        'rgba(255,69,0,0.8)'
     ];
 
-    // Função para interpolar cores (misturar frio com quente)
+    // Função para interpolar cores
     function interpolarCor(frio, quente, t) {
-        // Parse das cores RGBA
         const regexFrio = /rgba\((\d+),(\d+),(\d+),([\d.]+)\)/;
         const regexQuente = /rgba\((\d+),(\d+),(\d+),([\d.]+)\)/;
         
@@ -191,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const b2 = parseInt(matchQuente[3]);
         const a2 = parseFloat(matchQuente[4]);
         
-        // Interpolação linear
         const r = Math.round(r1 + (r2 - r1) * t);
         const g = Math.round(g1 + (g2 - g1) * t);
         const b = Math.round(b1 + (b2 - b1) * t);
@@ -200,19 +200,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return `rgba(${r},${g},${b},${a})`;
     }
 
-    // Configuração das ondas com mais variação
+    // Configuração das ondas
     const ondas = [];
     for (let i = 0; i < 3; i++) {
         ondas.push({
-            amp: 45 + i * 8,          // Amplitude um pouco menor para mais suavidade
-            freq: 0.0018 + i * 0.0008, // Frequência mais suave
-            vel: 0.0015 + i * 0.0012,  // Velocidade um pouco menor
+            amp: 45 + i * 8,
+            freq: 0.0018 + i * 0.0008,
+            vel: 0.0015 + i * 0.0012,
             fase: Math.random() * 1000,
             corBase: coresBase[i],
             corQuente: coresQuentes[i],
             corAtual: coresBase[i],
             targetAmp: 45 + i * 8,
-            ampEase: 0.05  // Suavização da amplitude
+            ampEase: 0.05
         });
     }
 
@@ -221,25 +221,23 @@ document.addEventListener('DOMContentLoaded', () => {
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
 
-        // Determinar direção das ondas baseado na posição do mouse
         const centerX = window.innerWidth / 2;
         if (e.clientX < centerX) {
-            targetWaveDirection = 1; // Esquerda (invertido)
+            targetWaveDirection = 1;
         } else if (e.clientX > centerX) {
-            targetWaveDirection = -1; // Direita (invertido)
+            targetWaveDirection = -1;
         }
     });
 
     // Detecta pressão do botão esquerdo do mouse
     window.addEventListener('mousedown', (e) => {
-        if (e.button === 0) { // Botão esquerdo
+        if (e.button === 0) {
             isMousePressed = true;
             
-            // Criar efeito de calor e labareda ao clicar nas waves (fora do formulário)
-            if (!isFormFocused && interactive) {
-                heatIntensity = 1.0; // Ativa o efeito de calor
-                clickAmplitude = maxClickAmplitude; // Ativa labareda
-                targetClickHeight = -(canvas.height / 2 - e.clientY); // Sobe até altura do mouse
+            if (!isFormFocused && interactive && wavesEnabled) {
+                heatIntensity = 1.0;
+                clickAmplitude = maxClickAmplitude;
+                targetClickHeight = -(canvas.height / 2 - e.clientY);
                 console.log('[waves] Clique nas ondas — efeito de labareda ativado');
             }
             console.log('[waves] Mouse pressionado — BOOST começando a aumentar');
@@ -248,19 +246,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Detecta soltura do botão esquerdo do mouse
     window.addEventListener('mouseup', (e) => {
-        if (e.button === 0) { // Botão esquerdo
+        if (e.button === 0) {
             isMousePressed = false;
             console.log('[waves] Mouse liberado — boost começará a decair');
         }
     });
 
-    // Seleciona a caixa de login para detectar quando desabilitar interatividade
+    // Seleciona a caixa de login
     const loginBox = document.querySelector('.CaixaLogin') || document.querySelector('.login');
-    const formElement = document.getElementById('formLogin');
 
-    if (formElement) {
-        // Quando qualquer input dentro do formulário recebe foco
-        formElement.addEventListener('focusin', (e) => {
+    if (formLogin) {
+        formLogin.addEventListener('focusin', (e) => {
             if (e.target.matches('input, textarea, button')) {
                 isFormFocused = true;
                 interactive = false;
@@ -268,11 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, true);
 
-        // Quando qualquer input perde foco
-        formElement.addEventListener('focusout', (e) => {
+        formLogin.addEventListener('focusout', (e) => {
             if (e.target.matches('input, textarea, button')) {
                 isFormFocused = false;
-                // Só reativa se o mouse não estiver na caixa
                 if (loginBox && !loginBox.matches(':hover')) {
                     interactive = true;
                     console.log('[waves] Elemento desfocado — interactive ON');
@@ -282,13 +276,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (loginBox) {
-        // Mouse entra na caixa de login -> desativa interatividade suavemente
         loginBox.addEventListener('mouseenter', () => {
             interactive = false;
             console.log('[waves] Mouse entrou na caixa — interactive OFF');
         });
         
-        // Mouse sai da caixa de login -> ativa apenas se nenhum input está focado
         loginBox.addEventListener('mouseleave', () => {
             if (!isFormFocused) {
                 interactive = true;
@@ -297,102 +289,82 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Toque em dispositivos móveis
     if (loginBox) {
         loginBox.addEventListener('touchstart', () => {
             interactive = false;
-            console.log('[waves] Touch started — interactive OFF');
         }, { passive: true });
 
         loginBox.addEventListener('touchend', () => {
             if (!isFormFocused) {
                 interactive = true;
-                console.log('[waves] Touch ended — interactive ON');
             }
         }, { passive: true });
     }
 
-    // Variável para rastrear o tempo do último frame (para deltaTime)
     let lastFrameTime = Date.now();
 
-    // Função de desenho/loop com suavização melhorada
     function desenhar() {
+        if (!wavesEnabled) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            animationFrameId = requestAnimationFrame(desenhar);
+            return;
+        }
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Calcular deltaTime
         const currentTime = Date.now();
-        const deltaTime = (currentTime - lastFrameTime) / 1000; // em segundos
+        const deltaTime = (currentTime - lastFrameTime) / 1000;
         lastFrameTime = currentTime;
 
-        // Suavizar transição entre ativo/inativo
         const targetTransition = interactive ? 1 : 0;
         interactiveTransition += (targetTransition - interactiveTransition) * transitionSpeed;
 
-        // Suavizar movimento do mouse (easing)
         mouseX += (targetMouseX - mouseX) * easeAmount;
         mouseY += (targetMouseY - mouseY) * easeAmount;
 
-        // Suavizar mudança de direção das ondas
         waveDirection += (targetWaveDirection - waveDirection) * directionEaseAmount;
 
-        // Calcular posição da onda suavemente
-        // Quando interactive = true, usa posição real do mouse
-        // Quando interactive = false, suavemente volta para o centro
         const smoothMouseY = window.innerHeight / 2 + (mouseY - window.innerHeight / 2) * interactiveTransition;
 
-        // Atualizar boost com delay (build rate) quando pressionado
         if (isMousePressed && speedBoost < maxSpeedBoost) {
             speedBoost += boostBuildRate;
             if (speedBoost > maxSpeedBoost) speedBoost = maxSpeedBoost;
         } else if (!isMousePressed && speedBoost > 0) {
-            // Decay do boost quando o mouse não está pressionado
             speedBoost *= boostDecayRate;
-            if (speedBoost < 0.01) speedBoost = 0; // Zera quando muito pequeno
+            if (speedBoost < 0.01) speedBoost = 0;
         }
 
-        // Atualizar intensidade de calor (mais lento agora)
         if (heatIntensity > 0) {
             heatIntensity *= heatDecayRate;
             if (heatIntensity < 0.01) heatIntensity = 0;
         }
 
-        // Atualizar amplitude do clique (labareda)
         if (clickAmplitude > 0) {
             clickAmplitude *= clickAmplitudeDecayRate;
             if (clickAmplitude < 0.01) clickAmplitude = 0;
         }
 
-        // Atualizar altura do clique (sobe até o mouse)
         clickHeight += (targetClickHeight - clickHeight) * clickHeightEaseAmount;
 
         ondas.forEach((o, idx) => {
-            // Calcular amplitude alvo baseado no estado com transição suave
             let newTargetAmp;
             const influence = Math.abs(smoothMouseY - canvas.height / 2) * 0.03;
-            
-            // Adicionar amplitude do clique (labareda)
             const extraAmp = clickAmplitude * (60 + idx * 10);
             newTargetAmp = (45 + idx * 8) + influence * interactiveTransition + extraAmp;
 
-            // Suavizar mudança de amplitude
             o.targetAmp = newTargetAmp;
             o.amp += (o.targetAmp - o.amp) * o.ampEase;
 
-            // Cálculo de deslocamento vertical com transição suave + altura do clique
             const verticalInfluence = ((smoothMouseY - canvas.height / 2) * 0.04 * (idx + 1) * interactiveTransition) + clickHeight;
 
-            // Atualizar cor baseado na intensidade de calor
             o.corAtual = interpolarCor(o.corBase, o.corQuente, heatIntensity);
 
-            // === ONDAS DE BAIXO COM EFEITO DE LABAREDA (MAIS PONTUDAS) ===
             ctx.beginPath();
             
-            // Aumentar frequência durante o clique para efeito mais pontudo
             const freqMultiplier = 1 + clickAmplitude * 0.8;
             const adjustedFreq = o.freq * freqMultiplier;
             
             for (let x = 0; x <= canvas.width; x += 10) {
-                // Adicionar harmônico para efeito de labareda
                 const baseY = Math.sin(x * adjustedFreq + o.fase) * o.amp;
                 const harmonic = Math.sin(x * adjustedFreq * 2.5 + o.fase) * (o.amp * clickAmplitude * 0.6);
                 const y = baseY + harmonic + canvas.height / 2 + verticalInfluence;
@@ -403,33 +375,193 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.lineTo(0, canvas.height);
             ctx.closePath();
 
-            // Gradiente com cor dinâmica baseada no calor (fogo: amarelo > laranja > vermelho)
             const gradBottom = ctx.createLinearGradient(0, 0, 0, canvas.height);
             
-            // Interpolar a cor atual baseado no calor
-            const corMeio = interpolarCor(o.corBase, 'rgba(255,140,0,0.85)', heatIntensity); // Laranja
-            const corBorda = interpolarCor(o.corBase, 'rgba(255,69,0,0.9)', heatIntensity);  // Vermelho
+            const corMeio = interpolarCor(o.corBase, 'rgba(255,140,0,0.85)', heatIntensity);
+            const corBorda = interpolarCor(o.corBase, 'rgba(255,69,0,0.9)', heatIntensity);
             
-            // Gradiente de fogo: amarelo (interior) > laranja (meio) > vermelho (borda/fundo)
-            gradBottom.addColorStop(0, o.corAtual);  // Topo: amarelo/rosa (conforme calor)
-            gradBottom.addColorStop(0.5, corMeio);   // Meio: laranja
-            gradBottom.addColorStop(1, corBorda);    // Fundo: vermelho
+            gradBottom.addColorStop(0, o.corBase);
+            gradBottom.addColorStop(0.5, corMeio);
+            gradBottom.addColorStop(1, corBorda);
             
             ctx.fillStyle = gradBottom;
             ctx.fill();
 
-            // Velocidade de animação suavizada baseada no estado + BOOST + DIREÇÃO
-            // Remover a influência da posição X do mouse na velocidade base
-            const baseSpeed = 0.8; // Velocidade constante
-            const speedBoostMultiplier = 1 + speedBoost; // Boost adiciona ao multiplicador
+            const baseSpeed = 0.8;
+            const speedBoostMultiplier = 1 + speedBoost;
             const speedMultiplier = baseSpeed * speedBoostMultiplier * (1 + Math.sin(Date.now() * 0.0005) * 0.1);
             
-            // Aplicar direção das ondas
             o.fase += o.vel * speedMultiplier * waveDirection;
         });
 
-        requestAnimationFrame(desenhar);
+        animationFrameId = requestAnimationFrame(desenhar);
     }
 
     desenhar();
+
+    /* ========== CONFIGURAÇÕES DA PÁGINA ========== */
+    const settingsBtn = document.getElementById('settingsBtn');
+    const settingsModal = document.getElementById('settingsModal');
+    const closeSettings = document.getElementById('closeSettings');
+    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+    const resetSettings = document.getElementById('resetSettings');
+
+    // Configurações padrão
+    const defaultSettings = {
+        enableWaves: true,
+        theme: 'light',
+        reduceMotion: false,
+        enableAnimations: true,
+        highContrast: false,
+        largerText: false
+    };
+
+    // Carregar configurações do localStorage
+    function loadSettings() {
+        const saved = localStorage.getItem('loginPageSettings');
+        return saved ? JSON.parse(saved) : defaultSettings;
+    }
+
+    // Salvar configurações no localStorage
+    function saveSettings() {
+        const settings = {
+            enableWaves: document.getElementById('enableWaves').checked,
+            theme: document.querySelector('input[name="theme"]:checked').value,
+            reduceMotion: document.getElementById('reduceMotion').checked,
+            enableAnimations: document.getElementById('enableAnimations').checked,
+            highContrast: document.getElementById('highContrast').checked,
+            largerText: document.getElementById('largerText').checked
+        };
+        localStorage.setItem('loginPageSettings', JSON.stringify(settings));
+        applySettings(settings);
+        console.log('[Configurações-Login] Salvas:', settings);
+    }
+
+    // Aplicar configurações
+    function applySettings(settings) {
+        // Ondas - Desaparece completamente
+        wavesEnabled = settings.enableWaves;
+        if (canvas) {
+            if (settings.enableWaves) {
+                canvas.style.opacity = '1';
+                canvas.style.pointerEvents = 'none';
+                canvas.style.display = 'block';
+                console.log('[Configurações-Login] Ondas ATIVADAS');
+            } else {
+                canvas.style.opacity = '0';
+                canvas.style.pointerEvents = 'none';
+                canvas.style.display = 'none';
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                console.log('[Configurações-Login] Ondas DESATIVADAS');
+            }
+        }
+
+        // Tema
+        if (settings.theme === 'dark') {
+            document.body.style.filter = 'invert(1)';
+            document.documentElement.style.filter = 'invert(1)';
+        } else if (settings.theme === 'auto') {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+                document.body.style.filter = 'invert(1)';
+                document.documentElement.style.filter = 'invert(1)';
+            } else {
+                document.body.style.filter = 'none';
+                document.documentElement.style.filter = 'none';
+            }
+        } else {
+            document.body.style.filter = 'none';
+            document.documentElement.style.filter = 'none';
+        }
+
+        // Reduzir movimento
+        if (settings.reduceMotion) {
+            document.documentElement.style.setProperty('--animation-duration', '0s');
+            document.body.style.animation = 'none';
+        } else {
+            document.documentElement.style.setProperty('--animation-duration', '0.3s');
+        }
+
+        // Texto maior
+        if (settings.largerText) {
+            document.body.style.fontSize = '18px';
+        } else {
+            document.body.style.fontSize = '16px';
+        }
+
+        // Alto contraste
+        if (settings.highContrast && settings.theme === 'light') {
+            document.body.style.filter = 'contrast(1.3)';
+        }
+    }
+
+    // Restaurar padrões
+    function restoreDefaults() {
+        if (confirm('Tem certeza que deseja restaurar as configurações padrão?')) {
+            localStorage.removeItem('loginPageSettings');
+            document.getElementById('enableWaves').checked = defaultSettings.enableWaves;
+            document.getElementById('reduceMotion').checked = defaultSettings.reduceMotion;
+            document.getElementById('enableAnimations').checked = defaultSettings.enableAnimations;
+            document.getElementById('highContrast').checked = defaultSettings.highContrast;
+            document.getElementById('largerText').checked = defaultSettings.largerText;
+            document.querySelector(`input[value="${defaultSettings.theme}"]`).checked = true;
+            saveSettings();
+            alert('Configurações restauradas!');
+            console.log('[Configurações-Login] Padrões restaurados');
+        }
+    }
+
+    // Abrir modal
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.classList.add('active');
+            console.log('[Configurações-Login] Modal aberto');
+        });
+    }
+
+    // Fechar modal
+    function closeModal() {
+        settingsModal.classList.remove('active');
+        console.log('[Configurações-Login] Modal fechado');
+    }
+
+    if (closeSettings) {
+        closeSettings.addEventListener('click', closeModal);
+    }
+
+    if (closeSettingsBtn) {
+        closeSettingsBtn.addEventListener('click', () => {
+            saveSettings();
+            closeModal();
+        });
+    }
+
+    // Fechar ao clicar fora
+    if (settingsModal) {
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                closeModal();
+            }
+        });
+    }
+
+    // Restaurar padrões
+    if (resetSettings) {
+        resetSettings.addEventListener('click', restoreDefaults);
+    }
+
+    // Salvar ao mudar qualquer opção
+    document.querySelectorAll('.settings-option input').forEach(input => {
+        input.addEventListener('change', saveSettings);
+    });
+
+    // Carregar configurações ao iniciar
+    const currentSettings = loadSettings();
+    document.getElementById('enableWaves').checked = currentSettings.enableWaves;
+    document.getElementById('reduceMotion').checked = currentSettings.reduceMotion;
+    document.getElementById('enableAnimations').checked = currentSettings.enableAnimations;
+    document.getElementById('highContrast').checked = currentSettings.highContrast;
+    document.getElementById('largerText').checked = currentSettings.largerText;
+    document.querySelector(`input[value="${currentSettings.theme}"]`).checked = true;
+    applySettings(currentSettings);
 });

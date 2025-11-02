@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -13,13 +12,101 @@
 
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
+    <!-- Botão de Configurações - Canto Superior Esquerdo -->
+    <button class="settings-btn" id="settingsBtn" title="Configurações">
+        <i class="bi bi-gear-fill"></i>
+    </button>
+
+    <!-- Modal de Configurações -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>Configurações</h2>
+                <button class="close-settings" id="closeSettings">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+
+            <!-- Grupo: Preferências de Exibição -->
+            <div class="settings-group">
+                <label>🎨 Exibição</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableWaves" checked>
+                    <span>Ativar Ondas Animadas</span>
+                </div>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableSoundFX">
+                    <span>Efeitos Sonoros</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <!-- Grupo: Tema -->
+            <div class="settings-group">
+                <label>🌙 Tema</label>
+                <div class="settings-option">
+                    <input type="radio" name="theme" id="themeLight" value="light" checked>
+                    <span>Claro</span>
+                </div>
+                <div class="settings-option">
+                    <input type="radio" name="theme" id="themeDark" value="dark">
+                    <span>Escuro</span>
+                </div>
+                <div class="settings-option">
+                    <input type="radio" name="theme" id="themeAuto" value="auto">
+                    <span>Automático</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <!-- Grupo: Performance -->
+            <div class="settings-group">
+                <label>⚡ Performance</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="reduceMotion">
+                    <span>Reduzir Movimento</span>
+                </div>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableAnimations" checked>
+                    <span>Animações</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <!-- Grupo: Acessibilidade -->
+            <div class="settings-group">
+                <label>♿ Acessibilidade</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="highContrast">
+                    <span>Alto Contraste</span>
+                </div>
+                <div class="settings-option">
+                    <input type="checkbox" id="largerText">
+                    <span>Texto Maior</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <!-- Botões de Ação -->
+            <button class="settings-button" id="resetSettings">
+                <i class="bi bi-arrow-counterclockwise"></i> Restaurar Padrões
+            </button>
+            <button class="settings-button" id="closeSettingsBtn">
+                <i class="bi bi-check-circle"></i> Salvar e Fechar
+            </button>
+        </div>
+    </div>
+
     <section>
         <div class="CaixaLogin">
             <div class="login">
                 <img src="../img/PETO E BANCO.png" alt="Logo" class="CaixaLoginImg">
                 <label for="TituloLogin">Login</label>
                <form id="formLogin" method="POST" action="login.php" onsubmit="event.preventDefault()">
-
 
                     <label for="Subtitulo">Nome do Perfil ou E-mail:</label>
                     <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou E-mail" required>
@@ -28,19 +115,14 @@
                     <div class="password-container">
                         <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
                         <i class="bi bi-eye-fill" id="BtnVerSenha" title="Mostrar/ocultar senha"></i>
-
                     </div>
 
-
-
-                        <div class="LembrarMeContainer">
+                    <div class="LembrarMeContainer">
                         <input type="checkbox" id="CBXLembrarSenha" name="LembrarSenha">
                         <label for="LembrarSenhaSubtitulo">Lembrar-me</label>
-                        </div>
-
+                    </div>
 
                     <div class="form-buttons">
-                        <!-- botão convertido para type="button" para que o JS controle o envio -->
                         <button type="button" id="ButtonEntrar">Entrar</button>
                         <button id="ButtonCriarConta" type="button"
                             onclick="window.location.href='../Cadastro_E_Perfil/Cadastro.html'">Criar Conta</button>

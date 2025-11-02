@@ -3,7 +3,7 @@ session_start();
 include("../conexao.php");
 
 if(!isset($_COOKIE['lembrar_tolken'])){
-    $tolken =$_COOKIE['lembrar_tolken']
+    $tolken =$_COOKIE['lembrar_tolken'];
 }
 ?>
 
