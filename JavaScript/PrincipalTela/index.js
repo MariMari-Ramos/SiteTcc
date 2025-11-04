@@ -81,8 +81,22 @@
     switch (action) {
       case 'create-sheet':
         console.log('Criar ficha para:', currentSystem);
-        alert(`Criação de ficha para ${currentSystem} em desenvolvimento.`);
-        window.closeModal();
+        
+        // Redireciona para a página de criação de ficha baseado no sistema
+        if (currentSystem === '3DeT Victory') {
+          window.location.href = '../SistemasRPG/Pasta3DeT/Ficha_3DeT.html';
+        } else if (currentSystem === 'Dungeons and Dragons') {
+          window.location.href = '../SistemasRPG/DnD5e/CriarFichaDnD.html';
+        } else if (currentSystem === 'Cyberpunk') {
+          window.location.href = '../SistemasRPG/Cyberpunk/CriarFichaCyberpunk.html';
+        } else if (currentSystem === 'Feiticeiros e Maldições') {
+          window.location.href = '../SistemasRPG/FeiticeiroseMaldicoes/CriarFichaFM.html';
+        } else if (currentSystem === 'Vampiro a Mascara') {
+          window.location.href = '../SistemasRPG/Vampiro/CriarFichaVampiro.html';
+        } else {
+          alert(`Sistema ${currentSystem} ainda não possui página de criação de ficha.`);
+          window.closeModal();
+        }
         break;
         
       case 'system-summary':
@@ -174,14 +188,89 @@
     }
   });
 
+  /* ===== Minhas Fichas: renderização ===== */
+  function renderMinhasFichas() {
+    const host = document.getElementById('minhasFichasList');
+    if (!host || !window.MinhasFichas) return;
+
+    const fichas = window.MinhasFichas.getAll();
+    if (!fichas.length) {
+      host.innerHTML = '<p style="color:#666;margin:6px 8px;">Nenhuma ficha salva ainda.</p>';
+      return;
+    }
+
+    const bySys = fichas.reduce((acc, f) => {
+      const sys = f.sistema || 'Outros';
+      (acc[sys] ||= []).push(f);
+      return acc;
+    }, {});
+
+    const frag = document.createDocumentFragment();
+
+    Object.entries(bySys).forEach(([sistema, list]) => {
+      const group = document.createElement('div');
+      group.className = 'fichas-group';
+      group.setAttribute('data-system', (sistema || '').toLowerCase().replace(/\s+/g, ''));
+
+      const title = document.createElement('div');
+      title.className = 'fichas-title';
+      title.textContent = sistema;
+
+      const chips = document.createElement('div');
+      chips.className = 'fichas-chips';
+
+      list.forEach(f => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'ficha-chip';
+        chip.dataset.id = f.id;
+        chip.textContent = f.nome || `${sistema} - ${new Date(f.createdAt).toLocaleDateString()}`;
+        chip.title = `${f.nome || 'Sem nome'} (${sistema})`;
+        chip.addEventListener('click', () => {
+          alert(`Abrir ficha (em breve): ${f.nome || f.id}`);
+        });
+        chips.appendChild(chip);
+      });
+
+      const rail = document.createElement('div');
+      rail.className = 'fichas-rail';
+
+      group.appendChild(title);
+      group.appendChild(chips);
+      group.appendChild(rail);
+      frag.appendChild(group);
+    });
+
+    host.innerHTML = '';
+    host.appendChild(frag);
+  }
+
+  /* ===== Minhas Fichas Randômicas: renderização (placeholder) ===== */
+  function renderMinhasFichasRandomicas() {
+    const host = document.getElementById('minhasFichasRandomicasList');
+    if (!host) return;
+    
+    // Placeholder - ainda não há fichas randômicas salvas
+    host.innerHTML = '<p style="color:#666;margin:6px 8px;">Nenhuma ficha randômica salva ainda.</p>';
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.has-hover-video').forEach(bindCardHover);
 
     const iconEl = getCenterIconEl();
     if (iconEl) iconEl.style.display = 'none';
 
+    // Renderiza "Minhas Fichas"
+    renderMinhasFichas();
+    
+    // Renderiza "Minhas Fichas Randômicas"
+    renderMinhasFichasRandomicas();
+
     console.log('Script da página inicial carregado com sucesso');
   });
+
+  // Atualiza quando a lista de fichas mudar
+  window.addEventListener('minhasFichas:changed', renderMinhasFichas);
 
   // Fechar modal com ESC
   document.addEventListener('keydown', function(event) {

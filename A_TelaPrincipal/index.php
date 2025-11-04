@@ -6,15 +6,17 @@
   <title data-translate="title">SystemForge - Início</title>
 
   <!-- CSS Global -->
-  <link rel="stylesheet" href="../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css" />
+  <link rel="stylesheet" href="../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css" defer/>
   <!-- CSS da página -->
-  <link rel="stylesheet" href="../CSS/TelaPrinciapal/home.css" />
+  <link rel="stylesheet" href="../CSS/TelaPrinciapal/home.css" defer />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
 
   <!-- JS Global (sem defer para aplicar tema/estado inicial) -->
-  <script src="../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
+  <script src="../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js" defer></script>
+  <!-- Módulo de armazenamento das fichas -->
+  <script src="../JavaScript/PrincipalTela/fichasStorage.js" defer></script>
   <!-- JS da página (defer) -->
-  <script src="../JavaScript/PrincipalTela/index.js" defer></script>
+  <script src="../JavaScript/PrincipalTela/index.js" defer ></script>
 </head>
 <body>
   <header>
@@ -111,12 +113,16 @@
 
   <label for="MinhasFichas"><span class="highlight-word" data-translate="minhasFichas">Minhas Fichas</span></label>
   <section>
-    <div class="CaixaMinhasFichas"></div>
+    <div class="CaixaMinhasFichas">
+      <div id="minhasFichasList" class="fichas-list" aria-live="polite"></div>
+    </div>
   </section>
 
   <label for="MinhasFichasRandomicas"><span class="highlight-word" data-translate="minhasFichasRandomicas">Minhas Fichas Randômicas</span></label>
   <section>
-    <div class="CaixaMinhasFichas"></div>
+    <div class="CaixaMinhasFichas">
+      <div id="minhasFichasRandomicasList" class="fichas-list" aria-live="polite"></div>
+    </div>
   </section>
 
   <footer>

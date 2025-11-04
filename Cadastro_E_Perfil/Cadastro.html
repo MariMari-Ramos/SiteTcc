@@ -34,6 +34,10 @@
                 <input type="checkbox" id="enableWaves" checked>
                 <span>Ativar Ondas Animadas</span>
             </div>
+            <div class="settings-option">
+                <input type="checkbox" id="enableGif" checked>
+                <span>Ativar GIF Animado</span>
+            </div>
         </div>
 
         <div class="settings-divider"></div>
@@ -57,9 +61,9 @@
 
         <div class="settings-divider"></div>
 
-        <!-- Grupo: Efeitos de Clique -->
+        <!-- Grupo: Efeitos de Interação -->
         <div class="settings-group">
-            <label>✨ Efeitos de Clique</label>
+            <label>✨ Efeitos de Interação</label>
             <div class="settings-option">
                 <input type="checkbox" id="enableClickEffect" checked>
                 <span>Efeito ao Clicar</span>
@@ -88,7 +92,7 @@
         <div class="settings-divider"></div>
         
         <button id="resetSettings" class="settings-btn-secondary">Restaurar Padrões</button>
-        <button id="closeSettingsBtn" class="settings-btn-primary">Salvar e Fechar</button>
+        <button id="closeSettingsBtn" class="settings-btn-primary">Salvar</button>
     </div>
 </div>
 
@@ -97,7 +101,7 @@
   <div class="formulario">
     <label for="CriandoConta">Criando a Conta</label>
 
-    <form id="formCadastro" method="http://localhost:8080/SiteTCC/Cadastro_E_Perfil/Cadastro.html   ">
+    <form id="formCadastro" method="POST" action="Cadastrar.php">
 
       <label for="Subtitulo">E-mail:</label>
       <input type="email" id="CadastroEmail" name="email" placeholder="Digite seu e-mail" required>
@@ -133,7 +137,7 @@
   </div>
 
   <div class="imagem">
-    <img src="../img/Bigorna.gif" alt="Bigorna">
+    <img src="../img/Bigorna.gif" alt="Bigorna" crossorigin="anonymous">
   </div>
 
 </div>

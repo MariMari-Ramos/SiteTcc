@@ -12,7 +12,7 @@
 
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
-    <!-- Botão de Configurações - Canto Superior Esquerdo -->
+    <!-- Botão de Configurações - Canto Superior Direito -->
     <button class="settings-btn" id="settingsBtn" title="Configurações">
         <i class="bi bi-gear-fill"></i>
     </button>
@@ -34,7 +34,6 @@
                     <input type="checkbox" id="enableWaves" checked>
                     <span>Ativar Ondas Animadas</span>
                 </div>
-                
             </div>
 
             <div class="settings-divider"></div>
@@ -58,9 +57,9 @@
 
             <div class="settings-divider"></div>
 
-            <!-- Grupo: Efeitos de Clique -->
+            <!-- Grupo: Efeitos de Interação -->
             <div class="settings-group">
-                <label>✨ Efeitos de Clique</label>
+                <label>✨ Efeitos de Interação</label>
                 <div class="settings-option">
                     <input type="checkbox" id="enableClickEffect" checked>
                     <span>Efeito ao Clicar</span>
@@ -89,7 +88,7 @@
             <div class="settings-divider"></div>
             
             <button id="resetSettings" class="settings-btn settings-btn-secondary">Restaurar Padrões</button>
-            <button id="closeSettingsBtn" class="settings-btn settings-btn-primary">Salvar e Fechar</button>
+            <button id="closeSettingsBtn" class="settings-btn settings-btn-primary">Salvar</button>
         </div>
     </div>
 
