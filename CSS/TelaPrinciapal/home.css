@@ -19,7 +19,7 @@
 }
 
 :root {
-  --container-w: min(1100px, 92vw);
+  --container-w: min(1200px, 92vw);
   --peach: #ffd9b3;
   --peach-weak: #fff7f0;
   --text-strong: #000;
@@ -92,6 +92,11 @@ header .menu a.guide-trigger {
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 
+/* Remover underline hover do botão Guia */
+header .menu a.guide-trigger::before {
+  display: none;
+}
+
 header .menu a.guide-trigger:hover,
 header .menu a.guide-trigger:focus-visible {
   transform: translateY(-1px);
@@ -160,29 +165,37 @@ header .menu a.guide-trigger.viewed::after { opacity: 0; visibility: hidden; ani
 .guide-option { padding:12px 18px; background: linear-gradient(135deg,#007BFF,#0056b3); color:#fff; border:none; border-radius:10px; cursor:pointer; font-weight:600; transition: all .3s ease; text-align:left; display:flex; gap:10px; align-items:center; }
 .guide-option:hover { transform: translateX(5px); box-shadow: 0 4px 15px rgba(0,123,255,.3); }
 
-/* ==================== CENTRALIZAÇÃO (labels e sections) ==================== */
-body > label[for="System"],
-body > label[for="MinhasFichas"],
-body > label[for="MinhasFichasRandomicas"],
+/* ==================== CENTRALIZAÇÃO (apenas sections, labels ocupam 100%) ==================== */
 body > section {
   width: var(--container-w);
-  margin-left: auto; margin-right: auto;
+  margin-left: auto; 
+  margin-right: auto;
 }
 
-/* ==================== LABELS ==================== */
-label[for="System"], label[for="MinhasFichas"], label[for="MinhasFichasRandomicas"] {
-  display:block; width:100%; margin:30px 0 20px 0; padding:8px 20px;
-  border-radius:6px; background-color: var(--peach); color: var(--text-strong);
-  font-weight:700; font-size:1.1em; text-align:center;
+/* ==================== LABELS (100% de largura) ==================== */
+label[for="System"], 
+label[for="MinhasFichas"], 
+label[for="MinhasFichasRandomicas"] {
+  display: block; 
+  width: 100%;
+  margin: 30px 0 20px 0; 
+  padding: 8px 20px;
+  border-radius: 2px; 
+  background-color: var(--peach); 
+  color: var(--text-strong);
+  font-weight: 700; 
+  font-size: 1.1em; 
+  text-align: center;
 }
 
 /* Span com mesma altura do label */
-label[for="System"] .highlight-word {
+label[for="System"] .highlight-word,
+label[for="MinhasFichas"] .highlight-word,
+label[for="MinhasFichasRandomicas"] .highlight-word {
   background-color: #ff8c42;
-  color: #fff;
-  padding: 0;
+  padding: 5px 70px;
   margin: 0;
-  border-radius: 0;
+  border-radius: 7px;
   display: inline;
 }
 

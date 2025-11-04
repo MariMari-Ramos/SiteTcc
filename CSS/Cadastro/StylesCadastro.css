@@ -87,8 +87,6 @@ body.dark-theme {
     box-sizing: border-box;
 }
 
-/* ...existing code... */
-
 body { 
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif; 
     background: var(--bg);
@@ -286,7 +284,6 @@ label[for="Subtitulo"] {
     color: var(--accent-2);
 }
 
-
 #CheckBoxTermosPoliticasPrivadas {
     margin-left: 1.5em;
     cursor: pointer;
@@ -345,9 +342,9 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
     font-size: clamp(20px, 4vw, 30px);
     cursor: pointer;
     position: absolute;
-    right: 5%;
+    right: 1em;
     top: 50%;
-    transform: translateY(calc(-50% + 1.1em));
+    transform: translateY(-50%);
     color: color-mix(in srgb, var(--text) 80%, transparent);
     transition: all 0.2s ease;
     pointer-events: auto;
@@ -355,7 +352,7 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
 
 .password-container i:hover {
     color: var(--accent);
-    transform: translateY(calc(-50% + 1.1em)) scale(1.1);
+    transform: translateY(-50%) scale(1.1);
 }
 
 /* Responsividade geral */
@@ -394,10 +391,9 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
         margin-bottom: 0.5em;
     }
 
-    i {
+    .password-container i {
         font-size: 25px;
-        right: 4%;
-        bottom: 25%;
+        right: 0.8em;
     }
 
     label[for="Subtitulo"] {
@@ -409,7 +405,6 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
     .terms-row { gap: 10px; }
     .terms-row .terms-text { font-size: 0.95rem; }
 }
-/* ...existing code... */
 
 /* Tablet Responsiveness (601px - 900px) */
 @media (max-width: 900px) {
@@ -472,8 +467,7 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
 
     .password-container i {
         font-size: 20px;
-        right: 4%;
-        top: 40%;
+        right: 0.8em;
     }
 
     .terms-row {
@@ -537,6 +531,11 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
         width: 90%;
         padding: 15px;
         font-size: 0.85rem;
+    }
+
+    .password-container i {
+        font-size: 18px;
+        right: 0.6em;
     }
 }
 
@@ -773,26 +772,27 @@ body.dark-theme .settings-option span {
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
 }
 
-.settings-btn-primary {
-    background: var(--accent);
-    color: white;
-    margin-bottom: 8px;
-}
-
-.settings-btn-primary:hover {
-    background: var(--accent-2);
-    transform: translateY(-2px);
-}
-
+/* Espaçamento consistente entre os botões */
 .settings-btn-secondary {
     background: color-mix(in srgb, var(--panel-bg) 80%, var(--accent));
     color: var(--accent-2);
     border: 1px solid var(--accent);
+    margin-bottom: 12px; /* espaço entre "Restaurar Padrões" e "Salvar e Fechar" */
 }
-
 .settings-btn-secondary:hover {
     background: var(--accent);
     color: white;
+}
+
+.settings-btn-primary {
+    background: var(--accent);
+    color: white;
+    margin-bottom: 0;
+    margin-top: 4px; /* pequeno respiro após o secundário */
+}
+.settings-btn-primary:hover {
+    background: var(--accent-2);
+    transform: translateY(-2px);
 }
 
 /* ==================== SCROLLBAR CUSTOMIZADO ==================== */

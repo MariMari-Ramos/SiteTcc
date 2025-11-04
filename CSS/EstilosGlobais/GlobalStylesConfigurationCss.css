@@ -13,23 +13,25 @@
     --modal-bg: #ffffff;
     --guide-bg: #ffffff;
     --guide-text: #000000;
+    --highlight-bg: #ff8c42;
 }
 
 :root[data-theme="dark"] {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2d2d2d;
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --border-color: #505050;
-    --shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
-    --peach: #8b6f47;
-    --peach-weak: #3a3a3a;
-    --footer-bg: #2d2d2d;
-    --label-bg: #3d3d3d;
-    --card-bg: #2d2d2d;
-    --modal-bg: #2d2d2d;
-    --guide-bg: #2d2d2d;
-    --guide-text: #ffffff;
+    --bg-primary: #0d1b2a;
+    --bg-secondary: #1b263b;
+    --text-primary: #e0e1dd;
+    --text-secondary: #778da9;
+    --border-color: #415a77;
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+    --peach: #415a77;
+    --peach-weak: #1b263b;
+    --footer-bg: #1b263b;
+    --label-bg: #415a77;
+    --card-bg: #1b263b;
+    --modal-bg: #0d1b2a;
+    --guide-bg: #1b263b;
+    --guide-text: #e0e1dd;
+    --highlight-bg: #778da9;
 }
 
 /* ==================== ALTO CONTRASTE ==================== */
@@ -83,7 +85,19 @@ body.high-contrast video {
     display: none !important;
 }
 
-/* Melhorar visibilidade do texto "Guia" no modo escuro */
+/* Melhorar visibilidade do botão "Guia" no modo escuro com tons azuis escuros */
+:root[data-theme="dark"] header .menu a.guide-trigger {
+    border-color: #778da9;
+    background: linear-gradient(135deg, #1b263b, #415a77);
+    box-shadow: 0 4px 12px rgba(119, 141, 169, 0.35);
+}
+
+:root[data-theme="dark"] header .menu a.guide-trigger:hover,
+:root[data-theme="dark"] header .menu a.guide-trigger:focus-visible {
+    border-color: #778da9;
+    box-shadow: 0 6px 16px rgba(119, 141, 169, 0.45);
+}
+
 :root[data-theme="dark"] header .menu a.guide-trigger span {
     color: var(--text-primary);
     font-weight: 600;
@@ -101,6 +115,15 @@ body.high-contrast video {
     color: var(--text-primary);
 }
 
+:root[data-theme="dark"] .footer-links a:hover,
+:root[data-theme="dark"] .legal-links a:hover {
+    color: #778da9;
+}
+
+:root[data-theme="dark"] .social-icon:hover {
+    color: #778da9;
+}
+
 :root[data-theme="dark"] .footer-bottom {
     border-top-color: var(--border-color);
 }
@@ -112,10 +135,22 @@ body.high-contrast video {
     color: var(--text-primary);
 }
 
+/* Highlight word em azul escuro no modo escuro */
+:root[data-theme="dark"] label[for="System"] .highlight-word,
+:root[data-theme="dark"] label[for="MinhasFichas"] .highlight-word,
+:root[data-theme="dark"] label[for="MinhasFichasRandomicas"] .highlight-word {
+    background-color: var(--highlight-bg);
+}
+
 :root[data-theme="dark"] .card > div {
     background-color: var(--card-bg);
     color: var(--text-primary);
-    border-color: var(--border-color);
+    border-color: #415a77;
+}
+
+:root[data-theme="dark"] .card > div:hover {
+    border-color: #778da9;
+    box-shadow: 0 8px 20px rgba(65, 90, 119, 0.3);
 }
 
 :root[data-theme="dark"] .card p {
@@ -125,6 +160,7 @@ body.high-contrast video {
 :root[data-theme="dark"] .CaixaMinhasFichas {
     background-color: var(--card-bg);
     color: var(--text-primary);
+    border: 1px solid var(--border-color);
 }
 
 :root[data-theme="dark"] .modal {
@@ -133,8 +169,8 @@ body.high-contrast video {
 }
 
 :root[data-theme="dark"] .section {
-    background: linear-gradient(135deg, #3a3a3a, #2d2d2d);
-    border-color: var(--border-color);
+    background: linear-gradient(135deg, #415a77, #1b263b);
+    border-color: #415a77;
 }
 
 :root[data-theme="dark"] .section-title {
@@ -145,15 +181,36 @@ body.high-contrast video {
     color: var(--text-secondary);
 }
 
+:root[data-theme="dark"] .section:hover {
+    background: linear-gradient(135deg, #778da9, #415a77);
+    border-color: #778da9;
+    box-shadow: 0 12px 32px rgba(119, 141, 169, 0.25);
+}
+
 :root[data-theme="dark"] .section:hover .section-title {
-    color: #4dabf7;
+    color: #e0e1dd;
+}
+
+:root[data-theme="dark"] .section.center {
+    background: linear-gradient(135deg, #415a77, #1b263b);
+    border-color: #415a77;
+}
+
+:root[data-theme="dark"] .section.center:hover {
+    background: linear-gradient(135deg, #778da9, #415a77);
+    box-shadow: 0 14px 36px rgba(119, 141, 169, 0.35);
 }
 
 /* Corrigir TODOS os textos do balão do guia no modo escuro */
 :root[data-theme="dark"] .guide-speech {
     background-color: var(--guide-bg);
     color: var(--text-primary) !important;
-    border-color: var(--border-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 15px 50px rgba(65, 90, 119, 0.3);
+}
+
+:root[data-theme="dark"] .guide-speech::before {
+    border-bottom-color: var(--guide-bg);
 }
 
 :root[data-theme="dark"] .guide-speech * {
@@ -161,11 +218,15 @@ body.high-contrast video {
 }
 
 :root[data-theme="dark"] .guide-speech-title {
-    color: #ff8c42 !important;
+    color: #778da9 !important;
 }
 
 :root[data-theme="dark"] .guide-speech-content {
     color: var(--text-primary) !important;
+}
+
+:root[data-theme="dark"] .guide-speech-header {
+    border-bottom-color: var(--border-color);
 }
 
 :root[data-theme="dark"] .guide-speech-close {
@@ -179,11 +240,24 @@ body.high-contrast video {
 
 :root[data-theme="dark"] .guide-option {
     color: var(--text-primary) !important;
-    background: linear-gradient(135deg, #1976D2, #0d47a1) !important;
+    background: linear-gradient(135deg, #415a77, #1b263b) !important;
+}
+
+:root[data-theme="dark"] .guide-option:hover {
+    background: linear-gradient(135deg, #778da9, #415a77) !important;
+    box-shadow: 0 4px 15px rgba(119, 141, 169, 0.4);
 }
 
 :root[data-theme="dark"] .connection-line {
-    stroke: #4dabf7;
+    stroke: #778da9;
+}
+
+:root[data-theme="dark"] .close-button {
+    background: linear-gradient(45deg, #d32f2f, #b71c1c);
+}
+
+:root[data-theme="dark"] .close-button:hover {
+    background: linear-gradient(45deg, #e53935, #c62828);
 }
 
 /* ==================== CARROSSEL DESABILITADO ==================== */
@@ -224,8 +298,12 @@ body.auto-read {
 }
 
 body.auto-read *:hover {
-    outline: 2px solid #007BFF;
+    outline: 2px solid #778da9;
     outline-offset: 2px;
+}
+
+:root[data-theme="dark"] body.auto-read *:hover {
+    outline-color: #778da9;
 }
 
 /* ==================== ACESSIBILIDADE - TAMANHO DE FONTE ==================== */
@@ -288,8 +366,17 @@ body.alerts-disabled {
     outline-offset: 2px;
 }
 
+:root[data-theme="dark"] *:focus-visible {
+    outline-color: #778da9;
+}
+
 button:focus-visible,
 a:focus-visible {
     outline: 3px solid #007BFF;
     outline-offset: 3px;
+}
+
+:root[data-theme="dark"] button:focus-visible,
+:root[data-theme="dark"] a:focus-visible {
+    outline-color: #778da9;
 }

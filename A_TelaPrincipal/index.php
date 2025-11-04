@@ -109,13 +109,12 @@
     </div>
   </section>
 
-  <label for="MinhasFichas" data-translate="minhasFichas">Minhas Fichas</label>
+  <label for="MinhasFichas"><span class="highlight-word" data-translate="minhasFichas">Minhas Fichas</span></label>
   <section>
     <div class="CaixaMinhasFichas"></div>
   </section>
 
-  <label for="MinhasFichasRandomicas" data-translate="minhasFichasRandomicas">Minhas Fichas Randômicas</label>
-
+  <label for="MinhasFichasRandomicas"><span class="highlight-word" data-translate="minhasFichasRandomicas">Minhas Fichas Randômicas</span></label>
   <section>
     <div class="CaixaMinhasFichas"></div>
   </section>
