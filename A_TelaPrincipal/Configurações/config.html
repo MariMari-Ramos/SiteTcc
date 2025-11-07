@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- CSS Global (SEMPRE PRIMEIRO) -->
-+    <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">    
+    <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
     <!-- CSS da página -->
     <link rel="stylesheet" href="../../CSS/TelaPrinciapal/Configuração/stylesConfiguracao.css">
     
@@ -85,6 +85,36 @@
         <button id="backToMain" class="action-button back" data-translate="backToMain">
             Retornar para o lobby
         </button>
+    </div>
+
+    <!-- Link do Guia (IGUAL AO INDEX.PHP) -->
+    <a href="#" class="guide-trigger" onclick="toggleGuide(); return false;">
+        <img src="../../img/image-Photoroom (1).png" alt="Guia" />
+        <span data-translate="guia">Guia</span>
+    </a>
+
+    <!-- Balão de fala do guia (IDÊNTICO AO INDEX.PHP) -->
+    <div id="guideSpeech" class="guide-speech" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+        <div class="guide-speech-header">
+            <div class="guide-speech-title" id="guideTitle" data-translate="guide_title">
+                Hefélio, o Guia
+            </div>
+            <button class="guide-speech-close" onclick="closeGuide()" aria-label="Fechar">×</button>
+        </div>
+        <div class="guide-speech-content" id="guideContent" data-translate="guide_intro_config">
+            Olá! 👋 Aqui você pode configurar o tema, alertas, idioma e acessibilidade. Escolha um tópico abaixo para entender cada opção.
+        </div>
+        <div class="guide-speech-options">
+            <button class="guide-option" onclick="showGuideInfo('dark')" data-translate="guide_opt_dark">🌓 Modo escuro</button>
+            <button class="guide-option" onclick="showGuideInfo('carousel')" data-translate="guide_opt_carousel">🎠 Carrossel</button>
+            <button class="guide-option" onclick="showGuideInfo('guide')" data-translate="guide_opt_guide">🎓 Guia</button>
+            <button class="guide-option" onclick="showGuideInfo('alerts')" data-translate="guide_opt_alerts">🔔 Alertas</button>
+            <button class="guide-option" onclick="showGuideInfo('language')" data-translate="guide_opt_language">🌐 Idioma</button>
+            <button class="guide-option" onclick="showGuideInfo('accessibility')" data-translate="guide_opt_accessibility">♿ Acessibilidade</button>
+            <button class="guide-option" onclick="showGuideInfo('save')" data-translate="guide_opt_save">💾 Salvar</button>
+            <button class="guide-option" onclick="showGuideInfo('restore')" data-translate="guide_opt_restore">♻️ Restaurar</button>
+            <button class="guide-option" onclick="showGuideInfo('back')" data-translate="guide_opt_back">🏠 Voltar</button>
+        </div>
     </div>
 
     <!-- Modal de Idioma -->

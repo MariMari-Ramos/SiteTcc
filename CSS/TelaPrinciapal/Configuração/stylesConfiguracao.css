@@ -69,7 +69,7 @@ h1 {
     padding: 25px;
     box-shadow: var(--shadow);
     max-width: 700px;
-    margin: 0 auto;
+    margin: 0 auto 40px;
     border: 1px solid var(--border-color);
 }
 
@@ -677,11 +677,196 @@ body.high-contrast {
     display: none !important;
 }
 
+/* ==================== LINK DO GUIA (IGUAL AO INDEX.PHP) ==================== */
+.guide-trigger {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 2px solid #ffc38a;
+    background: linear-gradient(135deg, #fffaf5, #fff2e6);
+    box-shadow: 0 4px 12px rgba(255, 163, 94, 0.25);
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    z-index: 1200;
+}
+
+.guide-trigger:hover,
+.guide-trigger:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255, 163, 94, 0.35);
+    border-color: #ffb26b;
+}
+
+.guide-trigger img {
+    width: 32px;
+    height: 32px;
+}
+
+.guide-trigger::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 14px;
+    height: 14px;
+    background: #ff3b30;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(255,59,48,.6);
+    animation: guide-badge-pulse 2s ease infinite;
+    z-index: 2;
+}
+
+.guide-trigger.viewed::after {
+    opacity: 0;
+    visibility: hidden;
+    animation: none;
+}
+
+@keyframes guide-badge-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255,59,48,.6); }
+    70%  { box-shadow: 0 0 0 10px rgba(255,59,48,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,59,48,0); }
+}
+
+/* ==================== BALÃO DE FALA DO GUIA (IGUAL AO INDEX.PHP) ==================== */
+.guide-speech {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 350px;
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.8) translateY(-20px);
+    transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    z-index: 9999;
+}
+
+.guide-speech.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+}
+
+.guide-speech::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    right: 30px;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid white;
+}
+
+.guide-speech-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.guide-speech-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #ff6b35;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.guide-speech-close {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #999;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transition: background .2s ease, color .2s ease;
+}
+
+.guide-speech-close:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.guide-speech-content {
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.guide-speech-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.guide-option {
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #007BFF, #0056b3);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all .3s ease;
+    text-align: left;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.guide-option:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0,123,255,.3);
+}
+
+/* Tema escuro no balão do guia */
+:root[data-theme="dark"] .guide-speech {
+    background: var(--box-bg);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+}
+
+:root[data-theme="dark"] .guide-speech::before {
+    border-bottom-color: var(--box-bg);
+}
+
+:root[data-theme="dark"] .guide-speech-title {
+    color: var(--button-primary);
+}
+
+:root[data-theme="dark"] .guide-speech-content {
+    color: var(--text-color);
+}
+
+:root[data-theme="dark"] .guide-speech-close {
+    color: var(--text-color);
+}
+
+:root[data-theme="dark"] .guide-speech-close:hover {
+    background: rgba(255,255,255,0.05);
+}
+
 /* Responsivo */
 @media (max-width: 768px) {
     .CaixaConfig {
         padding: 18px;
-        margin: 10px;
+        margin: 10px auto 40px;
     }
 
     h1 {
@@ -732,5 +917,20 @@ body.high-contrast {
 
     .modal {
         padding: 10px;
+    }
+
+    .guide-trigger {
+        top: 10px;
+        right: 10px;
+    }
+
+    .guide-speech {
+        width: calc(100vw - 40px);
+        right: 20px;
+        left: 20px;
+    }
+
+    .guide-speech::before {
+        right: 50px;
     }
 }

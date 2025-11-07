@@ -25,7 +25,6 @@ class SettingsManager {
     }
 
     saveSettings() {
-        // Salva com as chaves corretas do sistema global
         localStorage.setItem('theme', this.savedSettings.theme);
         localStorage.setItem('language', this.savedSettings.language);
         localStorage.setItem('carouselHoverEnabled', this.savedSettings.carousel.toString());
@@ -36,14 +35,12 @@ class SettingsManager {
         localStorage.setItem('lineSpacing', this.savedSettings.lineSpacing);
         localStorage.setItem('highContrast', this.savedSettings.highContrast.toString());
         localStorage.setItem('autoRead', this.savedSettings.autoRead.toString());
-        
         this.unsavedChanges = false;
-        
-        // Atualiza as configurações globais imediatamente
+
         if (window.updateGlobalSettings) {
             window.updateGlobalSettings();
         }
-        
+
         this.showMessage('Configurações salvas com sucesso!');
     }
 
@@ -55,10 +52,10 @@ class SettingsManager {
         this.setupButtons();
         this.setupAlertsWarning();
         this.applyAllSettings();
+        this.setupGuideBubble();
     }
 
     setupToggles() {
-        // Toggle do Carrossel
         const carouselToggle = document.getElementById('carouselToggle');
         if (carouselToggle) {
             carouselToggle.checked = this.savedSettings.carousel;
@@ -69,7 +66,6 @@ class SettingsManager {
             });
         }
 
-        // Toggle do Guia
         const guideToggle = document.getElementById('guideToggle');
         if (guideToggle) {
             guideToggle.checked = this.savedSettings.guide;
@@ -94,10 +90,15 @@ class SettingsManager {
     applyGuideSettings() {
         if (this.savedSettings.guide) {
             document.body.classList.remove('guide-disabled');
+            const trigger = document.querySelector('.guide-trigger');
+            if (trigger) trigger.style.display = 'flex';
             this.showMessage('Guia ativado!');
         } else {
             document.body.classList.add('guide-disabled');
+            const trigger = document.querySelector('.guide-trigger');
+            if (trigger) trigger.style.display = 'none';
             this.showMessage('Guia desativado!');
+            if (typeof closeGuide === 'function') closeGuide();
         }
     }
 
@@ -377,6 +378,25 @@ class SettingsManager {
         }
     }
 
+    setupGuideBubble() {
+        const guideEnabled = this.savedSettings.guide;
+        const seenKey = 'configGuideSeen';
+        
+        // Aplica visibilidade do botão guia
+        const trigger = document.querySelector('.guide-trigger');
+        if (trigger) {
+            trigger.style.display = guideEnabled ? 'flex' : 'none';
+        }
+        
+        // Abre automaticamente na primeira visita
+        if (guideEnabled && localStorage.getItem(seenKey) !== 'true') {
+            setTimeout(() => {
+                if (typeof openGuide === 'function') openGuide();
+                localStorage.setItem(seenKey, 'true');
+            }, 600);
+        }
+    }
+
     applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         if (this.checkContrastConflict) {
@@ -412,6 +432,14 @@ class SettingsManager {
                 element.textContent = translations[key];
             }
         });
+        
+        // Atualiza textos do guia
+        const guideContent = document.getElementById('guideContent');
+        if (guideContent) {
+            const lang = this.savedSettings.language;
+            const texts = GUIDE_TEXTS[lang] || GUIDE_TEXTS['pt-BR'];
+            guideContent.textContent = texts.intro;
+        }
     }
 
     restoreDefaultSettings() {
@@ -477,6 +505,7 @@ class SettingsManager {
     }
 }
 
+// ==================== FUNÇÕES GLOBAIS ====================
 window.showAlert = function(message) {
     const alertsEnabled = localStorage.getItem('alertsEnabled') !== 'false';
     if (alertsEnabled && window.SITE_ALERTS_ENABLED !== false) {
@@ -496,6 +525,103 @@ window.showConfirm = function(message) {
     }
 };
 
+// ==================== SISTEMA DE GUIA (ESTILO INDEX.PHP) ====================
+function openGuide() {
+    if (localStorage.getItem('guideEnabled') === 'false') return;
+    
+    const el = document.getElementById('guideSpeech');
+    if (!el) return;
+    
+    el.classList.add('active');
+    
+    // Marca o link como visualizado
+    const trigger = document.querySelector('.guide-trigger');
+    if (trigger) {
+        trigger.classList.add('viewed');
+    }
+}
+
+function closeGuide() {
+    const el = document.getElementById('guideSpeech');
+    if (!el) return;
+    
+    el.classList.remove('active');
+}
+
+function toggleGuide() {
+    const el = document.getElementById('guideSpeech');
+    if (!el) return;
+    
+    if (el.classList.contains('active')) {
+        closeGuide();
+    } else {
+        openGuide();
+    }
+}
+
+// Conteúdo do guia por idioma
+const GUIDE_TEXTS = {
+    'pt-BR': {
+        intro: 'Olá! 👋 Aqui você pode configurar tema, alertas, idioma e acessibilidade. Escolha um tópico abaixo para entender cada opção.',
+        dark: '🌓 Modo escuro: alterna o tema entre claro e escuro. Dica: ative para reduzir cansaço visual em ambientes com pouca luz. Persistente entre sessões.',
+        carousel: '🎠 Animação do carrossel: controla animações/hover na tela principal. Ao desativar, reduz movimento automático.',
+        guide: '🎓 Guia: ativa/desativa tutoriais e explicações pelo site (inclusive este balão). Recomendado manter ativado na primeira vez.',
+        alerts: '🔔 Alertas: mostra mensagens importantes (erros, confirmações, avisos). Desativar pode ocultar confirmações críticas.',
+        language: '🌐 Idioma: abre um modal para escolher o idioma (PT/EN/ES). Textos da interface mudam imediatamente.',
+        accessibility: '♿ Acessibilidade: ajuste tamanho e tipo de fonte (OpenDyslexic recomendado), espaçamento, alto contraste e leitura automática.',
+        save: '💾 Salvar alterações: grava todas as preferências e aplica globalmente. Use após configurar.',
+        restore: '♻️ Restaurar padrões: volta tudo ao estado inicial recomendado. Útil se algo ficar estranho.',
+        back: '🏠 Retornar para o lobby: volta à página inicial. Lembre-se de salvar alterações antes de sair.'
+    },
+    'en-US': {
+        intro: 'Hi! 👋 Configure theme, alerts, language and accessibility. Pick a topic below to learn more.',
+        dark: '🌓 Dark mode: toggles between light and dark themes. Tip: use it to reduce eye strain in low light.',
+        carousel: '🎠 Carousel animation: controls hover/auto animations on the home page. Disabling reduces motion.',
+        guide: '🎓 Guide: enables/disables help tutorials across the site (including this bubble).',
+        alerts: '🔔 Alerts: shows important messages (errors, confirmations, warnings). Disabling may hide critical confirmations.',
+        language: '🌐 Language: opens a modal to choose the language (PT/EN/ES). Interface updates immediately.',
+        accessibility: '♿ Accessibility: adjust font size, font type (OpenDyslexic recommended), line spacing, high contrast and auto reading.',
+        save: '💾 Save changes: stores preferences and applies them globally.',
+        restore: '♻️ Restore defaults: revert everything to initial recommended values.',
+        back: '🏠 Return to lobby: go back to the home page. Remember to save first.'
+    },
+    'es-ES': {
+        intro: '¡Hola! 👋 Configura tema, alertas, idioma y accesibilidad. Elige un tema abajo para saber más.',
+        dark: '🌓 Modo oscuro: alterna entre temas claro y oscuro. Útil para reducir la fatiga visual.',
+        carousel: '🎠 Animación del carrusel: controla animaciones/hover en la página principal. Al desactivar, reduce movimiento.',
+        guide: '🎓 Guía: activa/desactiva tutoriales en el sitio (incluida esta burbuja).',
+        alerts: '🔔 Alertas: muestra mensajes importantes (errores, confirmaciones, avisos). Desactivar puede ocultar confirmaciones críticas.',
+        language: '🌐 Idioma: abre un modal para elegir (PT/EN/ES). La interfaz se actualiza inmediatamente.',
+        accessibility: '♿ Accesibilidad: ajusta tamaño y tipo de fuente (OpenDyslexic recomendado), interlineado, alto contraste y lectura automática.',
+        save: '💾 Guardar cambios: almacena preferencias y las aplica globalmente.',
+        restore: '♻️ Restaurar valores: revierte todo a los valores iniciales.',
+        back: '🏠 Volver al lobby: regresa a la página principal. Recuerda guardar primero.'
+    }
+};
+
+function showGuideInfo(topic) {
+    const lang = localStorage.getItem('language') || 'pt-BR';
+    const texts = GUIDE_TEXTS[lang] || GUIDE_TEXTS['pt-BR'];
+    const el = document.getElementById('guideContent');
+    if (!el) return;
+    
+    const map = {
+        dark: texts.dark,
+        carousel: texts.carousel,
+        guide: texts.guide,
+        alerts: texts.alerts,
+        language: texts.language,
+        accessibility: texts.accessibility,
+        save: texts.save,
+        restore: texts.restore,
+        back: texts.back
+    };
+    
+    el.textContent = map[topic] || texts.intro;
+    openGuide();
+}
+
+// ==================== INICIALIZAÇÃO ====================
 document.addEventListener('DOMContentLoaded', () => {
     const alertsEnabled = localStorage.getItem('alertsEnabled') !== 'false';
     window.SITE_ALERTS_ENABLED = alertsEnabled;
@@ -504,21 +630,27 @@ document.addEventListener('DOMContentLoaded', () => {
         window.alert = function() {
             console.log('[ALERT BLOQUEADO NO LOAD]:', arguments[0]);
         };
-        
         window.confirm = function() {
             console.log('[CONFIRM BLOQUEADO NO LOAD]:', arguments[0]);
             return true;
         };
-        
         console.warn = function() {};
         console.error = function() {};
-        
         document.body.classList.add('alerts-disabled');
     }
     
     new SettingsManager();
+
+    // Texto introdutório conforme idioma
+    const guideContent = document.getElementById('guideContent');
+    if (guideContent) {
+        const lang = localStorage.getItem('language') || 'pt-BR';
+        const texts = GUIDE_TEXTS[lang] || GUIDE_TEXTS['pt-BR'];
+        guideContent.textContent = texts.intro;
+    }
 });
 
+// ==================== TRADUÇÕES ====================
 const CONFIG = {
     translations: {
         'pt-BR': {
@@ -526,6 +658,7 @@ const CONFIG = {
             darkMode: 'Modo escuro',
             carousel: 'Animação do carrossel',
             guide: 'Guia',
+            guia: 'Guia',
             alerts: 'Alertas',
             language: 'Idioma',
             accessibility: 'Fonte e Acessibilidade',
@@ -548,13 +681,25 @@ const CONFIG = {
             alertsWarningItem3: 'Confirmações de ações importantes',
             alertsWarningItem4: 'Mensagens de validação',
             alertsWarningQuestion: 'Isso pode ser prejudicial para sua experiência no site. Tem certeza que deseja continuar?',
-            confirmDisable: 'Sim, desativar alertas'
+            confirmDisable: 'Sim, desativar alertas',
+            guide_title: 'Hefélio, o Guia',
+            guide_intro_config: 'Olá! 👋 Aqui você pode configurar o tema, alertas, idioma e acessibilidade. Escolha um tópico abaixo para entender cada opção.',
+            guide_opt_dark: '🌓 Modo escuro',
+            guide_opt_carousel: '🎠 Carrossel',
+            guide_opt_guide: '🎓 Guia',
+            guide_opt_alerts: '🔔 Alertas',
+            guide_opt_language: '🌐 Idioma',
+            guide_opt_accessibility: '♿ Acessibilidade',
+            guide_opt_save: '💾 Salvar',
+            guide_opt_restore: '♻️ Restaurar',
+            guide_opt_back: '🏠 Voltar'
         },
         'en-US': {
             title: 'Settings',
             darkMode: 'Dark mode',
             carousel: 'Carousel animation',
             guide: 'Guide',
+            guia: 'Guide',
             alerts: 'Alerts',
             language: 'Language',
             accessibility: 'Font and Accessibility',
@@ -577,13 +722,25 @@ const CONFIG = {
             alertsWarningItem3: 'Important action confirmations',
             alertsWarningItem4: 'Validation messages',
             alertsWarningQuestion: 'This can be harmful to your site experience. Are you sure you want to continue?',
-            confirmDisable: 'Yes, disable alerts'
+            confirmDisable: 'Yes, disable alerts',
+            guide_title: 'Hephélio, the Guide',
+            guide_intro_config: 'Hi! 👋 Configure theme, alerts, language and accessibility. Pick a topic below to learn more.',
+            guide_opt_dark: '🌓 Dark mode',
+            guide_opt_carousel: '🎠 Carousel',
+            guide_opt_guide: '🎓 Guide',
+            guide_opt_alerts: '🔔 Alerts',
+            guide_opt_language: '🌐 Language',
+            guide_opt_accessibility: '♿ Accessibility',
+            guide_opt_save: '💾 Save',
+            guide_opt_restore: '♻️ Restore',
+            guide_opt_back: '🏠 Back'
         },
         'es-ES': {
             title: 'Ajustes',
             darkMode: 'Modo oscuro',
             carousel: 'Animación carrusel',
             guide: 'Guía',
+            guia: 'Guía',
             alerts: 'Alertas',
             language: 'Idioma',
             accessibility: 'Fuente y Accesibilidad',
@@ -606,7 +763,18 @@ const CONFIG = {
             alertsWarningItem3: 'Confirmaciones de acciones importantes',
             alertsWarningItem4: 'Mensajes de validación',
             alertsWarningQuestion: 'Esto puede ser perjudicial para tu experiencia en el sitio. ¿Estás seguro de que quieres continuar?',
-            confirmDisable: 'Sí, desactivar alertas'
+            confirmDisable: 'Sí, desactivar alertas',
+            guide_title: 'Hefelio, el Guía',
+            guide_intro_config: '¡Hola! 👋 Configura tema, alertas, idioma y accesibilidad. Elige un tema abajo para saber más.',
+            guide_opt_dark: '🌓 Modo oscuro',
+            guide_opt_carousel: '🎠 Carrusel',
+            guide_opt_guide: '🎓 Guía',
+            guide_opt_alerts: '🔔 Alertas',
+            guide_opt_language: '🌐 Idioma',
+            guide_opt_accessibility: '♿ Accesibilidad',
+            guide_opt_save: '💾 Guardar',
+            guide_opt_restore: '♻️ Restaurar',
+            guide_opt_back: '🏠 Volver'
         }
     }
 };
