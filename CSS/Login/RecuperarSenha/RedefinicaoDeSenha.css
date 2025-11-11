@@ -1,148 +1,397 @@
+:root {
+    --bg:#ffffff;
+    --text:#222222;
+    --panel-bg:#ffffff;
+    --panel-border:#e5e7eb;
+    --overlay:rgba(0,0,0,0.65);
+
+    --accent:#ff6432;
+    --accent-2:#ff8351;
+    --accent-soft:rgba(255,100,50,0.18);
+
+    --wave1:rgba(255,192,192,0.55);
+    --wave2:rgba(255,170,150,0.5);
+    --wave3:rgba(255,210,180,0.45);
+    --waveHot1:rgba(255,200,0,0.75);
+    --waveHot2:rgba(255,140,0,0.7);
+    --waveHot3:rgba(255,69,0,0.65);
+
+    --input-bg:#f5f5f5;
+    --input-border:#00000075;
+    --input-placeholder:#666;
+
+    --btn-primary:#000;
+    --btn-primary-hover:#31313185;
+    --btn-secondary:#212121;
+    --btn-secondary-hover:#88888888;
+}
+
+body.dark-theme {
+    --bg:#1a1a1a;
+    --text:#e0e0e0;
+    --panel-bg:#2d2d2d;
+    --panel-border:#404040;
+
+    --accent:#4a90e2;
+    --accent-2:#2f78e5;
+    --accent-soft:rgba(74,144,226,0.20);
+
+    --wave1:rgba(140,185,250,0.60);
+    --wave2:rgba(110,160,245,0.54);
+    --wave3:rgba(70,130,235,0.46);
+    --waveHot1:rgba(70,135,235,0.90);
+    --waveHot2:rgba(55,120,225,0.85);
+    --waveHot3:rgba(45,105,210,0.80);
+
+    --input-bg:#3a3a3a;
+    --input-border:#555;
+    --input-placeholder:#aaaaaa;
+
+    --btn-primary:var(--accent);
+    --btn-primary-hover:var(--accent-2);
+    --btn-secondary:color-mix(in srgb,var(--accent) 70%,#333);
+    --btn-secondary-hover:var(--accent-2);
+}
+
+/* Alto contraste igual login */
+body.high-contrast {
+    --text:#000000;
+    --input-border:#000000;
+    --accent:#ff4500;
+    --accent-2:#ff6432;
+}
+body.dark-theme.high-contrast {
+    --bg:#000000;
+    --text:#ffffff;
+    --panel-bg:#000000;
+    --input-bg:#1a1a1a;
+    --input-border:#ffffff;
+    --accent:#00bfff;
+    --accent-2:#00a0ff;
+}
+
 @font-face {
-    font-family: 'OpenDyslexic';
-    src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
-         url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
-         url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+    font-family:'OpenDyslexic';
+    src:url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+        url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+        url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+    font-display:swap;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #ffeee4;
-    font-family: 'OpenDyslexic', Arial, sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'OpenDyslexic','Segoe UI',Arial,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    overflow-x:hidden;
 }
 
-.CaixaRedefinirSenha {
-    background: white;
-    padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
+#waveCanvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+    pointer-events:none;
+    transition:opacity .6s ease;
 }
 
-h1 {
-    color: #212121;
-    font-size: clamp(1.5rem, 5vw, 2rem);
-    margin-bottom: 1rem;
-    font-family: 'OpenDyslexic';
+.CaixaRedefinirSenha{
+    position:relative;
+    z-index:2;
+    background:var(--panel-bg);
+    width:92vw;
+    max-width:420px;
+    padding:2.2rem 2rem 2.4rem;
+    border-radius:1.8rem;
+    box-shadow:0 8px 24px rgba(0,0,0,0.12);
+    border:2px solid var(--panel-border);
+    backdrop-filter:blur(2px);
+    animation:fadeInUp .45s ease;
+}
+body.high-contrast .CaixaRedefinirSenha{border:3px solid var(--accent);}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(25px);}to{opacity:1;transform:translateY(0);}}
+
+h1{
+    text-align:center;
+    font-size:clamp(1.6rem,5.4vw,2.1rem);
+    margin:0 0 .7rem;
+    color:var(--accent);
+}
+body.high-contrast h1{font-weight:700;text-shadow:0 0 4px var(--accent-soft);}
+
+.SubtituloRedefinir{
+    text-align:center;
+    font-size:clamp(.78rem,2.6vw,.95rem);
+    line-height:1.4;
+    margin:0 0 1.8rem;
+    font-weight:500;
+    color:color-mix(in srgb,var(--text) 70%,transparent);
+}
+body.high-contrast .SubtituloRedefinir{font-weight:700;color:var(--text);}
+
+.redefinir-form{display:flex;flex-direction:column;width:100%;padding:0 .4rem;}
+
+.TextoSobreOsCampos{
+    font-size:clamp(.65rem,2.4vw,.75rem);
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:.35rem;
+    margin-top:.3rem;
+    padding-left:.4rem;
 }
 
-.SubtituloRedefinir {
-    color: #666;
-    font-size: clamp(0.8rem, 2.5vw, 1rem);
-    margin-bottom: 2rem;
-    line-height: 1.5;
+/* Evita ligaturas problemáticas */
+h1,
+.SubtituloRedefinir,
+.TextoSobreOsCampos,
+label {
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"clig" 0;
 }
 
-.TextoSobreOsCampos {
-    font-family: 'OpenDyslexic';
-    font-size: clamp(0.6rem, 2.5vw, 0.75rem);
-    font-weight: bold;
-    color: #212121;
-    margin-bottom: 0.20em;
-    margin-top: 1em;
-    padding-left: 1.5rem; /* Alterado de margin-left para padding-left */
-    white-space: nowrap;
-    display: block; /* Alterado de flex para block */
-    text-align: left; /* Adicionado para alinhar o texto à esquerda */
-    width: 100%; /* Adicionado para ocupar toda a largura */
+input[type="password"] {
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"clig" 0;
+  font-family:system-ui,"Segoe UI",Arial,sans-serif;
 }
 
-.redefinir-form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 0 1rem;
-    align-items: center; /* Adicionado para centralizar os elementos do form */
+.input-group{width:100%;margin-bottom:1.05rem;position:relative;}
+
+.input-group input{
+    width:100%;
+    padding:.8em 2.6em .8em 1.3em;
+    border:2px solid var(--input-border);
+    border-radius:2em;
+    background:var(--input-bg);
+    font-size:.95rem;
+    font-family:'OpenDyslexic';
+    color:var(--text);
+    transition:.25s;
+}
+.input-group input:focus{
+    outline:none;
+    border-color:var(--accent);
+    background:#fff;
+    box-shadow:0 0 0 3px var(--accent-soft);
+}
+.input-group input::placeholder{color:var(--input-placeholder);}
+
+.toggle-pass{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:22px;
+    color:#474747;
+    display:flex;
+    align-items:center;
+    padding:0;
+    transition:.3s;
+}
+.toggle-pass:hover{color:var(--accent);}
+
+body.high-contrast .input-group input{border-width:3px;font-weight:600;}
+
+.button-container{
+    margin-top:.4rem;
+    display:flex;
+    justify-content:center;
 }
 
-.input-group {
-    width: 100%;
-    margin-bottom: 1.2rem;
-    position: relative;
+#btnRedefinirSenha{
+    background:var(--btn-primary);
+    color:#fff;
+    border:none;
+    padding:.85em 2.4em;
+    border-radius:2em;
+    cursor:pointer;
+    font-size:.95rem;
+    font-family:'OpenDyslexic';
+    font-weight:600;
+    transition:.25s;
 }
+#btnRedefinirSenha:hover{background:var(--btn-primary-hover);transform:translateY(-2px);}
+body.high-contrast #btnRedefinirSenha{border:2px solid var(--text);font-weight:700;}
 
-.input-group input {
-    width: 100%;
-    padding: 0.6em 2em;
-    border: 3px solid #00000075;
-    border-radius: 2em;
-    box-sizing: border-box;
-    margin-bottom: 0;
-    background-color: #f5f5f5;
-    font-size: 1em;
-    font-family: 'OpenDyslexic';
+.message{
+    margin:.3rem 0 1rem;
+    padding:.7rem 1rem;
+    border-radius:.85rem;
+    font-size:.75rem;
+    font-weight:600;
+    background:var(--accent-soft);
+    color:var(--accent);
+    opacity:0;
+    transform:translateY(8px);
+    transition:.35s;
 }
+.message.show{opacity:1;transform:translateY(0);}
+.message.error{background:rgba(255,30,30,0.15);color:#d80000;}
+.message.success{background:rgba(0,180,70,0.18);color:#007a2e;}
+body.high-contrast .message{border:2px solid var(--accent);}
 
-.input-group input:focus {
-    outline: none;
-    border-color: #2196F3;
+.overlay{
+    position:fixed;
+    inset:0;
+    background:var(--overlay);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:1300;
+    backdrop-filter:blur(4px);
 }
-
-.input-group i {
-    font-size: clamp(20px, 4vw, 30px);
-    cursor: pointer;
-    position: absolute;
-    right: 5%;
-    color: #474747;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: color 0.3s ease;
+.modal{
+    background:var(--panel-bg);
+    color:var(--text);
+    width:min(420px,90%);
+    padding:1.4rem 1.3rem 1.2rem;
+    border-radius:1.1rem;
+    border:2px solid var(--panel-border);
+    box-shadow:0 8px 30px rgba(0,0,0,0.35);
+    animation:fadeScale .35s ease;
+    text-align:center;
 }
-
-.input-group i:hover {
-    color: #2196F3;
+@keyframes fadeScale{from{opacity:0;transform:scale(.85);}to{opacity:1;transform:scale(1);} }
+.modal h2{margin:0 0 .6rem;font-size:1.15rem;color:var(--accent);}
+.modal button{
+    margin-top:.7rem;
+    border:none;
+    background:var(--accent);
+    color:#fff;
+    padding:.55rem 1.1rem;
+    font-family:'OpenDyslexic';
+    font-size:.8rem;
+    border-radius:.7rem;
+    cursor:pointer;
+    transition:.25s;
 }
+.modal button:hover{background:var(--accent-2);}
 
-.button-container {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: center;
-    width: 100%; /* Adicionado para ocupar toda a largura */
+/* FAB de configurações */
+.settings-fab{
+    position:fixed;
+    top:18px;
+    right:18px;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:var(--accent);
+    border:2px solid var(--accent-2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:24px;
+    color:#fff;
+    z-index:1400;
+    box-shadow:0 4px 15px color-mix(in srgb,var(--accent) 45%,transparent);
+    transition:.35s;
 }
+.settings-fab:hover{transform:scale(1.1) rotate(90deg);background:var(--accent-2);}
+body.settings-open .settings-fab{opacity:0;transform:scale(.3) rotate(-180deg);pointer-events:none;}
 
-#btnRedefinirSenha {
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    padding: 0.8em 2em;
-    border-radius: 2em;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-    font-family: 'OpenDyslexic';
+.settings-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:var(--overlay);
+    z-index:1390;
+    justify-content:flex-end;
+    align-items:flex-start;
 }
+.settings-modal.active{display:flex;}
 
-#btnRedefinirSenha:hover {
-    background-color: #1976D2;
+.settings-content{
+    width:280px;
+    background:var(--panel-bg);
+    border-left:3px solid var(--accent);
+    border-bottom:3px solid var(--accent);
+    border-bottom-left-radius:14px;
+    max-height:100vh;
+    padding:20px 16px 18px;
+    box-shadow:-6px 0 18px rgba(0,0,0,0.4);
+    overflow-y:auto;
+    animation:slideInRight .35s ease;
 }
+@keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);} }
 
-@media (max-width: 480px) {
-    .CaixaRedefinirSenha {
-        padding: 1.5rem;
-        margin: 1rem;
-    }
+.settings-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--panel-border);
+}
+.settings-content h2{font-size:19px;margin:0;color:var(--accent-2);}
+.close-settings{
+    background:none;
+    border:none;
+    font-size:28px;
+    cursor:pointer;
+    color:var(--accent-2);
+    transition:.25s;
+}
+.close-settings:hover{color:var(--accent);transform:rotate(90deg);}
 
-    .input-group i {
-        font-size: 20px;
-        right: 8%;
-    }
+.settings-group{margin-bottom:14px;}
+.settings-group>label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:8px;
+    color:var(--accent-2);
+}
+.settings-option{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:color-mix(in srgb,var(--panel-bg) 85%,#fff);
+    border:1px solid color-mix(in srgb,var(--accent) 55%,transparent);
+    padding:10px;
+    border-radius:6px;
+    margin-bottom:8px;
+    cursor:pointer;
+    transition:.25s;
+}
+.settings-option:hover{background:var(--panel-bg);border-color:var(--accent);transform:translateX(-5px);}
+.settings-option input{accent-color:var(--accent);cursor:pointer;}
+.settings-option span{font-size:12px;font-weight:500;color:var(--accent-2);}
 
-    .TextoSobreOsCampos {
-        font-size: 0.8rem;
-        padding-left: 1.2rem; /* Alterado de margin-left para padding-left */
-    }
+.settings-btn{
+    width:100%;
+    border:none;
+    border-radius:.7rem;
+    padding:.7rem .9rem;
+    cursor:pointer;
+    font-family:'OpenDyslexic';
+    font-size:.8rem;
+    transition:.25s;
+    margin-bottom:4px;
+}
+.settings-btn-primary{background:var(--accent);color:#fff;font-weight:600;}
+.settings-btn-primary:hover{background:var(--accent-2);}
+.settings-btn-secondary{background:var(--btn-secondary);color:#fff;font-weight:600;}
+.settings-btn-secondary:hover{background:var(--btn-secondary-hover);}
+.settings-divider{height:1px;background:var(--panel-border);margin:14px 0;}
 
-    #btnRedefinirSenha {
-        width: 100%;
-    }
+body.large-text{font-size:18px !important;}
+body.large-text .input-group input{font-size:1.05rem;}
+body.large-text .TextoSobreOsCampos{font-size:.85rem;}
+body.large-text #btnRedefinirSenha{font-size:1rem;}
+
+@media (max-width:480px){
+    .CaixaRedefinirSenha{padding:1.8rem 1.3rem 2.1rem;width:94%;}
+    .settings-content{width:100%;border-left:none;}
+    .settings-fab{width:46px;height:46px;font-size:21px;}
 }

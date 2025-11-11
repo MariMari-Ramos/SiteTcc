@@ -2,26 +2,109 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../CSS/Login/RecuperarSenha/RecSenha.css">
-    
     <title>Recuperar Senha</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="../../CSS/Login/RecuperarSenha/RecSenha.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <form id="formRecSenha" method="post" action="InfoEmail.php">
-    <div class="CaixaRecuperarSenha">
-        <h1>Recuperando sua Senha</h1>
-        <p class="SubtituloRecSenha">
-            Insira seu email ou nome de usuário para que seja enviado um código de recuperação em seu email.
-        </p>
-        <div class="input-container">
-            <input type="email" name="email" id="email" placeholder="Digite seu email ou nome de usuário" required>
-        </div>
-        <div class="button-container">
-            <button id="btnEnviar" type="submit">Enviar</button>
-            <button id="btnVoltar" onclick="window.location.href='../Login/loginhtml.php'">Voltar</button>
+    <canvas id="waveCanvas" aria-hidden="true"></canvas>
+
+    <button class="settings-fab" id="settingsBtn" title="Configurações">
+        <i class="bi bi-gear-fill"></i>
+    </button>
+
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>Configurações</h2>
+                <button class="close-settings" id="closeSettings"><i class="bi bi-x"></i></button>
+            </div>
+
+            <div class="settings-group">
+                <label>🎨 Exibição</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableWaves">
+                    <span>Ondas animadas</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-group">
+                <label>🖱️ Interação</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableClickEffect">
+                    <span>Efeito ao clicar</span>
+                </div>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableHoldEffect">
+                    <span>Efeito ao segurar</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-group">
+                <label>🌙 Tema</label>
+                <div class="settings-option">
+                    <input type="radio" name="theme" value="light">
+                    <span>Claro</span>
+                </div>
+                <div class="settings-option">
+                    <input type="radio" name="theme" value="dark">
+                    <span>Escuro</span>
+                </div>
+                <div class="settings-option">
+                    <input type="radio" name="theme" value="auto">
+                    <span>Automático</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-group">
+                <label>♿ Acessibilidade</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="highContrast">
+                    <span>Alto contraste</span>
+                </div>
+                <div class="settings-option">
+                    <input type="checkbox" id="largerText">
+                    <span>Texto maior</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <button id="resetSettings" class="settings-btn settings-btn-secondary">Restaurar Padrões</button>
+            <button id="closeSettingsBtn" class="settings-btn settings-btn-primary">Salvar</button>
         </div>
     </div>
-</form>
+
+    <form id="formRecSenha" method="post" action="InfoEmail.php">
+        <div class="CaixaRecuperarSenha">
+            <h1>Recuperar Senha</h1>
+            <p class="SubtituloRecSenha">Digite seu e-mail ou nome de usuário para enviarmos o código de recuperação.</p>
+            <div class="input-container">
+                <input type="text" name="email" id="email" placeholder="E-mail ou usuário" required>
+            </div>
+            <div class="button-container">
+                <button id="btnEnviar" type="submit">Enviar Código</button>
+                <button id="btnVoltar" type="button">Voltar</button>
+            </div>
+            <div id="message" class="message" aria-live="polite"></div>
+        </div>
+    </form>
+
+    <div class="overlay" id="overlay">
+        <div class="modal">
+            <h2>Alerta</h2>
+            <p></p>
+            <button id="fecharModal">Fechar</button>
+        </div>
+    </div>
+
+    <script src="../../JavaScript/RecSenha/RecuperarSenha.js" defer></script>
 </body>
 </html>
