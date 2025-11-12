@@ -250,7 +250,7 @@ label[for="Subtitulo"] {
 .terms-row {
     display: flex;
     gap: 12px;
-    align-items: center;      /* alinhado verticalmente com a checkbox */
+    align-items: flex-start;  /* melhor para textos com várias linhas */
     margin-top: 1.2em;
     line-height: 1.45;
     word-break: break-word;
@@ -306,13 +306,20 @@ label[for="Subtitulo"] {
     transform: translate(-50%, -60%) rotate(45deg);
 }
 
+
+/* Texto dos termos: permitir quebra natural sem cortar com reticências */
 .terms-row .terms-text {
-    display: block;
+    display: block;           /* deixa o texto fluir em múltiplas linhas */
     color: var(--text);
     font-size: 0.98rem;
     text-align: left;
     word-break: break-word;
+    line-height: 1.25em;
+    max-height: none;
+    overflow: visible;
 }
+
+/* Mantém sempre no máximo 2 linhas (sem override em telas largas) */
 
 .terms-row .terms-text a {
     color: var(--accent);
@@ -379,22 +386,52 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
     position: relative;
 }
 
-.password-container i {
-    font-size: clamp(20px, 4vw, 30px);
+#BtnVerSenha {
+    font-size: 25px;
     cursor: pointer;
     position: absolute;
-    right: 1em;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 1.2em;
+    top: 1.8em;
+    background: none;
+    border: none;
     color: color-mix(in srgb, var(--text) 80%, transparent);
     transition: all 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
     pointer-events: auto;
 }
 
-.password-container i:hover {
+#BtnVerSenha:hover {
     color: var(--accent);
-    transform: translateY(-50%) scale(1.1);
+    transform: scale(1.15);
 }
+
+#BtnConfirmVerSenha {
+    font-size: 25px;
+    cursor: pointer;
+    position: absolute;
+    right: 1.2em;
+    top: 1.8em;
+    background: none;
+    border: none;
+    color: color-mix(in srgb, var(--text) 80%, transparent);
+    transition: all 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    pointer-events: auto;
+}
+
+#BtnConfirmVerSenha:hover {
+    color: var(--accent);
+    transform: scale(1.15);
+}
+
 
 /* Responsividade geral */
 @media (max-width: 900px) {

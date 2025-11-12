@@ -811,4 +811,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (themeEl) themeEl.checked = true;
 
     applySettings(currentSettings);
+
 });
