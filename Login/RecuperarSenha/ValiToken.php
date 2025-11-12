@@ -1,4 +1,4 @@
-<?php
+  <?php
 $token=$_GET["token"];
 date_default_timezone_set('America/Sao_Paulo');
 $token_hash=hash("sha256", $token);
@@ -97,9 +97,6 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
             </div>
 
             <div class="settings-divider"></div>
-
-            <button id="resetSettings" class="settings-btn settings-btn-secondary">Restaurar Padrões</button>
-            <button id="closeSettingsBtn" class="settings-btn settings-btn-primary">Salvar</button>
         </div>
     </div>
 
@@ -122,8 +119,6 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
                 <button type="button" class="toggle-pass" data-target="ConfirmarNovaSenha" aria-label="Mostrar/ocultar confirmação"><i class="bi bi-eye-fill"></i></button>
             </div>
 
-            <div id="message" class="message" aria-live="polite"></div>
-
             <div class="button-container">
                 <button type="submit" id="btnRedefinirSenha">Redefinir Senha</button>
             </div>
@@ -133,7 +128,7 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
     <div class="overlay" id="overlay">
         <div class="modal">
             <h2>Aviso</h2>
-            <p></p>
+            <p id="modalMessage"></p>
             <button id="fecharModal">Fechar</button>
         </div>
     </div>

@@ -86,8 +86,6 @@
 
             <div class="settings-divider"></div>
             
-            <button id="resetSettings" class="settings-btn settings-btn-secondary">Restaurar Padrões</button>
-            <button id="closeSettingsBtn" class="settings-btn settings-btn-primary">Salvar</button>
         </div>
     </div>
 

@@ -1,4 +1,3 @@
-
  <?php
 session_start();
 include("../conexao.php");
@@ -7,6 +6,7 @@ if(!isset($_COOKIE['lembrar_tolken'])){
     $tolken =$_COOKIE['lembrar_tolken'];
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -20,6 +20,17 @@ if(!isset($_COOKIE['lembrar_tolken'])){
 <body>
 
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
+
+    <!-- Modal de Alerta/Confirmação Reutilizável -->
+    <div class="overlay" id="alertOverlay" role="dialog" aria-modal="true" aria-labelledby="alertMessage" style="display:none;">
+        <div class="modal">
+            <p id="alertMessage">Tem certeza que deseja substituir sua escolha anterior?</p>
+            <div class="modal-actions">
+                <button type="button" id="alertCancel">Cancelar</button>
+                <button type="button" id="alertOk">Continuar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Botão de Configurações - Canto Superior Direito -->
     <button class="settings-btn" id="settingsBtn" title="Configurações">
@@ -94,10 +105,6 @@ if(!isset($_COOKIE['lembrar_tolken'])){
                 </div>
             </div>
 
-            <div class="settings-divider"></div>
-            
-            <button id="resetSettings" class="settings-btn-secondary">Restaurar Padrões</button>
-            <button id="closeSettingsBtn" class="settings-btn-primary">Salvar e Fechar</button>
         </div>
     </div>
     
@@ -111,7 +118,7 @@ if(!isset($_COOKIE['lembrar_tolken'])){
                 <p class="ou">ou</p>
                 <label for="NomesSugerido">Nomes Sugeridos:</label>
                 <select id="NomesSugerido" name="NomesSugerido">
-                    <option value="">Clique para ver os nomes sugeridos</option>
+                    <option value="">Ver nomes sugeridos</option>
                     <option value="Avatar1">Optimus Oprime</option>
                     <option value="Avatar2">Vladimir Putinks</option>
                     <option value="Avatar2">Valdemar Glaive</option>
@@ -121,7 +128,10 @@ if(!isset($_COOKIE['lembrar_tolken'])){
                     <option value="Avatar2">Naafiri</option>
                 </select>
                 <hr>
-                <input type="submit" id="ButtonCriarPerfil" value="Criar Perfil">
+                <div class="button-container">
+                    <input type="submit" id="ButtonCriarPerfil" value="Criar Perfil">
+                    <button type="button" id="btnVoltar">Voltar</button>
+                </div>
             </div>
 
             <div class="divisor"></div>
@@ -146,6 +156,9 @@ if(!isset($_COOKIE['lembrar_tolken'])){
 
     <div id="avatarModal" class="avatar-modal">
         <div class="avatar-modal-content">
+            <button class="close-avatar" id="closeAvatar" title="Fechar">
+                <i class="bi bi-x"></i>
+            </button>
             <h3>Escolha seu Avatar</h3>
             <div class="avatar-grid">
                 <div class="avatar-option">

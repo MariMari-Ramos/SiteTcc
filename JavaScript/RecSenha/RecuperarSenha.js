@@ -7,12 +7,38 @@
     const btnVoltar = document.getElementById('btnVoltar');
     const emailInput = document.getElementById('email');
     const messageDiv = document.getElementById('message');
+    // Modal de alerta (mesmo estilo do Login)
+    const overlay = document.getElementById('overlay');
+    const overlayModal = overlay?.querySelector('.modal');
+    const overlayTitle = overlayModal?.querySelector('h2');
+    const overlayText = overlayModal?.querySelector('p');
+    const overlayCloseBtn = document.getElementById('fecharModal');
 
+    function openAlert(title, text){
+        if(overlay){
+            if(overlayTitle) overlayTitle.textContent = title || 'Alerta';
+            if(overlayText) overlayText.textContent = text || '';
+            overlay.style.display = 'flex';
+            isAlertOpen = true;
+            interactive = false;
+            isMousePressed = false;
+        } else {
+            // Fallback
+            alert((title? title+': ' : '') + (text || ''));
+        }
+    }
+    function closeAlert(){
+        if(overlay){
+            overlay.style.display = 'none';
+            isAlertOpen = false;
+            if(!isFieldFocused && !isSettingsOpen && !isMouseInsideForm){
+                interactive = true;
+            }
+        }
+    }
     function showMessage(text,type='info'){
-        if(!messageDiv) return;
-        messageDiv.textContent = text;
-        messageDiv.className = `message ${type} show`;
-        setTimeout(()=> messageDiv.classList.remove('show'),5000);
+        const title = type==='error' ? 'Alerta' : (type==='success' ? 'Sucesso' : 'Aviso');
+        openAlert(title, text);
     }
     function validateInput(v){
         const value = v.trim();
@@ -34,15 +60,13 @@
         },1500);
     });
     btnVoltar?.addEventListener('click',()=> window.location.href='../loginhtml.php');
-    emailInput?.addEventListener('input',()=> messageDiv?.classList.remove('show'));
+    // Mensagem inline removida (substituída por modal)
     emailInput?.focus();
 
     // ===== Configurações =====
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsModal = document.getElementById('settingsModal');
     const closeSettings = document.getElementById('closeSettings');
-    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-    const resetSettings = document.getElementById('resetSettings');
 
     const defaultSettings = {
         enableWaves:true,
@@ -107,11 +131,38 @@
 
         wavesEnabled = s.enableWaves;
         if(canvas){
-            if(wavesEnabled){
-                canvas.style.display='block';
+            if(s.enableWaves){
+                if(!wavesEnabled){
+                    wavesFadingOut = false;
+                    waveFadeOpacity = 0;
+                    canvas.style.display = 'block';
+                    
+                    const fadeInInterval = setInterval(() => {
+                        waveFadeOpacity += 0.02;
+                        if(waveFadeOpacity >= 1){
+                            waveFadeOpacity = 1;
+                            clearInterval(fadeInInterval);
+                        }
+                    }, 16);
+                }
             } else {
-                canvas.style.display='none';
-                ctx?.clearRect(0,0,canvas.width,canvas.height);
+                if(wavesEnabled){
+                    wavesFadingOut = true;
+                    
+                    setTimeout(() => {
+                        if(!wavesEnabled){
+                            canvas.style.display = 'none';
+                            ctx.clearRect(0,0,canvas.width,canvas.height);
+                            
+                            heat = 0;
+                            clickAmp = 0;
+                            clickHeight = 0;
+                            targetClickHeight = 0;
+                            speedBoost = 0;
+                            wavesFadingOut = false;
+                        }
+                    }, 1500);
+                }
             }
         }
     }
@@ -127,18 +178,9 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
         applySettings(settings);
     }
-    function restoreDefaults(){
-        if(!confirm('Restaurar configurações padrão?')) return;
-        localStorage.removeItem(STORAGE_KEY);
-        const s = loadSettings();
-        syncUI(s);
-        applySettings(s);
-        alert('Padrões restaurados.');
-    }
 
     function openSettings(){
         settingsModal?.classList.add('active');
-        document.body.classList.add('settings-open');
         isSettingsOpen = true;
         interactive = false;
         isMousePressed = false;
@@ -148,10 +190,22 @@
         targetClickHeight = 0;
     }
     function closeSettingsModal(){
-        settingsModal?.classList.remove('active');
-        document.body.classList.remove('settings-open');
-        isSettingsOpen = false;
-        if(!isFieldFocused) interactive = true;
+        const settingsContent = settingsModal.querySelector('.settings-content');
+        
+        settingsModal.classList.add('closing');
+        if (settingsContent) {
+            settingsContent.classList.add('closing');
+        }
+        
+        setTimeout(() => {
+            settingsModal.classList.remove('active', 'closing');
+            if (settingsContent) {
+                settingsContent.classList.remove('closing');
+            }
+            
+            isSettingsOpen = false;
+            if (!isFieldFocused) interactive = true;
+        }, 300);
     }
 
     settingsBtn?.addEventListener('click', openSettings);
@@ -159,13 +213,27 @@
     settingsModal?.addEventListener('click',(e)=>{
         if(e.target===settingsModal) closeSettingsModal();
     });
-    closeSettingsBtn?.addEventListener('click',()=>{
-        saveSettings();
-        closeSettingsModal();
-    });
-    resetSettings?.addEventListener('click', restoreDefaults);
+    
     document.querySelectorAll('.settings-option input').forEach(i=>{
         i.addEventListener('change', saveSettings);
+    });
+    // Permite clicar no nome/linha para alternar a opção (checkbox/radio)
+    document.querySelectorAll('.settings-option').forEach(option=>{
+        option.addEventListener('click',(e)=>{
+            // Evita duplo toggle quando clica direto no input
+            if((e.target instanceof HTMLInputElement)) return;
+            const input = option.querySelector('input');
+            if(!input || input.disabled) return;
+            if(input.type === 'checkbox'){
+                input.checked = !input.checked;
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            } else if(input.type === 'radio'){
+                if(!input.checked){
+                    input.checked = true;
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            }
+        });
     });
 
     // ===== Ondas =====
@@ -180,10 +248,14 @@
     window.addEventListener('resize', resizeCanvas);
 
     let wavesEnabled = true;
+    let wavesFadingOut = false;
+    let waveFadeOpacity = 1;
     let isSettingsOpen = false;
     let interactive = true;
     let isMousePressed = false;
     let isFieldFocused = false;
+    let isMouseInsideForm = false; // bloqueia direção das waves quando cursor está sobre o formulário
+    let isAlertOpen = false; // modal de alerta aberto
 
     let mouseX = window.innerWidth/2;
     let mouseY = window.innerHeight/2;
@@ -198,6 +270,9 @@
 
     let waveDir = 1;
     let targetWaveDir = 1;
+    // Transição suave de interatividade (igual Login)
+    let interactiveTransition = 1; // 1 = totalmente interativo, 0 = bloqueado
+    const transitionSpeed = 0.06;
 
     let heat = 0;
     const heatDecay = 0.96;
@@ -209,6 +284,10 @@
     let clickHeight = 0;
     let targetClickHeight = 0;
     const clickHeightEase = 0.12;
+    
+    // Ponto de clique para direcionar as ondas
+    let clickPointX = window.innerWidth / 2;
+    let clickDirectionTarget = 1;
 
     function cssVar(name){
         return getComputedStyle(document.body).getPropertyValue(name).trim();
@@ -237,17 +316,22 @@
     }
 
     window.addEventListener('mousemove',(e)=>{
+        // Não atualiza alvo quando modal de alerta está aberto
+        if(isAlertOpen) return;
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
-        const center = window.innerWidth/2;
-        targetWaveDir = e.clientX < center ? 1 : -1;
+        // Não mude a direção das ondas se o mouse estiver sobre o formulário
+        if(!isMouseInsideForm){
+            const center = window.innerWidth/2;
+            targetWaveDir = e.clientX < center ? 1 : -1;
+        }
     });
 
     window.addEventListener('mousedown',(e)=>{
         if(e.button!==0) return;
         isMousePressed = true;
         const s = loadSettings();
-        if(s.enableClickEffect && wavesEnabled && interactive && !isSettingsOpen){
+        if(s.enableClickEffect && wavesEnabled && interactive && !isSettingsOpen && !isAlertOpen){
             heat = 1;
             clickAmp = maxClickAmp;
             targetClickHeight = -(canvas.height/2 - e.clientY);
@@ -267,31 +351,71 @@
     form?.addEventListener('focusout',(ev)=>{
         if(ev.target.matches('input,button')){
             isFieldFocused = false;
-            if(!isSettingsOpen) interactive = true;
+            if(!isSettingsOpen && !isMouseInsideForm) interactive = true;
         }
     },true);
+
+    // Detecta mouse dentro/fora da caixa para travar interatividade e direção
+    const formBox = document.querySelector('.CaixaRecuperarSenha');
+    formBox?.addEventListener('mouseenter',()=>{
+        isMouseInsideForm = true;
+        interactive = false;
+    });
+    formBox?.addEventListener('mouseleave',()=>{
+        isMouseInsideForm = false;
+        if(!isFieldFocused && !isSettingsOpen){
+            interactive = true;
+        }
+    });
 
     settingsBtn?.addEventListener('mouseenter',()=> interactive=false);
     settingsBtn?.addEventListener('mouseleave',()=>{
         if(!isFieldFocused && !isSettingsOpen) interactive=true;
     });
 
+    // Eventos do modal de alerta
+    overlayCloseBtn?.addEventListener('click', closeAlert);
+    overlay?.addEventListener('click',(e)=>{ if(e.target===overlay) closeAlert(); });
+    window.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && isAlertOpen) closeAlert(); });
+
     function draw(){
         requestAnimationFrame(draw);
         if(!canvas || !ctx) return;
-        if(!wavesEnabled){
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            return;
+        
+        if (!wavesEnabled) {
+            if (wavesFadingOut) {
+                waveFadeOpacity -= 0.015;
+                if (waveFadeOpacity <= 0) {
+                    waveFadeOpacity = 0;
+                    wavesFadingOut = false;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    return;
+                }
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                return;
+            }
         }
+        
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         const s = loadSettings();
 
+        // Ajusta transição de interatividade (0..1) suavemente
+        const targetTransition = (interactive && !isSettingsOpen && !isFieldFocused && !isMouseInsideForm && !isAlertOpen) ? 1 : 0;
+        interactiveTransition += (targetTransition - interactiveTransition) * transitionSpeed;
+
         mouseX += (targetMouseX - mouseX)*ease;
         mouseY += (targetMouseY - mouseY)*ease;
-        waveDir += (targetWaveDir - waveDir)*0.1;
+        
+        // Sempre segue a direção do mouse, clique não altera a direção
+        waveDir += (targetWaveDir - waveDir)*0.1 * interactiveTransition;
 
-        if(s.enableHoldEffect && interactive && !isSettingsOpen && !isFieldFocused){
+        // Usa uma posição de mouse "suavizada" para reduzir salto ao entrar/sair do form
+        const centerY = canvas.height/2;
+        const smoothMouseY = centerY + (mouseY - centerY) * interactiveTransition;
+
+        if(s.enableHoldEffect && interactive && !isSettingsOpen && !isFieldFocused && !isAlertOpen && !isMouseInsideForm){
             if(isMousePressed && speedBoost < maxSpeedBoost){
                 speedBoost += boostBuild;
             } else if(!isMousePressed && speedBoost>0){
@@ -310,12 +434,12 @@
         const hotColors  = [cssVar('--waveHot1'),cssVar('--waveHot2'),cssVar('--waveHot3')];
 
         waves.forEach((w,i)=>{
-            const influence = Math.abs(mouseY - canvas.height/2)*0.03;
+            const influence = Math.abs(smoothMouseY - centerY) * 0.03; // influencia suavizada
             const extra = clickAmp * (60 + i*10);
-            w.targetAmp = w.baseAmp + influence*(interactive?1:0) + extra;
+            w.targetAmp = w.baseAmp + influence*interactiveTransition + extra;
             w.amp += (w.targetAmp - w.amp)*w.ampEase;
 
-            const verticalInfluence = ((mouseY - canvas.height/2)*0.04*(i+1)*(interactive?1:0)) + clickHeight;
+            const verticalInfluence = ((smoothMouseY - centerY) * 0.04 * (i+1) * interactiveTransition) + clickHeight;
             const freqAdj = w.freq * (1 + clickAmp*0.8);
 
             ctx.beginPath();
@@ -333,10 +457,12 @@
             const cMix2 = mixColor(baseColors[i], hotColors[(i+1)%3], heat*0.6);
 
             const grad = ctx.createLinearGradient(0,0,0,canvas.height);
-            grad.addColorStop(0, cMix1);
-            grad.addColorStop(1, cMix2);
+            grad.addColorStop(0,cMix1);
+            grad.addColorStop(1,cMix2);
             ctx.fillStyle = grad;
+            ctx.globalAlpha = waveFadeOpacity;
             ctx.fill();
+            ctx.globalAlpha = 1;
 
             const baseSpeed = 0.8;
             const mult = baseSpeed*(1+speedBoost)*(1+ Math.sin(Date.now()*0.0005)*0.1);

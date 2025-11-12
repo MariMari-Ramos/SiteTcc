@@ -4,6 +4,7 @@
     // Elementos
     const profilePhotoInput = document.getElementById('profilePhoto');
     const previewFoto = document.getElementById('previewFoto');
+    const previewContainer = document.querySelector('.perfil-foto-preview');
 
     // Validações
     if (!profilePhotoInput || !previewFoto) {
@@ -11,6 +12,18 @@
         console.error('profilePhotoInput:', profilePhotoInput);
         console.error('previewFoto:', previewFoto);
         return;
+    }
+
+    // Também permite clique no container para abrir o seletor (resiliente a sobreposições visuais)
+    if (previewContainer) {
+        previewContainer.addEventListener('click', function() {
+            profilePhotoInput.click();
+        });
+        previewContainer.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openAvatarModal();
+        });
     }
 
     /**

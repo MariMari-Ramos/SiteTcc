@@ -132,6 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let waveDirection = 1;
     let targetWaveDirection = 1;
     const directionEaseAmount = 0.1;
+    // Flag para saber se o mouse está dentro da caixa de login
+    let isMouseInsideForm = false;
 
     let heatIntensity = 0;
     const heatDecayRate = 0.96;
@@ -242,11 +244,14 @@ document.addEventListener('DOMContentLoaded', () => {
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
 
-        const centerX = window.innerWidth / 2;
-        if (e.clientX < centerX) {
-            targetWaveDirection = 1;
-        } else if (e.clientX > centerX) {
-            targetWaveDirection = -1;
+        // Evita trocar a direção quando o mouse está sobre o formulário
+        if (!isMouseInsideForm) {
+            const centerX = window.innerWidth / 2;
+            if (e.clientX < centerX) {
+                targetWaveDirection = 1;
+            } else if (e.clientX > centerX) {
+                targetWaveDirection = -1;
+            }
         }
     });
 
@@ -289,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formLogin.addEventListener('focusout', (e) => {
             if (e.target.matches('input, textarea, button')) {
                 isFormFocused = false;
-                if (loginBox && !loginBox.matches(':hover') && !isSettingsOpen) {
+                if (!isMouseInsideForm && !isSettingsOpen) {
                     interactive = true;
                     console.log('[waves] Elemento desfocado — interactive ON');
                 }
@@ -299,11 +304,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (loginBox) {
         loginBox.addEventListener('mouseenter', () => {
+            isMouseInsideForm = true;
             interactive = false;
             console.log('[waves] Mouse entrou na caixa — interactive OFF');
         });
         
         loginBox.addEventListener('mouseleave', () => {
+            isMouseInsideForm = false;
             if (!isFormFocused && !isSettingsOpen) {
                 interactive = true;
                 console.log('[waves] Mouse saiu da caixa — interactive ON');
@@ -445,8 +452,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsModal = document.getElementById('settingsModal');
     const closeSettings = document.getElementById('closeSettings');
-    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-    const resetSettings = document.getElementById('resetSettings');
 
     if (settingsBtn) {
         settingsBtn.addEventListener('mouseenter', () => {
@@ -589,30 +594,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('[Configurações-Login] Efeito ao segurar:', settings.enableHoldEffect ? 'ATIVADO' : 'DESATIVADO');
     }
 
-    function restoreDefaults() {
-        if (confirm('Tem certeza que deseja restaurar as configurações padrão?')) {
-            localStorage.removeItem('loginPageSettings');
-            
-            const enableWavesEl = document.getElementById('enableWaves');
-            const enableClickEffectEl = document.getElementById('enableClickEffect');
-            const enableHoldEffectEl = document.getElementById('enableHoldEffect');
-            const highContrastEl = document.getElementById('highContrast');
-            const largerTextEl = document.getElementById('largerText');
-            const themeLightEl = document.querySelector('input[value="light"]');
-
-            if (enableWavesEl) enableWavesEl.checked = defaultSettings.enableWaves;
-            if (enableClickEffectEl) enableClickEffectEl.checked = defaultSettings.enableClickEffect;
-            if (enableHoldEffectEl) enableHoldEffectEl.checked = defaultSettings.enableHoldEffect;
-            if (highContrastEl) highContrastEl.checked = defaultSettings.highContrast;
-            if (largerTextEl) largerTextEl.checked = defaultSettings.largerText;
-            if (themeLightEl) themeLightEl.checked = true;
-
-            saveSettings();
-            alert('Configurações restauradas!');
-            console.log('[Configurações-Login] Padrões restaurados');
-        }
-    }
-
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => {
             settingsModal.classList.add('active');
@@ -642,11 +623,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             isSettingsOpen = false;
-            if (!isFormFocused) {
-                const loginBox = document.querySelector('.CaixaLogin') || document.querySelector('.login');
-                if (!(loginBox && loginBox.matches(':hover'))) {
-                    interactive = true;
-                }
+            if (!isFormFocused && !isMouseInsideForm) {
+                interactive = true;
             }
             console.log('[Configurações-Login] Modal fechado — interatividade das waves conforme contexto');
         }, 300);
@@ -656,23 +634,12 @@ document.addEventListener('DOMContentLoaded', () => {
         closeSettings.addEventListener('click', closeModal);
     }
 
-    if (closeSettingsBtn) {
-        closeSettingsBtn.addEventListener('click', () => {
-            saveSettings();
-            closeModal();
-        });
-    }
-
     if (settingsModal) {
         settingsModal.addEventListener('click', (e) => {
             if (e.target === settingsModal) {
                 closeModal();
             }
         });
-    }
-
-    if (resetSettings) {
-        resetSettings.addEventListener('click', restoreDefaults);
     }
 
     document.querySelectorAll('.settings-option input').forEach(input => {

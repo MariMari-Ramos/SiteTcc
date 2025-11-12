@@ -181,7 +181,7 @@ input[type="password"] {
     background:#fff;
     box-shadow:0 0 0 3px var(--accent-soft);
 }
-.input-group input::placeholder{color:var(--input-placeholder);}
+.input-group input::placeholder{color:var(--input-placeholder);font-size:0.85em;}
 
 .toggle-pass{
     position:absolute;
@@ -191,8 +191,8 @@ input[type="password"] {
     background:none;
     border:none;
     cursor:pointer;
-    font-size:22px;
-    color:#474747;
+    font-size:24px; /* levemente maior para melhor usabilidade */
+    color:color-mix(in srgb, var(--text) 70%, transparent);
     display:flex;
     align-items:center;
     padding:0;
@@ -201,6 +201,12 @@ input[type="password"] {
 .toggle-pass:hover{color:var(--accent);}
 
 body.high-contrast .input-group input{border-width:3px;font-weight:600;}
+
+body.dark-theme .input-group input:focus{
+    background:var(--input-bg);
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+}
 
 .button-container{
     margin-top:.4rem;
@@ -222,23 +228,6 @@ body.high-contrast .input-group input{border-width:3px;font-weight:600;}
 }
 #btnRedefinirSenha:hover{background:var(--btn-primary-hover);transform:translateY(-2px);}
 body.high-contrast #btnRedefinirSenha{border:2px solid var(--text);font-weight:700;}
-
-.message{
-    margin:.3rem 0 1rem;
-    padding:.7rem 1rem;
-    border-radius:.85rem;
-    font-size:.75rem;
-    font-weight:600;
-    background:var(--accent-soft);
-    color:var(--accent);
-    opacity:0;
-    transform:translateY(8px);
-    transition:.35s;
-}
-.message.show{opacity:1;transform:translateY(0);}
-.message.error{background:rgba(255,30,30,0.15);color:#d80000;}
-.message.success{background:rgba(0,180,70,0.18);color:#007a2e;}
-body.high-contrast .message{border:2px solid var(--accent);}
 
 .overlay{
     position:fixed;
@@ -293,12 +282,11 @@ body.high-contrast .message{border:2px solid var(--accent);}
     cursor:pointer;
     font-size:24px;
     color:#fff;
-    z-index:1400;
+    z-index:1380; /* abaixo do modal (1390) para não ficar por cima */
     box-shadow:0 4px 15px color-mix(in srgb,var(--accent) 45%,transparent);
     transition:.35s;
 }
 .settings-fab:hover{transform:scale(1.1) rotate(90deg);background:var(--accent-2);}
-body.settings-open .settings-fab{opacity:0;transform:scale(.3) rotate(-180deg);pointer-events:none;}
 
 .settings-modal{
     display:none;
@@ -323,7 +311,12 @@ body.settings-open .settings-fab{opacity:0;transform:scale(.3) rotate(-180deg);p
     overflow-y:auto;
     animation:slideInRight .35s ease;
 }
-@keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);} }
+@keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);}}
+@keyframes slideOutRight{from{transform:translateX(0);}to{transform:translateX(100%);}}
+
+.settings-modal.closing, .settings-content.closing {
+    animation: slideOutRight 0.3s ease forwards;
+}
 
 .settings-header{
     display:flex;
@@ -379,10 +372,6 @@ body.settings-open .settings-fab{opacity:0;transform:scale(.3) rotate(-180deg);p
     transition:.25s;
     margin-bottom:4px;
 }
-.settings-btn-primary{background:var(--accent);color:#fff;font-weight:600;}
-.settings-btn-primary:hover{background:var(--accent-2);}
-.settings-btn-secondary{background:var(--btn-secondary);color:#fff;font-weight:600;}
-.settings-btn-secondary:hover{background:var(--btn-secondary-hover);}
 .settings-divider{height:1px;background:var(--panel-border);margin:14px 0;}
 
 body.large-text{font-size:18px !important;}

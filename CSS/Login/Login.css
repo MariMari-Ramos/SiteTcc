@@ -254,6 +254,8 @@ label[for="LembrarSenhaSubtitulo"] {
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
     transition: all 0.2s ease;
     color: var(--text);
+    /* Espaço extra para o ícone do olho não sobrepor o texto */
+    padding-right: 3em;
 }
 
 #email::placeholder,
@@ -270,23 +272,34 @@ label[for="LembrarSenhaSubtitulo"] {
     background-color: #fff;
 }
 
+/* Garante bolinhas de senha e evita barra sólida em alguns ambientes */
+input[type="password"] {
+    -webkit-text-security: disc; /* WebKit/Blink */
+    letter-spacing: normal;
+    line-height: normal;
+    /* Usa fonte do sistema para o glifo da bolinha caso a fonte principal não possua */
+    font-family: system-ui, "Segoe UI", Arial, sans-serif;
+}
+
 /* ==================== PASSWORD CONTAINER ==================== */
 .password-container {
     position: relative;
 }
 
-i {
+/* Escopa o estilo apenas para o ícone do olho dentro do campo de senha */
+.password-container i {
     font-size: clamp(20px, 4vw, 30px);
     cursor: pointer;
     position: absolute;
-    right: 5%;
+    right: 0.5em; /* move um pouco para a direita */
     top: 50%;
     transform: translateY(-50%);
     color: color-mix(in srgb, var(--text) 80%, transparent);
     transition: all 0.2s ease;
+    z-index: 2;
 }
 
-i:hover {
+.password-container i:hover {
     color: var(--accent);
     transform: translateY(-50%) scale(1.1);
 }
@@ -666,26 +679,6 @@ body.dark-theme .settings-option span {
     font-weight: 500;
     transition: all 0.3s ease;
     margin-top: 6px;
-}
-
-.settings-btn-primary {
-    background: var(--accent);
-    color: white;
-}
-
-.settings-btn-primary:hover {
-    background: var(--accent-2);
-    transform: translateY(-1px);
-}
-
-.settings-btn-secondary {
-    background: var(--modal-btn-bg);
-    color: var(--text);
-    border: 1px solid var(--input-border);
-}
-
-.settings-btn-secondary:hover {
-    background: var(--modal-btn-hover);
 }
 
 /* ==================== TEMA ESCURO ==================== */

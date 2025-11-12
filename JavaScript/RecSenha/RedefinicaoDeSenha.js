@@ -5,17 +5,19 @@
     const form = document.getElementById('resetPasswordForm');
     const nova = document.getElementById('NovaSenha');
     const confirma = document.getElementById('ConfirmarNovaSenha');
-    const messageDiv = document.getElementById('message');
     const overlay = document.getElementById('overlay');
+    const modalMessage = document.getElementById('modalMessage');
     const fecharModalBtn = document.getElementById('fecharModal');
 
-    function showMessage(text,type='info',persist=false){
-        if(!messageDiv) return;
-        messageDiv.textContent = text;
-        messageDiv.className = `message ${type} show`;
-        if(!persist){
-            setTimeout(()=> messageDiv.classList.remove('show'),5000);
-        }
+    function showMessage(text){
+        if(!overlay || !modalMessage) return;
+        modalMessage.textContent = text;
+        overlay.style.display = 'flex';
+    }
+
+    function closeModal(){
+        if(!overlay) return;
+        overlay.style.display = 'none';
     }
 
     function validar(){
@@ -29,15 +31,15 @@
     form?.addEventListener('submit',(e)=>{
         e.preventDefault();
         const erro = validar();
-        if(erro){ showMessage(erro,'error'); nova.focus(); return; }
-        showMessage('Senha redefinida!','success',true);
-        form.submit(); // remova se for tratar via AJAX
+        if(erro){ showMessage(erro); nova.focus(); return; }
+        showMessage('Senha redefinida com sucesso!');
+        setTimeout(() => form.submit(), 1500);
     });
 
-    nova?.addEventListener('input',()=> messageDiv.classList.remove('show'));
-    confirma?.addEventListener('input',()=> messageDiv.classList.remove('show'));
-
-    fecharModalBtn?.addEventListener('click',()=> overlay.style.display='none');
+    fecharModalBtn?.addEventListener('click', closeModal);
+    overlay?.addEventListener('click', (e) => {
+        if(e.target === overlay) closeModal();
+    });
 
     document.querySelectorAll('.toggle-pass').forEach(btn=>{
         btn.addEventListener('click',()=>{
@@ -59,8 +61,6 @@
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsModal = document.getElementById('settingsModal');
     const closeSettings = document.getElementById('closeSettings');
-    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-    const resetSettings = document.getElementById('resetSettings');
 
     const defaultSettings = {
         enableWaves:true,
@@ -117,10 +117,43 @@
             document.documentElement.classList.add('large-text');
         }
 
+        const previousWavesState = wavesEnabled;
         wavesEnabled = s.enableWaves;
+        
         if(canvas){
-            canvas.style.display = wavesEnabled ? 'block':'none';
-            if(!wavesEnabled) ctx?.clearRect(0,0,canvas.width,canvas.height);
+            if(s.enableWaves){
+                if(!previousWavesState){
+                    wavesFadingOut = false;
+                    waveFadeOpacity = 0;
+                    canvas.style.display = 'block';
+                    
+                    const fadeInInterval = setInterval(() => {
+                        waveFadeOpacity += 0.02;
+                        if(waveFadeOpacity >= 1){
+                            waveFadeOpacity = 1;
+                            clearInterval(fadeInInterval);
+                        }
+                    }, 16);
+                }
+            } else {
+                if(previousWavesState){
+                    wavesFadingOut = true;
+                    
+                    setTimeout(() => {
+                        if(!wavesEnabled){
+                            canvas.style.display = 'none';
+                            ctx.clearRect(0,0,canvas.width,canvas.height);
+                            
+                            heat = 0;
+                            clickAmp = 0;
+                            clickHeight = 0;
+                            targetClickHeight = 0;
+                            speedBoost = 0;
+                            wavesFadingOut = false;
+                        }
+                    }, 1500);
+                }
+            }
         }
     }
 
@@ -137,18 +170,8 @@
         applySettings(s);
     }
 
-    function restoreDefaults(){
-        if(!confirm('Restaurar configurações padrão?')) return;
-        localStorage.removeItem(STORAGE_KEY);
-        const s = loadSettings();
-        syncUI(s);
-        applySettings(s);
-        alert('Padrões restaurados.');
-    }
-
     function openSettings(){
         settingsModal?.classList.add('active');
-        document.body.classList.add('settings-open');
         isSettingsOpen = true;
         interactive = false;
         isMousePressed = false;
@@ -158,10 +181,22 @@
         targetClickHeight = 0;
     }
     function closeSettingsModal(){
-        settingsModal?.classList.remove('active');
-        document.body.classList.remove('settings-open');
-        isSettingsOpen = false;
-        if(!isFieldFocused) interactive = true;
+        const settingsContent = settingsModal.querySelector('.settings-content');
+        
+        settingsModal.classList.add('closing');
+        if (settingsContent) {
+            settingsContent.classList.add('closing');
+        }
+        
+        setTimeout(() => {
+            settingsModal.classList.remove('active', 'closing');
+            if (settingsContent) {
+                settingsContent.classList.remove('closing');
+            }
+            
+            isSettingsOpen = false;
+            if(!isFieldFocused) interactive = true;
+        }, 300);
     }
 
     settingsBtn?.addEventListener('click', openSettings);
@@ -169,11 +204,6 @@
     settingsModal?.addEventListener('click',e=>{
         if(e.target===settingsModal) closeSettingsModal();
     });
-    closeSettingsBtn?.addEventListener('click',()=>{
-        saveSettings();
-        closeSettingsModal();
-    });
-    resetSettings?.addEventListener('click', restoreDefaults);
     document.querySelectorAll('.settings-option input').forEach(i=>{
         i.addEventListener('change', saveSettings);
     });
@@ -204,10 +234,16 @@
     window.addEventListener('resize', resizeCanvas);
 
     let wavesEnabled = true;
+    let wavesFadingOut = false;
+    let waveFadeOpacity = 1;
     let isSettingsOpen = false;
     let interactive = true;
     let isMousePressed = false;
     let isFieldFocused = false;
+    let isMouseInsideForm = false;
+    // Transição suave de interatividade (0..1)
+    let interactiveTransition = 1;
+    const transitionSpeed = 0.06;
 
     let mouseX = window.innerWidth/2;
     let mouseY = window.innerHeight/2;
@@ -263,15 +299,19 @@
     window.addEventListener('mousemove',e=>{
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
-        const center = window.innerWidth/2;
-        targetWaveDir = e.clientX < center ? 1 : -1;
+        
+        // Não muda direção quando mouse está dentro do formulário
+        if(!isMouseInsideForm){
+            const center = window.innerWidth/2;
+            targetWaveDir = e.clientX < center ? 1 : -1;
+        }
     });
 
     window.addEventListener('mousedown',e=>{
         if(e.button!==0) return;
         isMousePressed=true;
         const s=loadSettings();
-        if(s.enableClickEffect && wavesEnabled && interactive && !isSettingsOpen){
+        if(s.enableClickEffect && wavesEnabled && interactive && !isSettingsOpen && !isMouseInsideForm && !isFieldFocused){
             heat=1;
             clickAmp=maxClickAmp;
             targetClickHeight = -(canvas.height/2 - e.clientY);
@@ -280,6 +320,18 @@
     window.addEventListener('mouseup',e=>{
         if(e.button!==0) return;
         isMousePressed=false;
+    });
+
+    const formBox = document.querySelector('.CaixaRedefinirSenha');
+    formBox?.addEventListener('mouseenter',()=>{
+        isMouseInsideForm = true;
+        interactive = false;
+    });
+    formBox?.addEventListener('mouseleave',()=>{
+        isMouseInsideForm = false;
+        if(!isFieldFocused && !isSettingsOpen){
+            interactive = true;
+        }
     });
 
     form?.addEventListener('focusin',ev=>{
@@ -291,31 +343,49 @@
     form?.addEventListener('focusout',ev=>{
         if(ev.target.matches('input,button')){
             isFieldFocused=false;
-            if(!isSettingsOpen) interactive=true;
+            if(!isMouseInsideForm && !isSettingsOpen) interactive=true;
         }
     },true);
 
     settingsBtn?.addEventListener('mouseenter',()=> interactive=false);
     settingsBtn?.addEventListener('mouseleave',()=>{
-        if(!isFieldFocused && !isSettingsOpen) interactive=true;
+        if(!isFieldFocused && !isSettingsOpen && !isMouseInsideForm) interactive=true;
     });
 
     function draw(){
         requestAnimationFrame(draw);
         if(!canvas || !ctx) return;
+        
         if(!wavesEnabled){
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            return;
+            if(wavesFadingOut){
+                waveFadeOpacity -= 0.015;
+                if(waveFadeOpacity <= 0){
+                    waveFadeOpacity = 0;
+                    wavesFadingOut = false;
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    return;
+                }
+            } else {
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                return;
+            }
         }
+        
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
         const s=loadSettings();
 
+        // Ajuste suave de interatividade com base no contexto
+        const targetTransition = (interactive && !isSettingsOpen && !isFieldFocused && !isMouseInsideForm) ? 1 : 0;
+        interactiveTransition += (targetTransition - interactiveTransition) * transitionSpeed;
+
         mouseX += (targetMouseX - mouseX)*ease;
         mouseY += (targetMouseY - mouseY)*ease;
-        waveDir += (targetWaveDir - waveDir)*0.1;
 
-        if(s.enableHoldEffect && interactive && !isSettingsOpen && !isFieldFocused){
+        // Atualiza direção suavizada pelo fator de interatividade
+        waveDir += (targetWaveDir - waveDir)*0.1 * interactiveTransition;
+
+           if(s.enableHoldEffect && interactive && !isSettingsOpen && !isFieldFocused && !isMouseInsideForm){
             if(isMousePressed && speedBoost < maxSpeedBoost){
                 speedBoost += boostBuild;
             } else if(!isMousePressed && speedBoost>0){
@@ -333,13 +403,16 @@
         const baseColors=[cssVar('--wave1'),cssVar('--wave2'),cssVar('--wave3')];
         const hotColors=[cssVar('--waveHot1'),cssVar('--waveHot2'),cssVar('--waveHot3')];
 
+        const centerY = canvas.height/2;
+        const smoothMouseY = centerY + (mouseY - centerY) * interactiveTransition;
+
         waves.forEach((w,i)=>{
-            const influence = Math.abs(mouseY - canvas.height/2)*0.03;
+            const influence = Math.abs(smoothMouseY - centerY)*0.03;
             const extra = clickAmp * (60 + i*10);
-            w.targetAmp = w.baseAmp + influence*(interactive?1:0) + extra;
+            w.targetAmp = w.baseAmp + influence*interactiveTransition + extra;
             w.amp += (w.targetAmp - w.amp)*w.ampEase;
 
-            const verticalInfluence = ((mouseY - canvas.height/2)*0.04*(i+1)*(interactive?1:0)) + clickHeight;
+            const verticalInfluence = ((smoothMouseY - centerY)*0.04*(i+1)*interactiveTransition) + clickHeight;
             const freqAdj = w.freq * (1 + clickAmp*0.8);
 
             ctx.beginPath();
@@ -359,7 +432,9 @@
             grad.addColorStop(0,cMix1);
             grad.addColorStop(1,cMix2);
             ctx.fillStyle=grad;
+            ctx.globalAlpha = waveFadeOpacity;
             ctx.fill();
+            ctx.globalAlpha = 1;
 
             const baseSpeed=0.8;
             const mult = baseSpeed*(1+speedBoost)*(1+Math.sin(Date.now()*0.0005)*0.1);

@@ -40,6 +40,31 @@
     --shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
+/* Alto contraste baseado na paleta do Login (conversa com o tema escuro) */
+body.high-contrast {
+    /* Paleta de alto contraste (claro) */
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --box-bg: #000000;
+    --border-color: #ffffff;
+    --button-primary: #ff4500;       /* accent do login */
+    --button-primary-hover: #ff6432; /* accent-2 do login */
+    --button-secondary: #000000;
+    --button-hover: rgba(255, 69, 0, 0.25);
+}
+
+:root[data-theme="dark"] body.high-contrast {
+    /* Paleta de alto contraste + escuro (igual Login) */
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --box-bg: #000000;
+    --border-color: #ffffff;
+    --button-primary: #00bfff;       /* accent do login (dark) */
+    --button-primary-hover: #00a0ff; /* accent-2 do login (dark) */
+    --button-secondary: #000000;
+    --button-hover: rgba(0, 191, 255, 0.25);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -228,17 +253,40 @@ input:checked + .slider:before {
     background: linear-gradient(135deg, #1b263b, #415a77);
 }
 
+/* 
+ * MODAL COM DESFOQUE DE FUNDO
+ * 
+ * IMPORTANTE: O backdrop-filter pode não funcionar em:
+ * - Navegadores muito antigos
+ * - Modo de economia de energia (alguns sistemas)
+ * - Hardware sem aceleração gráfica
+ * 
+ * Se o desfoque não aparecer, verifique:
+ * 1. Versão do navegador (use Chrome/Edge/Firefox atualizados)
+ * 2. Aceleração de hardware habilitada no navegador
+ * 3. Drivers de vídeo atualizados
+ */
+
 /* Modal - ajustado para não vazar */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.3);
     z-index: 1000;
     animation: fadeIn 0.3s ease;
     overflow-y: auto;
     padding: 20px;
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+}
+
+/* Garantir compatibilidade para cada modal específico */
+#languageModal,
+#accessibilityModal,
+#alertsWarningModal {
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
 }
 
 @keyframes fadeIn {
@@ -251,14 +299,34 @@ input:checked + .slider:before {
     margin: 5% auto;
     padding: 28px;
     width: 90%;
-    max-width: 500px;
-    max-height: 85vh;
+    max-width: 600px;
+    max-height: 90vh;
     overflow-y: auto;
+    overflow-x: hidden;
     border-radius: 16px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     border: 2px solid var(--border-color);
     animation: slideDown 0.3s ease;
     position: relative;
+}
+
+/* Personalizar scrollbar do modal */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: var(--button-secondary);
+    border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--button-primary);
+    border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--button-primary-hover);
 }
 
 @keyframes slideDown {
@@ -271,6 +339,7 @@ input:checked + .slider:before {
     color: var(--button-primary);
     font-size: 1.5rem;
     text-align: center;
+    padding-right: 30px;
 }
 
 .close {
@@ -338,6 +407,13 @@ input:checked + .slider:before {
     flex-direction: column;
     gap: 15px;
     margin: 15px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#accessibilityModal .modal-content {
+    max-width: 620px;
+    padding: 28px 24px;
 }
 
 .accessibility-item, .accessibility-group {
@@ -345,10 +421,12 @@ input:checked + .slider:before {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 12px;
+    padding: 14px;
     background: var(--button-secondary);
     border-radius: 8px;
     border: 2px solid var(--border-color);
+    flex-wrap: nowrap;
+    min-height: 60px;
 }
 
 :root[data-theme="dark"] .accessibility-item,
@@ -359,9 +437,10 @@ input:checked + .slider:before {
 .accessibility-item label, .accessibility-group label {
     font-weight: 600;
     font-size: 0.95rem;
-    min-width: 150px;
+    min-width: 180px;
     font-family: 'OpenDyslexic', Arial, sans-serif;
     flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .accessibility-item select,
@@ -369,7 +448,7 @@ input:checked + .slider:before {
 .toggle-button,
 .contrast-toggle,
 .auto-read-toggle {
-    padding: 8px 12px;
+    padding: 10px 14px;
     border-radius: 6px;
     border: 2px solid var(--border-color);
     background: var(--box-bg);
@@ -380,7 +459,8 @@ input:checked + .slider:before {
     font-weight: 600;
     font-family: 'OpenDyslexic', Arial, sans-serif;
     flex: 1;
-    max-width: 200px;
+    min-width: 150px;
+    max-width: 250px;
 }
 
 .accessibility-item select:hover,
@@ -446,6 +526,25 @@ input:checked + .slider:before {
 /* Modal de aviso de alertas */
 .alerts-warning-modal .modal-content {
     border-left: 6px solid var(--danger-color);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    max-width: 500px;
+    width: 90%;
+    animation: zoomIn 0.3s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
 
 .alerts-warning-modal h2 {
@@ -542,8 +641,8 @@ input:checked + .slider:before {
 /* Toast de mensagem */
 .message-modal {
     position: fixed;
-    top: 30px;
-    right: 30px;
+    top: 80px;
+    right: 20px;
     background: var(--box-bg);
     padding: 16px 20px;
     border-radius: 10px;
@@ -552,6 +651,12 @@ input:checked + .slider:before {
     z-index: 1001;
     border: 2px solid var(--border-color);
     border-left: 6px solid var(--button-primary);
+    transition: top 0.3s ease;
+}
+
+/* Quando o guia está ativo (body.guide-visible), o alerta fica abaixo do balão */
+body.guide-visible .message-modal {
+    top: 530px; /* Ajuste baseado na altura do guia + espaçamento */
 }
 
 @keyframes slideInRight {
@@ -621,56 +726,62 @@ input:checked + .slider:before {
     color: #e57373;
 }
 
-/* Alto contraste */
+/* Alto contraste (usando variáveis do tema) */
 body.high-contrast {
-    background: #000 !important;
-    color: #fff !important;
+    background: var(--bg-color) !important;
+    color: var(--text-color) !important;
 }
 
 .high-contrast .CaixaConfig,
 .high-contrast .modal-content {
-    background: #111 !important;
-    color: #fff !important;
-    border: 3px solid #fff !important;
+    background: var(--box-bg) !important;
+    color: var(--text-color) !important;
+    border: 3px solid var(--border-color) !important;
 }
 
-.high-contrast .slider {
-    background-color: #555 !important;
-}
-
-.high-contrast input:checked + .slider {
-    background-color: #fff !important;
-}
+.high-contrast .slider { background-color: var(--button-secondary) !important; }
+.high-contrast input:checked + .slider { background-color: var(--button-primary) !important; }
 
 .high-contrast .action-button,
 .high-contrast .config-button,
 .high-contrast .modal-button,
 .high-contrast .language-button,
 .high-contrast .accessibility-button {
-    background: #fff !important;
-    color: #000 !important;
-    border: 3px solid #fff !important;
+    border: 3px solid var(--border-color) !important;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.0);
+}
+
+.high-contrast .action-button.save,
+.high-contrast .modal-button,
+.high-contrast #saveLanguage,
+.high-contrast #saveAccessibility { 
+    background: linear-gradient(135deg, var(--button-primary), var(--button-primary-hover)) !important; 
+    color: #fff !important; 
+}
+
+.high-contrast .action-button.restore,
+.high-contrast .action-button.back,
+.high-contrast .config-button,
+.high-contrast .language-button,
+.high-contrast .accessibility-button {
+    background: var(--button-secondary) !important;
+    color: var(--text-color) !important;
 }
 
 .high-contrast .lang-option.selected {
-    background: #fff !important;
-    color: #000 !important;
+    background: linear-gradient(135deg, var(--button-primary), var(--button-primary-hover)) !important;
+    color: #fff !important;
+    border-color: var(--button-primary) !important;
 }
 
 .high-contrast .message-modal {
-    background: #fff !important;
-    color: #000 !important;
-    border: 3px solid #000 !important;
+    background: var(--box-bg) !important;
+    color: var(--text-color) !important;
+    border: 3px solid var(--border-color) !important;
 }
 
-.high-contrast .message-content p {
-    color: #000 !important;
-}
-
-.high-contrast .message-content button {
-    background: #000 !important;
-    color: #fff !important;
-}
+.high-contrast .message-content p { color: var(--text-color) !important; }
+.high-contrast .message-content button { background: var(--button-primary) !important; color: #fff !important; }
 
 /* Alertas desabilitados */
 .alerts-disabled .message-modal:not(.final-alert) {
@@ -693,8 +804,43 @@ body.high-contrast {
     text-decoration: none;
     color: var(--text-color);
     font-weight: bold;
-    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    transition: all .3s cubic-bezier(0.68,-0.55,0.265,1.55);
     z-index: 1200;
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateX(0);
+}
+
+/* Animação de desativação do guia */
+.guide-trigger.hiding {
+    animation: guideSlideOut 0.3s cubic-bezier(0.68,-0.55,0.265,1.55) forwards;
+}
+
+/* Animação de ativação do guia */
+.guide-trigger.showing {
+    animation: guideSlideIn 0.5s cubic-bezier(0.68,-0.55,0.265,1.55) forwards;
+}
+
+@keyframes guideSlideIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateX(100px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+    }
+}
+
+@keyframes guideSlideOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8) translateX(100px);
+    }
 }
 
 .guide-trigger:hover,
@@ -840,10 +986,15 @@ body.high-contrast {
 :root[data-theme="dark"] .guide-speech {
     background: var(--box-bg);
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--border-color);
 }
 
 :root[data-theme="dark"] .guide-speech::before {
     border-bottom-color: var(--box-bg);
+}
+
+:root[data-theme="dark"] .guide-speech-header {
+    border-bottom-color: var(--border-color);
 }
 
 :root[data-theme="dark"] .guide-speech-title {
@@ -860,6 +1011,28 @@ body.high-contrast {
 
 :root[data-theme="dark"] .guide-speech-close:hover {
     background: rgba(255,255,255,0.05);
+    color: var(--button-primary);
+}
+
+:root[data-theme="dark"] .guide-option {
+    background: linear-gradient(135deg, var(--button-primary), var(--button-primary-hover));
+    color: #fff;
+}
+
+:root[data-theme="dark"] .guide-option:hover {
+    box-shadow: 0 4px 15px rgba(119, 141, 169, 0.4);
+}
+
+/* Tema escuro no link do guia */
+:root[data-theme="dark"] .guide-trigger {
+    background: linear-gradient(135deg, var(--box-bg), #1b263b);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+:root[data-theme="dark"] .guide-trigger:hover {
+    border-color: var(--button-primary);
+    box-shadow: 0 6px 16px rgba(119, 141, 169, 0.35);
 }
 
 /* Responsivo */
@@ -882,10 +1055,13 @@ body.high-contrast {
     .accessibility-item, .accessibility-group {
         flex-direction: column;
         align-items: flex-start;
+        gap: 8px;
     }
 
     .accessibility-item label, .accessibility-group label {
         min-width: auto;
+        white-space: normal;
+        width: 100%;
     }
 
     .accessibility-item select,
@@ -893,6 +1069,7 @@ body.high-contrast {
     .toggle-button {
         max-width: 100%;
         width: 100%;
+        min-width: 100%;
     }
 
     .lang-options, .language-options {
@@ -933,4 +1110,46 @@ body.high-contrast {
     .guide-speech::before {
         right: 50px;
     }
+}
+
+/* Dropdown (lista aberta) dos selects do modal de acessibilidade */
+#accessibilityModal select option,
+#accessibilityModal select optgroup {
+    background-color: var(--box-bg);
+    color: var(--text-color);
+}
+
+/* Estado selecionado dentro da lista do select */
+#accessibilityModal select option:checked {
+    background: var(--button-primary);
+    color: #fff;
+}
+
+/* Hover dos itens dentro da lista */
+#accessibilityModal select option:hover {
+    background: var(--button-hover);
+    color: var(--text-color);
+}
+
+/* Aparência do próprio select ao focar/abrir */
+#accessibilityModal select:focus {
+    outline: 2px solid var(--button-primary);
+    outline-offset: 2px;
+    border-color: var(--button-primary);
+    background-color: var(--box-bg);
+    color: var(--text-color);
+}
+
+/* Reforço de tema escuro para listas no Windows/Edge */
+:root[data-theme="dark"] #accessibilityModal select,
+:root[data-theme="dark"] #accessibilityModal select option,
+:root[data-theme="dark"] #accessibilityModal select optgroup {
+    background-color: #0d1b2a; /* mesmo tom usado nos cards escuros */
+    color: #e0e6ed;
+}
+
+/* Evitar flash branco em alguns navegadores ao abrir a lista */
+#accessibilityModal select::-ms-value { /* legado IE/Edge antigo, inofensivo nos atuais */
+    background: var(--box-bg);
+    color: var(--text-color);
 }

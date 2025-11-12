@@ -88,15 +88,48 @@ class SettingsManager {
     }
 
     applyGuideSettings() {
+        const trigger = document.querySelector('.guide-trigger');
+        
         if (this.savedSettings.guide) {
             document.body.classList.remove('guide-disabled');
-            const trigger = document.querySelector('.guide-trigger');
-            if (trigger) trigger.style.display = 'flex';
+            
+            if (trigger) {
+                // Remove classe de hiding se existir
+                trigger.classList.remove('hiding');
+                trigger.style.display = 'flex';
+                
+                // Force reflow para garantir que a animação aconteça
+                void trigger.offsetWidth;
+                
+                // Adiciona animação de entrada
+                trigger.classList.add('showing');
+                
+                // Remove a classe de animação após completar
+                setTimeout(() => {
+                    trigger.classList.remove('showing');
+                }, 500);
+            }
+            
             this.showMessage('Guia ativado!');
         } else {
             document.body.classList.add('guide-disabled');
-            const trigger = document.querySelector('.guide-trigger');
-            if (trigger) trigger.style.display = 'none';
+            
+            if (trigger) {
+                // Force reflow para garantir que a animação aconteça
+                void trigger.offsetWidth;
+                
+                // Adiciona animação de saída
+                trigger.classList.add('hiding');
+                
+                // Esconde completamente após a animação
+                setTimeout(() => {
+                    if (trigger.classList.contains('hiding')) {
+                        trigger.style.display = 'none';
+                        trigger.classList.remove('hiding');
+                    }
+                }, 300);
+            }
+            
             this.showMessage('Guia desativado!');
             if (typeof closeGuide === 'function') closeGuide();
         }
@@ -533,6 +566,7 @@ function openGuide() {
     if (!el) return;
     
     el.classList.add('active');
+    document.body.classList.add('guide-visible');
     
     // Marca o link como visualizado
     const trigger = document.querySelector('.guide-trigger');
@@ -546,6 +580,7 @@ function closeGuide() {
     if (!el) return;
     
     el.classList.remove('active');
+    document.body.classList.remove('guide-visible');
 }
 
 function toggleGuide() {

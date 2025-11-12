@@ -176,11 +176,16 @@ body {
     gap: 2em;
     flex-wrap: wrap;
     filter: none !important;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 }
 
 .formulario {
-    flex: 1 1 250px; 
+    flex: 1 1 250px;
+    transition: all 0.4s ease;
+}
+
+.imagem {
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .imagem img {
@@ -202,6 +207,7 @@ label[for="CriandoConta"] {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.4s ease;
 }
 
 label[for="Subtitulo"] {
@@ -213,6 +219,7 @@ label[for="Subtitulo"] {
     margin-top: 2em;
     margin-left: 7%;
     white-space: nowrap;
+    transition: all 0.4s ease;
 }
 
 #CadastroEmail,
@@ -227,7 +234,7 @@ label[for="Subtitulo"] {
     background-color: var(--input-bg);
     color: var(--text);
     font-size: 1em;
-    transition: all 0.2s ease;
+    transition: all 0.4s ease;
 }
 
 #CadastroEmail::placeholder,
@@ -254,6 +261,7 @@ label[for="Subtitulo"] {
     margin-top: 1.2em;
     line-height: 1.45;
     word-break: break-word;
+    transition: all 0.4s ease;
 }
 
 /* Mantém compatibilidade; ID abaixo sobrescreve tamanho/margem */
@@ -341,31 +349,56 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
     word-break: break-all;
 }
 
-/* botão criar */
-#ButtonCriarCadastro {
-    background: var(--btn-secondary);
-    color: #f5f1f2;
+/* container de botões */
+.button-container {
+    display: flex;
+    gap: 0.9rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+
+/* botão criar e voltar */
+#ButtonCriarCadastro,
+#btnVoltar {
+    flex: 1 1 140px;
     border: none;
     border-radius: 2em;
+    padding: 0.85em 0;
     cursor: pointer;
-    font-size: 1em;
-    width: 75%;
-    padding: 0.3em 2em;
-    position: relative;
-    margin-top: 1em;
-    margin-left: 2.5em;
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-    letter-spacing: 1px;
+    font-size: 0.9rem;
+    font-weight: 600;
     transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#ButtonCriarCadastro {
+    background: var(--btn-primary);
+    color: #fff;
 }
 
 #ButtonCriarCadastro:hover {
+    background: var(--btn-primary-hover);
+    transform: translateY(-2px);
+}
+
+#btnVoltar {
+    background: var(--btn-secondary);
+    color: #fff;
+}
+
+#btnVoltar:hover {
     background: var(--btn-secondary-hover);
     transform: translateY(-2px);
 }
 
-#ButtonCriarCadastro:active {
-    transform: translateY(0);
+body.high-contrast #ButtonCriarCadastro,
+body.high-contrast #btnVoltar {
+    border: 2px solid var(--text);
+    font-weight: 700;
 }
 
 #SenhaCadastro,
@@ -376,21 +409,24 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
 
 .password-container {
     position: relative;
+    transition: all 0.4s ease;
 }
 
 .password-container label {
     position: relative;
+    transition: all 0.4s ease;
 }
 
 .password-container input {
     position: relative;
+    transition: all 0.4s ease;
 }
 
 #BtnVerSenha {
     font-size: 25px;
     cursor: pointer;
     position: absolute;
-    right: 1.2em;
+    right: 0.75em;
     top: 1.8em;
     background: none;
     border: none;
@@ -413,7 +449,7 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
     font-size: 25px;
     cursor: pointer;
     position: absolute;
-    right: 1.2em;
+    right: 0.75em;
     top: 1.8em;
     background: none;
     border: none;
@@ -462,11 +498,17 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
         padding: 0.6em 0.8em;
     }
 
-    #ButtonCriarCadastro {
+    .button-container {
+        gap: 0.6rem;
+        flex-direction: column;
+    }
+
+    #ButtonCriarCadastro,
+    #btnVoltar {
         font-size: 0.9em;
         padding: 0.6em 0;
         width: 100%;
-        margin-bottom: 0.5em;
+        flex: 1 1 auto;
     }
 
     .password-container i {
@@ -562,9 +604,14 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
         font-size: 0.85rem;
     }
 
-    #ButtonCriarCadastro {
+    .button-container {
+        margin-top: 1rem;
+        gap: 0.5rem;
+    }
+
+    #ButtonCriarCadastro,
+    #btnVoltar {
         width: 100%;
-        margin: 1em 0;
         padding: 0.8em;
         font-size: 0.9em;
     }
@@ -601,7 +648,8 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
         font-size: 0.8rem;
     }
 
-    #ButtonCriarCadastro {
+    #ButtonCriarCadastro,
+    #btnVoltar {
         font-size: 0.85em;
     }
 
@@ -851,40 +899,6 @@ body.dark-theme .settings-option span {
     color: var(--accent);
 }
 
-/* ==================== BOTÕES DO MODAL ==================== */
-.settings-btn-primary,
-.settings-btn-secondary {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    margin-top: 6px;
-}
-
-.settings-btn-primary {
-    background: var(--accent);
-    color: white;
-}
-
-.settings-btn-primary:hover {
-    background: var(--accent-2);
-    transform: translateY(-1px);
-}
-
-.settings-btn-secondary {
-    background: var(--modal-btn-bg);
-    color: var(--text);
-    border: 1px solid var(--input-border);
-}
-
-.settings-btn-secondary:hover {
-    background: var(--modal-btn-hover);
-}
-
 /* ==================== SCROLLBAR CUSTOMIZADO ==================== */
 .settings-content::-webkit-scrollbar {
     width: 8px;
@@ -977,6 +991,11 @@ body.large-text label[for="Subtitulo"] {
 }
 
 body.large-text .terms-text {
+    font-size: 1rem;
+}
+
+body.large-text #ButtonCriarCadastro,
+body.large-text #btnVoltar {
     font-size: 1rem;
 }
 
