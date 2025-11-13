@@ -43,10 +43,11 @@ body.high-contrast {
     --border-color: #ffffff;
 }
 
+/* Em alto contraste não forçar fundo global preto em todos os elementos.
+   Mantemos cores através de variáveis para permitir paletas por página (ex.: Login/Config). */
 body.high-contrast * {
-    border-color: #ffffff !important;
-    background-color: #000000 !important;
-    color: #ffffff !important;
+    border-color: var(--border-color, #ffffff) !important;
+    color: var(--text-primary, #ffffff) !important;
 }
 
 body.high-contrast a {
@@ -54,11 +55,7 @@ body.high-contrast a {
     text-decoration: underline !important;
 }
 
-body.high-contrast button {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    border: 2px solid #ffffff !important;
-}
+/* Botões herdam paleta específica de cada página no alto contraste. */
 
 body.high-contrast img,
 body.high-contrast video {
@@ -338,9 +335,7 @@ body {
 }
 
 /* ==================== ALERTAS DESABILITADOS ==================== */
-body.alerts-disabled {
-    /* Marcador visual (opcional) */
-}
+/* Regras globais removidas (tratado por página quando necessário) */
 
 /* ==================== RESPONSIVIDADE GLOBAL ==================== */
 @media (max-width: 768px) {

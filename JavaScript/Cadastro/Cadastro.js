@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById("overlay");
     const textoModal = overlay ? overlay.querySelector("p") : null;
     const btnCriar = document.getElementById("ButtonCriarCadastro");
+    const btnVoltar = document.getElementById("btnVoltar");
     const btnVerSenha = document.getElementById("BtnVerSenha");
     const btnConfirmVerSenha = document.getElementById("BtnConfirmVerSenha");
     const btnFecharModal = overlay ? overlay.querySelector("button") : null;
@@ -56,6 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if(btnVerSenha) btnVerSenha.addEventListener('click', MostrarSenha);
     if(btnConfirmVerSenha) btnConfirmVerSenha.addEventListener('click', ConfirmMostrarSenha);
+
+    // Botão Voltar
+    if(btnVoltar) {
+        btnVoltar.addEventListener('click', () => {
+            window.location.href = '../Login/loginhtml.php';
+        });
+    }
 
     // Submit do formulário
     if(formCadastro) {
@@ -361,7 +369,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mouseX += (targetMouseX - mouseX) * easeAmount;
         mouseY += (targetMouseY - mouseY) * easeAmount;
 
-        waveDirection += (targetWaveDirection - waveDirection) * directionEaseAmount;
+        // Sempre segue a direção do mouse com transição suave, clique não altera a direção
+        waveDirection += (targetWaveDirection - waveDirection) * directionEaseAmount * interactiveTransition;
 
         const smoothMouseY = window.innerHeight / 2 + (mouseY - window.innerHeight / 2) * interactiveTransition;
 
@@ -447,85 +456,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     desenhar();
 
-    /* ========== CONTROLE DO GIF COM CANVAS ========== */
+    /* ========== CONTROLE DO GIF ========== */
     const gifContainer = document.querySelector('.imagem');
     const gifImage = gifContainer ? gifContainer.querySelector('img') : null;
     let gifEnabled = true;
-    let originalGifSrc = '';
-    let frozenCanvas = null;
-    let frozenCanvasCtx = null;
-
-    if (gifImage) {
-        originalGifSrc = gifImage.src;
-        
-        // Criar canvas para o frame congelado
-        frozenCanvas = document.createElement('canvas');
-        frozenCanvasCtx = frozenCanvas.getContext('2d');
-        frozenCanvas.style.cssText = gifImage.style.cssText;
-        frozenCanvas.className = gifImage.className;
-    }
-
-    function captureGifFrame() {
-        if (!gifImage || !frozenCanvas || !frozenCanvasCtx) return;
-        
-        // Definir tamanho do canvas igual à imagem
-        frozenCanvas.width = gifImage.naturalWidth || gifImage.width;
-        frozenCanvas.height = gifImage.naturalHeight || gifImage.height;
-        
-        // Copiar estilos computados
-        const computedStyle = window.getComputedStyle(gifImage);
-        frozenCanvas.style.maxWidth = computedStyle.maxWidth;
-        frozenCanvas.style.width = computedStyle.width;
-        frozenCanvas.style.height = computedStyle.height;
-        frozenCanvas.style.borderRadius = computedStyle.borderRadius;
-        frozenCanvas.style.border = computedStyle.border;
-        frozenCanvas.style.marginBottom = computedStyle.marginBottom;
-        
-        // Desenhar frame atual do GIF no canvas
-        try {
-            frozenCanvasCtx.drawImage(gifImage, 0, 0, frozenCanvas.width, frozenCanvas.height);
-            console.log('[cadastro] Frame do GIF capturado com sucesso');
-        } catch (e) {
-            console.error('[cadastro] Erro ao capturar frame:', e);
-        }
-    }
 
     function toggleGif(enabled) {
-        if (!gifImage || !gifContainer || !frozenCanvas) return;
+        if (!gifContainer) return;
         
         gifEnabled = enabled;
         
         if (enabled) {
-            // Remover canvas e mostrar GIF animado
-            if (frozenCanvas.parentNode === gifContainer) {
-                gifContainer.removeChild(frozenCanvas);
-            }
+            // Mostrar o container do GIF com transição suave
+            gifContainer.style.opacity = '0';
+            gifContainer.style.transform = 'scale(0.95)';
+            gifContainer.style.display = '';
             
-            if (!gifImage.parentNode) {
-                gifContainer.appendChild(gifImage);
-            }
+            // Forçar reflow para garantir que a transição funcione
+            gifContainer.offsetHeight;
             
-            // Forçar reload do GIF
-            const tempSrc = gifImage.src;
-            gifImage.src = '';
-            setTimeout(() => {
-                gifImage.src = originalGifSrc + '?t=' + Date.now();
-                console.log('[cadastro] GIF ATIVADO - animação restaurada');
-            }, 10);
+            requestAnimationFrame(() => {
+                gifContainer.style.opacity = '1';
+                gifContainer.style.transform = 'scale(1)';
+            });
             
+            console.log('[GIF-Cadastro] GIF exibido com transição suave');
         } else {
-            // Capturar frame atual e substituir por canvas
-            captureGifFrame();
+            // Ocultar com transição suave
+            gifContainer.style.opacity = '0';
+            gifContainer.style.transform = 'scale(0.95)';
             
-            if (gifImage.parentNode === gifContainer) {
-                gifContainer.removeChild(gifImage);
-            }
-            
-            if (!frozenCanvas.parentNode) {
-                gifContainer.appendChild(frozenCanvas);
-            }
-            
-            console.log('[cadastro] GIF DESATIVADO - frame congelado exibido');
+            // Aguardar a transição terminar antes de ocultar
+            setTimeout(() => {
+                gifContainer.style.display = 'none';
+                console.log('[GIF-Cadastro] GIF ocultado com transição suave');
+            }, 400); // Tempo da transição CSS
         }
     }
 
@@ -533,8 +498,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingsBtn = document.getElementById('settingsBtn');
     const settingsModal = document.getElementById('settingsModal');
     const closeSettings = document.getElementById('closeSettings');
-    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-    const resetSettings = document.getElementById('resetSettings');
 
     if (settingsBtn) {
         settingsBtn.addEventListener('mouseenter', () => {
@@ -684,32 +647,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('[Configurações-Cadastro] GIF:', settings.enableGif ? 'ATIVADO' : 'DESATIVADO');
     }
 
-    function restoreDefaults() {
-        if (confirm('Tem certeza que deseja restaurar as configurações padrão?')) {
-            localStorage.removeItem('cadastroPageSettings');
-            
-            const enableWavesEl = document.getElementById('enableWaves');
-            const enableGifEl = document.getElementById('enableGif');
-            const enableClickEffectEl = document.getElementById('enableClickEffect');
-            const enableHoldEffectEl = document.getElementById('enableHoldEffect');
-            const highContrastEl = document.getElementById('highContrast');
-            const largerTextEl = document.getElementById('largerText');
-            const themeLightEl = document.querySelector('input[value="light"]');
-
-            if (enableWavesEl) enableWavesEl.checked = defaultSettings.enableWaves;
-            if (enableGifEl) enableGifEl.checked = defaultSettings.enableGif;
-            if (enableClickEffectEl) enableClickEffectEl.checked = defaultSettings.enableClickEffect;
-            if (enableHoldEffectEl) enableHoldEffectEl.checked = defaultSettings.enableHoldEffect;
-            if (highContrastEl) highContrastEl.checked = defaultSettings.highContrast;
-            if (largerTextEl) largerTextEl.checked = defaultSettings.largerText;
-            if (themeLightEl) themeLightEl.checked = true;
-
-            saveSettings();
-            alert('Configurações restauradas!');
-            console.log('[Configurações-Cadastro] Padrões restaurados');
-        }
-    }
-
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => {
             settingsModal.classList.add('active');
@@ -753,23 +690,12 @@ document.addEventListener('DOMContentLoaded', () => {
         closeSettings.addEventListener('click', closeModal);
     }
 
-    if (closeSettingsBtn) {
-        closeSettingsBtn.addEventListener('click', () => {
-            saveSettings();
-            closeModal();
-        });
-    }
-
     if (settingsModal) {
         settingsModal.addEventListener('click', (e) => {
             if (e.target === settingsModal) {
                 closeModal();
             }
         });
-    }
-
-    if (resetSettings) {
-        resetSettings.addEventListener('click', restoreDefaults);
     }
 
     document.querySelectorAll('.settings-option input').forEach(input => {

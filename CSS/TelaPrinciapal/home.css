@@ -39,6 +39,13 @@ header {
 
 header .logo img { height: 50px; }
 
+/* Trocar aparência da logo no modo escuro e no alto contraste
+   (evita camuflar em fundos escuros sem precisar de um arquivo extra) */
+:root[data-theme="dark"] header .logo img,
+body.high-contrast header .logo img {
+  filter: invert(1) hue-rotate(180deg) contrast(0.95) brightness(1.05);
+}
+
 header .menu {
   display: flex;
   gap: 16px;
@@ -449,7 +456,7 @@ footer { background-color: #ffeee4; padding: 2rem 4rem; margin-top: 50px; }
 .social-icon { color:#666; font-size:1.5rem; transition: color .3s ease; }
 .social-icon:hover { color:#333; }
 .footer-legal { text-align:center; color:#666; font-size:.8rem; }
-.legal-links { display:flex; justify-content:center; gap:1.5rem; margin-top:.5rem; }
+.legal-links { display:flex; justify-content:center; gap:2.25rem; margin-top:.5rem; }
 .legal-links a { color:#666; text-decoration:none; transition: color .3s ease; }
 .legal-links a:hover { color:#333; }
 
@@ -457,7 +464,7 @@ footer { background-color: #ffeee4; padding: 2rem 4rem; margin-top: 50px; }
 @media (max-width: 768px) {
   footer { padding: 2rem; }
   .footer-content { flex-direction: column; gap: 1.5rem; }
-  .legal-links { flex-wrap: wrap; gap: 1rem; }
+  .legal-links { flex-wrap: wrap; gap: 1.25rem; }
   .carrossel { width:95vw; overflow-x:auto; }
   .card { gap:14px; width:max-content; }
   .card > div { width:190px; height:160px; }
@@ -474,3 +481,111 @@ footer { background-color: #ffeee4; padding: 2rem 4rem; margin-top: 50px; }
   .card img { width:76px; height:76px; }
   .card p { font-size:.9em; }
 }
+
+/* ==================== ALTO CONTRASTE (conversa com tema escuro) ==================== */
+/* Paleta: claro (laranja) e escuro (azul), igual Login */
+body.high-contrast {
+  --hc-bg: #000000;
+  --hc-text: #ffffff;
+  --hc-panel: #000000;
+  --hc-accent: #ff4500;   /* accent (claro) */
+  --hc-accent-2: #ff6432; /* accent-2 (claro) */
+  color: var(--hc-text);
+  background-color: var(--hc-bg);
+}
+
+:root[data-theme="dark"] body.high-contrast {
+  --hc-accent: #00bfff;   /* accent (escuro) */
+  --hc-accent-2: #00a0ff; /* accent-2 (escuro) */
+}
+
+/* Header e navegação */
+body.high-contrast header {
+  background: var(--hc-panel);
+  border-bottom: 3px solid var(--hc-text);
+}
+body.high-contrast header .menu a { color: var(--hc-text); }
+body.high-contrast header .menu a::before { background: var(--hc-accent); }
+body.high-contrast header .menu a:focus-visible { outline-color: var(--hc-accent); }
+body.high-contrast header .menu a.guide-trigger {
+  border-color: var(--hc-accent);
+  background: linear-gradient(135deg, #0b0b0b, #141414);
+  box-shadow: 0 4px 12px color-mix(in oklab, var(--hc-accent) 35%, transparent);
+}
+body.high-contrast header .menu a.guide-trigger:hover,
+body.high-contrast header .menu a.guide-trigger:focus-visible {
+  border-color: var(--hc-accent-2);
+  box-shadow: 0 6px 16px color-mix(in oklab, var(--hc-accent) 45%, transparent);
+}
+
+/* Balão do guia */
+body.high-contrast .guide-speech {
+  background: #000;
+  color: var(--hc-text);
+  border: 2px solid var(--hc-text);
+}
+body.high-contrast .guide-speech::before { border-bottom-color: #000; }
+body.high-contrast .guide-speech-title { color: var(--hc-accent); }
+body.high-contrast .guide-speech-close { color: #aaa; }
+body.high-contrast .guide-speech-close:hover { background: #111; color:#fff; }
+body.high-contrast .guide-option {
+  background: linear-gradient(135deg, var(--hc-accent), var(--hc-accent-2));
+  color: #fff;
+}
+
+/* Labels e destaques */
+body.high-contrast label[for="System"],
+body.high-contrast label[for="MinhasFichas"],
+body.high-contrast label[for="MinhasFichasRandomicas"] {
+  background: var(--hc-panel);
+  color: var(--hc-text);
+  border: 2px solid var(--hc-text);
+}
+body.high-contrast label .highlight-word {
+  background: var(--hc-accent);
+  color: #000;
+}
+
+/* Minhas fichas container e chips */
+body.high-contrast .CaixaMinhasFichas { background:#000; border:2px solid var(--hc-text); }
+body.high-contrast .fichas-group { background:#000; border-color: var(--hc-text); }
+body.high-contrast .ficha-chip {
+  background: #111;
+  border-color: var(--hc-accent);
+  color: #fff;
+}
+body.high-contrast .ficha-chip:hover { border-color: var(--hc-accent-2); }
+body.high-contrast .fichas-rail { background: color-mix(in srgb, var(--hc-text) 40%, transparent); }
+
+/* Cards do carrossel */
+body.high-contrast .card > div {
+  background: #000;
+  border-color: var(--hc-accent);
+}
+body.high-contrast .card > div:hover { border-color: var(--hc-accent-2); box-shadow: 0 8px 20px color-mix(in srgb, var(--hc-accent) 25%, transparent); }
+body.high-contrast .card p { color: var(--hc-text); }
+
+/* Overlay / modal mapa mental */
+body.high-contrast .overlay { background: rgba(0,0,0,.85); }
+body.high-contrast .modal { background: #000; border:2px solid var(--hc-text); }
+body.high-contrast .connection-line { stroke: var(--hc-accent); }
+body.high-contrast .section { background:#000; border-color: var(--hc-text); box-shadow: none; }
+body.high-contrast .section:hover { background: #0d0d0d; border-color: var(--hc-accent); }
+body.high-contrast .section.center { background: linear-gradient(135deg, var(--hc-accent), var(--hc-accent-2)); border-color: var(--hc-accent-2); }
+body.high-contrast .section.center .section-title, 
+body.high-contrast .section.center .section-description { color:#fff; }
+body.high-contrast .section-title { color: var(--hc-text); }
+body.high-contrast .section-description { color: #c9d1d9; }
+body.high-contrast .close-button { background: linear-gradient(45deg,#dc3545,#c82333); color:#fff; }
+
+/* Footer */
+body.high-contrast footer { background:#000; }
+body.high-contrast .footer-links span,
+body.high-contrast .footer-legal,
+body.high-contrast .legal-links a { color:#fff; }
+body.high-contrast .footer-links a { color:#ddd; }
+body.high-contrast .footer-links a:hover,
+body.high-contrast .legal-links a:hover { color: var(--hc-accent); }
+body.high-contrast .footer-bottom { border-top-color: var(--hc-text); }
+body.high-contrast .social-icon { color:#fff; }
+body.high-contrast .social-icon:hover { color: var(--hc-accent); }

@@ -78,6 +78,9 @@ let clickHeight = 0;
 let targetClickHeight = 0;
 const clickHeightEaseAmount = 0.12;
 
+// Controle de timeout para esconder/mostrar canvas sem "sumir" ao alternar rápido
+let waveHideTimeoutId = null;
+
 // Paleta de cores base
 const coresBase = [
     'rgba(255,192,192,0.7)',
@@ -340,17 +343,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('avatarModal');
     const avatarButton = document.getElementById('chooseAvatar');
     const confirmButton = document.getElementById('confirmAvatar');
+    const closeAvatarButton = document.getElementById('closeAvatar');
     const avatarOptions = document.querySelectorAll('.avatar-option');
     const fileInput = document.getElementById('FotoPerfil');
     const fileLabel = fileInput ? fileInput.parentElement : null;
-    let selectedAvatar = null;
+    const originalAvatarButtonHTML = avatarButton ? avatarButton.innerHTML : '';
+    let selectedAvatar = null;     // seleção temporária dentro do modal
+    let appliedAvatarSrc = null;    // avatar efetivamente aplicado
 
     // Upload de arquivo - mostrar nome e prévia
     if (fileInput && fileLabel) {
-        fileInput.addEventListener('change', (e) => {
+        fileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             
             if (file) {
+                // Se já houver avatar aplicado, pedir confirmação
+                if (appliedAvatarSrc) {
+                    const proceed = await confirmSwap('Você selecionou uma foto de arquivo. Isso vai substituir o avatar escolhido anteriormente. Continuar?');
+                    if (!proceed) {
+                        fileInput.value = '';
+                        return;
+                    }
+                }
+
                 // Verifica se é uma imagem
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
@@ -396,6 +411,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     console.log('[CriarPerfil] Arquivo carregado:', file.name);
                 }
+                // Exclusividade: ao escolher arquivo, limpa avatar aplicado e seleção
+                avatarOptions.forEach(opt => opt.classList.remove('selected'));
+                selectedAvatar = null;
+                appliedAvatarSrc = null;
+                if (avatarButton) avatarButton.innerHTML = originalAvatarButtonHTML;
+            } else {
+                // Se usuário limpar o arquivo, volta ao estado padrão
+                fileLabel.innerHTML = '';
+                fileLabel.appendChild(fileInput);
+                fileLabel.appendChild(document.createTextNode('Escolha um arquivo'));
             }
         });
     }
@@ -408,6 +433,16 @@ document.addEventListener('DOMContentLoaded', () => {
         isFormFocused = true;
         console.log('[waves-criarPerfil] Modal aberto — interactive OFF');
     });
+
+    // Fechar modal com botão X - reativa waves
+    if (closeAvatarButton) {
+        closeAvatarButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+            interactive = true;
+            isFormFocused = false;
+            console.log('[waves-criarPerfil] Modal fechado (X) — interactive ON');
+        });
+    }
 
     // Fechar modal ao clicar fora - reativa waves
     window.addEventListener('click', (e) => {
@@ -429,8 +464,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Confirmar seleção - reativa waves
-    confirmButton.addEventListener('click', () => {
+    confirmButton.addEventListener('click', async () => {
         if (selectedAvatar) {
+            // Se houver arquivo selecionado, pedir confirmação antes de substituir
+            if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                const proceed = await confirmSwap('Você selecionou um avatar. Isso vai substituir a foto enviada por arquivo. Continuar?');
+                if (!proceed) {
+                    return;
+                }
+            }
             const container = document.createElement('div');
             container.className = 'avatar-button-content';
             
@@ -452,6 +494,16 @@ document.addEventListener('DOMContentLoaded', () => {
             interactive = true;
             isFormFocused = false;
             console.log('[waves-criarPerfil] Avatar confirmado — interactive ON');
+
+            // Exclusividade: ao escolher avatar, limpa seleção de arquivo
+            if (fileInput && fileLabel) {
+                fileInput.value = '';
+                fileLabel.innerHTML = '';
+                fileLabel.appendChild(fileInput);
+                fileLabel.appendChild(document.createTextNode('Escolha um arquivo'));
+            }
+
+            appliedAvatarSrc = selectedAvatar;
         }
     });
 
@@ -464,14 +516,22 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('[waves-criarPerfil] Modal fechado com ESC — interactive ON');
         }
     });
+
+    // ==================== BOTÃO DE VOLTAR ====================
+    const btnVoltar = document.getElementById('btnVoltar');
+    if (btnVoltar) {
+        btnVoltar.addEventListener('click', () => {
+            // Volta para a tela de cadastro
+            window.location.href = '../Cadastro_E_Perfil/Cadastro.html';
+        });
+    }
 });
 
 /* ========== CONFIGURAÇÕES DA PÁGINA ========== */
 const settingsBtn = document.getElementById('settingsBtn');
 const settingsModal = document.getElementById('settingsModal');
 const closeSettings = document.getElementById('closeSettings');
-const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-const resetSettings = document.getElementById('resetSettings');
+// Botões de salvar/restaurar removidos — configurações são aplicadas automaticamente
 
 // Botão de configurações - desativa interatividade das waves
 if (settingsBtn) {
@@ -485,6 +545,51 @@ if (settingsBtn) {
             interactive = true;
             console.log('[waves-criarPerfil] Mouse saiu do botão config — interactive ON');
         }
+    });
+}
+
+/* ==================== MODAL DE CONFIRMAÇÃO REUTILIZÁVEL ==================== */
+function confirmSwap(message) {
+    return new Promise((resolve) => {
+        const overlay = document.getElementById('alertOverlay');
+        const msg = document.getElementById('alertMessage');
+        const ok = document.getElementById('alertOk');
+        const cancel = document.getElementById('alertCancel');
+
+        if (!overlay || !msg || !ok || !cancel) {
+            // Se o modal não existir, segue em frente para não travar a UX
+            resolve(true);
+            return;
+        }
+
+        msg.textContent = message;
+        overlay.style.display = 'flex';
+        overlay.classList.add('active');
+        interactive = false;
+        isFormFocused = true;
+
+        const cleanup = () => {
+            overlay.classList.remove('active');
+            overlay.style.display = 'none';
+            ok.removeEventListener('click', onOk);
+            cancel.removeEventListener('click', onCancel);
+            document.removeEventListener('keydown', onKey);
+            if (!isSettingsOpen) {
+                interactive = true;
+                isFormFocused = false;
+            }
+        };
+
+        const onOk = () => { cleanup(); resolve(true); };
+        const onCancel = () => { cleanup(); resolve(false); };
+        const onKey = (e) => {
+            if (e.key === 'Escape') { onCancel(); }
+            else if (e.key === 'Enter') { onOk(); }
+        };
+
+        ok.addEventListener('click', onOk);
+        cancel.addEventListener('click', onCancel);
+        document.addEventListener('keydown', onKey);
     });
 }
 
@@ -523,19 +628,29 @@ function applySettings(settings) {
 
     // Ondas
     if (canvas) {
+        canvas.style.transition = 'opacity 1.5s ease-out';
+        // Limpa timeouts pendentes sempre que a configuração muda
+        if (waveHideTimeoutId) {
+            clearTimeout(waveHideTimeoutId);
+            waveHideTimeoutId = null;
+        }
+
         if (settings.enableWaves) {
-            canvas.style.transition = 'opacity 1.5s ease-out';
+            // Garante que volte a exibir e depois anima a opacidade
             canvas.style.display = 'block';
-            setTimeout(() => {
+            // Usa rAF para garantir que o browser aplique o display antes da opacidade
+            requestAnimationFrame(() => {
                 canvas.style.opacity = '1';
-            }, 10);
+            });
         } else {
-            canvas.style.transition = 'opacity 1.5s ease-out';
+            // Faz fade-out e só esconde se ainda estiver desabilitado ao final
             canvas.style.opacity = '0';
-            setTimeout(() => {
-                if (!settings.enableWaves) {
+            waveHideTimeoutId = setTimeout(() => {
+                const latest = loadSettings();
+                if (!latest.enableWaves) {
                     canvas.style.display = 'none';
                 }
+                waveHideTimeoutId = null;
             }, 1500);
         }
     }
@@ -614,27 +729,7 @@ function setWavePalettesFromCSS() {
     });
 }
 
-// Restaurar padrões
-function restoreDefaults() {
-    if (confirm('Tem certeza que deseja restaurar as configurações padrão?')) {
-        const enableWavesEl = document.getElementById('enableWaves');
-        const enableClickEffectEl = document.getElementById('enableClickEffect');
-        const enableHoldEffectEl = document.getElementById('enableHoldEffect');
-        const highContrastEl = document.getElementById('highContrast');
-        const largerTextEl = document.getElementById('largerText');
-        const themeEl = document.querySelector('input[value="light"]');
-
-        if (enableWavesEl) enableWavesEl.checked = defaultSettings.enableWaves;
-        if (enableClickEffectEl) enableClickEffectEl.checked = defaultSettings.enableClickEffect;
-        if (enableHoldEffectEl) enableHoldEffectEl.checked = defaultSettings.enableHoldEffect;
-        if (highContrastEl) highContrastEl.checked = defaultSettings.highContrast;
-        if (largerTextEl) largerTextEl.checked = defaultSettings.largerText;
-        if (themeEl) themeEl.checked = true;
-
-        saveSettings();
-        console.log('[Configurações-CriarPerfil] Restauradas para padrão');
-    }
-}
+// Função de restaurar padrões removida — sem botão de reset; usuário pode ajustar opções manualmente
 
 // Abrir modal
 if (settingsBtn) {
@@ -675,12 +770,7 @@ if (closeSettings) {
     closeSettings.addEventListener('click', closeModalSettings);
 }
 
-if (closeSettingsBtn) {
-    closeSettingsBtn.addEventListener('click', () => {
-        saveSettings();
-        closeModalSettings();
-    });
-}
+// Botão "Salvar e Fechar" removido
 
 // Fechar ao clicar fora
 if (settingsModal) {
@@ -691,10 +781,7 @@ if (settingsModal) {
     });
 }
 
-// Restaurar padrões
-if (resetSettings) {
-    resetSettings.addEventListener('click', restoreDefaults);
-}
+// Botão de restaurar padrões removido
 
 // Salvar ao mudar qualquer opção
 document.querySelectorAll('.settings-option input').forEach(input => {
@@ -704,18 +791,22 @@ document.querySelectorAll('.settings-option input').forEach(input => {
 // Permitir clicar na caixa toda para marcar/desmarcar
 document.querySelectorAll('.settings-option').forEach(option => {
     option.addEventListener('click', (e) => {
-        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL' && e.target.tagName !== 'SPAN') {
-            const input = option.querySelector('input');
-            if (input) {
-                if (input.type === 'checkbox') {
-                    input.checked = !input.checked;
-                    saveSettings();
-                } else if (input.type === 'radio') {
-                    input.checked = true;
-                    saveSettings();
-                }
-            }
+        const input = option.querySelector('input');
+        if (!input) return;
+
+        // Se o clique foi diretamente no input, deixa o evento padrão agir
+        if (e.target === input) return;
+
+        // Evita duplo toggle quando houver <label> vinculado
+        e.preventDefault();
+
+        if (input.type === 'checkbox') {
+            input.checked = !input.checked;
+        } else if (input.type === 'radio') {
+            input.checked = true;
         }
+        // Dispara o change para acionar saveSettings
+        input.dispatchEvent(new Event('change', { bubbles: true }));
     });
 });
 
@@ -736,3 +827,49 @@ if (largerTextEl) largerTextEl.checked = currentSettings.largerText;
 if (themeEl) themeEl.checked = true;
 
 applySettings(currentSettings);
+
+/* ==================== EXCLUSIVIDADE NOME: TEXTO x SUGESTÕES ==================== */
+(function exclusividadeNome() {
+    const nomeInput = document.getElementById('NomePerfil');
+    const nomesSelect = document.getElementById('NomesSugerido');
+    if (!nomeInput || !nomesSelect) return;
+
+    async function onNomeInput() {
+        const hasText = nomeInput.value.trim().length > 0;
+        if (hasText && nomesSelect.value) {
+            const proceed = await confirmSwap('Você começou a digitar um nome. Isso vai desfazer o nome sugerido selecionado. Continuar?');
+            if (proceed) {
+                // Limpa a seleção do select, mas mantém habilitado para permitir troca de ideia
+                nomesSelect.value = '';
+            } else {
+                // Reverte digitação
+                nomeInput.value = '';
+                return;
+            }
+        }
+        // Não desabilita o select para permitir a troca com confirmação
+    }
+
+    async function onNomesChange() {
+        const hasChoice = !!nomesSelect.value;
+        if (hasChoice && nomeInput.value.trim().length > 0) {
+            const proceed = await confirmSwap('Você selecionou um nome sugerido. Isso vai desfazer o nome que você digitou. Continuar?');
+            if (proceed) {
+                nomeInput.value = '';
+            } else {
+                // Reverte a seleção do select
+                nomesSelect.value = '';
+                return;
+            }
+        }
+        // Não desabilita o input de texto para permitir a troca com confirmação
+    }
+
+    // Inicializa estado de acordo com o preenchido atual
+    onNomeInput();
+    onNomesChange();
+
+    // Listeners
+    nomeInput.addEventListener('input', onNomeInput);
+    nomesSelect.addEventListener('change', onNomesChange);
+})();

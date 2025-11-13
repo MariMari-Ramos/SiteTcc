@@ -106,10 +106,10 @@ body{
     position:relative;
     z-index:2;
     background:var(--panel-bg);
-    width:92vw;
-    max-width:400px;
-    padding:2.2rem 2rem 2.6rem;
-    border-radius:1.8rem;
+    width:88vw;
+    max-width:420px; /* restaura largura mais confortável (alinhada ao modal) */
+    padding:1.8rem 1.6rem 2.2rem; /* compacta o padding */
+    border-radius:1.6rem;
     box-shadow:0 8px 24px rgba(0,0,0,0.12);
     border:2px solid var(--panel-border);
     backdrop-filter:blur(2px);
@@ -151,6 +151,11 @@ body.high-contrast .SubtituloRecSenha{font-weight:700;color:var(--text);}
     transition:.25s;
     color:var(--text);
 }
+#email:hover{
+    border-color:var(--accent-2);
+    background:color-mix(in srgb, var(--input-bg) 92%, #fff);
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--accent-soft) 65%, transparent);
+}
 #email:focus{
     outline:none;
     border-color:var(--accent);
@@ -159,6 +164,18 @@ body.high-contrast .SubtituloRecSenha{font-weight:700;color:var(--text);}
 }
 #email::placeholder{color:var(--input-placeholder);font-size:.75rem;}
 body.high-contrast #email{border-width:3px;font-weight:600;}
+
+/* Ajustes de hover/focus no modo escuro para não ficar branco */
+body.dark-theme #email:hover{
+    border-color: var(--accent-2);
+    background: color-mix(in srgb, var(--input-bg) 85%, #fff);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-soft) 70%, transparent);
+}
+body.dark-theme #email:focus{
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--input-bg) 80%, #fff);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
 
 .button-container{
     display:flex;
@@ -187,20 +204,13 @@ body.high-contrast #email{border-width:3px;font-weight:600;}
 body.high-contrast #btnEnviar,body.high-contrast #btnVoltar{border:2px solid var(--text);font-weight:700;}
 
 .message{
-    margin-top:1.2rem;
-    padding:.8rem 1rem;
-    border-radius:.9rem;
-    font-size:.8rem;
-    font-weight:600;
-    background:var(--accent-soft);
-    color:var(--accent);
-    opacity:0;
-    transform:translateY(8px);
-    transition:.35s;
+    /* Substituída por modal: remove espaçamento do layout */
+    display:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    height:0 !important;
 }
-.message.show{opacity:1;transform:translateY(0);}
-.message.error{background:rgba(255,30,30,0.15);color:#d80000;}
-.message.success{background:rgba(0,180,70,0.18);color:#007a2e;}
 body.high-contrast .message{border:2px solid var(--accent);font-weight:700;}
 
 .overlay{
@@ -259,12 +269,11 @@ body.high-contrast .message{border:2px solid var(--accent);font-weight:700;}
     cursor:pointer;
     font-size:24px;
     color:#fff;
-    z-index:1100;
+    z-index:1080; /* abaixo do modal (1090) para não ficar por cima */
     box-shadow:0 4px 15px color-mix(in srgb,var(--accent) 45%,transparent);
     transition:.35s;
 }
 .settings-fab:hover{transform:scale(1.1) rotate(90deg);background:var(--accent-2);}
-body.settings-open .settings-fab{opacity:0;transform:scale(.3) rotate(-180deg);pointer-events:none;}
 
 .settings-modal{
     display:none;
@@ -274,10 +283,8 @@ body.settings-open .settings-fab{opacity:0;transform:scale(.3) rotate(-180deg);p
     z-index:1090;
     justify-content:flex-end;
     align-items:flex-start;
-    animation:fadeIn .3s ease;
 }
 .settings-modal.active{display:flex;}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
 .settings-content{
     width:280px;
@@ -286,12 +293,17 @@ body.settings-open .settings-fab{opacity:0;transform:scale(.3) rotate(-180deg);p
     border-bottom:3px solid var(--accent);
     border-bottom-left-radius:14px;
     max-height:100vh;
-    padding:22px 16px;
+    padding:20px 16px 18px;
     box-shadow:-6px 0 18px rgba(0,0,0,0.4);
     overflow-y:auto;
     animation:slideInRight .35s ease;
 }
-@keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);} }
+@keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);}}
+@keyframes slideOutRight{from{transform:translateX(0);}to{transform:translateX(100%);}}
+
+.settings-modal.closing, .settings-content.closing {
+    animation: slideOutRight 0.3s ease forwards;
+}
 
 .settings-header{
     display:flex;
@@ -348,15 +360,22 @@ body.settings-open .settings-fab{opacity:0;transform:scale(.3) rotate(-180deg);p
     transition:.25s;
     margin-bottom:4px;
 }
-.settings-btn-primary{background:var(--accent);color:#fff;font-weight:600;}
-.settings-btn-primary:hover{background:var(--accent-2);}
-.settings-btn-secondary{background:var(--btn-secondary);color:#fff;font-weight:600;}
-.settings-btn-secondary:hover{background:var(--btn-secondary-hover);}
 .settings-divider{height:1px;background:var(--panel-border);margin:14px 0;}
 
-/* Aumentar fonte (igual Login) */
+/* Aumentar fonte - aumenta apenas o texto, não os campos */
 body.large-text{font-size:18px !important;}
-body.large-text #email{font-size:1.1em;}
+body.large-text h1{font-size:clamp(2rem,6vw,2.4rem);}
+body.large-text .SubtituloRecSenha{font-size:clamp(.9rem,3vw,1.05rem);}
+body.large-text #email{font-size:1.05rem;} /* só a letra, não o campo */
+body.large-text #btnEnviar,
+body.large-text #btnVoltar{font-size:1rem;}
+body.large-text .modal h2{font-size:1.3rem;}
+body.large-text .modal p{font-size:1.05rem;}
+body.large-text .modal button{font-size:.95rem;}
+body.large-text .settings-content h2{font-size:21px;}
+body.large-text .settings-group>label{font-size:14px;}
+body.large-text .settings-option span{font-size:13px;}
+body.large-text .settings-btn{font-size:.9rem;}
 
 @media (max-width:480px){
     .CaixaRecuperarSenha{padding:1.8rem 1.3rem 2.2rem;width:94%;}
