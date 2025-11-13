@@ -108,7 +108,7 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
         <p class="SubtituloRedefinir">Insira sua nova senha e confirme para redefinir o acesso à sua conta.</p>
 
         <form id="resetPasswordForm" class="redefinir-form" autocomplete="off" method="post" action="NovaSenha.php">
-            <input type="hidden" name="token" value="<?= htmlspecialchars($token ?? '') ?>">
+            <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
             
             <label class="TextoSobreOsCampos" for="NovaSenha">Nova senha:</label>
             <div class="input-group">

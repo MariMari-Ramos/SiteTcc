@@ -22,7 +22,7 @@
     }
 
     form?.addEventListener('submit',(e)=>{
-        e.preventDefault();
+       // e.preventDefault();
         const res = validateInput(emailInput.value);
         if(!res.valid){ showMessage(res.message,'error'); emailInput.focus(); return; }
         btnEnviar.disabled = true;

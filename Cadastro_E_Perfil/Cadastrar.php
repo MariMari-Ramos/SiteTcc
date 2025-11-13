@@ -27,21 +27,25 @@ $stmt->store_result();
 
 if ($stmt->num_rows > 0) {
     echo json_encode(["status" => "error", "message" => "Email já cadastrado!"]);
+    $stmt->close();
+    $conn->close();
     exit;
 }
 $stmt->close();
 
-// Cria o usuário
-$senha_hash = md5($senha); // compatibilidade
+// Cria o usuário com senha criptografada (bcrypt)
+$senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+
 $sql_insert = "INSERT INTO usuarios (email, senha) VALUES (?, ?)";
 $stmt = $conn->prepare($sql_insert);
 $stmt->bind_param("ss", $email, $senha_hash);
 
 if ($stmt->execute()) {
-    echo json_encode(["status" => "success", "message" => "Usuário criado com sucesso! Verifique seu e-mail."]);
+    echo json_encode(["status" => "success", "message" => "Usuário criado com sucesso!"]);
 } else {
     echo json_encode(["status" => "error", "message" => "Erro ao criar usuário: " . $conn->error]);
 }
 
 $stmt->close();
 $conn->close();
+?>

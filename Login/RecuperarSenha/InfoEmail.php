@@ -14,12 +14,13 @@ $stmt->bind_param("sss", $token_hash, $expire, $email);
 $stmt->execute();
 if($mysqli->affected_rows){
     $mail= require __DIR__ . "/Mailer.php";
+    $mail->CharSet = 'UTF-8';
     $mail->setFrom('noreply@example.com', 'System Forge RPG');
     $mail->addAddress($email);
     $mail->Subject = 'Redefinição de senha';
     $mail->Body = <<<END
 
-Clique <a href="http://localhost:8080/SiteTcc/Login/RecuperarSenha/ValiToken.php?token=$token">aqui</a> para redefinir sua senha. Este link expirará em 30 minutos.
+Clique <a href="http://localhost/SiteTcc/Login/RecuperarSenha/ValiToken.php?token=$token">aqui</a> para redefinir sua senha. Este link expirará em 30 minutos.
 
 END;
     

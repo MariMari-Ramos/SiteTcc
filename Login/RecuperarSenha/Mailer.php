@@ -15,7 +15,7 @@ $mail->Host = 'smtp.gmail.com';
 $mail->SMTPSecure=PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
 $mail->Username = 'systemforgerpg@gmail.com';
-$mail->Password = 'nauc ulnh gdto djtq';
+$mail->Password = 'szvf pkwd lqeh fqcj';
 
 $mail->isHtml(true);
 

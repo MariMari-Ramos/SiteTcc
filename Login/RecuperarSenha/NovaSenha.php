@@ -1,16 +1,4 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-   
-
-    $senha = isset($_POST['NovaSenha']) ? $_POST['NovaSenha'] : '';
-    $confirmasenha = isset($_POST['ConfirmarNovaSenha']) ? $_POST['ConfirmarNovaSenha'] : '';
-
-    // Verifica se as senhas coincidem
-    if ($senha !== $confirmasenha) {
-        die("As senhas não coincidem. Tente novamente.");
-    }
-}  
-
 $token=$_POST["token"];
 date_default_timezone_set('America/Sao_Paulo');
 $token_hash=hash("sha256", $token);
@@ -29,15 +17,15 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
     die("Token expirado.");
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-   
+$sql = "UPDATE usuarios
+    SET senha=?,
+        reset_token_hash=NULL,
+        reset_token_expires_at=NULL
+    WHERE id=?";
+$stmt = $mysqli->prepare($sql);
+$password_hash = password_hash($_POST["NovaSenha"], PASSWORD_DEFAULT);
 
-    $senha = isset($_POST['NovaSenha']) ? $_POST['NovaSenha'] : '';
-    $confirmasenha = isset($_POST['ConfirmarNovaSenha']) ? $_POST['ConfirmarNovaSenha'] : '';
-
-    // Verifica se as senhas coincidem
-    if ($senha !== $confirmasenha) {
-        die("As senhas não coincidem. Tente novamente.");
-    }
-}  
+$stmt->bind_param("ss", $password_hash, $usuario["id"]);
+$stmt->execute();
+echo "Senha redefinida com sucesso.";
 ?>
