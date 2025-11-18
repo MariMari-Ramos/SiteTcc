@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/Index/index.css">
+    <script src="JavaScript/Index/index.js"></script>
+
+    <title>System Forge</title>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1> System Forge</h1>
+            <div class="header-buttons">
+                <button class="btn-login" id="ButtonGoToLogin">Entrar</button>
+                <button class="btn-cadastrar" id="ButtonGoToCadastrar">Criar Conta</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="logo-container">
+            <img src="img/PETO E BANCO-Photoroom.png" alt="System Forge Logo">
+            <p class="logo-subtitle">Sua jornada épica começa aqui!</p>
+        </div>
+
+        <!-- Sistema de Abas -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-button active" data-tab="quem-somos">
+                    <span class="tab-icon"></span>
+                    <span class="tab-text">Quem Somos</span>
+                </button>
+                <button class="tab-button" data-tab="sobre-nos">
+                    <span class="tab-icon"></span>
+                    <span class="tab-text">Nossa Missão</span>
+                </button>
+                <button class="tab-button" data-tab="dislexia-rpg">
+                    <span class="tab-icon"></span>
+                    <span class="tab-text">Acessibilidade</span>
+                </button>
+            </div>
+
+            <div class="tabs-content">
+                <!-- Aba 1: Quem Somos -->
+                <div class="tab-pane active" id="quem-somos">
+                    <h2> Bem-vindo ao System Forge</h2>
+                    <p class="intro-text">O System Forge é uma plataforma inovadora desenvolvida para auxiliar mestres de RPG na criação e gerenciamento de suas campanhas. Nossa missão é tornar a experiência de RPG mais acessível e inclusiva, especialmente para pessoas com dislexia.</p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h3> Criação de Personagens</h3>
+                            <p>Sistema completo para criar e gerenciar personagens únicos com fichas detalhadas.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3> Gestão de Campanhas</h3>
+                            <p>Organize suas histórias, NPCs, locais e muito mais em um só lugar.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3> Sistema de Dados</h3>
+                            <p>Rolagem de dados integrada para agilizar suas partidas.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3> Acessibilidade</h3>
+                            <p>Interface otimizada com fonte OpenDyslexic e recursos de alto contraste.</p>
+                        </div>
+                    </div>
+
+                    <div class="-section">
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Aba 2: Nossa Missão -->
+                <div class="tab-pane" id="sobre-nos">
+                    <h2> Nossa Missão</h2>
+                    <p class="intro-text">Somos uma equipe apaixonada por RPG e tecnologia, comprometida em criar ferramentas que facilitem a vida de mestres e jogadores. Acreditamos que o RPG é uma forma poderosa de expressão, criatividade e inclusão social.</p>
+                    
+                    <div class="mission-section">
+                        <h3> Nossos Objetivos</h3>
+                        <ul class="objectives-list">
+                            <li>
+                                <strong>Democratizar o RPG:</strong> Tornar o RPG acessível para todos, independentemente de suas habilidades ou necessidades especiais.
+                            </li>
+                            <li>
+                                <strong>Facilitar a Mestria:</strong> Fornecer ferramentas intuitivas que reduzam a carga administrativa dos mestres.
+                            </li>
+                            <li>
+                                <strong>Promover Inclusão:</strong> Criar um ambiente acolhedor para jogadores neurodivergentes, especialmente pessoas com dislexia.
+                            </li>
+                            <li>
+                                <strong>Inovar Constantemente:</strong> Desenvolver recursos que melhorem a experiência de jogo baseados no feedback da comunidade.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="values-section">
+                        <h3> Nossos Valores</h3>
+                        <div class="values-grid">
+                            <div class="value-item">
+                                <span class="value-emoji">🤝</span>
+                                <h4>Comunidade</h4>
+                                <p>Construímos juntos uma plataforma melhor</p>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-emoji">♿</span>
+                                <h4>Acessibilidade</h4>
+                                <p>Design inclusivo em primeiro lugar</p>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-emoji">🚀</span>
+                                <h4>Inovação</h4>
+                                <p>Sempre buscando novas soluções</p>
+                            </div>
+                            <div class="value-item">
+                                <span class="value-emoji">❤️</span>
+                                <h4>Paixão</h4>
+                                <p>Amor pelo RPG move nosso trabalho</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aba 3: Acessibilidade -->
+                <div class="tab-pane" id="dislexia-rpg">
+                    <h2> Acessibilidade e Dislexia</h2>
+                    
+                    <div class="accessibility-intro">
+                        <p class="intro-text">A dislexia é um transtorno específico de aprendizagem de origem neurobiológica que afeta cerca de 10% da população mundial. No System Forge, reconhecemos a importância de criar ferramentas acessíveis que permitam a todos desfrutar do maravilhoso mundo do RPG.</p>
+                    </div>
+
+                    <div class="dyslexia-section">
+                        <h3>🧠 Entendendo a Dislexia</h3>
+                        <p>A dislexia se caracteriza por dificuldades com:</p>
+                        <ul class="dyslexia-list">
+                            <li>Reconhecimento preciso e fluente de palavras</li>
+                            <li>Decodificação e habilidades de ortografia</li>
+                            <li>Processamento fonológico</li>
+                        </ul>
+                        <p class="important-note">⚠️ Importante: A dislexia NÃO é resultado de falta de inteligência ou motivação!</p>
+                    </div>
+
+                    <div class="rpg-benefits-section">
+                        <h3>🎲 Como o RPG Pode Ajudar</h3>
+                        <div class="benefits-grid">
+                            <div class="benefit-card">
+                                <span class="benefit-icon">🎨</span>
+                                <h4>Criatividade</h4>
+                                <p>Estimula a imaginação e o pensamento criativo através da narrativa</p>
+                            </div>
+                            <div class="benefit-card">
+                                <span class="benefit-icon">🗣️</span>
+                                <h4>Comunicação</h4>
+                                <p>Desenvolve habilidades de comunicação oral e expressão verbal</p>
+                            </div>
+                            <div class="benefit-card">
+                                <span class="benefit-icon">🧩</span>
+                                <h4>Resolução de Problemas</h4>
+                                <p>Melhora a capacidade de pensar estrategicamente e resolver desafios</p>
+                            </div>
+                            <div class="benefit-card">
+                                <span class="benefit-icon">💪</span>
+                                <h4>Autoconfiança</h4>
+                                <p>Fortalece a autoestima ao superar desafios no jogo</p>
+                            </div>
+                            <div class="benefit-card">
+                                <span class="benefit-icon">👥</span>
+                                <h4>Socialização</h4>
+                                <p>Promove interação social em ambiente acolhedor e sem julgamentos</p>
+                            </div>
+                            <div class="benefit-card">
+                                <span class="benefit-icon">📚</span>
+                                <h4>Leitura Prazerosa</h4>
+                                <p>Torna a leitura uma atividade divertida e motivadora</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="features-section">
+                        <h3>✨ Recursos de Acessibilidade do System Forge</h3>
+                        <ul class="features-list">
+                            <li>
+                                <strong> Fonte OpenDyslexic:</strong> Tipografia especialmente desenvolvida para facilitar a leitura de pessoas com dislexia
+                            </li>
+                            <li>
+                                <strong> Temas Personalizáveis:</strong> Modo claro, escuro e alto contraste para melhor visualização
+                            </li>
+                            <li>
+                                <strong> Interface Limpa:</strong> Layout organizado e intuitivo que reduz a sobrecarga cognitiva
+                            </li>
+                            <li>
+                                <strong> Espaçamento Otimizado:</strong> Maior espaçamento entre letras e linhas para facilitar a leitura
+                            </li>
+                            <li>
+                                <strong> Textos Concisos:</strong> Instruções claras e objetivas, evitando textos longos
+                            </li>
+                            <li>
+                                <strong> Suporte Visual:</strong> Ícones e indicadores visuais complementam as informações textuais
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="testimonial-section">
+                        <blockquote class="testimonial">
+                            <p>"Voa mlk voa."</p>
+                            <cite>- Santos Drumond </cite>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 System Forge. Todos os direitos reservados.</p>
+            <p class="footer-tagline">Forjando aventuras épicas, uma história de cada vez</p>
+        </div>
+    </footer>
+
+</body>
+</html>
