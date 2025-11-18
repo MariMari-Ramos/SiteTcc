@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnFecharModal = overlay ? overlay.querySelector("button") : null;
     const formCadastro = document.getElementById("formCadastro");
 
+    
+
     if(!overlay || !textoModal || !btnCriar || !btnVerSenha || !btnConfirmVerSenha || !formCadastro) {
         console.warn('[cadastro.js] Alguns elementos não foram encontrados no DOM. Verifique IDs.');
     } else {
@@ -82,10 +84,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 mostrarAlerta(data.message);
 
                 if (data.status === "success") {
+                    // CORREÇÃO: Usar o redirect que vem do PHP
                     overlay.onclick = () => {
                         fecharModal();
-                        window.location.href = "../Login/loginhtml.php";
+                        // Redirecionar para criação de perfil
+                        if(data.redirect) {
+                            window.location.href = data.redirect;
+                        } else {
+                            window.location.href = "CPerfilhtml.php";
+                        }
                     };
+                    
+                    // Auto-redirecionar após 2 segundos
+                    setTimeout(() => {
+                        if(data.redirect) {
+                            window.location.href = data.redirect;
+                        } else {
+                            window.location.href = "CPerfilhtml.php";
+                        }
+                    }, 2000);
                 } else {
                     overlay.onclick = () => {
                         fecharModal();
@@ -249,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
 
-        // Bloquear mudança de direção quando estiver dentro do formulário
         if (!isMouseInsideForm) {
             const centerX = window.innerWidth / 2;
             if (e.clientX < centerX) {
@@ -369,7 +385,6 @@ document.addEventListener('DOMContentLoaded', () => {
         mouseX += (targetMouseX - mouseX) * easeAmount;
         mouseY += (targetMouseY - mouseY) * easeAmount;
 
-        // Sempre segue a direção do mouse com transição suave, clique não altera a direção
         waveDirection += (targetWaveDirection - waveDirection) * directionEaseAmount * interactiveTransition;
 
         const smoothMouseY = window.innerHeight / 2 + (mouseY - window.innerHeight / 2) * interactiveTransition;
@@ -467,12 +482,10 @@ document.addEventListener('DOMContentLoaded', () => {
         gifEnabled = enabled;
         
         if (enabled) {
-            // Mostrar o container do GIF com transição suave
             gifContainer.style.opacity = '0';
             gifContainer.style.transform = 'scale(0.95)';
             gifContainer.style.display = '';
             
-            // Forçar reflow para garantir que a transição funcione
             gifContainer.offsetHeight;
             
             requestAnimationFrame(() => {
@@ -482,15 +495,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             console.log('[GIF-Cadastro] GIF exibido com transição suave');
         } else {
-            // Ocultar com transição suave
             gifContainer.style.opacity = '0';
             gifContainer.style.transform = 'scale(0.95)';
             
-            // Aguardar a transição terminar antes de ocultar
             setTimeout(() => {
                 gifContainer.style.display = 'none';
                 console.log('[GIF-Cadastro] GIF ocultado com transição suave');
-            }, 400); // Tempo da transição CSS
+            }, 400);
         }
     }
 
@@ -600,7 +611,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Aplicar configuração do GIF
         toggleGif(settings.enableGif);
 
         if (settings.theme === 'dark') {

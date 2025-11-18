@@ -1,250 +1,612 @@
-(function() {
-    'use strict';
+/* ========== PERFIL DO USUÁRIO.JS ==========
+   Controla formulário de EDITAR PERFIL do usuário
+   - Alteração de foto (upload, avatar ou remover)
+   - Edição de nome
+   - Sair e excluir conta
+   - Waves com efeitos
+*/
 
-    // Elementos
-    const profilePhotoInput = document.getElementById('profilePhoto');
-    const previewFoto = document.getElementById('previewFoto');
-    const previewContainer = document.querySelector('.perfil-foto-preview');
+/* ==================== CANVAS WAVES ==================== */
+const canvas = document.getElementById('waveCanvas');
+const ctx = canvas ? canvas.getContext('2d') : null;
 
-    // Validações
-    if (!profilePhotoInput || !previewFoto) {
-        console.error('Elementos de foto de perfil não encontrados');
-        console.error('profilePhotoInput:', profilePhotoInput);
-        console.error('previewFoto:', previewFoto);
-        return;
+const defaultSettings = {
+    enableWaves: true,
+    theme: 'light',
+    enableClickEffect: true,
+    enableHoldEffect: true,
+    highContrast: false,
+    largerText: false
+};
+
+function loadSettings() {
+    const savedSettings = localStorage.getItem('profileSettings');
+    return savedSettings ? { ...defaultSettings, ...JSON.parse(savedSettings) } : defaultSettings;
+}
+
+let settings = loadSettings();
+
+if(canvas && ctx) {
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let targetMouseX = window.innerWidth / 2;
+    let targetMouseY = window.innerHeight / 2;
+    const easeAmount = 0.08;
+
+    let interactive = true;
+    let isFormFocused = false;
+    let isSettingsOpen = false;
+    let interactiveTransition = 1;
+    const transitionSpeed = 0.06;
+
+    let isMousePressed = false;
+    let speedBoost = 0;
+    const maxSpeedBoost = 2.5;
+    const boostDecayRate = 0.95;
+    const boostBuildRate = 0.08;
+
+    let waveDirection = 1;
+    let targetWaveDirection = 1;
+    const directionEaseAmount = 0.1;
+
+    let heatIntensity = 0;
+    const heatDecayRate = 0.96;
+
+    let clickAmplitude = 0;
+    const maxClickAmplitude = 1.5;
+    const clickAmplitudeDecayRate = 0.93;
+
+    let clickHeight = 0;
+    let targetClickHeight = 0;
+    const clickHeightEaseAmount = 0.12;
+
+    const baseColorPalette = {
+        light: {
+            bg: [240, 248, 255],
+            wave1: [100, 149, 237],
+            wave2: [135, 206, 250],
+            wave3: [173, 216, 230],
+            glow: [70, 130, 180]
+        },
+        dark: {
+            bg: [10, 15, 30],
+            wave1: [25, 25, 112],
+            wave2: [0, 0, 139],
+            wave3: [72, 61, 139],
+            glow: [138, 43, 226]
+        }
+    };
+
+    let currentPalette = settings.theme === 'dark' ? baseColorPalette.dark : baseColorPalette.light;
+
+    const fireColors = [
+        [255, 69, 0],
+        [255, 140, 0],
+        [255, 215, 0],
+        [255, 255, 255]
+    ];
+
+    const flames = [];
+    const maxFlames = 50;
+
+    class Flame {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.vx = (Math.random() - 0.5) * 2;
+            this.vy = -Math.random() * 3 - 2;
+            this.life = 1;
+            this.decay = Math.random() * 0.02 + 0.01;
+            this.size = Math.random() * 8 + 4;
+            this.colorIndex = Math.floor(Math.random() * (fireColors.length - 1));
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vy += 0.1;
+            this.life -= this.decay;
+            this.size *= 0.98;
+        }
+
+        draw() {
+            if (this.life <= 0) return;
+
+            const color1 = fireColors[this.colorIndex];
+            const color2 = fireColors[Math.min(this.colorIndex + 1, fireColors.length - 1)];
+            const blend = this.life;
+
+            const r = color1[0] * blend + color2[0] * (1 - blend);
+            const g = color1[1] * blend + color2[1] * (1 - blend);
+            const b = color1[2] * blend + color2[2] * (1 - blend);
+
+            ctx.save();
+            ctx.globalAlpha = this.life * 0.8;
+            ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
     }
 
-    // Também permite clique no container para abrir o seletor (resiliente a sobreposições visuais)
-    if (previewContainer) {
-        previewContainer.addEventListener('click', function() {
-            profilePhotoInput.click();
-        });
-        previewContainer.addEventListener('dblclick', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            openAvatarModal();
+    const waves = [];
+    const waveCount = 3;
+    const baseWaveSpeed = 0.02;
+
+    for (let i = 0; i < waveCount; i++) {
+        waves.push({
+            offset: (Math.PI * 2 / waveCount) * i,
+            amplitude: 60 + i * 15,
+            frequency: 0.005 - i * 0.0005,
+            speed: baseWaveSpeed * (1 + i * 0.3),
+            colorIndex: i
         });
     }
 
-    /**
-     * Manipula a mudança de arquivo da foto de perfil
-     */
-    profilePhotoInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
+    function lerpColor(color1, color2, t) {
+        return color1.map((c, i) => Math.round(c + (color2[i] - c) * t));
+    }
 
-        // Validações
-        if (!file) {
-            console.warn('Nenhum arquivo selecionado');
+    function getWaveColor(index, heatAmount) {
+        const paletteKey = `wave${index + 1}`;
+        const baseColor = currentPalette[paletteKey];
+        const heatColor = fireColors[1];
+        return lerpColor(baseColor, heatColor, Math.min(heatAmount, 0.7));
+    }
+
+    let time = 0;
+
+    function animate() {
+        if (!settings.enableWaves) {
+            requestAnimationFrame(animate);
             return;
         }
 
-        // Verificar se é uma imagem
-        if (!file.type.startsWith('image/')) {
-            alert('Por favor, selecione um arquivo de imagem válido.');
-            profilePhotoInput.value = '';
-            return;
-        }
+        mouseX += (targetMouseX - mouseX) * easeAmount;
+        mouseY += (targetMouseY - mouseY) * easeAmount;
 
-        // Verificar tamanho (máximo 5MB)
-        const maxSize = 5 * 1024 * 1024; // 5MB
-        if (file.size > maxSize) {
-            alert('A imagem é muito grande. Máximo permitido: 5MB');
-            profilePhotoInput.value = '';
-            return;
-        }
+        const targetInteractive = interactive ? 1 : 0;
+        interactiveTransition += (targetInteractive - interactiveTransition) * transitionSpeed;
 
-        // Criar URL temporária para preview
-        const reader = new FileReader();
+        waveDirection += (targetWaveDirection - waveDirection) * directionEaseAmount;
 
-        reader.onload = function(e) {
-            try {
-                previewFoto.src = e.target.result;
-                previewFoto.style.display = 'block';
-                previewFoto.style.opacity = '1';
-                console.log('Foto de perfil atualizada com sucesso');
-            } catch (error) {
-                console.error('Erro ao atualizar imagem:', error);
+        heatIntensity *= heatDecayRate;
+        clickAmplitude *= clickAmplitudeDecayRate;
+
+        clickHeight += (targetClickHeight - clickHeight) * clickHeightEaseAmount;
+        targetClickHeight *= 0.9;
+
+        if (isMousePressed && settings.enableHoldEffect) {
+            speedBoost = Math.min(speedBoost + boostBuildRate, maxSpeedBoost);
+            heatIntensity = Math.min(heatIntensity + 0.03, 1);
+
+            if (settings.enableClickEffect && Math.random() < 0.3 && flames.length < maxFlames) {
+                flames.push(new Flame(mouseX, mouseY));
             }
-        };
-
-        reader.onerror = function(error) {
-            console.error('Erro ao ler arquivo:', error);
-            alert('Erro ao ler o arquivo. Por favor, tente novamente.');
-            profilePhotoInput.value = '';
-        };
-
-        // Ler o arquivo como Data URL
-        reader.readAsDataURL(file);
-    });
-
-    /**
-     * Permite drag and drop para a área de preview
-     */
-    previewFoto.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        previewFoto.classList.add('dragging');
-        previewFoto.style.opacity = '0.7';
-    }, false);
-
-    previewFoto.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        previewFoto.classList.remove('dragging');
-        previewFoto.style.opacity = '1';
-    }, false);
-
-    previewFoto.addEventListener('drop', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        previewFoto.classList.remove('dragging');
-        previewFoto.style.opacity = '1';
-
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            // Criar um novo DataTransfer para atualizar o input
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(files[0]);
-            profilePhotoInput.files = dataTransfer.files;
-            
-            // Disparar evento de change
-            const changeEvent = new Event('change', { bubbles: true });
-            profilePhotoInput.dispatchEvent(changeEvent);
-        }
-    }, false);
-
-    /**
-     * Clique único na foto abre o seletor de arquivo
-     */
-    previewFoto.addEventListener('click', function() {
-        profilePhotoInput.click();
-    });
-
-    /**
-     * Duplo clique abre o modal de avatares
-     */
-    previewFoto.addEventListener('dblclick', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        openAvatarModal();
-    });
-
-    /**
-     * Abre o modal de seleção de avatares
-     */
-    function openAvatarModal() {
-        // Criar modal se não existir
-        let modal = document.getElementById('avatarModalPerfil');
-        
-        if (!modal) {
-            modal = createAvatarModal();
-            document.body.appendChild(modal);
+        } else {
+            speedBoost *= boostDecayRate;
         }
 
-        modal.style.display = 'block';
-        setupAvatarModalListeners(modal);
-    }
+        const bgColor = currentPalette.bg;
+        ctx.fillStyle = `rgb(${bgColor[0]}, ${bgColor[1]}, ${bgColor[2]})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    /**
-     * Cria o modal HTML
-     */
-    function createAvatarModal() {
-        const modal = document.createElement('div');
-        modal.id = 'avatarModalPerfil';
-        modal.className = 'avatar-modal-perfil';
-        
-        // Array de avatares disponíveis (ajuste os caminhos conforme necessário)
-        const avatares = [
-            '../../assets/avatares/avatar-1.png',
-            '../../assets/avatares/avatar-2.png',
-            '../../assets/avatares/avatar-3.png',
-            '../../assets/avatares/avatar-4.png',
-            '../../assets/avatares/avatar-5.png',
-            '../../assets/avatares/avatar-6.png',
-            '../../assets/avatares/avatar-7.png',
-            '../../assets/avatares/avatar-8.png',
-            '../../assets/avatares/avatar-9.png',
-        ];
+        time += (baseWaveSpeed + speedBoost * 0.02) * waveDirection * interactiveTransition;
 
-        let avatarGrid = '<div class="avatar-grid-perfil">';
-        avatares.forEach((avatar, index) => {
-            avatarGrid += `
-                <div class="avatar-option-perfil" data-avatar="${avatar}">
-                    <img src="${avatar}" alt="Avatar ${index + 1}" />
-                </div>
-            `;
-        });
-        avatarGrid += '</div>';
+        waves.forEach((wave, index) => {
+            ctx.beginPath();
 
-        modal.innerHTML = `
-            <div class="avatar-modal-content-perfil">
-                <button class="avatar-modal-close" aria-label="Fechar">&times;</button>
-                <h3>Escolha seu Avatar</h3>
-                ${avatarGrid}
-                <button class="confirm-button-perfil" id="confirmAvatarPerfil">Confirmar</button>
-            </div>
-        `;
+            const waveColor = getWaveColor(index, heatIntensity);
+            const glowColor = currentPalette.glow;
 
-        return modal;
-    }
+            ctx.shadowBlur = 20 + heatIntensity * 30;
+            ctx.shadowColor = `rgba(${glowColor[0]}, ${glowColor[1]}, ${glowColor[2]}, ${0.5 + heatIntensity * 0.5})`;
 
-    /**
-     * Configura os listeners do modal de avatares
-     */
-    function setupAvatarModalListeners(modal) {
-        const avatarOptions = modal.querySelectorAll('.avatar-option-perfil');
-        const confirmButton = modal.querySelector('.confirm-button-perfil');
-        const closeButton = modal.querySelector('.avatar-modal-close');
-        let selectedAvatar = null;
+            for (let x = 0; x <= canvas.width; x += 5) {
+                const distanceToMouse = Math.abs(x - mouseX);
+                const mouseInfluence = Math.max(0, 1 - distanceToMouse / 300) * interactiveTransition;
 
-        // Selecionar avatar
-        avatarOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                avatarOptions.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedAvatar = this.querySelector('img').src;
-            });
-        });
+                const baseY = canvas.height / 2 + index * 40;
+                const waveY = Math.sin(x * wave.frequency + time + wave.offset) * wave.amplitude;
+                const mouseDistortion = Math.sin(distanceToMouse * 0.01 + time * 2) * mouseInfluence * 50;
+                const clickDistortion = clickAmplitude * Math.exp(-Math.pow(distanceToMouse / 150, 2)) * 60;
 
-        // Confirmar seleção
-        if (confirmButton) {
-            confirmButton.addEventListener('click', function() {
-                if (selectedAvatar) {
-                    previewFoto.src = selectedAvatar;
-                    previewFoto.style.display = 'block';
-                    modal.style.display = 'none';
-                    console.log('Avatar selecionado:', selectedAvatar);
+                const y = baseY + waveY + mouseDistortion - clickHeight * mouseInfluence + clickDistortion;
+
+                if (x === 0) {
+                    ctx.moveTo(x, y);
                 } else {
-                    alert('Por favor, selecione um avatar primeiro.');
+                    ctx.lineTo(x, y);
                 }
-            });
+            }
+
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.closePath();
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, `rgba(${waveColor[0]}, ${waveColor[1]}, ${waveColor[2]}, 0.3)`);
+            gradient.addColorStop(1, `rgba(${waveColor[0]}, ${waveColor[1]}, ${waveColor[2]}, 0.8)`);
+
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+        });
+
+        if (settings.enableClickEffect) {
+            for (let i = flames.length - 1; i >= 0; i--) {
+                flames[i].update();
+                flames[i].draw();
+                if (flames[i].life <= 0) {
+                    flames.splice(i, 1);
+                }
+            }
         }
 
-        // Fechar ao clicar no X
-        if (closeButton) {
-            closeButton.addEventListener('click', function() {
-                modal.style.display = 'none';
-            });
-        }
+        requestAnimationFrame(animate);
+    }
 
-        // Fechar ao clicar fora do modal
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                modal.style.display = 'none';
+    animate();
+
+    document.addEventListener('mousemove', (e) => {
+        targetMouseX = e.clientX;
+        targetMouseY = e.clientY;
+    });
+
+    document.addEventListener('mousedown', (e) => {
+        if (!isFormFocused && !isSettingsOpen && settings.enableHoldEffect) {
+            isMousePressed = true;
+            targetClickHeight = 100;
+            if (settings.enableClickEffect) {
+                clickAmplitude = maxClickAmplitude;
+                for (let i = 0; i < 10; i++) {
+                    flames.push(new Flame(e.clientX, e.clientY));
+                }
+            }
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isMousePressed = false;
+        targetClickHeight = 0;
+    });
+
+    document.addEventListener('contextmenu', (e) => {
+        if (!isFormFocused && !isSettingsOpen) {
+            e.preventDefault();
+            targetWaveDirection *= -1;
+        }
+    });
+}
+
+/* ==================== FORMULÁRIO DE EDITAR PERFIL ==================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+    const formPerfil = document.getElementById('formPerfil');
+    const profilePhoto = document.getElementById('profilePhoto');
+    const previewFoto = document.getElementById('previewFoto');
+    const fotoPreviewContainer = document.getElementById('fotoPreviewContainer');
+    const avatarModal = document.getElementById('avatarModal');
+    const closeAvatar = document.getElementById('closeAvatar');
+    const confirmAvatar = document.getElementById('confirmAvatar');
+    const btnSair = document.getElementById('btnSair');
+    const btnExcluirConta = document.getElementById('btnExcluirConta');
+    const alertOverlay = document.getElementById('alertOverlay');
+    const alertMessage = document.getElementById('alertMessage');
+    const alertOk = document.getElementById('alertOk');
+    const alertCancel = document.getElementById('alertCancel');
+
+    let avatarSelecionado = null;
+
+    function mostrarAlerta(mensagem, callback = null, mostrarCancelar = false) {
+        alertMessage.textContent = mensagem;
+        alertOverlay.style.display = 'flex';
+        
+        if(mostrarCancelar) {
+            alertCancel.style.display = 'inline-block';
+            alertCancel.onclick = () => {
+                alertOverlay.style.display = 'none';
+            };
+        } else {
+            alertCancel.style.display = 'none';
+        }
+        
+        alertOk.onclick = () => {
+            alertOverlay.style.display = 'none';
+            if(callback) callback();
+        };
+    }
+
+    // Clique simples - Upload
+    if(fotoPreviewContainer) {
+        fotoPreviewContainer.addEventListener('click', (e) => {
+            if(e.detail === 1) {
+                setTimeout(() => {
+                    if(e.detail === 1) {
+                        profilePhoto.click();
+                    }
+                }, 200);
             }
         });
 
-        // Fechar com ESC
-        const handleEsc = (e) => {
-            if (e.key === 'Escape' && modal.style.display === 'block') {
-                modal.style.display = 'none';
-                document.removeEventListener('keydown', handleEsc);
-            }
-        };
-        document.addEventListener('keydown', handleEsc);
+        // Duplo clique - Modal de avatares
+        fotoPreviewContainer.addEventListener('dblclick', () => {
+            avatarModal.style.display = 'flex';
+            isSettingsOpen = true;
+        });
+
+        // Botão direito - Remover foto
+        fotoPreviewContainer.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            mostrarAlerta('Deseja remover a foto de perfil?', () => {
+                document.getElementById('removerFoto').value = '1';
+                document.getElementById('tipoFoto').value = '';
+                document.getElementById('avatarSelecionado').value = '';
+                
+                fotoPreviewContainer.innerHTML = `
+                    <div class="no-photo" id="noPhotoPlaceholder">
+                        <i class="bi bi-person-circle"></i>
+                        <p>Sem foto</p>
+                    </div>
+                `;
+                
+                mostrarAlerta('Foto removida! Clique em "Salvar alterações" para confirmar.');
+            }, true);
+        });
     }
 
-    // Inicialização
-    console.log('Script de perfil do usuário carregado com sucesso');
-    console.log('previewFoto inicial src:', previewFoto.src);
-})();
+    // Preview de upload
+    if(profilePhoto) {
+        profilePhoto.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    fotoPreviewContainer.innerHTML = `
+                        <img id="previewFoto" 
+                             src="${event.target.result}" 
+                             alt="Foto de perfil">
+                    `;
+                    document.getElementById('tipoFoto').value = 'upload';
+                    document.getElementById('avatarSelecionado').value = '';
+                    document.getElementById('removerFoto').value = '0';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Modal de avatares
+    if(closeAvatar) {
+        closeAvatar.addEventListener('click', () => {
+            avatarModal.style.display = 'none';
+            isSettingsOpen = false;
+        });
+    }
+
+    if(avatarModal) {
+        avatarModal.addEventListener('click', (e) => {
+            if(e.target === avatarModal) {
+                avatarModal.style.display = 'none';
+                isSettingsOpen = false;
+            }
+        });
+    }
+
+    const avatarOptions = document.querySelectorAll('.avatar-option');
+    avatarOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            avatarOptions.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            avatarSelecionado = option.dataset.avatar;
+        });
+    });
+
+    if(confirmAvatar) {
+        confirmAvatar.addEventListener('click', () => {
+            if(avatarSelecionado !== null) {
+                if(avatarSelecionado === '') {
+                    fotoPreviewContainer.innerHTML = `
+                        <div class="no-photo" id="noPhotoPlaceholder">
+                            <i class="bi bi-person-circle"></i>
+                            <p>Sem foto</p>
+                        </div>
+                    `;
+                    document.getElementById('removerFoto').value = '1';
+                } else {
+                    fotoPreviewContainer.innerHTML = `
+                        <img id="previewFoto" 
+                             src="${avatarSelecionado}" 
+                             alt="Foto de perfil">
+                    `;
+                    document.getElementById('avatarSelecionado').value = avatarSelecionado;
+                    document.getElementById('removerFoto').value = '0';
+                }
+                
+                document.getElementById('tipoFoto').value = avatarSelecionado ? 'avatar' : '';
+                profilePhoto.value = '';
+                avatarModal.style.display = 'none';
+                isSettingsOpen = false;
+                mostrarAlerta('Avatar selecionado! Clique em "Salvar alterações" para confirmar.');
+            } else {
+                mostrarAlerta('Por favor, selecione um avatar');
+            }
+        });
+    }
+
+    // Submit do formulário
+    if(formPerfil) {
+        formPerfil.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(formPerfil);
+
+            try {
+                const response = await fetch('AtualizarPerfil.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if(data.success) {
+                    mostrarAlerta(data.message, () => {
+                        location.reload();
+                    });
+                } else {
+                    mostrarAlerta('Erro: ' + data.message);
+                }
+
+            } catch (err) {
+                mostrarAlerta('Erro ao atualizar perfil: ' + err);
+            }
+        });
+    }
+
+    // Botão Sair
+    if(btnSair) {
+        btnSair.addEventListener('click', () => {
+            mostrarAlerta('Deseja realmente sair da conta?', () => {
+                window.location.href = 'Logout.php';
+            }, true);
+        });
+    }
+
+    // Botão Excluir Conta
+    if(btnExcluirConta) {
+        btnExcluirConta.addEventListener('click', () => {
+            mostrarAlerta('ATENÇÃO: Tem certeza que deseja excluir sua conta? Esta ação é IRREVERSÍVEL!', async () => {
+                try {
+                    const response = await fetch('ExcluirConta.php', {
+                        method: 'POST'
+                    });
+
+                    const data = await response.json();
+
+                    if(data.success) {
+                        mostrarAlerta(data.message, () => {
+                            window.location.href = data.redirect;
+                        });
+                    } else {
+                        mostrarAlerta('Erro: ' + data.message);
+                    }
+
+                } catch (err) {
+                    mostrarAlerta('Erro ao excluir conta: ' + err);
+                }
+            }, true);
+        });
+    }
+
+    // Detectar foco em inputs
+    const inputs = document.querySelectorAll('input, select, textarea, button');
+    inputs.forEach(input => {
+        input.addEventListener('focus', () => {
+            isFormFocused = true;
+            interactive = false;
+        });
+        input.addEventListener('blur', () => {
+            isFormFocused = false;
+            interactive = true;
+        });
+    });
+
+    // Configurações
+    const settingsBtn = document.getElementById('settingsBtn');
+    const settingsModal = document.getElementById('settingsModal');
+    const closeSettings = document.getElementById('closeSettings');
+
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.classList.add('active');
+            isSettingsOpen = true;
+            interactive = false;
+        });
+    }
+
+    if (closeSettings) {
+        closeSettings.addEventListener('click', () => {
+            settingsModal.classList.remove('active');
+            isSettingsOpen = false;
+            interactive = true;
+        });
+    }
+
+    if (settingsModal) {
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove('active');
+                isSettingsOpen = false;
+                interactive = true;
+            }
+        });
+    }
+
+    function applySettings() {
+        const enableWavesCheckbox = document.getElementById('enableWaves');
+        if (enableWavesCheckbox) {
+            enableWavesCheckbox.checked = settings.enableWaves;
+            if(canvas) canvas.style.display = settings.enableWaves ? 'block' : 'none';
+        }
+
+        const themeInputs = document.querySelectorAll('input[name="theme"]');
+        themeInputs.forEach(input => {
+            if (input.value === settings.theme) {
+                input.checked = true;
+            }
+        });
+        document.documentElement.setAttribute('data-theme', settings.theme);
+        if(canvas && ctx) {
+            currentPalette = settings.theme === 'dark' ? baseColorPalette.dark : baseColorPalette.light;
+        }
+
+        const enableClickEffectCheckbox = document.getElementById('enableClickEffect');
+        if (enableClickEffectCheckbox) {
+            enableClickEffectCheckbox.checked = settings.enableClickEffect;
+        }
+
+        const enableHoldEffectCheckbox = document.getElementById('enableHoldEffect');
+        if (enableHoldEffectCheckbox) {
+            enableHoldEffectCheckbox.checked = settings.enableHoldEffect;
+        }
+
+        const highContrastCheckbox = document.getElementById('highContrast');
+        if (highContrastCheckbox) {
+            highContrastCheckbox.checked = settings.highContrast;
+            document.body.classList.toggle('high-contrast', settings.highContrast);
+        }
+
+        const largerTextCheckbox = document.getElementById('largerText');
+        if (largerTextCheckbox) {
+            largerTextCheckbox.checked = settings.largerText;
+            document.body.classList.toggle('larger-text', settings.largerText);
+        }
+    }
+
+    applySettings();
+
+    function saveSettings() {
+        settings.enableWaves = document.getElementById('enableWaves')?.checked ?? true;
+        settings.theme = document.querySelector('input[name="theme"]:checked')?.value ?? 'light';
+        settings.enableClickEffect = document.getElementById('enableClickEffect')?.checked ?? true;
+        settings.enableHoldEffect = document.getElementById('enableHoldEffect')?.checked ?? true;
+        settings.highContrast = document.getElementById('highContrast')?.checked ?? false;
+        settings.largerText = document.getElementById('largerText')?.checked ?? false;
+
+        localStorage.setItem('profileSettings', JSON.stringify(settings));
+        applySettings();
+    }
+
+    document.querySelectorAll('.settings-option input').forEach(input => {
+        input.addEventListener('change', saveSettings);
+    });
+});

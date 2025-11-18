@@ -1,14 +1,30 @@
- <?php
+<?php
 session_start();
 include("../conexao.php");
 
-if(!isset($_COOKIE['lembrar_tolken'])){
-    $tolken =$_COOKIE['lembrar_tolken'];
+// Verificar se o usuário está logado
+if(!isset($_SESSION['usuario_id'])){
+    header("Location: ../Login/loginhtml.php");
+    exit();
 }
-?>
 
+$usuario_id = $_SESSION['usuario_id'];
+
+// Verificar se já tem perfil criado
+$stmt = $conn->prepare("SELECT * FROM perfis WHERE usuario_id = ?");
+$stmt->bind_param("i", $usuario_id);
+$stmt->execute();
+$resultado = $stmt->get_result();
+
+if($resultado->num_rows > 0){
+    // Já tem perfil, redirecionar
+    header("Location: ../Home/index.php");
+    exit();
+}
+$stmt->close();
+?>
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,7 +63,6 @@ if(!isset($_COOKIE['lembrar_tolken'])){
                 </button>
             </div>
 
-            <!-- Grupo: Preferências de Exibição -->
             <div class="settings-group">
                 <label>🎨 Exibição</label>
                 <div class="settings-option">
@@ -58,7 +73,6 @@ if(!isset($_COOKIE['lembrar_tolken'])){
 
             <div class="settings-divider"></div>
 
-            <!-- Grupo: Tema -->
             <div class="settings-group">
                 <label>🌙 Tema</label>
                 <div class="settings-option">
@@ -77,7 +91,6 @@ if(!isset($_COOKIE['lembrar_tolken'])){
 
             <div class="settings-divider"></div>
 
-            <!-- Grupo: Efeitos de Clique -->
             <div class="settings-group">
                 <label>✨ Efeitos de Clique</label>
                 <div class="settings-option">
@@ -92,7 +105,6 @@ if(!isset($_COOKIE['lembrar_tolken'])){
 
             <div class="settings-divider"></div>
 
-            <!-- Grupo: Acessibilidade -->
             <div class="settings-group">
                 <label>♿ Acessibilidade</label>
                 <div class="settings-option">
@@ -110,49 +122,51 @@ if(!isset($_COOKIE['lembrar_tolken'])){
     
     <section class="CaixaCriarPerfil">
         <h2>Criação do Perfil</h2>
-        <div class="Colunas">
-            <div class="Coluna">
-                <label for="NomePerfil">Nome do Perfil:</label>
-                <input type="text" id="NomePerfil" name="NomePerfil" placeholder="Digite o nome do seu perfil" required>
-                <hr>
-                <p class="ou">ou</p>
-                <label for="NomesSugerido">Nomes Sugeridos:</label>
-                <select id="NomesSugerido" name="NomesSugerido">
-                    <option value="">Ver nomes sugeridos</option>
-                    <option value="Avatar1">Optimus Oprime</option>
-                    <option value="Avatar2">Vladimir Putinks</option>
-                    <option value="Avatar2">Valdemar Glaive</option>
-                    <option value="Avatar2">Vaarus</option>
-                    <option value="Avatar2">Aatrox</option>
-                    <option value="Avatar2">Rhaast</option>
-                    <option value="Avatar2">Naafiri</option>
-                </select>
-                <hr>
-                <div class="button-container">
-                    <input type="submit" id="ButtonCriarPerfil" value="Criar Perfil">
-                    <button type="button" id="btnVoltar">Voltar</button>
+        <form id="formCriarPerfil" method="POST" action="CriarPerfil.php" enctype="multipart/form-data">
+            <input type="hidden" id="avatarSelecionado" name="avatarSelecionado">
+            <input type="hidden" id="tipoFoto" name="tipoFoto" value="">
+            
+            <div class="Colunas">
+                <div class="Coluna">
+                    <label for="NomePerfil">Nome do Perfil:</label>
+                    <input type="text" id="NomePerfil" name="NomePerfil" placeholder="Digite o nome do seu perfil">
+                    <hr>
+                    <p class="ou">ou</p>
+                    <label for="NomesSugerido">Nomes Sugeridos:</label>
+                    <select id="NomesSugerido" name="NomesSugerido">
+                        <option value="">Ver nomes sugeridos</option>
+                        <option value="Optimus Oprime">Optimus Oprime</option>
+                        <option value="Vladimir Putinks">Vladimir Putinks</option>
+                        <option value="Valdemar Glaive">Valdemar Glaive</option>
+                        <option value="Vaarus">Vaarus</option>
+                        <option value="Aatrox">Aatrox</option>
+                        <option value="Rhaast">Rhaast</option>
+                        <option value="Naafiri">Naafiri</option>
+                    </select>
+                    <hr>
+                    <div class="button-container">
+                        <button type="submit" id="ButtonCriarPerfil">Criar Perfil</button>
+                        <button type="button" id="btnVoltar">Voltar</button>
+                    </div>
+                </div>
+
+                <div class="divisor"></div>
+                <div class="Coluna">
+                    <label for="FotoDoPerfil">Foto do Perfil:</label>
+                    <label class="CustomFile">
+                        <input type="file" id="FotoPerfil" name="FotoPerfil" accept="image/*">
+                        Escolha um arquivo
+                    </label>
+                    <p class="ou">ou</p>
+                    <label for="NossosAvatares">Nossos Avatares:</label>
+                    <button type="button" class="CustomFile" id="chooseAvatar">
+                        <label for="SubtituloDoAvatar">Escolher Avatar</label>
+                    </button>
+                    <p class="Aviso">Aviso: A foto do perfil é um elemento opcional na criação do perfil, podendo ser criado agora mesmo ou posteriormente.</p>
                 </div>
             </div>
-
-            <div class="divisor"></div>
-            <div class="Coluna">
-                <label for="FotoDoPerfil">Foto do Perfil:</label>
-                <label class="CustomFile">
-                    <input type="file" id="FotoPerfil" name="FotoPerfil" accept="image/*">
-                    Escolha um arquivo
-                </label>
-                <p class="ou">ou</p>
-                <label for="NossosAvatares">Nossos Avatares:</label>
-                <button class="CustomFile" id="chooseAvatar">
-                    <label for="SubtituloDoAvatar">Escolher Avatar</label>
-                </button>
-                <p class="Aviso">Aviso: A foto do perfil é um elemento opcional na criação do perfil, podendo ser criado agora mesmo ou posteriormente.</p>
-            </div>
-        </div>
+        </form>
     </section>
-
-
-
 
     <div id="avatarModal" class="avatar-modal">
         <div class="avatar-modal-content">
@@ -161,18 +175,17 @@ if(!isset($_COOKIE['lembrar_tolken'])){
             </button>
             <h3>Escolha seu Avatar</h3>
             <div class="avatar-grid">
-                <div class="avatar-option">
+                <div class="avatar-option" data-avatar="../img/bigorna.png">
                     <img src="../img/bigorna.png" alt="Avatar 1">
                 </div>
-                <div class="avatar-option">
+                <div class="avatar-option" data-avatar="../img/MascoteVesgo.png">
                     <img src="../img/MascoteVesgo.png" alt="Avatar 2">
                 </div>
-                <div class="avatar-option">
+                <div class="avatar-option" data-avatar="../img/cthulhu.png">
                     <img src="../img/cthulhu.png" alt="Avatar 3">
                 </div>
-                
             </div>
-            <button id="confirmAvatar" class="confirm-button">Confirmar</button>
+            <button type="button" id="confirmAvatar" class="confirm-button">Confirmar</button>
         </div>
     </div>
 </body>

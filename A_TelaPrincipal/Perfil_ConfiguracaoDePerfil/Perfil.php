@@ -1,84 +1,241 @@
 <?php
 session_start();
+include("../../conexao.php");
 
 // Redireciona para login se não estiver autenticado
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['usuario_id'])) {
     header('Location: ../../Login/loginhtml.php');
     exit;
 }
-?>
 
+$usuario_id = $_SESSION['usuario_id'];
+
+// Buscar dados do perfil do usuário
+$stmt = $conn->prepare("SELECT p.nome_perfil, p.foto_perfil, p.tipo_foto, p.avatar_selecionado, u.email 
+                        FROM perfis p 
+                        INNER JOIN usuarios u ON p.usuario_id = u.id 
+                        WHERE p.usuario_id = ?");
+$stmt->bind_param("i", $usuario_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if($result->num_rows > 0) {
+    $perfil = $result->fetch_assoc();
+    $nome_perfil = $perfil['nome_perfil'];
+    $foto_perfil = $perfil['foto_perfil'];
+    $tipo_foto = $perfil['tipo_foto'];
+    $avatar_atual = $perfil['avatar_selecionado'];
+    $email = $perfil['email'];
+} else {
+    // Se não tem perfil, redireciona para criar
+    header('Location: ../../Cadastro_E_Perfil/CPerfilhtml.php');
+    exit;
+}
+
+$stmt->close();
+?>
 
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
     <link rel="stylesheet" href="../../CSS/TelaPrinciapal/ConfiguraçõesDePerfil/Perfil.css">
-    <script src="../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
-    <title data-translate="profileTitle">Perfil do Usuário - SystemForge</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <script src="../../JavaScript/PerfilDoUsuário/PerfilDoUsuário.js" defer></script>
+    <title>Editar Perfil - SystemForge</title>
 </head>
 <body>
-    <div class="container-perfil">
-        <section class="perfil-wrapper">
-            <div class="CaixaEditarPerfil">
-                <h1 data-translate="profileTitle">Perfil do Usuário</h1>
-                <p data-translate="profileDescription">Nesta tela é possível a visualização e edição dos elementos da sua conta.</p>
 
-                <div class="perfil-info">
-                    <div class="input-group">
-                        <label for="username" data-translate="username">Nome de usuário:</label>
-                        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>" />
-                    </div>
+    <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
-                    <div class="input-group">
-                        <label for="email" data-translate="email">Email vinculado:</label>
-                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?>" disabled readonly />
-                    </div>
-
-                    <div class="input-group">
-                        <label for="profilePhoto" data-translate="profilePhoto">Foto de perfil:</label>
-                        
-                        <!-- Input de arquivo (oculto) -->
-                        <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" />
-                        
-                        <!-- Preview da foto de perfil (clicável) -->
-                        <div class="perfil-foto-preview">
-                            <img id="previewFoto" 
-                                 src="../../assets/images/default-avatar.png" 
-                                 alt="Foto de perfil"
-                                 title="Clique para alterar a foto de perfil">
-                        </div>
-                        
-                        <!-- Dica de upload -->
-                        <p class="foto-upload-hint">Clique na foto ou arraste uma imagem para alterar | Duplo clique para escolher avatar</p>
-                    </div>
-
-                    <div class="input-group action-group">
-                        <label data-translate="changePassword">Alterar senha:</label>
-                        <button class="btn-secondary" onclick="window.location.href='../../Login/RecuperarSenha/RedefinirSenha/RedefinicaoDeSenha.html'">
-                            <span data-translate="changePasswordBtn">Alterar Senha</span>
-                        </button>
-                    </div>
-
-                    <div class="input-group action-group">
-                        <label data-translate="deleteAccount">Excluir conta:</label>
-                        <button class="btn-danger" onclick="if(confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível!')) { alert('Conta excluída'); }">
-                            <span data-translate="deleteAccountBtn">Excluir Conta</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="botoes-acao">
-                    <input type="button" class="btn-save" value="Salvar alterações" data-translate="saveChanges" onclick="alert('Alterações salvas com sucesso!')">
-                    <input type="button" class="btn-back" value="Voltar" data-translate="backButton" onclick="window.location.href='../index.php'">
-                </div>
+    <!-- Modal de Alerta -->
+    <div class="overlay" id="alertOverlay" style="display: none;">
+        <div class="modal">
+            <p id="alertMessage"></p>
+            <div class="modal-actions">
+                <button id="alertOk">OK</button>
+                <button id="alertCancel" style="display: none;">Cancelar</button>
             </div>
-        </section>
+        </div>
     </div>
 
-    <!-- Script de perfil do usuário (com defer) -->
-    <script src="../../JavaScript/PerfilDoUsuário/PerfilDoUsuário.js" defer></script>
+    <!-- Modal de Avatares -->
+    <div id="avatarModal" class="avatar-modal" style="display: none;">
+        <div class="avatar-modal-content">
+            <button class="close-avatar" id="closeAvatar" title="Fechar">
+                <i class="bi bi-x"></i>
+            </button>
+            <h3>Escolha seu Avatar</h3>
+            <div class="avatar-grid">
+                <div class="avatar-option" data-avatar="../../img/bigorna.png">
+                    <img src="../../img/bigorna.png" alt="Avatar 1">
+                </div>
+                <div class="avatar-option" data-avatar="../../img/MascoteVesgo.png">
+                    <img src="../../img/MascoteVesgo.png" alt="Avatar 2">
+                </div>
+                <div class="avatar-option" data-avatar="../../img/cthulhu.png">
+                    <img src="../../img/cthulhu.png" alt="Avatar 3">
+                </div>
+                <div class="avatar-option" data-avatar="">
+                    <div class="no-avatar">
+                        <i class="bi bi-x-circle"></i>
+                        <p>Sem Foto</p>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="confirmAvatar" class="confirm-button">Confirmar</button>
+        </div>
+    </div>
+
+    <!-- Botão de Configurações -->
+    <button class="settings-btn" id="settingsBtn" title="Configurações">
+        <i class="bi bi-gear-fill"></i>
+    </button>
+
+    <!-- Modal de Configurações -->
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h2>Configurações</h2>
+                <button class="close-settings" id="closeSettings">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+
+            <div class="settings-group">
+                <label>🎨 Exibição</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableWaves" checked>
+                    <span>Ativar Ondas Animadas</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-group">
+                <label>🌙 Tema</label>
+                <div class="settings-option">
+                    <input type="radio" name="theme" id="themeLight" value="light" checked>
+                    <span>Claro</span>
+                </div>
+                <div class="settings-option">
+                    <input type="radio" name="theme" id="themeDark" value="dark">
+                    <span>Escuro</span>
+                </div>
+                <div class="settings-option">
+                    <input type="radio" name="theme" id="themeAuto" value="auto">
+                    <span>Automático</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-group">
+                <label>✨ Efeitos de Interação</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableClickEffect" checked>
+                    <span>Efeito ao Clicar</span>
+                </div>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableHoldEffect" checked>
+                    <span>Efeito ao Segurar</span>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-group">
+                <label>♿ Acessibilidade</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="highContrast">
+                    <span>Alto Contraste</span>
+                </div>
+                <div class="settings-option">
+                    <input type="checkbox" id="largerText">
+                    <span>Texto Maior</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="CaixaEditarPerfil">
+        <h2>Edição do Perfil</h2>
+        
+        <form id="formPerfil" enctype="multipart/form-data">
+            <input type="hidden" id="avatarSelecionado" name="avatarSelecionado" value="<?php echo htmlspecialchars($avatar_atual ?? ''); ?>">
+            <input type="hidden" id="tipoFoto" name="tipoFoto" value="<?php echo htmlspecialchars($tipo_foto ?? ''); ?>">
+            <input type="hidden" id="removerFoto" name="removerFoto" value="0">
+            
+            <div class="Colunas">
+                <div class="Coluna">
+                    <label for="username">Nome do Perfil:</label>
+                    <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($nome_perfil); ?>" placeholder="Digite o nome do seu perfil">
+                    
+                    <hr>
+                    
+                    <label for="email">Email Vinculado:</label>
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" disabled readonly>
+                    
+                    <hr>
+                    
+                    <div class="acoes-conta">
+                        <h3>Ações da Conta</h3>
+                        
+                        <button type="button" class="btn-secondary" onclick="window.location.href='../../Login/RecuperarSenha/RedefinirSenha/RedefinicaoDeSenha.html'">
+                            <i class="bi bi-key"></i> Alterar Senha
+                        </button>
+                        
+                        <button type="button" class="btn-warning" id="btnSair">
+                            <i class="bi bi-box-arrow-right"></i> Sair da Conta
+                        </button>
+                        
+                        <button type="button" class="btn-danger" id="btnExcluirConta">
+                            <i class="bi bi-trash"></i> Excluir Conta
+                        </button>
+                    </div>
+                </div>
+
+                <div class="divisor"></div>
+                
+                <div class="Coluna">
+                    <label>Foto do Perfil:</label>
+                    
+                    <!-- Preview da foto atual -->
+                    <div class="perfil-foto-preview" id="fotoPreviewContainer" title="Clique para alterar | Duplo clique para avatar | Botão direito para remover">
+                        <?php if(!empty($foto_perfil)): ?>
+                            <img id="previewFoto" 
+                                 src="<?php echo htmlspecialchars($foto_perfil); ?>" 
+                                 alt="Foto de perfil">
+                        <?php else: ?>
+                            <div class="no-photo" id="noPhotoPlaceholder">
+                                <i class="bi bi-person-circle"></i>
+                                <p>Sem foto</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <p class="foto-hint">
+                        <i class="bi bi-info-circle"></i> 
+                        Clique: Upload | Duplo clique: Avatar | Botão direito: Remover
+                    </p>
+                    
+                    <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" style="display: none;">
+                    
+                    <hr>
+                    
+                    <div class="button-container">
+                        <button type="submit" id="ButtonSalvarPerfil">
+                            <i class="bi bi-check-circle"></i> Salvar Alterações
+                        </button>
+                        <button type="button" id="btnVoltar" onclick="window.location.href='../index.php'">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+
 </body>
 </html>

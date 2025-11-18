@@ -18,6 +18,11 @@ if ($senha !== $confirma_senha) {
     exit;
 }
 
+if (strlen($senha) < 6) {
+    echo json_encode(["status" => "error", "message" => "A senha deve ter no mínimo 6 caracteres!"]);
+    exit;
+}
+
 // Verifica se o email já existe
 $sql_check = "SELECT id FROM usuarios WHERE email = ?";
 $stmt = $conn->prepare($sql_check);
@@ -33,7 +38,7 @@ if ($stmt->num_rows > 0) {
 }
 $stmt->close();
 
-// Cria o usuário com senha criptografada (bcrypt)
+// Cria o usuário com senha criptografada
 $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
 
 $sql_insert = "INSERT INTO usuarios (email, senha) VALUES (?, ?)";
@@ -41,7 +46,17 @@ $stmt = $conn->prepare($sql_insert);
 $stmt->bind_param("ss", $email, $senha_hash);
 
 if ($stmt->execute()) {
-    echo json_encode(["status" => "success", "message" => "Usuário criado com sucesso!"]);
+    // CORREÇÃO: Salvar usuario_id na sessão
+    $usuario_id = $conn->insert_id;
+    $_SESSION['usuario_id'] = $usuario_id;
+    $_SESSION['user_id'] = $usuario_id;
+    $_SESSION['email'] = $email;
+    
+    echo json_encode([
+        "status" => "success", 
+        "message" => "Usuário criado com sucesso!",
+        "redirect" => "CPerfilhtml.php"
+    ]);
 } else {
     echo json_encode(["status" => "error", "message" => "Erro ao criar usuário: " . $conn->error]);
 }
