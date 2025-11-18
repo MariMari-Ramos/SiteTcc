@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="Ficha_D&D.js" defer></script>
+    <link rel="stylesheet" href="Ficha_D&D.css">
+</head>
+<body>
+    <form id="formDD" onsubmit="return false;">
+  <!-- PARTE 1 -->
+  <div id="Parte1">
+    <h2>Parte 1 — Básico</h2>
+
+    <label for="nomePersonagem">Nome do Personagem:</label><br>
+    <input type="text" id="nomePersonagem" name="nomePersonagem" required><br><br>
+
+    <label for="nivel">Nível do Personagem:</label><br>
+    <input type="number" id="nivel" name="nivel" min="1" max="20" required><br><br>
+
+    <h3>Escolha sua Classe</h3>
+    <div class="cards-container" id="classe-cards">
+      <label class="card">
+        <input type="radio" name="classe" value="barbaro">
+        <h3>Bárbaro</h3>
+        <p>Avance com Fúria e entre em combate corpo a corpo.</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="bardo">
+        <h3>Bardo</h3>
+        <p>Conjure magias que inspiram e curam aliados ou confundem inimigos</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="bruxo">
+        <h3>Bruxo</h3>
+        <p>Conjure magias derivadas de conhecimento oculto.</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="clerigo">
+        <h3>Clérigo</h3>
+        <p>Invoque magia divina para curar, fortalecer e castigar.</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="druida">
+        <h3>Druida</h3>
+        <p>Canalize a magia da natureza para curar, moldar e controlar os elementos.</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="feiticeiro">
+        <h3>Feiticeiro</h3>
+        <p>Use magia inerente ao seu ser, moldando o poder à sua vontade.</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="guardiao">
+        <h3>Guardião</h3>
+        <p>Uma proezas marciais, magia da natureza e habilidades de sobrevivência</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="guerreiro">
+        <h3>Guerreiro</h3>
+        <p>Domine todas as armas e armaduras</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="ladino">
+        <h3>Ladino</h3>
+        <p>Desfira Ataques Furtivos mortais enquanto evita danos através da furtividade.</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="mago">
+        <h3>Mago</h3>
+        <p>Estude magia arcana e domine magias para todos os propósitos.</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="monge">
+        <h3>Monge</h3>
+        <p>Entre e saia do combate corpo a corpo com velocidade e precisão.</p>
+      </label>
+
+      <label class="card">
+        <input type="radio" name="classe" value="paladino">
+        <h3>Paladino</h3>
+        <p>Destrua inimigos e proteja aliados com poder divino e marcial.</p>
+      </label>
+
+      
+    </div>
+
+
+    <!-- Subclasses (escondido até nível >= 3) -->
+    <div id="subclasse-area" style="display:none;">
+      <h3>Escolha sua Subclasse</h3>
+      <div class="cards-container" id="subclasse-cards"></div>
+    </div>
+
+    <br>
+    <button type="button" id="btnParaParte2">Próxima Parte</button>
+  </div>
+
+  <!-- PARTE 2 -->
+  <div id="Parte2" style="display:none;">
+    <h2>Parte 2 — Informações Adicionais</h2>
+
+    <label for="racaPersonagem">Raça:</label><br>
+    <input type="text" id="racaPersonagem" name="racaPersonagem"><br><br>
+
+    <label for="racsssaPersonagem">Antecedente (ou outra info):</label><br>
+    <input type="text" id="racsssaPersonagem" name="racsssaPersonagem"><br><br>
+
+    <button type="button" class="secondary" id="btnVoltar1">Voltar</button>
+    <button type="button" id="btnMostrarTudo">Próxima / Resumo</button>
+  </div>
+
+  <!-- TUDO (Resumo antes de enviar) -->
+  <div id="Tudo" style="display:none;">
+    <h2>Resumo</h2>
+    <div class="summary-row"><strong>Nome:</strong> <span id="display_nome"></span></div>
+    <div class="summary-row"><strong>Nível:</strong> <span id="display_nivel"></span></div>
+    <div class="summary-row"><strong>Classe:</strong> <span id="display_classe"></span></div>
+    <div class="summary-row"><strong>Subclasse:</strong> <span id="display_subclasse"></span></div>
+    <div class="summary-row"><strong>Raça:</strong> <span id="display_raca"></span></div>
+    <div class="summary-row"><strong>Antecedente:</strong> <span id="display_racsssa"></span></div>
+
+    <button type="button" class="secondary" id="btnVoltar2">Voltar</button>
+    <button type="button" id="btnEnviar">Enviar formulário</button>
+  </div>
+</form>
+</body>
+</html>

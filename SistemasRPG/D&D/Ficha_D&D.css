@@ -1,0 +1,23 @@
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+.card {
+  background:#fff;
+  border-radius:10px;
+  padding:14px;
+  text-align:center;
+  box-shadow:0 3px 8px rgba(0,0,0,0.08);
+  cursor:pointer;
+  border:3px solid transparent;
+  transition:.18s;
+}
+.card:hover{ transform: translateY(-3px); }
+.card.selected{ border-color:#4a73ff; background:#eef3ff; box-shadow:0 6px 18px rgba(74,115,255,0.12); }
+.card input{ display:none; } /* esconder o radio visualmente */
+section{ margin:16px 8px; }
+button{ padding:8px 14px; border-radius:8px; border:none; background:#4a73ff; color:white; cursor:pointer; }
+button.secondary{ background:#888; }
+.summary-row{ margin:8px 0; }
