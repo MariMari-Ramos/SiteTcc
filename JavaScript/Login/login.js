@@ -15,6 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('[login.js] Elementos do formulário encontrados');
     }
 
+    /* ========== CONFIGURAÇÕES - DEFINIÇÕES ========== */
+    const defaultSettings = {
+        enableWaves: true,
+        theme: 'light',
+        enableClickEffect: true,
+        enableHoldEffect: true,
+        highContrast: false,
+        largerText: false
+    };
+
+    function loadSettings() {
+        const saved = localStorage.getItem('loginPageSettings');
+        return saved ? JSON.parse(saved) : defaultSettings;
+    }
+
     function mostrarAlerta(mensagem){
         if(!overlay || !textoModal) return console.warn('overlay/textoModal ausentes');
         textoModal.textContent = mensagem;
@@ -465,20 +480,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('[waves] Mouse saiu do botão de configurações — interactive ON');
             }
         });
-    }
-
-    const defaultSettings = {
-        enableWaves: true,
-        theme: 'light',
-        enableClickEffect: true,
-        enableHoldEffect: true,
-        highContrast: false,
-        largerText: false
-    };
-
-    function loadSettings() {
-        const saved = localStorage.getItem('loginPageSettings');
-        return saved ? JSON.parse(saved) : defaultSettings;
     }
 
     function saveSettings() {

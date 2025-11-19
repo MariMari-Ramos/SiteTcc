@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('[cadastro.js] DOM pronto — iniciando scripts');
+    console.log('[cadastro.js] DOM pronto — iniciando scripts v2');
 
     /* ========== REFERÊNCIAS DOM - CADASTRO ========== */
     const overlay = document.getElementById("overlay");
@@ -17,6 +17,22 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('[cadastro.js] Alguns elementos não foram encontrados no DOM. Verifique IDs.');
     } else {
         console.log('[cadastro.js] Elementos do formulário encontrados');
+    }
+
+    /* ========== CONFIGURAÇÕES - DEFINIÇÕES ========== */
+    const defaultSettings = {
+        enableWaves: true,
+        enableGif: true,
+        theme: 'light',
+        enableClickEffect: true,
+        enableHoldEffect: true,
+        highContrast: false,
+        largerText: false
+    };
+
+    function loadSettings() {
+        const saved = localStorage.getItem('cadastroPageSettings');
+        return saved ? JSON.parse(saved) : defaultSettings;
     }
 
     function mostrarAlerta(mensagem){
@@ -522,21 +538,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('[waves-cadastro] Mouse saiu do botão de configurações — interactive ON');
             }
         });
-    }
-
-    const defaultSettings = {
-        enableWaves: true,
-        enableGif: true,
-        theme: 'light',
-        enableClickEffect: true,
-        enableHoldEffect: true,
-        highContrast: false,
-        largerText: false
-    };
-
-    function loadSettings() {
-        const saved = localStorage.getItem('cadastroPageSettings');
-        return saved ? JSON.parse(saved) : defaultSettings;
     }
 
     function saveSettings() {

@@ -47,8 +47,6 @@ $stmt->close();
 </head>
 <body>
 
-    <canvas id="waveCanvas" aria-hidden="true"></canvas>
-
     <!-- Modal de Alerta -->
     <div class="overlay" id="alertOverlay" style="display: none;">
         <div class="modal">
@@ -88,79 +86,9 @@ $stmt->close();
         </div>
     </div>
 
-    <!-- Botão de Configurações -->
-    <button class="settings-btn" id="settingsBtn" title="Configurações">
-        <i class="bi bi-gear-fill"></i>
-    </button>
-
-    <!-- Modal de Configurações -->
-    <div class="settings-modal" id="settingsModal">
-        <div class="settings-content">
-            <div class="settings-header">
-                <h2>Configurações</h2>
-                <button class="close-settings" id="closeSettings">
-                    <i class="bi bi-x"></i>
-                </button>
-            </div>
-
-            <div class="settings-group">
-                <label>🎨 Exibição</label>
-                <div class="settings-option">
-                    <input type="checkbox" id="enableWaves" checked>
-                    <span>Ativar Ondas Animadas</span>
-                </div>
-            </div>
-
-            <div class="settings-divider"></div>
-
-            <div class="settings-group">
-                <label>🌙 Tema</label>
-                <div class="settings-option">
-                    <input type="radio" name="theme" id="themeLight" value="light" checked>
-                    <span>Claro</span>
-                </div>
-                <div class="settings-option">
-                    <input type="radio" name="theme" id="themeDark" value="dark">
-                    <span>Escuro</span>
-                </div>
-                <div class="settings-option">
-                    <input type="radio" name="theme" id="themeAuto" value="auto">
-                    <span>Automático</span>
-                </div>
-            </div>
-
-            <div class="settings-divider"></div>
-
-            <div class="settings-group">
-                <label>✨ Efeitos de Interação</label>
-                <div class="settings-option">
-                    <input type="checkbox" id="enableClickEffect" checked>
-                    <span>Efeito ao Clicar</span>
-                </div>
-                <div class="settings-option">
-                    <input type="checkbox" id="enableHoldEffect" checked>
-                    <span>Efeito ao Segurar</span>
-                </div>
-            </div>
-
-            <div class="settings-divider"></div>
-
-            <div class="settings-group">
-                <label>♿ Acessibilidade</label>
-                <div class="settings-option">
-                    <input type="checkbox" id="highContrast">
-                    <span>Alto Contraste</span>
-                </div>
-                <div class="settings-option">
-                    <input type="checkbox" id="largerText">
-                    <span>Texto Maior</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <section class="CaixaEditarPerfil">
-        <h2>Edição do Perfil</h2>
+        <h2>Perfil do Usuário</h2>
+        <p>Nesta tela é possível a visualização e edição dos elementos da sua conta.</p>
         
         <form id="formPerfil" enctype="multipart/form-data">
             <input type="hidden" id="avatarSelecionado" name="avatarSelecionado" value="<?php echo htmlspecialchars($avatar_atual ?? ''); ?>">

@@ -17,8 +17,8 @@ $stmt->execute();
 $resultado = $stmt->get_result();
 
 if($resultado->num_rows > 0){
-    // Já tem perfil, redirecionar
-    header("Location: ../Home/index.php");
+    // Já tem perfil, redirecionar para tela principal
+    header("Location: ../A_TelaPrincipal/index.php");
     exit();
 }
 $stmt->close();
@@ -35,6 +35,7 @@ $stmt->close();
 </head>
 <body>
 
+    <!-- Canvas para ondas animadas -->
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
     <!-- Modal de Alerta/Confirmação Reutilizável -->
@@ -63,6 +64,7 @@ $stmt->close();
                 </button>
             </div>
 
+            <!-- Grupo: Preferências de Exibição -->
             <div class="settings-group">
                 <label>🎨 Exibição</label>
                 <div class="settings-option">
@@ -159,10 +161,8 @@ $stmt->close();
                     </label>
                     <p class="ou">ou</p>
                     <label for="NossosAvatares">Nossos Avatares:</label>
-                    <button type="button" class="CustomFile" id="chooseAvatar">
-                        <label for="SubtituloDoAvatar">Escolher Avatar</label>
-                    </button>
-                    <p class="Aviso">Aviso: A foto do perfil é um elemento opcional na criação do perfil, podendo ser criado agora mesmo ou posteriormente.</p>
+                    <button type="button" class="CustomFile" id="chooseAvatar" aria-label="Escolher Avatar">Escolher Avatar</button>
+                    <p class="Aviso">Aviso: A foto do perfil é opcional. A visualização aparecerá diretamente no botão de arquivo ou no avatar escolhido.</p>
                 </div>
             </div>
         </form>
@@ -175,14 +175,14 @@ $stmt->close();
             </button>
             <h3>Escolha seu Avatar</h3>
             <div class="avatar-grid">
-                <div class="avatar-option" data-avatar="../img/bigorna.png">
-                    <img src="../img/bigorna.png" alt="Avatar 1">
+                <div class="avatar-option" role="button" tabindex="0" data-avatar="../img/bigorna.png">
+                    <img src="../img/bigorna.png" alt="Avatar Bigorna">
                 </div>
-                <div class="avatar-option" data-avatar="../img/MascoteVesgo.png">
-                    <img src="../img/MascoteVesgo.png" alt="Avatar 2">
+                <div class="avatar-option" role="button" tabindex="0" data-avatar="../img/MascoteVesgo.png">
+                    <img src="../img/MascoteVesgo.png" alt="Avatar Mascote Vesgo">
                 </div>
-                <div class="avatar-option" data-avatar="../img/cthulhu.png">
-                    <img src="../img/cthulhu.png" alt="Avatar 3">
+                <div class="avatar-option" role="button" tabindex="0" data-avatar="../img/cthulhu.png">
+                    <img src="../img/cthulhu.png" alt="Avatar Cthulhu">
                 </div>
             </div>
             <button type="button" id="confirmAvatar" class="confirm-button">Confirmar</button>

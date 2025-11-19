@@ -1,18 +1,18 @@
 @font-face {
-    font-family: 'OpenDyslexic';
-    src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
-         url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
-         url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: 'OpenDyslexic';
+  src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+      url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+      url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 :root[data-theme="light"] {
     --bg-color: #ffeee4;
-    --text-color: #333;
-    --box-bg: #fff;
-    --border-color: #e0d4c8;
+    --text-color: #222;
+    --box-bg: #ffffff;
+    --border-color: #e5d9cf;
     --button-primary: #ff8c42;
     --button-primary-hover: #ff7425;
     --button-secondary: #f5f5f5;
@@ -21,7 +21,7 @@
     --button-danger-hover: #d32f2f;
     --input-bg: #fff;
     --input-disabled-bg: #f5f5f5;
-    --shadow: 0 4px 15px rgba(0,0,0,0.1);
+    --shadow: 0 6px 28px rgba(0,0,0,0.12);
     --preview-border: #ddd;
 }
 
@@ -38,23 +38,23 @@
     --button-danger-hover: #ef5350;
     --input-bg: #0d1b2a;
     --input-disabled-bg: #1b263b;
-    --shadow: 0 4px 15px rgba(0,0,0,0.5);
+    --shadow: 0 6px 28px rgba(0,0,0,0.55);
     --preview-border: #415a77;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
-    font-family: 'OpenDyslexic', Arial, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: all 0.3s ease;
-    min-height: 100vh;
-    padding: 15px;
+  font-family: 'OpenDyslexic', Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px 20px;
+  line-height: 1.35;
 }
 
 .container-perfil {
@@ -70,29 +70,31 @@ body {
 }
 
 .CaixaEditarPerfil {
-    background-color: var(--box-bg);
-    border-radius: 16px;
-    padding: 25px;
-    box-shadow: var(--shadow);
-    max-width: 700px;
-    width: 100%;
+    background: var(--box-bg);
     border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    border-radius: 16px;
+    padding: 38px 42px 34px;
+    width: 100%;
+    max-width: 760px;
+    box-shadow: var(--shadow);
+    margin: 0 auto;
+    position: relative;
 }
 
-h1 {
+h2 {
     text-align: center;
-    margin-bottom: 1rem;
-    font-size: 2rem;
-    color: var(--text-color);
+    margin: 0 0 18px;
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
 }
 
 .CaixaEditarPerfil > p {
     text-align: center;
-    margin-bottom: 1.8rem;
-    font-size: 0.95rem;
-    color: var(--text-color);
-    opacity: 0.8;
+    margin: 0 auto 28px;
+    font-size: 0.92rem;
+    max-width: 640px;
+    opacity: 0.78;
 }
 
 .perfil-info {
@@ -120,10 +122,10 @@ h1 {
     border: 2px solid var(--border-color);
     border-radius: 8px;
     font-size: 0.95rem;
-    font-family: 'OpenDyslexic', Arial, sans-serif;
-    background-color: var(--input-bg);
+    font-family: inherit;
+    background: var(--input-bg);
     color: var(--text-color);
-    transition: all 0.3s ease;
+    transition: .25s;
 }
 
 .input-group input[type="text"]:focus,
@@ -281,43 +283,40 @@ h1 {
 .btn-save,
 .btn-back {
     flex: 1;
-    padding: 12px 24px;
+    padding: 14px 26px;
     border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 700;
+    border-radius: 12px;
+    font-size: .95rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'OpenDyslexic', Arial, sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    transition: .25s;
+    font-family: inherit;
+    letter-spacing: 2px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.15);
 }
 
 .btn-save {
-    background: linear-gradient(135deg, var(--button-primary), var(--button-primary-hover));
-    color: white;
+    background: linear-gradient(180deg,#ff8c42 0%,#ff7a28 58%,#ff6a14 100%);
+    color:#fff;
 }
 
 .btn-save:hover {
-    background: linear-gradient(135deg, var(--button-primary-hover), #778da9);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(119, 141, 169, 0.4);
+    background: linear-gradient(180deg,#ff9a5a 0%,#ff7f30 72%,#ff6f18 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255,120,40,.35);
 }
 
-:root[data-theme="light"] .btn-save {
-    background: linear-gradient(135deg, var(--button-primary), var(--button-primary-hover));
-}
+:root[data-theme="light"] .btn-save { background: linear-gradient(180deg,#ff8c42 0%,#ff7a28 58%,#ff6a14 100%); }
 
 :root[data-theme="light"] .btn-save:hover {
-    background: linear-gradient(135deg, var(--button-primary-hover), #ff6420);
-    box-shadow: 0 6px 16px rgba(255, 140, 66, 0.4);
+    background: linear-gradient(180deg,#ffa066 0%,#ff8235 70%,#ff7120 100%);
+    box-shadow: 0 6px 18px rgba(255, 120, 40, 0.4);
 }
 
 .btn-back {
-    background: linear-gradient(135deg, var(--button-secondary), #e0e0e0);
-    color: var(--text-color);
-    border: 2px solid var(--border-color);
+    background: linear-gradient(180deg,#f7f7f7 0%,#ececec 60%,#e2e2e2 100%);
+    color:#333;
+    border:2px solid #d7d7d7;
 }
 
 :root[data-theme="dark"] .btn-back {
@@ -325,10 +324,10 @@ h1 {
 }
 
 .btn-back:hover {
-    background: linear-gradient(135deg, #e0e0e0, #d0d0d0);
-    border-color: var(--button-primary);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(180deg,#ffffff 0%,#f3f3f3 60%,#e7e7e7 100%);
+    border-color:#ff8c42;
+    transform: translateY(-2px);
+    box-shadow:0 6px 14px rgba(0,0,0,.15);
 }
 
 :root[data-theme="dark"] .btn-back:hover {
@@ -353,12 +352,13 @@ h1 {
 }
 
 .overlay .modal {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    background: var(--box-bg);
+    padding: 28px 26px;
+    border-radius: 14px;
+    max-width: 420px;
+    width: 92%;
+    box-shadow: var(--shadow);
+    border:1px solid var(--border-color);
 }
 
 .overlay .modal p {
@@ -406,20 +406,18 @@ h1 {
     height: 150px;
     border-radius: 50%;
     overflow: hidden;
-    border: 3px solid #ddd;
+    border: 4px solid var(--preview-border);
     cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f5f5f5;
-    margin: 10px auto;
+    transition:.3s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f5f5f5;
+    margin:16px auto 10px;
+    position:relative;
 }
 
-.perfil-foto-preview:hover {
-    border-color: #4CAF50;
-    transform: scale(1.05);
-}
+.perfil-foto-preview:hover { border-color: var(--button-primary); transform: scale(1.05); }
 
 .perfil-foto-preview img {
     width: 100%;

@@ -68,14 +68,13 @@ $stmt = $conn->prepare("INSERT INTO perfis (usuario_id, nome_perfil, foto_perfil
 $stmt->bind_param("issss", $usuario_id, $nome_perfil, $foto_perfil, $tipo_foto, $avatar_selecionado);
 
 if($stmt->execute()){
-    // CORREÇÃO: NÃO destruir sessão, apenas atualizar
-    $_SESSION['nome_perfil'] = $nome_perfil;
-    $_SESSION['foto_perfil'] = $foto_perfil;
+    // Destruir a sessão para que o usuário faça login novamente
+    session_destroy();
     
     echo json_encode([
         'success' => true, 
-        'message' => 'Perfil criado com sucesso!',
-        'redirect' => '../Home/index.php'
+        'message' => 'Perfil criado com sucesso! Faça login novamente para continuar.',
+        'redirect' => '../Login/loginhtml.php'
     ]);
 } else {
     echo json_encode(['success' => false, 'message' => 'Erro ao criar perfil: ' . $conn->error]);

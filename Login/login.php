@@ -51,7 +51,7 @@ if ($result && $result->num_rows > 0) {
             echo json_encode([
                 "status" => "success", 
                 "message" => "Login realizado com sucesso!",
-                "redirect" => "../Home/index.php"
+                "redirect" => "../A_TelaPrincipal/index.php"
             ]);
         } else {
             // Usuário não tem perfil, redirecionar para criar
