@@ -83,6 +83,7 @@ const subclassesDescricao = {
 const nivelInput = _("nivel");
 const classeCardsContainer = _("classe-cards");
 const classeCardLabels = classeCardsContainer.querySelectorAll(".card");
+const antecedenteCards = _("antecedente-cards").querySelectorAll(".card");
 const subclasseArea = _("subclasse-area");
 const subclasseCardsContainer = _("subclasse-cards");
 
@@ -183,22 +184,38 @@ btnVoltar1.addEventListener('click', () => {
   _("Parte1").style.display = 'block';
 });
 
+
+// ADICIONAR EVENTO DE CLIQUE
+antecedenteCards.forEach(card => {
+    card.addEventListener("click", () => {
+
+        // remover seleção de todos
+        antecedenteCards.forEach(c => c.classList.remove("selected"));
+
+        // adicionar no clicado
+        card.classList.add("selected");
+
+        // marcar radio
+        const radio = card.querySelector('input[type="radio"]');
+        radio.checked = true;
+    });
+});
+
+
 btnMostrarTudo.addEventListener('click', () => {
   // coletar dados
   const nome = _("nomePersonagem").value || '';
   const nivel = _("nivel").value || '';
   const classe = (document.querySelector('input[name="classe"]:checked') || {}).value || '';
   const subclasse = (document.querySelector('input[name="subclasse"]:checked') || {}).value || '';
-  const raca = _("racaPersonagem").value || '';
-  const racsssa = _("racsssaPersonagem").value || '';
+  const antecedente = (document.querySelector('input[name="antecedente"]:checked') || {}).value || '';
 
   // preencher resumo
   _("display_nome").textContent = nome;
   _("display_nivel").textContent = nivel;
   _("display_classe").textContent = classe;
   _("display_subclasse").textContent = subclasse;
-  _("display_raca").textContent = raca;
-  _("display_racsssa").textContent = racsssa;
+  _("display_antecedente").textContent = antecedente;
 
   _("Parte2").style.display = 'none';
   _("Tudo").style.display = 'block';
