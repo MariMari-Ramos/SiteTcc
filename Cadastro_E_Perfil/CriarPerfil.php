@@ -1,6 +1,8 @@
 <?php
 session_start();
 include("../conexao.php");
+require_once __DIR__ . "../password.php";
+
 
 header('Content-Type: application/json');
 

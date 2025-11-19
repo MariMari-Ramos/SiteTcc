@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../password.php";
 $token=$_POST["token"];
 date_default_timezone_set('America/Sao_Paulo');
 $token_hash=hash("sha256", $token);
