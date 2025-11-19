@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("../conexao.php");
-require_once __DIR__ . "/includes/password_compat.php";
+require_once __DIR__ . "/../password.php";
 
 
 header('Content-Type: application/json; charset=utf-8');

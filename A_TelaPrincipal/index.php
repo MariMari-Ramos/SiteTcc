@@ -75,7 +75,7 @@
         <!-- Feiticeiros e Maldições -->
         <div class="has-hover-video system-FM" tabindex="0" onclick="openModal('Feiticeiros e Maldições','../img/LogoJujutsuKaisen.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
-            <source src="../videos/FeiticeirosEMaldiçõesHoover.mp4" type="video/mp4" />
+            <source src="../videos/GojoVsSukuna2.mp4" type="video/mp4" />
           </video>
           <img src="../img/LogoJujutsuKaisen.png" alt="Feiticeiros e Maldições" />
           <p>Feiticeiros e Maldições</p>
@@ -93,7 +93,7 @@
         <!-- Dungeons and Dragons -->
         <div class="has-hover-video system-dnd" tabindex="0" onclick="openModal('Dungeons and Dragons','../img/icons8-dungeons-and-dragons-256.png')">
           <video class="hover-video" muted loop playsinline preload="auto">
-            <source src="../videos/DarkStarJhin.mp4" type="video/mp4" />
+            <source src="../videos/D&D_GoldenDragon.mp4" type="video/mp4" />
           </video>
           <img src="../img/icons8-dungeons-and-dragons-256.png" alt="Dungeons and Dragons" />
           <p>Dungeons and Dragons</p>
