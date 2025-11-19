@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('[cadastro.js] DOM pronto — iniciando scripts v2');
+    console.log('[cadastro.js] DOM pronto — iniciando scripts v3');
 
     /* ========== REFERÊNCIAS DOM - CADASTRO ========== */
     const overlay = document.getElementById("overlay");
@@ -11,12 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnFecharModal = overlay ? overlay.querySelector("button") : null;
     const formCadastro = document.getElementById("formCadastro");
 
-    
-
-    if(!overlay || !textoModal || !btnCriar || !btnVerSenha || !btnConfirmVerSenha || !formCadastro) {
-        console.warn('[cadastro.js] Alguns elementos não foram encontrados no DOM. Verifique IDs.');
-    } else {
-        console.log('[cadastro.js] Elementos do formulário encontrados');
+    if (!overlay || !textoModal || !btnCriar || !formCadastro) {
+        console.warn('[cadastro.js] Elementos essenciais não encontrados.');
     }
 
     /* ========== CONFIGURAÇÕES - DEFINIÇÕES ========== */
@@ -31,89 +27,99 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function loadSettings() {
-        const saved = localStorage.getItem('cadastroPageSettings');
-        return saved ? JSON.parse(saved) : defaultSettings;
+        try {
+            const raw = localStorage.getItem('cadastroSettings');
+            if (!raw) return defaultSettings;
+            const parsed = JSON.parse(raw);
+            return { ...defaultSettings, ...parsed };
+        } catch {
+            return defaultSettings;
+        }
     }
 
-    function mostrarAlerta(mensagem){
-        if(!overlay || !textoModal) return console.warn('overlay/textoModal ausentes');
+    function mostrarAlerta(mensagem) {
+        if (!overlay || !textoModal) return;
         textoModal.textContent = mensagem;
-        overlay.style.display = "flex";
+        overlay.style.display = 'flex';
     }
 
-    function fecharModal(){
-        if(!overlay) return;
-        overlay.style.display = "none";
+    function fecharModal() {
+        if (!overlay) return;
+        overlay.style.display = 'none';
     }
+    // Expor global (caso HTML antigo tenha onclick)
+    window.fecharModal = fecharModal;
 
-    if(btnFecharModal) btnFecharModal.addEventListener('click', fecharModal);
+    if (btnFecharModal) {
+        btnFecharModal.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fecharModal();
+        });
+    }
 
     // Mostrar/Ocultar Senha
-    function MostrarSenha(){
-        const input = document.getElementById('SenhaCadastro');
-        if(!input) return;
-        if(input.type === 'password'){
-            input.type = 'text';
-            btnVerSenha.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');
-        } else {
-            input.type = 'password';
-            btnVerSenha.classList.replace('bi-eye-slash-fill','bi-eye-fill');
-        }
+    function MostrarSenha() {
+        const senhaInput = document.getElementById('password');
+        if (!senhaInput) return;
+        senhaInput.type = senhaInput.type === 'password' ? 'text' : 'password';
     }
 
-    function ConfirmMostrarSenha(){
-        const input = document.getElementById('ConfirmSenhaCadastro');
-        if(!input) return;
-        if(input.type === 'password'){
-            input.type = 'text';
-            btnConfirmVerSenha.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');
-        } else {
-            input.type = 'password';
-            btnConfirmVerSenha.classList.replace('bi-eye-slash-fill','bi-eye-fill');
-        }
+    function ConfirmMostrarSenha() {
+        const senhaInput = document.getElementById('confirm-password');
+        if (!senhaInput) return;
+        senhaInput.type = senhaInput.type === 'password' ? 'text' : 'password';
     }
 
-    if(btnVerSenha) btnVerSenha.addEventListener('click', MostrarSenha);
-    if(btnConfirmVerSenha) btnConfirmVerSenha.addEventListener('click', ConfirmMostrarSenha);
+    if (btnVerSenha) btnVerSenha.addEventListener('click', MostrarSenha);
+    if (btnConfirmVerSenha) btnConfirmVerSenha.addEventListener('click', ConfirmMostrarSenha);
 
     // Botão Voltar
-    if(btnVoltar) {
+    if (btnVoltar) {
         btnVoltar.addEventListener('click', () => {
             window.location.href = '../Login/loginhtml.php';
         });
     }
 
     // Submit do formulário
-    if(formCadastro) {
+    if (formCadastro) {
         formCadastro.addEventListener("submit", async (e) => {
             e.preventDefault();
-
             const formData = new FormData(formCadastro);
 
             try {
-                const response = await fetch("Cadastrar.php", {
+                const responseText = await fetch("Cadastrar.php", {
                     method: "POST",
                     body: formData
-                });
+                }).then(r => r.text());
 
-                const data = await response.json();
-                mostrarAlerta(data.message);
+                if (responseText.trim().startsWith('<')) {
+                    console.error('[cadastro.js] Resposta parece HTML (erro PHP):', responseText);
+                    mostrarAlerta('Erro no servidor. Tente novamente mais tarde.');
+                    return;
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseErr) {
+                    console.error('[cadastro.js] Falha JSON:', parseErr, 'Bruto:', responseText);
+                    mostrarAlerta('Resposta inválida do servidor.');
+                    return;
+                }
+
+                mostrarAlerta(data.message || 'Sem mensagem.');
 
                 if (data.status === "success") {
-                    // CORREÇÃO: Usar o redirect que vem do PHP
                     overlay.onclick = () => {
                         fecharModal();
-                        // Redirecionar para criação de perfil
-                        if(data.redirect) {
+                        if (data.redirect) {
                             window.location.href = data.redirect;
                         } else {
                             window.location.href = "CPerfilhtml.php";
                         }
                     };
-                    
-                    // Auto-redirecionar após 2 segundos
                     setTimeout(() => {
-                        if(data.redirect) {
+                        if (data.redirect) {
                             window.location.href = data.redirect;
                         } else {
                             window.location.href = "CPerfilhtml.php";
@@ -126,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
             } catch (err) {
-                mostrarAlerta("Erro inesperado: " + err);
                 console.error('[cadastro.js] fetch erro:', err);
+                mostrarAlerta("Erro inesperado: " + err);
             }
         });
     }
