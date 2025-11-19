@@ -1,0 +1,83 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+}
+
+.resultado-container {
+    position: relative;
+    z-index: 2;
+    width: min(480px, 92%);
+    background: linear-gradient(145deg, color-mix(in srgb, var(--panel-bg, #ffffff) 95%, #aaa), var(--panel-bg, #ffffff));
+    border: 1px solid var(--panel-border, #e5e7eb);
+    box-shadow: 0 4px 10px rgba(117,117,117,0.49);
+    border-radius: 20px;
+    padding: 34px 36px 40px;
+    text-align: center;
+    animation: fadeIn .6s ease;
+}
+
+.icone-resultado {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: #fff;
+}
+
+.icone-sucesso {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 4px 15px rgba(34,197,94,0.4);
+}
+
+.icone-erro {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 4px 15px rgba(239,68,68,0.4);
+}
+
+.titulo-resultado {
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--accent, #ff6432);
+}
+
+.mensagem-resultado {
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--text, #222) 80%, transparent);
+    margin-bottom: 28px;
+}
+
+.btn-acao {
+    display: inline-block;
+    background: var(--accent, #ff6432);
+    color: #fff;
+    padding: 12px 32px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent, #ff6432) 40%, transparent);
+}
+
+.btn-acao:hover {
+    background: var(--accent-glow, #ff8351);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--accent, #ff6432) 50%, transparent);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -38,6 +38,11 @@ $stmt->close();
     <!-- Canvas para ondas animadas -->
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
+    <!-- Botão Voltar - Canto Superior Esquerdo -->
+    <button class="back-btn" id="backBtn" title="Voltar" data-no-wave>
+        <i class="bi bi-arrow-left"></i>
+    </button>
+
     <!-- Modal de Alerta/Confirmação Reutilizável -->
     <div class="overlay" id="alertOverlay" role="dialog" aria-modal="true" aria-labelledby="alertMessage" style="display:none;">
         <div class="modal">
@@ -50,7 +55,7 @@ $stmt->close();
     </div>
 
     <!-- Botão de Configurações - Canto Superior Direito -->
-    <button class="settings-btn" id="settingsBtn" title="Configurações">
+    <button class="settings-btn" id="settingsBtn" title="Configurações" data-no-wave>
         <i class="bi bi-gear-fill"></i>
     </button>
 
@@ -148,7 +153,6 @@ $stmt->close();
                     <hr>
                     <div class="button-container">
                         <button type="submit" id="ButtonCriarPerfil">Criar Perfil</button>
-                        <button type="button" id="btnVoltar">Voltar</button>
                     </div>
                 </div>
 

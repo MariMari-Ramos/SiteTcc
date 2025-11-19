@@ -21,7 +21,7 @@ let settings = loadSettings();
 
 document.addEventListener('DOMContentLoaded', () => {
     const formCriarPerfil = document.getElementById('formCriarPerfil');
-    const btnVoltar = document.getElementById('btnVoltar');
+    const backBtn = document.getElementById('backBtn');
     const nomePerfil = document.getElementById('NomePerfil');
     const nomesSugerido = document.getElementById('NomesSugerido');
     const chooseAvatar = document.getElementById('chooseAvatar');
@@ -184,28 +184,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('mousemove', e => {
+        if (isMouseInsideForm) {
+            targetMouseX = window.innerWidth / 2;
+            targetMouseY = window.innerHeight / 2;
+            return;
+        }
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
-
-        if (!isMouseInsideForm) {
-            const centerX = window.innerWidth / 2;
-            if (e.clientX < centerX) {
-                targetWaveDirection = 1;
-            } else {
-                targetWaveDirection = -1;
-            }
-        }
+        const centerX = window.innerWidth / 2;
+        targetWaveDirection = (e.clientX < centerX) ? 1 : -1;
     });
 
     window.addEventListener('mousedown', (e) => {
-        if (e.button === 0) {
-            isMousePressed = true;
-            const currentSettings = loadSettings();
-            if (currentSettings.enableClickEffect && wavesEnabled && interactive && !isSettingsOpen && !isMouseInsideForm && !isFormFocused) {
-                heatIntensity = 1;
-                clickAmplitude = maxClickAmplitude;
-                targetClickHeight = -(canvas.height / 2 - e.clientY);
-            }
+        if (e.button !== 0) return;
+        if (isMouseInsideForm || e.target.closest('[data-no-wave]')) return;
+        isMousePressed = true;
+        const currentSettings = loadSettings();
+        if (currentSettings.enableClickEffect && wavesEnabled && interactive && !isSettingsOpen && !isFormFocused) {
+            heatIntensity = 1;
+            clickAmplitude = maxClickAmplitude;
+            targetClickHeight = -(canvas.height / 2 - e.clientY);
         }
     });
 
@@ -401,11 +399,11 @@ document.addEventListener('DOMContentLoaded', () => {
         alertCancel.onclick = () => { alertOverlay.style.display='none'; onCancel && onCancel(); };
     }
 
-    // Botão Voltar
-    if(btnVoltar) {
-        btnVoltar.addEventListener('click', () => {
-            mostrarAlerta('Deseja realmente sair? As alterações não salvas serão perdidas.', () => {
-                window.location.href = '../Login/loginhtml.php';
+    // Botão Voltar (novo estilo fixo)
+    if(backBtn) {
+        backBtn.addEventListener('click', () => {
+            mostrarAlerta('Deseja voltar para o cadastro? Alterações não salvas serão perdidas.', () => {
+                window.location.href = '../Cadastro_E_Perfil/Cadastro.html';
             }, true);
         });
     }

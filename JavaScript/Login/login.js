@@ -255,36 +255,38 @@ document.addEventListener('DOMContentLoaded', () => {
         o.corAtual = o.corBase;
     });
 
+    // Movimento do mouse controla ondas somente fora do formulário
     window.addEventListener('mousemove', e => {
+        if (isMouseInsideForm) {
+            // Enquanto dentro: fixa alvo no centro para ondas neutras
+            targetMouseX = window.innerWidth / 2;
+            targetMouseY = window.innerHeight / 2;
+            return; // ignora qualquer lógica interativa
+        }
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
-
-        // Evita trocar a direção quando o mouse está sobre o formulário
-        if (!isMouseInsideForm) {
-            const centerX = window.innerWidth / 2;
-            if (e.clientX < centerX) {
-                targetWaveDirection = 1;
-            } else if (e.clientX > centerX) {
-                targetWaveDirection = -1;
-            }
+        const centerX = window.innerWidth / 2;
+        if (e.clientX < centerX) {
+            targetWaveDirection = 1;
+        } else if (e.clientX > centerX) {
+            targetWaveDirection = -1;
         }
     });
 
     window.addEventListener('mousedown', (e) => {
-        if (e.button === 0) {
-            isMousePressed = true;
-            
-            const settings = loadSettings();
-            if (!isFormFocused && interactive && wavesEnabled && !isSettingsOpen && settings.enableClickEffect) {
-                heatIntensity = 1.0;
-                clickAmplitude = maxClickAmplitude;
-                targetClickHeight = -(canvas.height / 2 - e.clientY);
-                console.log('[waves] Clique nas ondas — efeito de labareda ativado');
-            }
-            
-            if (settings.enableHoldEffect) {
-                console.log('[waves] Mouse pressionado — BOOST começando a aumentar');
-            }
+        if (e.button !== 0) return;
+        // Bloqueia efeitos de clique/segurar se o mouse estiver dentro do formulário ou em elementos sem interação de ondas
+        if (isMouseInsideForm || e.target.closest('[data-no-wave]')) return;
+        isMousePressed = true;
+        const settings = loadSettings();
+        if (!isFormFocused && interactive && wavesEnabled && !isSettingsOpen && settings.enableClickEffect) {
+            heatIntensity = 1.0;
+            clickAmplitude = maxClickAmplitude;
+            targetClickHeight = -(canvas.height / 2 - e.clientY);
+            console.log('[waves] Clique nas ondas — efeito de labareda ativado');
+        }
+        if (settings.enableHoldEffect) {
+            console.log('[waves] Mouse pressionado — BOOST começando a aumentar');
         }
     });
 
@@ -462,6 +464,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     desenhar();
+
+    /* ========== BOTÃO VOLTAR ========== */
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            window.location.href = '../index.html';
+        });
+    }
 
     /* ========== CONFIGURAÇÕES DA PÁGINA ========== */
     const settingsBtn = document.getElementById('settingsBtn');

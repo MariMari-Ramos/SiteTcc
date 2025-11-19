@@ -11,8 +11,13 @@
 
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
+    <!-- Botão Voltar - Canto Superior Esquerdo -->
+    <button class="back-btn" id="backBtn" title="Voltar" data-no-wave>
+        <i class="bi bi-arrow-left"></i>
+    </button>
+
     <!-- Botão de Configurações - Canto Superior Direito -->
-    <button class="settings-btn" id="settingsBtn" title="Configurações">
+    <button class="settings-btn" id="settingsBtn" title="Configurações" data-no-wave>
         <i class="bi bi-gear-fill"></i>
     </button>
 
@@ -84,7 +89,6 @@
                 </div>
             </div>
 
-            <div class="settings-divider"></div>
             
         </div>
     </div>

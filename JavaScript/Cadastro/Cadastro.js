@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById("overlay");
     const textoModal = overlay ? overlay.querySelector("p") : null;
     const btnCriar = document.getElementById("ButtonCriarCadastro");
-    const btnVoltar = document.getElementById("btnVoltar");
+    const backBtn = document.getElementById("backBtn");
     const btnVerSenha = document.getElementById("BtnVerSenha");
     const btnConfirmVerSenha = document.getElementById("BtnConfirmVerSenha");
     const btnFecharModal = overlay ? overlay.querySelector("button") : null;
@@ -73,9 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnVerSenha) btnVerSenha.addEventListener('click', MostrarSenha);
     if (btnConfirmVerSenha) btnConfirmVerSenha.addEventListener('click', ConfirmMostrarSenha);
 
-    // Botão Voltar
-    if (btnVoltar) {
-        btnVoltar.addEventListener('click', () => {
+    // Botão Voltar (novo estilo fixo)
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
             window.location.href = '../Login/loginhtml.php';
         });
     }
@@ -285,34 +285,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('mousemove', e => {
+        // Bloqueia interatividade se dentro do formulário
+        if (isMouseInsideForm) {
+            targetMouseX = window.innerWidth / 2;
+            targetMouseY = window.innerHeight / 2;
+            return;
+        }
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
-
-        if (!isMouseInsideForm) {
-            const centerX = window.innerWidth / 2;
-            if (e.clientX < centerX) {
-                targetWaveDirection = 1;
-            } else if (e.clientX > centerX) {
-                targetWaveDirection = -1;
-            }
+        const centerX = window.innerWidth / 2;
+        if (e.clientX < centerX) {
+            targetWaveDirection = 1;
+        } else if (e.clientX > centerX) {
+            targetWaveDirection = -1;
         }
     });
 
     window.addEventListener('mousedown', (e) => {
-        if (e.button === 0) {
-            isMousePressed = true;
-            
-            const settings = loadSettings();
-            if (!isFormFocused && interactive && wavesEnabled && !isSettingsOpen && settings.enableClickEffect) {
-                heatIntensity = 1.0;
-                clickAmplitude = maxClickAmplitude;
-                targetClickHeight = -(canvas.height / 2 - e.clientY);
-                console.log('[waves-cadastro] Clique nas ondas — efeito de labareda ativado');
-            }
-            
-            if (settings.enableHoldEffect) {
-                console.log('[waves-cadastro] Mouse pressionado — BOOST começando a aumentar');
-            }
+        if (e.button !== 0) return;
+        // Ignora efeitos quando dentro do formulário ou em botões marcados
+        if (isMouseInsideForm || e.target.closest('[data-no-wave]')) return;
+        isMousePressed = true;
+        const settings = loadSettings();
+        if (!isFormFocused && interactive && wavesEnabled && !isSettingsOpen && settings.enableClickEffect) {
+            heatIntensity = 1.0;
+            clickAmplitude = maxClickAmplitude;
+            targetClickHeight = -(canvas.height / 2 - e.clientY);
+            console.log('[waves-cadastro] Clique nas ondas — efeito de labareda ativado');
+        }
+        if (settings.enableHoldEffect) {
+            console.log('[waves-cadastro] Mouse pressionado — BOOST começando a aumentar');
         }
     });
 
