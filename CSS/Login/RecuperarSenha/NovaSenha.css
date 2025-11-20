@@ -1,23 +1,63 @@
+html,body {height:100%;}
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: var(--bg, var(--panel-bg,#ffffff));
+    color: var(--text,#222);
     min-height: 100vh;
-    margin: 0;
-    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
+    margin:0;
+    font-family:'OpenDyslexic','Segoe UI',Arial,sans-serif;
+    display:flex;
+    flex-direction:column;
+}
+
+/* Variáveis (usa esquema global já definido, mas garante fallback) */
+:root {
+    --accent: #ff6432;
+    --accent-glow: #ff8351;
+    --panel-bg: #ffffff;
+    --panel-border: #e5e7eb;
+    --text: #222222;
+    --wave1: rgba(255,192,192,0.55);
+    --wave2: rgba(255,170,150,0.5);
+    --wave3: rgba(255,210,180,0.45);
+    --waveHot1: rgba(255,200,0,0.75);
+    --waveHot2: rgba(255,140,0,0.7);
+    --waveHot3: rgba(255,69,0,0.65);
+    --radius: 20px;
+}
+body.dark-theme {
+    --accent: #4a90e2;
+    --accent-glow: #2f78e5;
+    --panel-bg:#2d2d2d;
+    --panel-border:#404040;
+    --text:#e0e0e0;
+    --wave1: rgba(140,185,250,0.60);
+    --wave2: rgba(110,160,245,0.54);
+    --wave3: rgba(70,130,235,0.46);
+    --waveHot1: rgba(70,135,235,0.90);
+    --waveHot2: rgba(55,120,225,0.85);
+    --waveHot3: rgba(45,105,210,0.80);
+}
+
+#waveCanvas {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display:block; z-index:0; pointer-events:none;
+    transition: opacity 1.2s ease;
 }
 
 .resultado-container {
     position: relative;
     z-index: 2;
-    width: min(480px, 92%);
-    background: linear-gradient(145deg, color-mix(in srgb, var(--panel-bg, #ffffff) 95%, #aaa), var(--panel-bg, #ffffff));
-    border: 1px solid var(--panel-border, #e5e7eb);
-    box-shadow: 0 4px 10px rgba(117,117,117,0.49);
-    border-radius: 20px;
-    padding: 34px 36px 40px;
+    width: min(520px, 92%);
+    margin: 120px auto 60px;
+    background: linear-gradient(145deg, color-mix(in srgb, var(--panel-bg,#ffffff) 96%, #bbb), var(--panel-bg,#ffffff));
+    border: 1px solid var(--panel-border,#e5e7eb);
+    box-shadow: 0 6px 22px -8px rgba(0,0,0,0.25);
+    border-radius: var(--radius);
+    padding: 40px 42px 46px;
     text-align: center;
     animation: fadeIn .6s ease;
+    flex:0 0 auto;
 }
 
 .icone-resultado {
@@ -58,7 +98,7 @@ body {
 
 .btn-acao {
     display: inline-block;
-    background: var(--accent, #ff6432);
+    background: linear-gradient(135deg, var(--accent), var(--accent-glow));
     color: #fff;
     padding: 12px 32px;
     border-radius: 25px;
@@ -68,16 +108,89 @@ body {
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent, #ff6432) 40%, transparent);
+    min-width: 170px;
+    box-shadow: 0 6px 18px -5px color-mix(in srgb, var(--accent) 55%, transparent);
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-acao:hover {
-    background: var(--accent-glow, #ff8351);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px color-mix(in srgb, var(--accent, #ff6432) 50%, transparent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px -6px color-mix(in srgb, var(--accent) 65%, transparent);
 }
+
+.btn-acao:active {transform: translateY(0);}    
+
+.btn-acao::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent);
+  opacity:0; transition: opacity .35s ease;
+}
+.btn-acao:hover::before {opacity:.45;}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ================= CONFIGURAÇÕES (modal + botão) ================= */
+.settings-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: color-mix(in srgb, var(--accent) 90%, transparent);
+    border: 2px solid color-mix(in srgb, var(--accent-glow) 80%, transparent);
+    color:#fff; width:50px; height:50px; border-radius:50%; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; padding:0; transition: all .3s ease;
+    box-shadow:0 4px 15px color-mix(in srgb, var(--accent) 40%, transparent);
+    z-index:999;
+}
+
+/* Modal fullscreen igual login */
+#settingsModal.settings-modal, .settings-modal {
+    display:none;
+    position:fixed;
+    top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.7);
+    z-index:1000;
+    align-items:flex-start;justify-content:flex-end;
+}
+.settings-modal.active {display:flex;animation:fadeIn .3s ease;}
+.settings-modal.closing {animation:fadeOut .3s ease forwards;}
+.settings-btn:hover {background: var(--accent-glow); transform: scale(1.1) rotate(90deg); box-shadow:0 6px 20px color-mix(in srgb, var(--accent) 60%, transparent);} 
+.settings-btn:active {transform: scale(.95) rotate(90deg);} 
+.settings-btn i {margin:0;line-height:1;color:#fff;}
+
+.settings-modal {display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:1000; align-items:flex-start; justify-content:flex-end;}
+.settings-modal.active {display:flex; animation: fadeIn .3s ease;}
+.settings-modal.closing {animation: fadeOut .3s ease forwards;}
+
+.settings-content {background: var(--panel-bg); width:280px; max-height:100vh; padding:25px 18px; border-left:3px solid var(--accent); border-bottom:3px solid var(--accent); border-bottom-left-radius:12px; box-shadow:-5px 0 20px rgba(0,0,0,.3); overflow-y:auto; position:relative; animation: slideInRight .3s ease;}
+.settings-content.closing {animation: slideOutRight .3s ease forwards;}
+
+@keyframes slideInRight {from {transform:translateX(100%);} to {transform:translateX(0);}}
+@keyframes slideOutRight {from {transform:translateX(0);} to {transform:translateX(100%);}}
+
+.settings-header {display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding-bottom:12px; border-bottom:2px solid var(--panel-border);} 
+.settings-content h2 {color: var(--accent-glow); font-size:20px; margin:0; text-align:left;}
+.close-settings {background:none; border:none; font-size:28px; cursor:pointer; color: var(--accent-glow); transition: all .2s ease; width:30px; height:30px; display:flex; align-items:center; justify-content:center; line-height:1;}
+.close-settings:hover {color: var(--accent); transform: rotate(90deg);} 
+
+.settings-group {margin-bottom:15px;} 
+.settings-group > label {display:block; color: var(--accent-glow); font-weight:600; margin-bottom:10px; font-size:14px;}
+.settings-divider {height:1px; background: var(--panel-border); margin:15px 0;}
+.settings-option {display:flex; align-items:center; padding:10px; background: color-mix(in srgb, var(--panel-bg) 80%, #fff); border-radius:6px; margin-bottom:10px; cursor:pointer; transition: all .2s ease; border:1px solid color-mix(in srgb, var(--accent) 55%, transparent);} 
+.settings-option:hover {background: var(--panel-bg); border-color: var(--accent); transform: translateX(-5px);} 
+.settings-option input {margin-right:10px; cursor:pointer; width:16px; height:16px; accent-color: var(--accent);} 
+.settings-option span {color: var(--accent-glow); font-size:12px; font-weight:500; cursor:pointer; margin:0;}
+
+body.dark-theme .settings-option {background: rgba(80,80,80,.9); border-color: var(--accent);} 
+body.dark-theme .settings-option:hover {background: rgba(100,100,100,1); border-color: var(--accent-glow);} 
+body.dark-theme .settings-option span {color: var(--accent);} 
+
+/* Acessibilidade */
+body.high-contrast {--text:#000; --input-border:#000; --accent:#ff4500; --accent-glow:#ff6432;}
+body.dark-theme.high-contrast {--panel-bg:#000; --text:#fff; --accent:#00bfff; --accent-glow:#00a0ff;}
+body.larger-text .resultado-container {font-size:1.05rem;}
+body.larger-text .btn-acao {font-size:1.05rem;}

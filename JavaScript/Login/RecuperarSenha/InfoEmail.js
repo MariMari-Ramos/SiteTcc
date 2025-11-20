@@ -1,6 +1,7 @@
 // InfoEmail.js - Waves animation e configurações para página de confirmação
 (function(){
     'use strict';
+    console.log('[InfoEmail.js] carregado — iniciando configurações e ondas');
 
     const canvas = document.getElementById('waveCanvas');
     if(!canvas) return;
@@ -25,44 +26,48 @@
 
     function loadSettings(){
         try {
-            const stored = localStorage.getItem('recPageSettings');
+            const stored = localStorage.getItem('loginPageSettings');
             return stored ? {...defaultSettings, ...JSON.parse(stored)} : defaultSettings;
         } catch(e){ return defaultSettings; }
     }
 
     function saveSettings(){
-        try {
-            localStorage.setItem('recPageSettings', JSON.stringify(settings));
-        } catch(e){ console.error('Erro salvando configurações:', e); }
+        try { localStorage.setItem('loginPageSettings', JSON.stringify(settings)); }
+        catch(e){ console.error('Erro salvando configurações:', e); }
     }
 
     function applySettings(s){
-        // Tema
-        document.body.classList.remove('dark-theme', 'light-theme');
-        document.documentElement.classList.remove('dark-theme', 'light-theme');
-        if(s.theme === 'dark'){
+        document.body.classList.remove('light-theme','dark-theme','high-contrast','larger-text');
+        document.documentElement.classList.remove('light-theme','dark-theme','high-contrast','larger-text');
+        // Aplica tema
+        if(s.theme === 'dark') {
             document.body.classList.add('dark-theme');
             document.documentElement.classList.add('dark-theme');
-        } else if(s.theme === 'light'){
+        } else if(s.theme === 'auto') {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if(prefersDark){
+                document.body.classList.add('dark-theme');
+                document.documentElement.classList.add('dark-theme');
+            } else {
+                document.body.classList.add('light-theme');
+                document.documentElement.classList.add('light-theme');
+            }
+        } else {
             document.body.classList.add('light-theme');
             document.documentElement.classList.add('light-theme');
-        } else if(s.theme === 'auto'){
-            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const themeClass = isDark ? 'dark-theme' : 'light-theme';
-            document.body.classList.add(themeClass);
-            document.documentElement.classList.add(themeClass);
         }
-
-        // Waves
-        wavesEnabled = s.enableWaves;
-
-        // Acessibilidade
-        document.body.classList.toggle('high-contrast', s.highContrast);
-        document.body.classList.toggle('larger-text', s.largerText);
-
-        // Efeitos (click/hold)
-        clickEffectEnabled = s.enableClickEffect;
-        holdEffectEnabled = s.enableHoldEffect;
+        // Aplica acessibilidade
+        if(s.highContrast){
+            document.body.classList.add('high-contrast');
+            document.documentElement.classList.add('high-contrast');
+        }
+        if(s.largerText){
+            document.body.classList.add('larger-text');
+            document.documentElement.classList.add('larger-text');
+        }
+            wavesEnabled = s.enableWaves;
+            clickEffectEnabled = s.enableClickEffect;
+            holdEffectEnabled = s.enableHoldEffect;
     }
 
     let settings = loadSettings();
@@ -70,6 +75,12 @@
     let clickEffectEnabled = settings.enableClickEffect !== false;
     let holdEffectEnabled = settings.enableHoldEffect !== false;
 
+    // Inicializa opacidade do canvas de acordo com a configuração (transição suave definida via CSS)
+    try {
+        // Usar transição igual ao login (fade mais lento): 1.5s
+        canvas.style.transition = canvas.style.transition || 'opacity 1.5s ease-out';
+        canvas.style.opacity = wavesEnabled ? '1' : '0';
+    } catch(e) { /* ambiente pode bloquear estilos inline */ }
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let targetMouseX = mouseX;
@@ -78,6 +89,15 @@
 
     let waveDir = 1;
     let targetWaveDir = 1;
+
+    // Clique / Segurar - efeitos nas ondas
+    let isMousePressed = false;
+    let clickAmplitude = 0;
+    const maxClickAmplitude = 3.0;
+    const clickAmplitudeDecay = 0.92;
+    let clickHeight = window.innerHeight / 2;
+    let targetClickHeight = clickHeight;
+    const clickHeightEase = 0.12;
 
     function cssVar(name){
         return getComputedStyle(document.body).getPropertyValue(name).trim();
@@ -98,11 +118,43 @@
         return m ? [+m[1], +m[2], +m[3], +m[4]] : [0,0,0,1];
     }
 
+    const interactiveBox = document.querySelector('.CaixaLogin') || document.querySelector('.container-confirmacao') || document.querySelector('.login');
+
     window.addEventListener('mousemove', (e) => {
+        // Só atualiza a direção/posição das ondas se o ponteiro estiver sobre a área de waves
+        // e não estiver interagindo com formulários/controles/settings (data-no-wave).
+        if (interactiveBox && interactiveBox.contains(e.target)) return;
+        if (e.target.closest && e.target.closest('[data-no-wave]')) return;
+        if (e.target.closest && e.target.closest('.settings-content, .settings-modal, #settingsModal')) return;
+
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
         const centerX = window.innerWidth / 2;
         targetWaveDir = (e.clientX < centerX) ? 1 : -1;
+    });
+
+    // Efeitos de clique / segurar - ativam impulso nas ondas
+    window.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        // bloqueia se clicar dentro da caixa de formulário ou em elementos marcados
+        if (interactiveBox && interactiveBox.contains(e.target)) return;
+        if (e.target.closest && e.target.closest('[data-no-wave]')) return;
+        if (e.target.closest && e.target.closest('.settings-content, .settings-modal, #settingsModal')) return;
+        isMousePressed = true;
+        targetClickHeight = e.clientY;
+        const cfg = loadSettings();
+        if (!cfg) return;
+        if (!cfg.enableClickEffect) return;
+        // impulso instantâneo
+        clickAmplitude = Math.min(maxClickAmplitude, clickAmplitude + 1.2);
+        const centerX = window.innerWidth / 2;
+        targetWaveDir = (e.clientX < centerX) ? 1 : -1;
+    });
+
+    window.addEventListener('mouseup', (e) => {
+        if (e.button === 0) {
+            isMousePressed = false;
+        }
     });
 
     function draw(){
@@ -128,9 +180,16 @@
 
         waves.forEach((o, idx) => {
             const influence = Math.abs(smoothMouseY - canvas.height / 2) * 0.03;
-            o.amp = (45 + idx * 8) + influence;
+            const baseAmp = (45 + idx * 8) + influence;
 
             const verticalInfluence = (smoothMouseY - canvas.height / 2) * 0.04 * (idx + 1);
+
+            // efeito de clique/segurar: calcula distância vertical do ponto do clique e aplica boost com queda
+            const clickDist = Math.abs((canvas.height / 2 + verticalInfluence) - clickHeight);
+            const clickFalloff = Math.max(0, 1 - clickDist / (canvas.height * 0.6));
+            const clickBoost = clickAmplitude * 30 * clickFalloff * (1 + idx * 0.25);
+
+            o.amp = baseAmp + clickBoost;
 
             ctx.beginPath();
             for(let x = 0; x <= canvas.width; x += 10){
@@ -150,6 +209,15 @@
 
             o.fase += o.vel * 0.8 * waveDir;
         });
+
+        // Se estiver segurando e o efeito estiver habilitado, aumenta suavemente a amplitude do impulso
+        if(isMousePressed && holdEffectEnabled){
+            clickAmplitude = Math.min(maxClickAmplitude, clickAmplitude + 0.06);
+        }
+        // decaimento do impulso ao longo do tempo
+        clickAmplitude = Math.max(0, clickAmplitude * clickAmplitudeDecay);
+        // suaviza posição vertical alvo do clique
+        clickHeight += (targetClickHeight - clickHeight) * clickHeightEase;
 
         requestAnimationFrame(draw);
     }
@@ -225,10 +293,23 @@
     // Handlers de mudança
     if(enableWavesCheck){
         enableWavesCheck.addEventListener('change', () => {
-            settings.enableWaves = enableWavesCheck.checked;
-            wavesEnabled = settings.enableWaves;
+            const enabled = enableWavesCheck.checked;
+            settings.enableWaves = enabled;
             saveSettings();
-            applySettings(settings);
+            // Se for ativar, liga imediatamente e faz fade in
+            if(enabled){
+                wavesEnabled = true;
+                try { canvas.style.opacity = '1'; } catch(e){}
+                applySettings(settings);
+            } else {
+                // Faz fade out suave e só então desliga a animação (igual ao login: 1500ms)
+                try { canvas.style.opacity = '0'; } catch(e){}
+                // aguarda duração da transição antes de desativar loop de ondas
+                setTimeout(() => {
+                    wavesEnabled = false;
+                    applySettings(settings);
+                }, 1500);
+            }
         });
     }
 

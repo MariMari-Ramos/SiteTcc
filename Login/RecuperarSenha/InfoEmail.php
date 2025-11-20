@@ -44,7 +44,6 @@ $badgeTexto = $statusEnvio ? 'Solicitação registrada' : 'Processamento conclu�
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redefinição de Senha - Confirmação</title>
-    <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
     <link rel="stylesheet" href="../../CSS/Login/RecuperarSenha/InfoEmail.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script>
@@ -67,9 +66,6 @@ $badgeTexto = $statusEnvio ? 'Solicitação registrada' : 'Processamento conclu�
   </head>
 <body>
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
-    <button class="back-btn" id="backBtn" title="Voltar" data-no-wave>
-        <i class="bi bi-arrow-left"></i>
-    </button>
 
     <!-- Botão de Configurações - Canto Superior Direito -->
     <button class="settings-btn" id="settingsBtn" title="Configurações" data-no-wave>
@@ -165,11 +161,6 @@ $badgeTexto = $statusEnvio ? 'Solicitação registrada' : 'Processamento conclu�
             <p style="color:#d9534f; font-size:.75rem; text-align:center; margin-top:8px;">Aviso interno: falha ao tentar enviar e-mail. Tente novamente mais tarde.</p>
         <?php endif; ?>
     </div>
-    <script src="../../JavaScript/Login/RecuperarSenha/InfoEmail.js" defer></script>
-    <script>
-      document.getElementById('backBtn')?.addEventListener('click', function(){
-        window.location.href = 'InfoEmail.html';
-      });
-    </script>
+        <script src="../../JavaScript/Login/RecuperarSenha/InfoEmail.js" defer></script>
 </body>
 </html>

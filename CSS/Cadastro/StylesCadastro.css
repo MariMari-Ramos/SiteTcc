@@ -719,19 +719,25 @@ body.high-contrast #btnVoltar {
     background: color-mix(in srgb, var(--accent) 90%, transparent);
     border: 2px solid color-mix(in srgb, var(--accent-2) 80%, transparent);
     color: white;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+    width: auto;
+    min-width: 260px; /* garante espaço confortável para o texto completo */
+    height: 58px;
+    padding: 0 30px;
+    border-radius: 40px; /* formato de pílula maior */
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    padding: 0;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 40%, transparent);
+    justify-content: flex-start;
+    gap: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    line-height: 1;
+    transition: all 0.35s ease;
+    box-shadow: 0 8px 22px -6px color-mix(in srgb, var(--accent) 50%, transparent);
     z-index: 999;
     filter: none !important;
+    white-space: nowrap;
 }
 .back-btn i {
     position: static;
@@ -739,15 +745,16 @@ body.high-contrast #btnVoltar {
     margin: 0;
     line-height: 1;
     color: white;
+    font-size: 24px;
     transition: none;
 }
 .back-btn:hover {
     background: var(--accent-2);
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 60%, transparent);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px -6px color-mix(in srgb, var(--accent) 65%, transparent);
 }
 .back-btn:active {
-    transform: scale(0.95);
+    transform: translateY(0);
 }
 
 /* ==================== MODAL DE CONFIGURAÇÕES ==================== */

@@ -38,19 +38,14 @@ if($usuario===null){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $sucesso ? 'Senha Redefinida' : 'Erro na Redefinição'; ?></title>
-    <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
-    <link rel="stylesheet" href="../../CSS/Login/RecuperarSenha/InfoEmail.css">
     <link rel="stylesheet" href="../../CSS/Login/RecuperarSenha/NovaSenha.css">
+        <link rel="stylesheet" href="../../CSS/Login/RecuperarSenha/infoEmail.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="../../JavaScript/Login/RecuperarSenha/NovaSenha.js"></script>
+    <script src="../../JavaScript/Login/RecuperarSenha/NovaSenha.js" defer></script>
 </head>
 <body>
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
     
-    <button class="back-btn" id="backBtn" title="Voltar ao Login" data-no-wave>
-        <i class="bi bi-arrow-left"></i>
-    </button>
-
     <button class="settings-btn" id="settingsBtn" title="Configurações" data-no-wave>
         <i class="bi bi-gear-fill"></i>
     </button>
