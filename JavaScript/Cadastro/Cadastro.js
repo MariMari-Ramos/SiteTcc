@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('[cadastro.js] DOM pronto — iniciando scripts v3');
+    console.log('[cadastro.js] DOM pronto — iniciando scripts v5');
 
     /* ========== REFERÊNCIAS DOM - CADASTRO ========== */
     const overlay = document.getElementById("overlay");
@@ -57,21 +57,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Mostrar/Ocultar Senha
-    function MostrarSenha() {
-        const senhaInput = document.getElementById('password');
-        if (!senhaInput) return;
-        senhaInput.type = senhaInput.type === 'password' ? 'text' : 'password';
+    // Mostrar/Ocultar Senha com alternância de ícone
+    if (btnVerSenha) {
+        btnVerSenha.addEventListener('click', () => {
+            const senhaInput = document.getElementById('SenhaCadastro');
+            if (senhaInput) {
+                const isPassword = senhaInput.type === 'password';
+                senhaInput.type = isPassword ? 'text' : 'password';
+                btnVerSenha.classList.toggle('bi-eye-fill', !isPassword);
+                btnVerSenha.classList.toggle('bi-eye-slash-fill', isPassword);
+            }
+        });
+        // Inicializa ícone como olho aberto
+        btnVerSenha.classList.add('bi-eye-fill');
+        btnVerSenha.classList.remove('bi-eye-slash-fill');
     }
 
-    function ConfirmMostrarSenha() {
-        const senhaInput = document.getElementById('confirm-password');
-        if (!senhaInput) return;
-        senhaInput.type = senhaInput.type === 'password' ? 'text' : 'password';
+    if (btnConfirmVerSenha) {
+        btnConfirmVerSenha.addEventListener('click', () => {
+            const senhaInput = document.getElementById('ConfirmSenhaCadastro');
+            if (senhaInput) {
+                const isPassword = senhaInput.type === 'password';
+                senhaInput.type = isPassword ? 'text' : 'password';
+                btnConfirmVerSenha.classList.toggle('bi-eye-fill', !isPassword);
+                btnConfirmVerSenha.classList.toggle('bi-eye-slash-fill', isPassword);
+            }
+        });
+        // Inicializa ícone como olho aberto
+        btnConfirmVerSenha.classList.add('bi-eye-fill');
+        btnConfirmVerSenha.classList.remove('bi-eye-slash-fill');
     }
-
-    if (btnVerSenha) btnVerSenha.addEventListener('click', MostrarSenha);
-    if (btnConfirmVerSenha) btnConfirmVerSenha.addEventListener('click', ConfirmMostrarSenha);
 
     // Botão Voltar (novo estilo fixo)
     if (backBtn) {

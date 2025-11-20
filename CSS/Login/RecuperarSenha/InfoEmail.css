@@ -1,29 +1,4 @@
-/* Estilos da tela de confirmação de envio de email de redefinição */
-/* Fonte OpenDyslexic (consistência com demais telas) */
-@font-face {
-  font-family: 'OpenDyslexic';
-  src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
-       url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'OpenDyslexic';
-  src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Italic.woff2') format('woff2'),
-       url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Italic.woff') format('woff');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'OpenDyslexic';
-  src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Bold.woff2') format('woff2'),
-       url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+
 @font-face {
   font-family: 'OpenDyslexic';
   src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Bold-Italic.woff2') format('woff2'),
@@ -41,9 +16,74 @@
   --success: #2da44e;
   --radius: 14px;
 }
-body.dark-theme :root, body.dark-theme {
+body.dark-theme {
+  --bg: #1a1a1a;
+  --text: #e0e0e0;
+  --panel-bg: #2d2d2d;
+  --panel-border: #444444;
+  --overlay: rgba(0,0,0,0.7);
+
   --accent: #4a90e2;
   --accent-glow: #2f78e5;
+  --accent-2: #2f78e5;
+  --accent-soft: rgba(74,144,226,0.15);
+
+  --wave1: rgba(140,185,250,0.60);
+  --wave2: rgba(110,160,245,0.52);
+  --wave3: rgba(70,130,235,0.42);
+  --waveHot1: rgba(70,135,235,0.9);
+  --waveHot2: rgba(55,120,225,0.85);
+  --waveHot3: rgba(45,105,210,0.8);
+
+  --input-bg: #3a3a3a;
+  --input-border: #555555;
+  --input-placeholder: #a3a3a3;
+}
+
+/* ==================== CONFIGURAÇÕES ACESSIBILIDADE (ALTO CONTRASTE) ==================== */
+body.high-contrast {
+  --text: #000000;
+  --input-border: #000000;
+  --accent: #ff4500;
+  --accent-2: #ff6432;
+}
+
+body.high-contrast.dark-theme {
+  --bg: #000000;
+  --text: #ffffff;
+  --panel-bg: #000000;
+  --input-bg: #1a1a1a;
+  --input-border: #ffffff;
+  --accent: #00bfff;
+  --accent-2: #00a0ff;
+}
+
+body.high-contrast .container-confirmacao,
+body.high-contrast .CaixaLogin {
+  border: 3px solid var(--accent);
+}
+
+body.high-contrast #email,
+body.high-contrast #senha {
+  border-width: 3px;
+  font-weight: 600;
+}
+
+body.high-contrast label,
+body.high-contrast .nao-quebrar-linha,
+body.high-contrast .LembrarMeContainer {
+  font-weight: 700;
+}
+
+body.high-contrast #ButtonEntrar,
+body.high-contrast #ButtonCriarConta {
+  border: 2px solid var(--text);
+  font-weight: 700;
+}
+
+body.high-contrast .nao-quebrar-linha a {
+  text-decoration: underline;
+  font-weight: 700;
 }
 
 body {
@@ -57,6 +97,27 @@ body {
   align-items: center;
   justify-content: center;
   padding: 32px 16px;
+}
+
+/* Transições sutis para alternância de tema/contraste (inspirado no Login.css) */
+/* Mantém a alteração visual suave ao alternar light/dark/high-contrast */
+.container-confirmacao,
+.header-icon,
+.acao-btns button,
+.settings-option,
+input,
+textarea,
+.badge-status {
+  transition: background-color 0.45s ease, color 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease, transform 0.28s ease;
+}
+
+/* Transição para aumento/redução do tamanho de fonte (Texto Maior) */
+h1,
+.mensagem-principal,
+.lista-passos li,
+.acao-btns button,
+.badge-status {
+  transition: font-size 0.36s cubic-bezier(.2,.9,.3,1), padding 0.32s ease, gap 0.32s ease;
 }
 
 .container-confirmacao {
@@ -217,27 +278,66 @@ h1 {
 .aviso-extra {
   font-size: .75rem;
   text-align: center;
-  color: var(--text-secondary, #c9d1d9);
-  opacity: .7;
+  color: var(--text);
+  opacity: 0.95;
   margin-top: 10px;
 }
 
 .badge-status {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: .75rem;
-  font-weight: 600;
+  justify-content: center;
+  gap: 8px;
+  font-size: .85rem;
+  font-weight: 700;
   letter-spacing: .4px;
-  padding: 6px 12px 6px 10px;
-  border-radius: 100px;
-  background: rgba(45,164,78,.12);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: transparent;
   color: var(--success);
-  border: 1px solid rgba(45,164,78,.4);
+  border: 1px solid var(--success);
   margin: 0 auto 18px;
 }
 
 .badge-status i {font-size: 14px;}
+
+.badge-status { text-align: center; }
+
+/* ==================== TEMA DE TEXTO MAIOR (compatibilidade large-text / larger-text) ==================== */
+body.large-text, body.larger-text {
+  font-size: 18px !important;
+}
+
+/* (preserva regras originais de texto maior sem transição para manter formatação consistente) */
+
+body.large-text h1,
+body.larger-text h1 {
+  font-size: clamp(1.9rem, 1.6rem + 1.6vw, 2.4rem);
+}
+
+body.large-text .mensagem-principal,
+body.larger-text .mensagem-principal {
+  font-size: 1.15rem;
+}
+
+body.large-text .lista-passos li,
+body.larger-text .lista-passos li {
+  font-size: 1.05rem;
+}
+
+body.large-text .acao-btns a,
+body.larger-text .acao-btns a,
+body.large-text .acao-btns button,
+body.larger-text .acao-btns button {
+  font-size: 1rem;
+  padding: 14px 28px;
+}
+
+body.large-text .badge-status,
+body.larger-text .badge-status {
+  font-size: .95rem;
+  padding: 8px 18px;
+}
 
 @media (max-width: 480px) {
   .container-confirmacao {padding: 28px 24px 34px;}
@@ -253,22 +353,27 @@ h1 {
   background: color-mix(in srgb, var(--accent) 90%, transparent);
   border: 2px solid color-mix(in srgb, var(--accent-glow, var(--accent)) 80%, transparent);
   color: #fff;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  width: auto; /* deixa ajustar com conteúdo */
+  min-width: 250px;
+  height: 58px;
+  padding: 0 28px;
+  border-radius: 40px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  padding: 0;
-  transition: all .3s ease;
-  box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 40%, transparent);
+  justify-content: flex-start;
+  gap: 12px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: .4px;
+  transition: all .35s ease;
+  box-shadow: 0 8px 22px -6px color-mix(in srgb, var(--accent) 50%, transparent);
   z-index: 999;
+  white-space: nowrap;
 }
-.back-btn:hover {background: var(--accent-glow); transform: scale(1.1); box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 60%, transparent);} 
-.back-btn:active {transform: scale(0.95);} 
-.back-btn i {margin:0;line-height:1;color:#fff;}
+.back-btn:hover {background: var(--accent-glow); transform: translateY(-3px); box-shadow: 0 12px 28px -8px color-mix(in srgb, var(--accent) 70%, transparent);} 
+.back-btn:active {transform: translateY(0);} 
+.back-btn i {margin:0;line-height:1;color:#fff;font-size:24px;}
 
 /* Botão de configurações (mesmo estilo do login) */
 .settings-btn {

@@ -45,42 +45,33 @@
 
         function loadSettings(){
             try {
-                const stored = localStorage.getItem('recPageSettings');
-                return stored ? {...defaultSettings, ...JSON.parse(stored)} : defaultSettings;
+                const stored = localStorage.getItem('loginPageSettings');
+                return stored ? { ...defaultSettings, ...JSON.parse(stored) } : defaultSettings;
             } catch(e){ return defaultSettings; }
         }
 
         function saveSettings(){
-            try {
-                localStorage.setItem('recPageSettings', JSON.stringify(settings));
-            } catch(e){ console.error('Erro salvando configurações:', e); }
+            try { localStorage.setItem('loginPageSettings', JSON.stringify(settings)); }
+            catch(e){ console.error('Erro salvando configurações:', e); }
         }
 
         function applySettings(s){
-            // Tema
-            document.body.classList.remove('dark-theme', 'light-theme');
-            document.documentElement.classList.remove('dark-theme', 'light-theme');
-            if(s.theme === 'dark'){
+            document.body.classList.remove('light-theme','dark-theme','high-contrast','larger-text');
+            document.documentElement.classList.remove('light-theme','dark-theme','high-contrast','larger-text');
+            if(s.theme === 'dark') {
                 document.body.classList.add('dark-theme');
                 document.documentElement.classList.add('dark-theme');
-            } else if(s.theme === 'light'){
+            } else if(s.theme === 'auto') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.body.classList.add(prefersDark ? 'dark-theme':'light-theme');
+                document.documentElement.classList.add(prefersDark ? 'dark-theme':'light-theme');
+            } else {
                 document.body.classList.add('light-theme');
                 document.documentElement.classList.add('light-theme');
-            } else if(s.theme === 'auto'){
-                const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                const themeClass = isDark ? 'dark-theme' : 'light-theme';
-                document.body.classList.add(themeClass);
-                document.documentElement.classList.add(themeClass);
             }
-
-            // Waves
             wavesEnabled = s.enableWaves;
-
-            // Acessibilidade
             document.body.classList.toggle('high-contrast', s.highContrast);
             document.body.classList.toggle('larger-text', s.largerText);
-
-            // Efeitos
             clickEffectEnabled = s.enableClickEffect;
             holdEffectEnabled = s.enableHoldEffect;
         }
@@ -171,13 +162,7 @@
 
         draw();
 
-        // ===== BOTÃO DE VOLTAR =====
-        const backBtn = document.getElementById('backBtn');
-        if(backBtn){
-            backBtn.addEventListener('click', () => {
-                window.location.href = '../loginhtml.php';
-            });
-        }
+        // Botão de voltar fixo removido nesta tela; somente link interno presente no container.
 
         // ===== MODAL DE CONFIGURAÇÕES =====
         const settingsBtn = document.getElementById('settingsBtn');
