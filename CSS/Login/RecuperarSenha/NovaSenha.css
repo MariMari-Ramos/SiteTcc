@@ -42,7 +42,28 @@ body.dark-theme {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     display:block; z-index:0; pointer-events:none;
-    transition: opacity 1.2s ease;
+    /* Igual ao login: transição mais lenta para fade suave */
+    transition: opacity 1.5s ease-out;
+}
+
+/* Transições para mudanças de tema / alto contraste
+   - Suaviza background, color, border e box-shadow para paridade com Login.css */
+body,
+.resultado-container,
+.settings-content,
+.settings-option,
+.settings-btn,
+.btn-acao,
+#email,
+#senha {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease, transform 0.15s ease;
+}
+
+/* Também transitar borda e glow quando alternando alto contraste */
+.resultado-container {
+    transition-property: background, border-color, box-shadow, color;
+    transition-duration: 0.28s;
+    transition-timing-function: ease;
 }
 
 .resultado-container {
@@ -121,6 +142,18 @@ body.dark-theme {
 
 .btn-acao:active {transform: translateY(0);}    
 
+/* Melhor comportamento de foco/hover para botões - paridade com Login */
+.btn-acao:focus,
+.btn-acao:focus-visible {
+    outline: none;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.35), 0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent);
+    transform: translateY(-3px) scale(1.01);
+}
+
+.btn-acao:active {
+    transform: translateY(0) scale(0.98);
+}
+
 .btn-acao::before {
   content:''; position:absolute; inset:0;
   background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent);
@@ -190,7 +223,121 @@ body.dark-theme .settings-option:hover {background: rgba(100,100,100,1); border-
 body.dark-theme .settings-option span {color: var(--accent);} 
 
 /* Acessibilidade */
-body.high-contrast {--text:#000; --input-border:#000; --accent:#ff4500; --accent-glow:#ff6432;}
-body.dark-theme.high-contrast {--panel-bg:#000; --text:#fff; --accent:#00bfff; --accent-glow:#00a0ff;}
-body.larger-text .resultado-container {font-size:1.05rem;}
-body.larger-text .btn-acao {font-size:1.05rem;}
+body.high-contrast {
+    --text: #000000;
+    --input-border: #000000;
+    --accent: #ff4500;
+    --accent-2: #ff6432;
+}
+
+body.high-contrast.dark-theme {
+    --bg: #000000;
+    --text: #ffffff;
+    --panel-bg: #000000;
+    --input-bg: #1a1a1a;
+    --input-border: #ffffff;
+    --accent: #00bfff;
+    --accent-2: #00a0ff;
+}
+
+body.high-contrast .CaixaLogin {
+    border: 3px solid var(--accent);
+}
+
+body.high-contrast #email,
+body.high-contrast #senha {
+    border-width: 3px;
+    font-weight: 600;
+}
+
+/* Mostrar borda de alto contraste ao redor do container de resultado (paridade com caixa de login) */
+body.high-contrast .resultado-container {
+    border: 3px solid var(--accent);
+}
+
+/* Aprimoramento visual: adicionar brilho/contorno para paridade com o login */
+body.high-contrast .resultado-container {
+    /* Mantém a borda forte */
+    border: 3px solid var(--accent);
+    /* Glow externo leve com mistura de cor do acento */
+    box-shadow: 0 10px 28px rgba(0,0,0,0.45), 0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent);
+    /* Garante que o raio seja idêntico ao padrão de caixas */
+    border-radius: var(--radius);
+}
+
+body.high-contrast label,
+body.high-contrast .nao-quebrar-linha,
+body.high-contrast .LembrarMeContainer {
+    font-weight: 700;
+}
+
+body.high-contrast #ButtonEntrar,
+body.high-contrast #ButtonCriarConta {
+    border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast .nao-quebrar-linha a {
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+/* Alto contraste: botões principais na tela de resultado devem destacar-se igual ao login */
+body.high-contrast .btn-acao {
+    border: 2px solid var(--text);
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+}
+
+body.high-contrast .btn-acao:hover,
+body.high-contrast .btn-acao:focus {
+    box-shadow: 0 12px 32px rgba(0,0,0,0.55), 0 0 0 6px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+body.large-text {
+    font-size: 18px !important;
+}
+
+/* Aplicar Texto Maior de forma abrangente (títulos, mensagens, botões, labels, inputs) */
+body.large-text #email,
+body.large-text #senha {
+    font-size: 1.1em;
+}
+
+body.large-text .titulo-resultado {
+    font-size: 1.4rem;
+}
+
+body.large-text .mensagem-resultado,
+body.large-text .nao-quebrar-linha,
+body.large-text .settings-option span,
+body.large-text .settings-group > label,
+body.large-text .btn-acao,
+body.large-text .resultado-container,
+body.large-text .icone-resultado {
+    font-size: 1.05rem;
+}
+
+body.large-text .settings-content h2 {
+    font-size: 1.15rem;
+}
+
+/* Garantir que o modo Texto Maior afete todo o modal de configurações */
+body.large-text .settings-content,
+body.large-text .settings-content h2,
+body.large-text .settings-option span,
+body.large-text .settings-group > label,
+body.large-text .settings-option,
+body.large-text .close-settings,
+body.large-text .settings-btn {
+    font-size: 1.08rem;
+}
+
+/* Ajustes mais específicos para legibilidade dentro do modal */
+body.large-text .settings-content { padding: 28px 20px; }
+body.large-text .settings-option { padding: 12px; }
+body.large-text .settings-option input { width:18px; height:18px; }
+
+/* Aumenta também o texto das opções e rótulos para consistência */
+body.large-text .settings-option span { font-size: 1.05rem; }
+body.large-text .settings-group > label { font-size: 1.05rem; font-weight:700; }
