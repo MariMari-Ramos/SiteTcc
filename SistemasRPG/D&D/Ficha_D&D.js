@@ -1,236 +1,523 @@
-function _(id){ return document.getElementById(id); }
+// ===== FEITICEIROS E MALDIÇÕES - SISTEMA DE FICHA MELHORADO =====
+// Estado da aplicação com todas as melhorias integradas
 
-/* dados de subclasse por classe */
-const subclasses = {
-    barbaro: ["Trilha da Árvore do Mundo", "Trilha do Berserker", "Trilha do Coração Selvagem","Trilha do Fanático"],
-    bardo: ["Colégio da Bravura", "Colégio da Dança", "Colégio do Conhecimento", "Colégio do Glamour"],
-    bruxo: ["Patrono Arquifada", "Patrono Celestial", "Patrono Grande Antigo", "Patrono Ínfero"],
-    clerigo: ["Domínio da Guerra", "Domínio da Luz", "Domínio da Trapaça", "Domínio da Vida"],
-    druida: ["Círculo da Terra", "Círculo da Lua", "Círculo das Estrelas", "Círculo do Mar"],
-    feiticeiro: ["Feitiçaria Aberrante", "Feitiçaria Dracônica", "Feitiçaria Mecânica", "Feitiçaria Selvagem"],
-    guardiao: ["Andarilho Feérico", "Caçador", "Senhor das Feras", "Vigilante das Sombras"],
-    guerreiro: ["Campeão", "Cavaleiro Místico", "Combatente Psíquico", "Mestre da Batalha"],
-    ladino: ["Adaga Espiritual", "Assassino", "Ladrão", "Trapaceiro Arcano"],
-    mago: ["Abjurador", "Adivinhador", "Evocador", "Ilusionista"],
-    monge: ["Combatente da Mão Espalmada", "Combatente da Misericórdia", "Combatente das Sombras", "Combatente dos Elementos"],
-    paladino: ["Juramento da Devoção", "Juramento da Glória", "Juramento de Vingança", "Juramento dos Anciões"]
-    
-};
+// Listas de origens e especializações baseadas no sistema F&M
+const origens = [
+    'Inato',
+    'Herdado', 
+    'Derivado',
+    'Restringido',
+    'Feto Amaldiçoado Híbrido',
+    'Sem Técnica',
+    'Corpo Amaldiçoado Mutante'
+];
 
-const subclassesDescricao = {
-    "Trilha da Árvore do Mundo": "Entrelace as Raízes e Ramos do Multiverso",
-    "Trilha do Berserker": "Canalize sua Fúria em um Frenesi Violento",
-    "Trilha do Coração Selvagem": "Ande em Comunhão com o Mundo Animal",
-    "Trilha do Fanático": "Fúria em Êxtase com um Deus",
-    
-    "Colégio da Bravura": "Cante os Feitos dos Heróis Antigos",
-    "Colégio da Dança": "Mova-se em Harmonia com o Cosmos",
-    "Colégio do Conhecimento": "Explore as Profundezas do Conhecimento Mágico",
-    "Colégio do Glamour": "Teça Magia Feérica Fascinante",
+const especializacoes = [
+    'Lutador',
+    'Especialista em Combate',
+    'Especialista em Técnica',
+    'Controlador',
+    'Suporte',
+    'Restringido'
+];
 
-    "Patrono Arquifada": "Faça Acordos com Feéricos Excêntricos",
-    "Patrono Celestial": "Invoque o Poder dos Céus",
-    "Patrono Grande Antigo": "Descubra o Conhecimento Proibido de Seres Inefáveis",
-    "Patrono Ínfero": "Realize um Pacto com os Planos Inferiores",
+// Navegação entre páginas
+const pages = ['index', 'pagina2', 'pagina3', 'pagina4', 'pagina5', 'pagina6', 'pagina7'];
+let currentPage = 1;
+const totalPages = 7;
+let diceHistory = [];
 
-    "Domínio da Guerra": "Inspire Bravura e Derrote Inimigos",
-    "Domínio da Luz": "Traga a Luz para Banir a Escuridão",
-    "Domínio da Trapaça": "Pregue Peças e Desafie as Autoridades",
-    "Domínio da Vida": "Alivie as Feridas do Mundo",
-
-    "Círculo da Lua": "Assuma Formas Animais para Proteger a Vida Selvagem",
-    "Círculo da Terra": "Celebre a Conexão com o Mundo Natural",
-    "Círculo das Estrelas": "Domine os Segredos Ocultos nas Constelações",
-    "Círculo do Mar": "Torne-se Um com as Marés e Tempestades",
-
-    "Feitiçaria Aberrante": "Exerça o Sobrenatural Poder Psiônico",
-    "Feitiçaria Dracônica": "Respire a Magia dos Dragões",
-    "Feitiçaria Mecânica": "Canalize as Forças Cósmicas da Ordem",
-    "Feitiçaria Selvagem": "Liberte a Magia Caótica",
-
-    "Andarilho Feérico": "Empunhe o Deleite e a Fúria Feérica",
-    "Caçador": "Proteja a Natureza e as Pessoas da Destruição",
-    "Senhor das Feras": "Vincule-se a uma Fera Primal",
-    "Vigilante das Sombras": "Aproveite a Magia das Sombras para Lutar contra Seus Inimigos",
-
-    "Campeão": "Busque a Excelência Física em Combate",
-    "Cavaleiro Místico": "Fortaleça suas Habilidades de Combate com Magia Arcana",
-    "Combatente Psíquico": "Aprimore o Poder Físico com Poder Psiônico",
-    "Mestre da Batalha": "Domine Manobras de Batalha Sofisticadas",
-
-    "Adaga Espiritual": "Ataque Inimigos com Lâminas Psiônicas",
-    "Assassino": "Pratique a Arte Sombria da Morte",
-    "Ladrão": "Cace Tesouros como um Clássico Aventureiro",
-    "Trapaceiro Arcano": "Aprimore a Furtividade com Magias Arcanas",
-
-    "Abjurador": "Proteja seus Companheiros e Bana Inimigos",
-    "Adivinhador": "Conheça os Segredos do Multiverso",
-    "Evocador": "Crie Efeitos Elementais Explosivos",
-    "Ilusionista": "Teça Magias Sutis de Enganação",
-
-    "Combatente da Mão Espalmada": "Domine as Técnicas de Combate Desarmado",
-    "Combatente da Misericórdia": "Manipule as Forças de Vida e da Morte",
-    "Combatente das Sombras": "Utilize o Poder das Sombras para Furtividade e Fuga",
-    "Combatente dos Elementos": "Manipule Golpes e Explosões de Poder Elemental",
-
-    "Juramento da Devoção": "Defenda os Ideais da Justiça e da Ordem",
-    "Juramento da Glória": "Aspire às Alturas do Heroísmo",
-    "Juramento de Vingança": "Puna os Malfeitores a Qualquer Custo",
-    "Juramento dos Anciões": "Preserve a Vida e a Luz no Mundo",
-};
-
-/* elementos */
-const nivelInput = _("nivel");
-const classeCardsContainer = _("classe-cards");
-const classeCardLabels = classeCardsContainer.querySelectorAll(".card");
-const antecedenteCards = _("antecedente-cards").querySelectorAll(".card");
-const subclasseArea = _("subclasse-area");
-const subclasseCardsContainer = _("subclasse-cards");
-
-const btnParaParte2 = _("btnParaParte2");
-const btnVoltar1 = _("btnVoltar1");
-const btnMostrarTudo = _("btnMostrarTudo");
-const btnVoltar2 = _("btnVoltar2");
-const btnEnviar = _("btnEnviar");
-
-/* função: seleciona visualmente os cards de classe e seta o input radio */
-classeCardLabels.forEach(label => {
-  label.addEventListener("click", (e) => {
-    // marca visual
-    classeCardLabels.forEach(l => l.classList.remove("selected"));
-    label.classList.add("selected");
-
-    // marca o radio dentro do label
-    const radio = label.querySelector('input[type="radio"]');
-    if(radio) radio.checked = true;
-
-    // gerar as subclasses correspondentes (se existirem)
-    const classeValor = radio.value;
-    gerarCardsSubclasse(subclasses[classeValor] || []);
-    // se nível >= 3 mostra area automaticamente
-    if (Number(nivelInput.value) >= 3) subclasseArea.style.display = "block";
-  });
+// ===== INICIALIZAÇÃO =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Sistema F&M carregado!');
+    fillSelectionBoxes();
+    setupAttributeModifiers();
+    setupArmorClass();
+    setupProficiencyBonus();
+    updatePageDisplay();
+    loadCharacter();
+    setupAutoSave();
+    initializeProgressBars();
 });
 
-/* quando o nível mudar, controla visibilidade de subclasse */
-nivelInput.addEventListener("input", () => {
-  const n = Number(nivelInput.value);
-  if (n >= 3) {
-    // só mostra se já existe uma classe selecionada e tem subclasses geradas
-    const checkedClasse = document.querySelector('input[name="classe"]:checked');
-    if (checkedClasse && subclasseCardsContainer.children.length) {
-      subclasseArea.style.display = "block";
-    } else {
-      // se não tiver subclasss geradas mas classe estiver selecionada, geramos
-      if (checkedClasse) gerarCardsSubclasse(subclasses[checkedClasse.value] || []);
-      subclasseArea.style.display = checkedClasse ? "block" : "none";
+// ===== PREENCHER SELECT BOXES =====
+function fillSelectionBoxes() {
+    const origemSelect = document.getElementById('origin');
+    if (origemSelect && origemSelect.tagName === 'SELECT') {
+        origemSelect.innerHTML = '<option value="">Selecione...</option>' + 
+            origens.map(o => `<option value="${o}">${o}</option>`).join('');
+        origemSelect.className += ' styled-select';
     }
-  } else {
-    subclasseArea.style.display = "none";
-    // opcional: limpa seleção de subclasse quando nível cai abaixo de 3
-    const checkedSub = document.querySelector('input[name="subclasse"]:checked');
-    if (checkedSub) checkedSub.checked = false;
-    subclasseCardsContainer.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
-  }
-});
 
-/* cria os cards de subclasse dinamicamente */
-function gerarCardsSubclasse(lista){
-  subclasseCardsContainer.innerHTML = ""; // limpa
-  if(!lista || lista.length === 0) return;
-  lista.forEach(sub => {
-    const label = document.createElement('label');
-    label.className = 'card';
-    label.innerHTML = `<input type="radio" name="subclasse" value="${sub}">
-                       <h3>${sub}</h3>
-                       <p>${subclassesDescricao[sub]}</p>`;
-    label.addEventListener('click', () => {
-      // marca visualmente apenas este
-      subclasseCardsContainer.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
-      label.classList.add('selected');
-      // marca o radio
-      const r = label.querySelector('input[type="radio"]');
-      if(r) r.checked = true;
-    });
-    subclasseCardsContainer.appendChild(label);
-  });
+    const especSelect = document.getElementById('specialization');
+    if (especSelect && especSelect.tagName === 'SELECT') {
+        especSelect.innerHTML = '<option value="">Selecione...</option>' + 
+            especializacoes.map(e => `<option value="${e}">${e}</option>`).join('');
+        especSelect.className += ' styled-select';
+    }
 }
 
-/* Botões de navegação e validação */
-btnParaParte2.addEventListener('click', () => {
-  const nivel = Number(nivelInput.value);
-  const classeSelecionada = document.querySelector('input[name="classe"]:checked');
+// ===== CÁLCULO DE MODIFICADORES DE ATRIBUTOS =====
+function calculateModifier(attributeValue) {
+    return Math.floor((parseInt(attributeValue) - 10) / 2);
+}
 
-  if (!nivelInput.value) { alert('Informe o nível.'); return; }
-  if (!classeSelecionada) { alert('Selecione uma classe.'); return; }
+function setupAttributeModifiers() {
+    const attributes = ['str', 'dex', 'con', 'wis', 'int', 'cha'];
 
-  // se nível >= 3 exigir subclasse selecionada
-  if (nivel >= 3) {
-    const subSelecionada = document.querySelector('input[name="subclasse"]:checked');
-    if (!subSelecionada) {
-      alert('Como seu nível é 3 ou mais, escolha também uma subclasse.'); 
-      // garante que a área de subclasse esteja visível para seleção:
-      subclasseArea.style.display = 'block';
-      return;
+    attributes.forEach(attr => {
+        const input = document.getElementById(attr);
+        const modSpan = document.getElementById(`${attr}-mod`);
+
+        if (input && modSpan) {
+            input.addEventListener('input', function() {
+                const value = parseInt(this.value) || 10;
+                const modifier = calculateModifier(value);
+                modSpan.textContent = modifier >= 0 ? `+${modifier}` : `${modifier}`;
+
+                // Atualizar DEX na CA automaticamente
+                if (attr === 'dex') {
+                    const acDex = document.getElementById('ac-dex');
+                    if (acDex) acDex.value = modifier;
+                    calculateTotalAC();
+                }
+            });
+            // Trigger inicial
+            input.dispatchEvent(new Event('input'));
+        }
+    });
+}
+
+// ===== CÁLCULO DE BÔNUS DE MAESTRIA =====
+function setupProficiencyBonus() {
+    const levelInput = document.getElementById('level');
+    const bonusInput = document.getElementById('proficiency-bonus');
+
+    if (levelInput && bonusInput) {
+        levelInput.addEventListener('input', function() {
+            const level = parseInt(this.value) || 1;
+            const bonus = Math.floor((level - 1) / 4) + 2;
+            bonusInput.value = `+${bonus}`;
+        });
+        levelInput.dispatchEvent(new Event('input'));
     }
-  }
+}
 
-  _("Parte1").style.display = 'none';
-  _("Parte2").style.display = 'block';
-});
+// ===== CÁLCULO DE CLASSE DE ARMADURA =====
+function setupArmorClass() {
+    const acInputs = ['ac-natural', 'ac-armor', 'ac-shield', 'ac-dex', 'ac-other'];
 
-btnVoltar1.addEventListener('click', () => {
-  _("Parte2").style.display = 'none';
-  _("Parte1").style.display = 'block';
-});
+    acInputs.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', calculateTotalAC);
+        }
+    });
 
+    calculateTotalAC();
+}
 
-// ADICIONAR EVENTO DE CLIQUE
-antecedenteCards.forEach(card => {
-    card.addEventListener("click", () => {
+function calculateTotalAC() {
+    const natural = parseInt(document.getElementById('ac-natural')?.value) || 0;
+    const armor = parseInt(document.getElementById('ac-armor')?.value) || 0;
+    const shield = parseInt(document.getElementById('ac-shield')?.value) || 0;
+    const dex = parseInt(document.getElementById('ac-dex')?.value) || 0;
+    const other = parseInt(document.getElementById('ac-other')?.value) || 0;
 
-        // remover seleção de todos
-        antecedenteCards.forEach(c => c.classList.remove("selected"));
+    const total = natural + armor + shield + dex + other;
+    const totalElement = document.getElementById('ac-total');
+    if (totalElement) {
+        totalElement.value = total;
+    }
+}
 
-        // adicionar no clicado
-        card.classList.add("selected");
+// ===== NAVEGAÇÃO ENTRE PÁGINAS =====
+function goToPage(pageNumber) {
+    if (pageNumber < 1 || pageNumber > totalPages || pageNumber === currentPage) return;
 
-        // marcar radio
-        const radio = card.querySelector('input[type="radio"]');
-        radio.checked = true;
+    // Salvar dados da página atual antes de mudar
+    saveCharacter(); 
+
+    // Esconder página atual
+    const currentPageEl = document.getElementById(`page-${currentPage}`);
+    if (currentPageEl) currentPageEl.classList.remove('active');
+
+    // Atualizar o número da página
+    currentPage = pageNumber;
+
+    // Mostrar nova página
+    const newPageEl = document.getElementById(`page-${currentPage}`);
+    if (newPageEl) newPageEl.classList.add('active');
+
+    // Atualizar UI (pontos, etc.)
+    updatePageDisplay(); 
+    window.scrollTo(0, 0);
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        saveCharacter();
+        const currentPageEl = document.getElementById(`page-${currentPage}`);
+        if (currentPageEl) currentPageEl.classList.remove('active');
+
+        currentPage--;
+
+        const prevPageEl = document.getElementById(`page-${currentPage}`);
+        if (prevPageEl) prevPageEl.classList.add('active');
+
+        updatePageDisplay();
+        window.scrollTo(0, 0);
+    }
+}
+
+function updatePageDisplay() {
+    // Atualizar indicadores visuais
+    const dots = document.querySelectorAll('.page-dot');
+    dots.forEach((dot, index) => {
+        if (index === (currentPage - 1)) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+}
+
+// ===== SISTEMA DE PERSISTÊNCIA (localStorage) =====
+function saveCharacter() {
+    const characterData = {};
+
+    // Salvar todos os inputs, selects e textareas
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+        if (el.id) {
+            if (el.type === 'checkbox') {
+                characterData[el.id] = el.checked;
+            } else {
+                characterData[el.id] = el.value;
+            }
+        }
+    });
+    // Salvar histórico do dado
+    characterData['diceHistory'] = diceHistory;
+    try {
+        localStorage.setItem('fichaPersonagemFM', JSON.stringify(characterData));
+        console.log('Ficha salva:', Object.keys(characterData).length, 'campos');
+    } catch (e) {
+        console.error('Erro ao salvar:', e);
+        showNotification('Erro ao salvar ficha!');
+    }
+}
+
+function loadCharacter() {
+    try {
+        const saved = localStorage.getItem('fichaPersonagemFM');
+        if (saved) {
+            const data = JSON.parse(saved);
+
+            Object.entries(data).forEach(([id, value]) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (el.type === 'checkbox') {
+                        el.checked = value;
+                    } else {
+                        el.value = value;
+                    }
+                    // Trigger eventos para recalcular valores
+                    el.dispatchEvent(new Event('input'));
+                }
+
+                // Carregar histórico do dado
+            if (data['diceHistory']) {
+                diceHistory = data['diceHistory'];
+            } else {
+                diceHistory = []; // Garantir que está limpo se não houver nada salvo
+            }
+            updateDiceHistory(); // Popular a UI
+            });
+
+            console.log('Ficha carregada:', Object.keys(data).length, 'campos');
+        }
+    } catch (e) {
+        console.error('Erro ao carregar:', e);
+    }
+}
+
+function clearCharacter() {
+    if (confirm('Tem certeza que deseja limpar toda a ficha? Esta ação não pode ser desfeita.')) {
+        localStorage.removeItem('fichaPersonagemFM');
+        diceHistory = []; // Limpa o array em memória
+        showNotification('Ficha limpa!');
+        setTimeout(() => location.reload(), 1000);
+    }
+}
+
+// ===== AUTO-SAVE =====
+function setupAutoSave() {
+    let autoSaveTimeout;
+
+    document.addEventListener('input', function() {
+        clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(() => {
+            saveCharacter();
+        }, 2000); // Auto-save após 2 segundos de inatividade
+    });
+}
+
+// ===== NOTIFICAÇÕES TOAST =====
+function showNotification(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'slideOutDown 0.4s ease';
+        setTimeout(() => toast.remove(), 400);
+    }, 2500);
+}
+
+// ===== ADICIONAR/REMOVER HABILIDADES =====
+function addAbility(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const abilityCard = document.createElement('div');
+    abilityCard.className = 'ability-card';
+    abilityCard.innerHTML = `
+        <div class="card-header">
+            <input type="text" placeholder="Nome da Habilidade" class="form-control ability-name">
+            <button class="btn-remove" onclick="this.parentElement.parentElement.remove(); saveCharacter();">×</button>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">Custo (PE)</label>
+                <input type="number" class="form-control" min="0" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Tipo</label>
+                <select class="form-control styled-select">
+                    <option>Ação Comum</option>
+                    <option>Ação Bônus</option>
+                    <option>Ação Livre</option>
+                    <option>Reação</option>
+                    <option>Passiva</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Descrição</label>
+            <textarea class="form-control" rows="3" placeholder="Descreva os efeitos da habilidade..."></textarea>
+        </div>
+    `;
+    container.appendChild(abilityCard);
+    saveCharacter();
+}
+
+// ===== ADICIONAR TALENTO =====
+function addTalent() {
+    const container = document.getElementById('talents-list');
+    if (!container) return;
+
+    const talentCard = document.createElement('div');
+    talentCard.className = 'talent-card';
+    talentCard.innerHTML = `
+        <div class="card-header">
+            <input type="text" placeholder="Nome do Talento" class="form-control">
+            <button class="btn-remove" onclick="this.parentElement.parentElement.remove(); saveCharacter();">×</button>
+        </div>
+        <textarea class="form-control" placeholder="Descrição do talento..." rows="2"></textarea>
+    `;
+    container.appendChild(talentCard);
+    saveCharacter();
+}
+
+// ===== ADICIONAR INVOCAÇÃO =====
+function addInvocation() {
+    const container = document.getElementById('invocations-list');
+    if (!container) return;
+
+    const invocationCard = document.createElement('div');
+    invocationCard.className = 'invocation-card';
+    invocationCard.innerHTML = `
+        <div class="card-header">
+            <input type="text" placeholder="Nome da Invocação" class="form-control">
+            <button class="btn-remove" onclick="this.parentElement.parentElement.remove(); saveCharacter();">×</button>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">Grau</label>
+                <select class="form-control styled-select">
+                    <option>4º Grau</option>
+                    <option>3º Grau</option>
+                    <option>2º Grau</option>
+                    <option>1º Grau</option>
+                    <option>Grau Especial</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Custo (PE)</label>
+                <input type="number" class="form-control" min="0">
+            </div>
+            <div class="form-group">
+                <label class="form-label">PV</label>
+                <input type="number" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="form-label">CA</label>
+                <input type="number" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Características</label>
+            <textarea class="form-control" rows="3" placeholder="Descreva as características da invocação..."></textarea>
+        </div>
+    `;
+    container.appendChild(invocationCard);
+    saveCharacter();
+}
+
+// ===== ADICIONAR TREINAMENTO =====
+function addTraining() {
+    const container = document.getElementById('trainings-list');
+    if (!container) return;
+
+    const trainingCard = document.createElement('div');
+    trainingCard.className = 'training-card';
+    trainingCard.innerHTML = `
+        <div class="card-header">
+            <input type="text" placeholder="Nome do Treinamento" class="form-control">
+            <button class="btn-remove" onclick="this.parentElement.parentElement.remove(); saveCharacter();">×</button>
+        </div>
+        <textarea class="form-control" placeholder="Descrição do treinamento..." rows="2"></textarea>
+    `;
+    container.appendChild(trainingCard);
+    saveCharacter();
+}
+
+// ===== BARRAS DE PROGRESSO =====
+function initializeProgressBars() {
+    updateProgressBar('hp');
+    updateProgressBar('pe');
+    updateProgressBar('integrity');
+}
+
+function updateProgressBar(type) {
+    const current = parseInt(document.getElementById(`${type}-current`)?.value) || 0;
+    const max = parseInt(document.getElementById(`${type}-max`)?.value) || 100;
+    const fillElement = document.getElementById(`${type}-fill`);
+
+    if (fillElement && max > 0) {
+        const percentage = Math.min((current / max) * 100, 100);
+        fillElement.style.width = `${percentage}%`;
+        fillElement.textContent = `${current}/${max}`;
+    }
+}
+
+function updateDiceHistory() {
+    const historyContainer = document.getElementById('dice-history');
+    if (historyContainer) {
+        if (diceHistory.length === 0) {
+            historyContainer.innerHTML = `<span style="color: var(--color-text-secondary); font-style: italic;">Nenhuma rolagem ainda.</span>`;
+        } else {
+            historyContainer.innerHTML = diceHistory.map(roll => 
+                `<span class="dice-history-item">${roll}</span>`
+            ).join('');
+        }
+    }
+}
+
+// ===== ROLAGEM DE D20 =====
+function rollD20() {
+    const result = Math.ceil(Math.random() * 20);
+    const bonus = parseInt(document.getElementById('dice-bonus')?.value) || 0;
+    const total = result + bonus;
+
+    // Atualizar histórico
+    diceHistory.unshift(total); // Adiciona no início
+    if (diceHistory.length > 5) {
+        diceHistory.pop(); // Remove o último
+    }
+    updateDiceHistory();
+    saveCharacter(); // Salva o novo histórico
+
+    const resultElement = document.getElementById('dice-result');
+    if (resultElement) {
+        resultElement.textContent = total;
+        // Atualiza a cor basedo no resultado do DADO (não o total)
+        resultElement.style.color = result === 20 ? 'var(--color-success)' : result === 1 ? 'var(--color-error)' : 'var(--color-primary)';
+    }
+
+    
+    // Abrir modal se existir
+    const modal = document.getElementById('dice-modal');
+    if (modal) modal.classList.add('active');
+}
+
+// ===== EXPORTAR FICHA =====
+function exportCharacter() {
+    window.print();
+}
+
+// Adicionar eventos aos botões
+document.addEventListener('DOMContentLoaded', function() {
+    const btnSave = document.getElementById('save-btn');
+    if (btnSave) btnSave.addEventListener('click', () => {
+        saveCharacter();
+        showNotification('Ficha salva com sucesso!');
+    });
+
+    const btnClear = document.getElementById('clear-btn');
+    if (btnClear) btnClear.addEventListener('click', clearCharacter);
+
+    const btnExport = document.getElementById('export-btn');
+    if (btnExport) btnExport.addEventListener('click', exportCharacter);
+
+// Setup Page Indicator Clicks
+const dots = document.querySelectorAll('.page-dot');
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        goToPage(index + 1); // +1 porque index é 0-based
     });
 });
 
-
-btnMostrarTudo.addEventListener('click', () => {
-  // coletar dados
-  const nome = _("nomePersonagem").value || '';
-  const nivel = _("nivel").value || '';
-  const classe = (document.querySelector('input[name="classe"]:checked') || {}).value || '';
-  const subclasse = (document.querySelector('input[name="subclasse"]:checked') || {}).value || '';
-  const antecedente = (document.querySelector('input[name="antecedente"]:checked') || {}).value || '';
-
-  // preencher resumo
-  _("display_nome").textContent = nome;
-  _("display_nivel").textContent = nivel;
-  _("display_classe").textContent = classe;
-  _("display_subclasse").textContent = subclasse;
-  _("display_antecedente").textContent = antecedente;
-
-  _("Parte2").style.display = 'none';
-  _("Tudo").style.display = 'block';
 });
 
-btnVoltar2.addEventListener('click', () => {
-  _("Tudo").style.display = 'none';
-  _("Parte2").style.display = 'block';
-});
+document.addEventListener('DOMContentLoaded', function() {
+    const closeModalBtn = document.querySelector('.modal-close');
+    const diceModal = document.getElementById('dice-modal');
+    if (closeModalBtn && diceModal) {
+      closeModalBtn.addEventListener('click', function() {
+        diceModal.classList.remove('active');
+      });
+    }
+  });
 
-/* Envio final (exemplo: envia ao servidor) */
-btnEnviar.addEventListener('click', () => {
-  // validações finais opcionais...
-  // aqui definimos a action e submetemos
-  const form = _("formDD");
-  form.method = "post";
-  form.action = "FichaD&D.php"; // ajuste conforme seu backend
-  form.submit();});
+  function nextPage() {
+    if (currentPage < totalPages) {
+      saveCharacter();
+      const currentPageEl = document.getElementById(`page-${currentPage}`);
+      if (currentPageEl) currentPageEl.classList.remove('active');
+      currentPage++;
+      const nextPageEl = document.getElementById(`page-${currentPage}`);
+      if (nextPageEl) nextPageEl.classList.add('active');
+      updatePageDisplay();
+      window.scrollTo(0, 0);
+      updateNavButtons();
+    }
+  }
+  
+  function previousPage() {
+    if (currentPage > 1) {
+      saveCharacter();
+      const currentPageEl = document.getElementById(`page-${currentPage}`);
+      if (currentPageEl) currentPageEl.classList.remove('active');
+      currentPage--;
+      const prevPageEl = document.getElementById(`page-${currentPage}`);
+      if (prevPageEl) prevPageEl.classList.add('active');
+      updatePageDisplay();
+      window.scrollTo(0, 0);
+      updateNavButtons();
+    }
+  }
+    
+
+console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');

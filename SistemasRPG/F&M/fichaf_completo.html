@@ -32,7 +32,8 @@
             </div>
         </div>
     </header>
-
+    <form action="Ficha_F&M.php" method="post">
+        <input type="hidden" name="id_ficha" value="<?= $_GET['id'] ?? '' ?>">
     <!-- Container Principal -->
     <div class="container">
 
@@ -61,14 +62,14 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="origin">Origem</label>
-                        <select id="origin" class="form-control styled-select">
+                        <select id="origin" name="origin" class="form-control styled-select">
                             <option value="">Selecione...</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="specialization">Especialização</label>
-                        <select id="specialization" class="form-control styled-select">
+                        <select id="specialization" name="specialization" class="form-control styled-select">
                             <option value="">Selecione...</option>
                         </select>
                     </div>
@@ -80,37 +81,37 @@
             <div class="attribute-grid card section-border-teal">
                 <div class="attribute-box">
                     <div class="attribute-name">Força</div>
-                    <input type="number" id="str" value="10" min="0" max="30" class="form-control attribute-value">
+                    <input type="number" id="str" value="10" min="0" max="30" class="form-control attribute-value" name="str">
                     <div class="attribute-modifier">Modificador: <span id="str-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Destreza</div>
-                    <input type="number" id="dex" value="10" min="0" max="30" class="form-control attribute-value">
+                    <input type="number" id="dex" value="10" min="0" max="30" class="form-control attribute-value" name="dex">
                     <div class="attribute-modifier">Modificador: <span id="dex-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Constituição</div>
-                    <input type="number" id="con" value="10" min="0" max="30" class="form-control attribute-value">
+                    <input type="number" id="con" value="10" min="0" max="30" class="form-control attribute-value" name="con">
                     <div class="attribute-modifier">Modificador: <span id="con-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Sabedoria</div>
-                    <input type="number" id="wis" value="10" min="0" max="30" class="form-control attribute-value">
+                    <input type="number" id="wis" value="10" min="0" max="30" class="form-control attribute-value" name="wis">
                     <div class="attribute-modifier">Modificador: <span id="wis-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Inteligência</div>
-                    <input type="number" id="int" value="10" min="0" max="30" class="form-control attribute-value">
+                    <input type="number" id="int" value="10" min="0" max="30" class="form-control attribute-value" name="int">
                     <div class="attribute-modifier">Modificador: <span id="int-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Carisma</div>
-                    <input type="number" id="cha" value="10" min="0" max="30" class="form-control attribute-value">
+                    <input type="number" id="cha" value="10" min="0" max="30" class="form-control attribute-value" name="cha">
                     <div class="attribute-modifier">Modificador: <span id="cha-mod" class="mod">+0</span></div>
                 </div>
             </div>
@@ -121,32 +122,32 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="ac-natural">Natural</label>
-                        <input type="number" id="ac-natural" value="10" class="form-control">
+                        <input type="number" id="ac-natural" value="10" class="form-control" name="ac-natural">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-armor">Uniforme</label>
-                        <input type="number" id="ac-armor" value="0" class="form-control">
+                        <input type="number" id="ac-armor" value="0" class="form-control" name="ac-armor">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-shield">Escudo</label>
-                        <input type="number" id="ac-shield" value="0" class="form-control">
+                        <input type="number" id="ac-shield" value="0" class="form-control" name="ac-shield">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-dex">Destreza</label>
-                        <input type="number" id="ac-dex" value="0" readonly class="form-control">
+                        <input type="number" id="ac-dex" value="0" readonly class="form-control" name="ac-dex">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-other">Outros</label>
-                        <input type="number" id="ac-other" value="0" class="form-control">
+                        <input type="number" id="ac-other" value="0" class="form-control" name="ac-other">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-total"><strong>Total CA</strong></label>
-                        <input type="number" id="ac-total" value="10" readonly class="form-control" style="font-weight: bold; font-size: 1.2em;">
+                        <input type="number" id="ac-total" value="10" readonly class="form-control" style="font-weight: bold; font-size: 1.2em;" name="ac-total">
                     </div>
                 </div>
             </div>
@@ -468,7 +469,7 @@
             <button class="btn btn--primary" onclick="rollD20()">🎲 Rolar Novamente</button>
         </div>
     </div>
-
+    </form>
     <script src="script_melhorado.js"></script>
 </body>
 </html>
