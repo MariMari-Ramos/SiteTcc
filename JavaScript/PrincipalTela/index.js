@@ -90,7 +90,7 @@
         } else if (currentSystem === 'Cyberpunk') {
           window.location.href = '../SistemasRPG/Cyberpunk/CriarFichaCyberpunk.html';
         } else if (currentSystem === 'Feiticeiros e Maldições') {
-          window.location.href = '../SistemasRPG/FeiticeiroseMaldicoes/CriarFichaFM.html';
+          window.location.href = '../SistemasRPG/F&M/fichaf_completo.html';
         } else if (currentSystem === 'Vampiro a Mascara') {
           window.location.href = '../SistemasRPG/Vampiro/CriarFichaVampiro.html';
         } else {

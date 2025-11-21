@@ -32,8 +32,7 @@
             </div>
         </div>
     </header>
-    <form action="Ficha_F&M.php" method="post">
-        <input type="hidden" name="id_ficha" value="<?= $_GET['id'] ?? '' ?>">
+    <form id="character-form" action="Ficha_F&M.php" method="POST">
     <!-- Container Principal -->
     <div class="container">
 
@@ -45,17 +44,17 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="char-name">Nome do Personagem</label>
-                        <input type="text" id="char-name" class="form-control" placeholder="Digite o nome...">
+                        <input type="text" id="char-name" class="form-control" placeholder="Digite o nome..." name="char-name">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="level">Nível</label>
-                        <input type="number" id="level" min="1" max="20" value="1" class="form-control">
+                        <input type="number" id="level" min="1" max="20" value="1" class="form-control" name="level">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="proficiency-bonus">Bônus de Maestria</label>
-                        <input type="text" id="proficiency-bonus" readonly value="+2" class="form-control">
+                        <input type="text" id="proficiency-bonus" readonly value="+2" class="form-control" name="proficiency-bonus">
                     </div>
                 </div>
 
@@ -154,9 +153,9 @@
 
             <!-- Navegação -->
             <div class="navigation">
-                <button id="prev-btn" class="btn btn--secondary" onclick="previousPage()" disabled>← Anterior</button>
+                <button id="prev-btn" type="button" class="btn btn--secondary" onclick="previousPage()" disabled>← Anterior</button>
                 <span class="page-info">Página <span id="current-page">1</span> de <span id="total-pages">7</span></span>
-                <button id="next-btn" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button id="next-btn" type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -217,9 +216,9 @@
             <!-- Adicionar perícias de Constituição, Sabedoria, Inteligência e Carisma seguindo o mesmo padrão -->
 
             <div class="navigation">
-                <button class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página <span id="nav-current-page">2</span> de 7</span>
-                <button class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -309,9 +308,9 @@
             </div>
 
             <div class="navigation">
-                <button class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 3 de 7</span>
-                <button class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -327,9 +326,9 @@
             </div>
 
             <div class="navigation">
-                <button class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 4 de 7</span>
-                <button class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -380,9 +379,9 @@
             </div>
 
             <div class="navigation">
-                <button class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 5 de 7</span>
-                <button class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -419,9 +418,9 @@
             </div>
 
             <div class="navigation">
-                <button class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 6 de 7</span>
-                <button class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -444,7 +443,7 @@
         </div>
 
     </div>
-
+    </form>
     <!-- Botão D20 Flutuante -->
     <div class="d20-container">
         <button class="d20-btn" onclick="rollD20()" title="Rolar D20">🎲</button>
@@ -469,7 +468,7 @@
             <button class="btn btn--primary" onclick="rollD20()">🎲 Rolar Novamente</button>
         </div>
     </div>
-    </form>
+    
     <script src="script_melhorado.js"></script>
 </body>
 </html>

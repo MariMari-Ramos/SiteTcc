@@ -25,3 +25,41 @@ CREATE TABLE perfis (
     data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE Sis_RPG (
+    id_sistema INT AUTO_INCREMENT PRIMARY KEY,
+    nome_sistema VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    url_regras VARCHAR(255)
+);
+
+
+INSERT INTO Sis_RPG (nome_sistema, descricao, url_regras)
+VALUES
+('D&D 5e', 
+ 'Sistema medieval fantástico com foco em exploração de masmorras e progressão por níveis.',
+ 'https://dnd5e.wikidot.com/');
+
+
+
+CREATE TABLE Ficha_Per (
+    id_ficha INT AUTO_INCREMENT PRIMARY KEY,
+    nome_personagem VARCHAR(150) NOT NULL,
+    nivel INT DEFAULT 1,
+    dados_json JSON,
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ultima_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    id_usuario INT(11) UNSIGNED NOT NULL,
+    id_sistema INT NOT NULL,
+
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    FOREIGN KEY (id_sistema) REFERENCES Sis_RPG(id_sistema)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
