@@ -1,0 +1,11 @@
+# Ignore uploaded files and runtime storage
+/uploads/
+/storage/
+
+# Ignore editor/OS files
+.DS_Store
+Thumbs.db
+
+# PHPStorm / VSCode
+.idea/
+.vscode/

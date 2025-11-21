@@ -69,7 +69,6 @@ if(!empty($foto_perfil) && strpos($foto_perfil, '/') === 0){
         </div>
     </div>
 
-    <!-- Modal de Avatares removido (seleção por avatar desativada) -->
     <!-- Modal de Avatares (restaurado) -->
     <div id="avatarModal" class="avatar-modal" style="display: none;">
         <div class="avatar-modal-content">
@@ -121,18 +120,33 @@ if(!empty($foto_perfil) && strpos($foto_perfil, '/') === 0){
                     
                     <div class="acoes-conta">
                         <h3>Ações da Conta</h3>
-                        
-                        <button type="button" class="btn-secondary" onclick="window.location.href='../../Login/RecuperarSenha/RedefinirSenha/RedefinicaoDeSenha.html'">
-                            <i class="bi bi-key"></i> Alterar Senha
-                        </button>
-                        
-                        <button type="button" class="btn-warning" id="btnSair">
-                            <i class="bi bi-box-arrow-right"></i> Sair da Conta
-                        </button>
-                        
-                        <button type="button" class="btn-danger" id="btnExcluirConta">
-                            <i class="bi bi-trash"></i> Excluir Conta
-                        </button>
+
+                        <div class="action-row">
+                            <div class="action-label">Alterar senha:</div>
+                            <div class="action-controls">
+                                <button type="button" class="action-button btn-secondary" onclick="window.location.href='../../Login/RecuperarSenha/RedefinirSenha/RedefinicaoDeSenha.html'">
+                                    <i class="bi bi-key"></i> Alterar Senha
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="action-row">
+                            <div class="action-label">Sair da conta:</div>
+                            <div class="action-controls">
+                                <button type="button" class="action-button btn-warning" id="btnSair">
+                                    <i class="bi bi-box-arrow-right"></i> Sair
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="action-row">
+                            <div class="action-label">Excluir conta:</div>
+                            <div class="action-controls">
+                                <button type="button" class="action-button btn-danger" id="btnExcluirConta">
+                                    <i class="bi bi-trash"></i> Excluir Conta
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
