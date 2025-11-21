@@ -1,37 +1,3 @@
-/* ========== PERFIL DO USUÁRIO.JS ==========
-   Controla formulário de EDITAR PERFIL do usuário
-// Waves e configurações removidas nesta tela para simplificação.
-
-        mouseX += (targetMouseX - mouseX) * easeAmount;
-        mouseY += (targetMouseY - mouseY) * easeAmount;
-
-        const targetInteractive = interactive ? 1 : 0;
-        interactiveTransition += (targetInteractive - interactiveTransition) * transitionSpeed;
-
-        waveDirection += (targetWaveDirection - waveDirection) * directionEaseAmount;
-
-        heatIntensity *= heatDecayRate;
-        clickAmplitude *= clickAmplitudeDecayRate;
-
-        clickHeight += (targetClickHeight - clickHeight) * clickHeightEaseAmount;
-        targetClickHeight *= 0.9;
-
-        if (isMousePressed && settings.enableHoldEffect) {
-            speedBoost = Math.min(speedBoost + boostBuildRate, maxSpeedBoost);
-            heatIntensity = Math.min(heatIntensity + 0.03, 1);
-
-            if (settings.enableClickEffect && Math.random() < 0.3 && flames.length < maxFlames) {
-                flames.push(new Flame(mouseX, mouseY));
-            }
-        } else {
-            speedBoost *= boostDecayRate;
-        }
-
-        const bgColor = currentPalette.bg;
-        ctx.fillStyle = `rgb(${bgColor[0]}, ${bgColor[1]}, ${bgColor[2]})`;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        time += (baseWaveSpeed + speedBoost * 0.02) * waveDirection * interactiveTransition;
 
 /* ==================== FORMULÁRIO DE EDITAR PERFIL ==================== */
 
@@ -43,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const avatarModal = document.getElementById('avatarModal');
     const closeAvatar = document.getElementById('closeAvatar');
     const confirmAvatar = document.getElementById('confirmAvatar');
+    const btnUploadPhoto = document.getElementById('btnUploadPhoto');
+    const btnChooseAvatar = document.getElementById('btnChooseAvatar');
+    const btnRemovePhoto = document.getElementById('btnRemovePhoto');
     const btnSair = document.getElementById('btnSair');
     const btnExcluirConta = document.getElementById('btnExcluirConta');
     const alertOverlay = document.getElementById('alertOverlay');
@@ -51,6 +20,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertCancel = document.getElementById('alertCancel');
 
     let avatarSelecionado = null;
+    // Estado local seguro (evita ReferenceErrors caso outras scripts não definam essas vars)
+    let isSettingsOpen = false;
+    let isFormFocused = false;
+    let interactive = true;
+
+    // Settings stored in localStorage (fallbacks provided)
+    let settings = JSON.parse(localStorage.getItem('profileSettings') || 'null') || {
+        enableWaves: true,
+        theme: 'light',
+        enableClickEffect: true,
+        enableHoldEffect: true,
+        highContrast: false,
+        largerText: false
+    };
+
+    // Canvas/waves palette placeholders (algumas páginas definem estes globalmente)
+    let canvas = window.wavesCanvas || null;
+    let ctx = window.wavesCtx || null;
+    let baseColorPalette = window.baseColorPalette || { dark: {}, light: {} };
+    let currentPalette = window.currentPalette || baseColorPalette.light;
 
     function mostrarAlerta(mensagem, callback = null, mostrarCancelar = false) {
         alertMessage.textContent = mensagem;
@@ -71,42 +60,64 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // Clique simples - Upload
+    // Preview é somente visual — interações por botões abaixo
     if(fotoPreviewContainer) {
-        fotoPreviewContainer.addEventListener('click', (e) => {
-            if(e.detail === 1) {
-                setTimeout(() => {
-                    if(e.detail === 1) {
-                        profilePhoto.click();
-                    }
-                }, 200);
-            }
-        });
+        // Remova handlers de clique/duplo/contextmenu no preview para torná-lo apenas visual
 
-        // Duplo clique - Modal de avatares
-        fotoPreviewContainer.addEventListener('dblclick', () => {
-            avatarModal.style.display = 'flex';
-            isSettingsOpen = true;
-        });
+        // Botões explícitos
+        if (btnUploadPhoto) {
+            btnUploadPhoto.addEventListener('click', () => {
+                if (profilePhoto) profilePhoto.click();
+            });
+        }
 
-        // Botão direito - Remover foto
-        fotoPreviewContainer.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            mostrarAlerta('Deseja remover a foto de perfil?', () => {
-                document.getElementById('removerFoto').value = '1';
-                document.getElementById('tipoFoto').value = '';
-                document.getElementById('avatarSelecionado').value = '';
-                
-                fotoPreviewContainer.innerHTML = `
-                    <div class="no-photo" id="noPhotoPlaceholder">
-                        <i class="bi bi-person-circle"></i>
-                        <p>Sem foto</p>
-                    </div>
-                `;
-                
-                mostrarAlerta('Foto removida! Clique em "Salvar alterações" para confirmar.');
-            }, true);
-        });
+        if (btnChooseAvatar) {
+            btnChooseAvatar.addEventListener('click', () => {
+                if (avatarModal) {
+                    avatarModal.style.display = 'flex';
+                    isSettingsOpen = true;
+                }
+            });
+        }
+
+        // Helper: checa se há uma foto exibida atualmente
+        function hasPhotoPresent(){
+            const img = document.getElementById('previewFoto');
+            const avatarVal = document.getElementById('avatarSelecionado')?.value || '';
+            const tipo = document.getElementById('tipoFoto')?.value || '';
+            // Se existe img no DOM ou algum avatar selecionado ou tipoFoto marcado, considera que tem foto
+            return !!img || avatarVal !== '' || tipo === 'upload' || tipo === 'avatar';
+        }
+
+        // Observação: menu de contexto sobre o preview removido — preview é somente visual.
+
+        // Remover foto via botão (verifica se há foto antes)
+        if (btnRemovePhoto) {
+            btnRemovePhoto.addEventListener('click', () => {
+                if (!hasPhotoPresent()) {
+                    mostrarAlerta('Não há foto para remover.');
+                    return;
+                }
+                mostrarAlerta('Deseja remover a foto de perfil?', () => {
+                    const removerInput = document.getElementById('removerFoto');
+                    const tipoInput = document.getElementById('tipoFoto');
+                    const avatarInput = document.getElementById('avatarSelecionado');
+                    if (removerInput) removerInput.value = '1';
+                    if (tipoInput) tipoInput.value = '';
+                    if (avatarInput) avatarInput.value = '';
+
+                    fotoPreviewContainer.innerHTML = `
+                        <div class="no-photo" id="noPhotoPlaceholder">
+                            <i class="bi bi-person-circle"></i>
+                            <p>Sem foto</p>
+                        </div>
+                    `;
+
+                    mostrarAlerta('Foto removida! Clique em "Salvar alterações" para confirmar.');
+                }, true);
+            });
+        }
+
     }
 
     // Preview de upload
@@ -147,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Avatar selection: permitir escolher via modal e confirmar
     const avatarOptions = document.querySelectorAll('.avatar-option');
     avatarOptions.forEach(option => {
         option.addEventListener('click', () => {
@@ -166,20 +178,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p>Sem foto</p>
                         </div>
                     `;
-                    document.getElementById('removerFoto').value = '1';
+                    const rem = document.getElementById('removerFoto'); if(rem) rem.value = '1';
+                    const tipo = document.getElementById('tipoFoto'); if(tipo) tipo.value = '';
+                    const avatarInput = document.getElementById('avatarSelecionado'); if(avatarInput) avatarInput.value = '';
                 } else {
                     fotoPreviewContainer.innerHTML = `
                         <img id="previewFoto" 
                              src="${avatarSelecionado}" 
                              alt="Foto de perfil">
                     `;
-                    document.getElementById('avatarSelecionado').value = avatarSelecionado;
-                    document.getElementById('removerFoto').value = '0';
+                    const avatarInput = document.getElementById('avatarSelecionado'); if(avatarInput) avatarInput.value = avatarSelecionado;
+                    const rem = document.getElementById('removerFoto'); if(rem) rem.value = '0';
+                    const tipo = document.getElementById('tipoFoto'); if(tipo) tipo.value = 'avatar';
                 }
-                
-                document.getElementById('tipoFoto').value = avatarSelecionado ? 'avatar' : '';
-                profilePhoto.value = '';
-                avatarModal.style.display = 'none';
+                if (profilePhoto) profilePhoto.value = '';
+                if (avatarModal) avatarModal.style.display = 'none';
                 isSettingsOpen = false;
                 mostrarAlerta('Avatar selecionado! Clique em "Salvar alterações" para confirmar.');
             } else {

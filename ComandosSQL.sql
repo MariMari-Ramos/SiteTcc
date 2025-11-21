@@ -17,7 +17,7 @@ CREATE TABLE usuarios (
 
 CREATE TABLE perfis (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL UNIQUE,
+    usuario_id INT(11) UNSIGNED NOT NULL UNIQUE,
     nome_perfil VARCHAR(255) NOT NULL,
     foto_perfil VARCHAR(255) NULL,
     tipo_foto ENUM('upload', 'avatar') DEFAULT NULL,
@@ -26,6 +26,23 @@ CREATE TABLE perfis (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
+UPDATE perfis
+SET foto_perfil = CONCAT('/SiteTcc/', REPLACE(foto_perfil, '../', ''))
+WHERE foto_perfil LIKE '../%';
+
+
+/* Tabela para armazenar as configurações do usuário (JSON) */
+CREATE TABLE user_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT(11) UNSIGNED NOT NULL UNIQUE,
+    settings JSON NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+UPDATE perfis
+SET foto_perfil = CONCAT('/SiteTcc/', REPLACE(foto_perfil, '../', ''))
+WHERE foto_perfil LIKE '../%';
 
 CREATE TABLE Sis_RPG (
     id_sistema INT AUTO_INCREMENT PRIMARY KEY,

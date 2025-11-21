@@ -1,3 +1,41 @@
+<?php
+session_start();
+// conectar ao banco para buscar perfil (se o usuário estiver logado)
+include(__DIR__ . '/../conexao.php');
+
+$showProfileName = false;
+$profileName = '';
+$profilePhoto = '';
+
+if (!empty($_SESSION['usuario_id'])) {
+  $usuario_id = intval($_SESSION['usuario_id']);
+  $stmt = $conn->prepare("SELECT p.nome_perfil, p.foto_perfil FROM perfis p WHERE p.usuario_id = ? LIMIT 1");
+  if ($stmt) {
+    $stmt->bind_param('i', $usuario_id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res && $res->num_rows > 0) {
+      $row = $res->fetch_assoc();
+      $profileName = $row['nome_perfil'] ?? '';
+      $foto = $row['foto_perfil'] ?? '';
+      // Se o caminho começar com '/', trate como caminho público e verifique arquivo físico
+      if (!empty($foto)) {
+        if (strpos($foto, '/') === 0) {
+          $physical = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . $foto;
+          if (file_exists($physical)) {
+            $profilePhoto = $foto;
+          }
+        } else {
+          // pode ser caminho relativo ou URL — usamos diretamente (assume válido)
+          $profilePhoto = $foto;
+        }
+      }
+      $showProfileName = true;
+    }
+    $stmt->close();
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
@@ -13,8 +51,6 @@
 
   <!-- JS Global (sem defer para aplicar tema/estado inicial) -->
   <script src="../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js" defer></script>
-  <!-- Módulo de armazenamento das fichas -->
-  <script src="../JavaScript/PrincipalTela/fichasStorage.js" defer></script>
   <!-- JS da página (defer) -->
   <script src="../JavaScript/PrincipalTela/index.js" defer ></script>
 </head>
@@ -27,10 +63,21 @@
     </div>
 
     <nav class="menu">
-      <a href="./Perfil_ConfiguracaoDePerfil/Perfil.php">
-        <i class="bi bi-person-circle" aria-hidden="true"></i>
-        <span data-translate="perfil">Perfil</span>
-      </a>
+      <?php if (!empty($showProfileName)): ?>
+        <a href="./Perfil_ConfiguracaoDePerfil/Perfil.php" class="profile-link" title="Ir para Perfil">
+          <?php if (!empty($profilePhoto)): ?>
+            <img src="<?php echo htmlspecialchars($profilePhoto); ?>" alt="<?php echo htmlspecialchars($profileName ?: 'Perfil'); ?>" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" />
+          <?php else: ?>
+            <i class="bi bi-person-circle" aria-hidden="true"></i>
+          <?php endif; ?>
+          <span><?php echo htmlspecialchars($profileName ?: 'Perfil'); ?></span>
+        </a>
+      <?php else: ?>
+        <a href="./Perfil_ConfiguracaoDePerfil/Perfil.php">
+          <i class="bi bi-person-circle" aria-hidden="true"></i>
+          <span data-translate="perfil">Perfil</span>
+        </a>
+      <?php endif; ?>
       <a href="Configurações/config.html">
         <i class="bi bi-gear-fill" aria-hidden="true"></i>
         <span data-translate="configuracoes">Configurações</span>

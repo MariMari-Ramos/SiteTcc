@@ -33,15 +33,26 @@ if($result->num_rows > 0) {
 }
 
 $stmt->close();
+
+// Se foto_perfil for um caminho público (ex: "/SiteTcc/uploads/.."), verifica se o arquivo existe
+if(!empty($foto_perfil) && strpos($foto_perfil, '/') === 0){
+    $physical = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . $foto_perfil;
+    if(!file_exists($physical)){
+        // arquivo não encontrado no servidor — não mostrar imagem
+        $foto_perfil = null;
+    }
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
     <link rel="stylesheet" href="../../CSS/TelaPrinciapal/ConfiguraçõesDePerfil/Perfil.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <script src="../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js" defer></script>
     <script src="../../JavaScript/PerfilDoUsuário/PerfilDoUsuário.js" defer></script>
     <title>Editar Perfil - SystemForge</title>
 </head>
@@ -58,7 +69,8 @@ $stmt->close();
         </div>
     </div>
 
-    <!-- Modal de Avatares -->
+    <!-- Modal de Avatares removido (seleção por avatar desativada) -->
+    <!-- Modal de Avatares (restaurado) -->
     <div id="avatarModal" class="avatar-modal" style="display: none;">
         <div class="avatar-modal-content">
             <button class="close-avatar" id="closeAvatar" title="Fechar">
@@ -130,7 +142,7 @@ $stmt->close();
                     <label>Foto do Perfil:</label>
                     
                     <!-- Preview da foto atual -->
-                    <div class="perfil-foto-preview" id="fotoPreviewContainer" title="Clique para alterar | Duplo clique para avatar | Botão direito para remover">
+                    <div class="perfil-foto-preview" id="fotoPreviewContainer" title="Foto de perfil — apenas visualização">
                         <?php if(!empty($foto_perfil)): ?>
                             <img id="previewFoto" 
                                  src="<?php echo htmlspecialchars($foto_perfil); ?>" 
@@ -142,22 +154,29 @@ $stmt->close();
                             </div>
                         <?php endif; ?>
                     </div>
+
+                    <!-- Botões explícitos para manipular foto de perfil -->
+                    <div class="photo-action-buttons" style="text-align:center; margin-top:12px; display:flex; gap:8px; justify-content:center;">
+                        <button type="button" id="btnUploadPhoto" class="btn-secondary" title="Enviar foto">Upload</button>
+                        <button type="button" id="btnChooseAvatar" class="btn-secondary" title="Escolher avatar">Escolher Avatar</button>
+                        <button type="button" id="btnRemovePhoto" class="btn-danger" title="Remover foto">Remover Foto</button>
+                    </div>
                     
                     <p class="foto-hint">
-                        <i class="bi bi-info-circle"></i> 
-                        Clique: Upload | Duplo clique: Avatar | Botão direito: Remover
+                        <i class="bi bi-info-circle"></i>
+                        Foto de perfil — apenas visualização. Use os botões abaixo para alterar ou remover.
                     </p>
                     
                     <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" style="display: none;">
                     
                     <hr>
                     
-                    <div class="button-container">
-                        <button type="submit" id="ButtonSalvarPerfil">
-                            <i class="bi bi-check-circle"></i> Salvar Alterações
+                    <div class="button-container" style="display:flex; gap:12px; margin-top:18px;">
+                        <button type="submit" id="ButtonSalvarPerfil" class="btn-save">
+                            <i class="bi bi-check-circle"></i> SALVAR ALTERAÇÕES
                         </button>
-                        <button type="button" id="btnVoltar" onclick="window.location.href='../index.php'">
-                            <i class="bi bi-arrow-left"></i> Voltar
+                        <button type="button" id="btnVoltar" class="btn-back" onclick="window.location.href='../index.php'">
+                            <i class="bi bi-arrow-left"></i> VOLTAR
                         </button>
                     </div>
                 </div>

@@ -15,15 +15,20 @@ if (empty($identificador) || empty($senha)) {
     exit;
 }
 
-// Buscar usuário SOMENTE pelo email
-$sql = "SELECT id, email, senha FROM usuarios WHERE email = ? LIMIT 1";
+// Buscar usuário pelo email OU pelo nome do perfil associado
+// Usa LEFT JOIN em perfis para permitir login usando o nome de perfil
+$sql = "SELECT u.id, u.email, u.senha
+        FROM usuarios u
+        LEFT JOIN perfis p ON p.usuario_id = u.id
+        WHERE u.email = ? OR p.nome_perfil = ?
+        LIMIT 1";
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
     die("Erro no prepare: " . $conn->error);
 }
 
-$stmt->bind_param("s", $identificador);
+$stmt->bind_param("ss", $identificador, $identificador);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -51,7 +56,7 @@ if ($result && $result->num_rows > 0) {
         echo json_encode(["status" => "error", "message" => "Senha incorreta!"]);
     }
 } else {
-    echo json_encode(["status" => "error", "message" => "Email não encontrado!"]);
+    echo json_encode(["status" => "error", "message" => "Email ou Nome de Perfil não encontrado!"]);
 }
 
 $stmt->close();
