@@ -188,19 +188,25 @@
     }
   });
 
-  /* ===== Minhas Fichas: renderização ===== */
-  function renderMinhasFichas() {
-    const host = document.getElementById('minhasFichasList');
-    if (!host || !window.MinhasFichas) return;
+  async function fetchFichasDoServidor() {
+    const r = await fetch("../SistemasRPG/listar_fichas.php" );
+    return await r.json();
+  }
 
-    const fichas = window.MinhasFichas.getAll();
+  /* ===== Minhas Fichas: renderização ===== */
+  async function renderMinhasFichas() {
+    const host = document.getElementById('minhasFichasList');
+    if (!host) return;
+
+    const fichas = await fetchFichasDoServidor();
+
     if (!fichas.length) {
       host.innerHTML = '<p style="color:#666;margin:6px 8px;">Nenhuma ficha salva ainda.</p>';
       return;
     }
 
     const bySys = fichas.reduce((acc, f) => {
-      const sys = f.sistema || 'Outros';
+      const sys = f.nome_sistema || 'Outros';
       (acc[sys] ||= []).push(f);
       return acc;
     }, {});
@@ -210,7 +216,7 @@
     Object.entries(bySys).forEach(([sistema, list]) => {
       const group = document.createElement('div');
       group.className = 'fichas-group';
-      group.setAttribute('data-system', (sistema || '').toLowerCase().replace(/\s+/g, ''));
+      group.setAttribute('data-system', sistema.toLowerCase().replace(/\s+/g, ''));
 
       const title = document.createElement('div');
       title.className = 'fichas-title';
@@ -223,14 +229,32 @@
         const chip = document.createElement('button');
         chip.type = 'button';
         chip.className = 'ficha-chip';
-        chip.dataset.id = f.id;
-        chip.textContent = f.nome || `${sistema} - ${new Date(f.createdAt).toLocaleDateString()}`;
-        chip.title = `${f.nome || 'Sem nome'} (${sistema})`;
+        chip.dataset.id = f.id_ficha;
+
+        let dados = {};
+        try { dados = JSON.parse(f.dados_json); } catch(e){}
+
+        const specialization = dados.specialization || dados.subclasse || "Não definido";
+
+        const dataCriacao = new Date(f.data_criacao)
+          .toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
+
+        chip.innerHTML = `
+          <strong>${f.nome_personagem}</strong><br>
+          <span style="font-size: 12px; color: #ccc;">
+              ${specialization} • Criada em ${dataCriacao}
+          </span>
+        `;
+
+        chip.title = `${f.nome_personagem} (${sistema})`;
+
         chip.addEventListener('click', () => {
-          alert(`Abrir ficha (em breve): ${f.nome || f.id}`);
+          window.location.href = `/SiteTcc/SistemasRPG/F&M/Edicao/EdicaoFicha_F&M.php?id=${f.id_ficha}`;
         });
+
         chips.appendChild(chip);
       });
+
 
       const rail = document.createElement('div');
       rail.className = 'fichas-rail';
@@ -243,7 +267,8 @@
 
     host.innerHTML = '';
     host.appendChild(frag);
-  }
+}
+
 
   /* ===== Minhas Fichas Randômicas: renderização (placeholder) ===== */
   function renderMinhasFichasRandomicas() {

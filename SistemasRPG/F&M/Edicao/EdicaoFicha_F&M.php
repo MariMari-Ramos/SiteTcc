@@ -1,14 +1,46 @@
+<?php
+session_start();
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: /SiteTcc/Login/login.php");
+    exit;
+}
+
+include("../../../conexao.php");
+
+if (!isset($_GET["id"])) {
+    die("ID da ficha não informado.");
+}
+
+$id_ficha = intval($_GET["id"]);
+$id_usuario = intval($_SESSION["usuario_id"]);
+
+$sql = "SELECT * FROM ficha_per WHERE id_ficha = ? AND id_usuario = ? LIMIT 1";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $id_ficha, $id_usuario);
+$stmt->execute();
+$res = $stmt->get_result();
+
+if ($res->num_rows === 0) {
+    die("Ficha não encontrada.");
+}
+
+$ficha = $res->fetch_assoc();
+$dados = json_decode($ficha["dados_json"], true);
+$info = $dados["info_basicas"];
+?>
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ficha F&M - Feiticeiros e Maldições</title>
-    <link rel="stylesheet" href="style_melhorado.css">
+    <title><?php echo htmlspecialchars($info["nome"]); ?></title>
+    <link rel="stylesheet" href="EdicaoFicha_F&M.css">
 </head>
 <body>
     <!-- Header Principal com Navegação -->
-    <header class="header page-theme-teal">
+    <header class="header page-theme-teal" action="Ficha_F&M.php" method="POST">
         <div class="header-content">
             <div class="header-left">
                 <h1 class="title">⚡ Feiticeiros & Maldições</h1>
@@ -25,10 +57,10 @@
                 <span class="page-dot" title="Invocações"></span>
             </div>
 
-            <div class="header-actions">
-                <button id="save-btn" class="btn btn--sm btn--secondary" title="Salvar Ficha">💾 Salvar</button>
-                <button id="clear-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha">🗑️ Limpar</button>
-                <button id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir">📄 Exportar</button>
+            <div class="header-actions" >
+                <button type="submit" id="save-btn" class="btn btn--sm btn--secondary" title="Salvar Ficha" >💾 Salvar</button>
+                <button type="button" id="edit-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha">💾 Editar</button>
+                <button type="button" id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir">📄 Exportar</button>
             </div>
         </div>
     </header>
@@ -44,31 +76,37 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="char-name">Nome do Personagem</label>
-                        <input type="text" id="char-name" class="form-control" placeholder="Digite o nome..." name="char-name">
+                        <input type="text" id="char-name" class="form-control" placeholder="Digite o nome..." name="char-name" value="<?php echo htmlspecialchars($info['nome']); ?>" disabled>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="level">Nível</label>
-                        <input type="number" id="level" min="1" max="20" value="1" class="form-control" name="level">
+                        <input type="number" id="level" min="1" max="20" value="1" class="form-control" name="level" value="<?php echo htmlspecialchars($info['nome']); ?>" >
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="proficiency-bonus">Bônus de Maestria</label>
-                        <input type="text" id="proficiency-bonus" readonly value="+2" class="form-control" name="proficiency-bonus">
+                        <input type="text" id="proficiency-bonus" readonly value="+2" class="form-control" name="proficiency-bonus" value="<?php echo htmlspecialchars($info['proficiency_bonus']); ?>" disabled>
                     </div>
                 </div>
+
+                <script>
+                    const fichaOrigin = "<?= htmlspecialchars($info['origin']) ?>";
+                    const fichaSpec = "<?= htmlspecialchars($info['specialization']) ?>";
+                </script>
+
 
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="origin">Origem</label>
-                        <select id="origin" name="origin" class="form-control styled-select">
+                        <select id="origin" name="origin" class="form-control styled-select" disabled>
                             <option value="">Selecione...</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="specialization">Especialização</label>
-                        <select id="specialization" name="specialization" class="form-control styled-select">
+                        <select id="specialization" name="specialization" class="form-control styled-select" disabled>
                             <option value="">Selecione...</option>
                         </select>
                     </div>
@@ -80,37 +118,37 @@
             <div class="attribute-grid card section-border-teal">
                 <div class="attribute-box">
                     <div class="attribute-name">Força</div>
-                    <input type="number" id="str" value="10" min="0" max="30" class="form-control attribute-value" name="str">
+                    <input type="number" id="str" value="10" min="0" max="30" class="form-control attribute-value" name="str" value="<?php echo htmlspecialchars($info['str']); ?>" disabled>
                     <div class="attribute-modifier">Modificador: <span id="str-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Destreza</div>
-                    <input type="number" id="dex" value="10" min="0" max="30" class="form-control attribute-value" name="dex">
+                    <input type="number" id="dex" value="10" min="0" max="30" class="form-control attribute-value" name="dex" value="<?php echo htmlspecialchars($info['dex']); ?>" disabled>
                     <div class="attribute-modifier">Modificador: <span id="dex-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Constituição</div>
-                    <input type="number" id="con" value="10" min="0" max="30" class="form-control attribute-value" name="con">
+                    <input type="number" id="con" value="10" min="0" max="30" class="form-control attribute-value" name="con"   value="<?php echo htmlspecialchars($info['con']); ?>" disabled>
                     <div class="attribute-modifier">Modificador: <span id="con-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Sabedoria</div>
-                    <input type="number" id="wis" value="10" min="0" max="30" class="form-control attribute-value" name="wis">
+                    <input type="number" id="wis" value="10" min="0" max="30" class="form-control attribute-value" name="wis" value="<?php echo htmlspecialchars($info['wis']); ?>" disabled>
                     <div class="attribute-modifier">Modificador: <span id="wis-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Inteligência</div>
-                    <input type="number" id="int" value="10" min="0" max="30" class="form-control attribute-value" name="int">
+                    <input type="number" id="int" value="10" min="0" max="30" class="form-control attribute-value" name="int"   value="<?php echo htmlspecialchars($info['int']); ?>" disabled>
                     <div class="attribute-modifier">Modificador: <span id="int-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
                     <div class="attribute-name">Carisma</div>
-                    <input type="number" id="cha" value="10" min="0" max="30" class="form-control attribute-value" name="cha">
+                    <input type="number" id="cha" value="10" min="0" max="30" class="form-control attribute-value" name="cha"  value="<?php echo htmlspecialchars($info['cha']); ?>" disabled>
                     <div class="attribute-modifier">Modificador: <span id="cha-mod" class="mod">+0</span></div>
                 </div>
             </div>
@@ -121,27 +159,27 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="ac-natural">Natural</label>
-                        <input type="number" id="ac-natural" value="10" class="form-control" name="ac-natural">
+                        <input type="number" id="ac-natural" value="10" class="form-control" name="ac-natural" value="<?php echo $info["ac_natural"]; ?>" disabled>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-armor">Uniforme</label>
-                        <input type="number" id="ac-armor" value="0" class="form-control" name="ac-armor">
+                        <input type="number" id="ac-armor" value="0" class="form-control" name="ac-armor" value="<?php echo $info["ac_armor"]; ?>" disabled>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-shield">Escudo</label>
-                        <input type="number" id="ac-shield" value="0" class="form-control" name="ac-shield">
+                        <input type="number" id="ac-shield" value="0" class="form-control" name="ac-shield" value="<?php echo $info["ac_shield"]; ?>" disabled>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-dex">Destreza</label>
-                        <input type="number" id="ac-dex" value="0" readonly class="form-control" name="ac-dex">
+                        <input type="number" id="ac-dex" value="0" readonly class="form-control" name="ac-dex" value="<?php echo $info["ac_dex"]; ?>" disabled>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-other">Outros</label>
-                        <input type="number" id="ac-other" value="0" class="form-control" name="ac-other">
+                        <input type="number" id="ac-other" value="0" class="form-control" name="ac-other" value="<?php echo $info["ac_other"]; ?>" disabled>
                     </div>
 
                     <div class="form-group">
@@ -469,6 +507,6 @@
         </div>
     </div>
     
-    <script src="script_melhorado.js"></script>
+    <script src="EdicaoFicha_F&M.js"></script>
 </body>
 </html>

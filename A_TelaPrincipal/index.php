@@ -36,6 +36,13 @@ if (!empty($_SESSION['usuario_id'])) {
   }
 }
 ?>
+
+<script>
+window.MinhasFichas = {
+  getAll: () => <?= json_encode($fichas); ?>
+};
+</script>
+
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
