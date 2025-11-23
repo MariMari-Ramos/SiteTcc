@@ -231,15 +231,15 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input type="number" id="hp-max" value="100" class="form-control" onchange="updateProgressBar('hp')">
+                        <input type="number" id="hp-max" name="hp-max" value="100" class="form-control" onchange="updateProgressBar('hp')">
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input type="number" id="hp-current" value="100" class="form-control" onchange="updateProgressBar('hp')">
+                        <input type="number" id="hp-current" name="hp-current" value="100" class="form-control" onchange="updateProgressBar('hp')">
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input type="number" id="hp-temp" value="0" class="form-control">
+                        <input type="number" id="hp-temp" name="hp-temp" value="0" class="form-control">
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -252,11 +252,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input type="number" id="pe-max" value="50" class="form-control" onchange="updateProgressBar('pe')">
+                        <input type="number" id="pe-max" name="pe-max" value="50" class="form-control" onchange="updateProgressBar('pe')">
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input type="number" id="pe-current" value="50" class="form-control" onchange="updateProgressBar('pe')">
+                        <input type="number" id="pe-current" name="pe-current" value="50" class="form-control" onchange="updateProgressBar('pe')">
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
@@ -273,15 +273,15 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input type="number" id="integrity-max" value="100" class="form-control" onchange="updateProgressBar('integrity')">
+                        <input type="number" id="integrity-max" name="integrity-max" value="100" class="form-control" onchange="updateProgressBar('integrity')">
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input type="number" id="integrity-current" value="100" class="form-control" onchange="updateProgressBar('integrity')">
+                        <input type="number" id="integrity-current" name="integrity-current" value="100" class="form-control" onchange="updateProgressBar('integrity')">
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input type="number" id="integrity-temp" value="0" class="form-control">
+                        <input type="number" id="integrity-temp" name="integrity-temp" value="0" class="form-control">
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -294,15 +294,15 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Deslocamento (metros)</label>
-                        <input type="number" id="movement" value="9" class="form-control">
+                        <input type="number" id="movement" name="movement" value="9" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Iniciativa</label>
-                        <input type="number" id="initiative" class="form-control">
+                        <input type="number" id="initiative" name="initiative" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Atenção</label>
-                        <input type="number" id="attention" class="form-control">
+                        <input type="number" id="attention" name="attention" class="form-control">
                     </div>
                 </div>
             </div>
@@ -310,7 +310,7 @@
             <div class="navigation">
                 <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 3 de 7</span>
-                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button  class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 

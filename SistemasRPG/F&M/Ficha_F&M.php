@@ -20,6 +20,18 @@ $ac_shield = $_POST['ac-shield'] ?? null;
 $ac_dex = $_POST['ac-dex'] ?? null;
 $ac_other = $_POST['ac-other'] ?? null;
 $ac_total = $_POST['ac-total'] ?? null;
+$hp_max = $_POST['hp-max'] ?? null;
+$hp_current = $_POST['hp-current'] ?? null;
+$hp_temp = $_POST['hp-temp'] ?? null;
+$pe_max = $_POST['pe-max'] ?? null;
+$pe_current = $_POST['pe-current'] ?? null;
+$pe_temp = $_POST['pe-temp'] ?? null;
+$integrity_max = $_POST['integrity-max'] ?? null;
+$integrity_current = $_POST['integrity-current'] ?? null;
+$integrity_temp = $_POST['integrity-temp'] ?? null;
+$movement = $_POST['movement'] ?? null;
+$initiative = $_POST['initiative'] ?? null;
+$attention = $_POST['attention'] ?? null;
 
 
 $id_ficha = $_POST['id_ficha'] ?? null;
@@ -44,6 +56,20 @@ $dados = [
         "ac_dex" => $ac_dex,
         "ac_other" => $ac_other,
         "ac_total" => $ac_total,
+    ],
+    "combate" => [
+        "hp_max" => $hp_max,
+        "hp_current" => $hp_current,
+        "hp_temp" => $hp_temp,
+        "pe_max" => $pe_max,
+        "pe_current" => $pe_current,
+        "pe_temp" => $pe_temp,
+        "integrity_max" => $integrity_max,
+        "integrity_current" => $integrity_current,
+        "integrity_temp" => $integrity_temp,
+        "movement" => $movement,
+        "initiative" => $initiative,
+        "attention" => $attention,
     ],
 ];
 

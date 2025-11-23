@@ -27,6 +27,7 @@ if ($res->num_rows === 0) {
 $ficha = $res->fetch_assoc();
 $dados = json_decode($ficha["dados_json"], true);
 $info = $dados["info_basicas"];
+$combate = $dados["combate"];
 ?>
 
 
@@ -81,7 +82,7 @@ $info = $dados["info_basicas"];
 
                     <div class="form-group">
                         <label class="form-label" for="level">Nível</label>
-                        <input type="number" id="level" min="1" max="20" value="1" class="form-control" name="level" value="<?php echo htmlspecialchars($info['nome']); ?>" >
+                        <input type="number" id="level" min="1" max="20" value="1" class="form-control" name="level" value="<?php echo $info["level"]; ?>">
                     </div>
 
                     <div class="form-group">
@@ -269,15 +270,15 @@ $info = $dados["info_basicas"];
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input type="number" id="hp-max" value="100" class="form-control" onchange="updateProgressBar('hp')">
+                        <input type="number" id="hp-max" value="100" class="form-control" onchange="updateProgressBar('hp')" value="<?php echo $combate["hp_max"]; ?>" disabled>
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input type="number" id="hp-current" value="100" class="form-control" onchange="updateProgressBar('hp')">
+                        <input type="number" id="hp-current" value="100" class="form-control" onchange="updateProgressBar('hp')" value="<?php echo $combate["hp_current"]; ?>">
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input type="number" id="hp-temp" value="0" class="form-control">
+                        <input type="number" id="hp-temp" value="0" class="form-control" value="<?php echo $combate["hp_temp"]; ?>">
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -290,15 +291,15 @@ $info = $dados["info_basicas"];
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input type="number" id="pe-max" value="50" class="form-control" onchange="updateProgressBar('pe')">
+                        <input type="number" id="pe-max" value="50" class="form-control" onchange="updateProgressBar('pe')" value="<?php echo $combate["pe_max"]; ?>" disabled>
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input type="number" id="pe-current" value="50" class="form-control" onchange="updateProgressBar('pe')">
+                        <input type="number" id="pe-current" value="50" class="form-control" onchange="updateProgressBar('pe')" value="<?php echo $combate["pe_current"]; ?>">
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input type="number" id="pe-temp" value="0" class="form-control">
+                        <input type="number" id="pe-temp" value="0" class="form-control" value="<?php echo $combate["pe_temp"]; ?>">
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -311,15 +312,15 @@ $info = $dados["info_basicas"];
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input type="number" id="integrity-max" value="100" class="form-control" onchange="updateProgressBar('integrity')">
+                        <input type="number" id="integrity-max" value="100" class="form-control" onchange="updateProgressBar('integrity')" value="<?php echo $combate["integrity_max"]; ?>" disabled>
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input type="number" id="integrity-current" value="100" class="form-control" onchange="updateProgressBar('integrity')">
+                        <input type="number" id="integrity-current" value="100" class="form-control" onchange="updateProgressBar('integrity')" value="<?php echo $combate["integrity_current"]; ?>">
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input type="number" id="integrity-temp" value="0" class="form-control">
+                        <input type="number" id="integrity-temp" value="0" class="form-control" value="<?php echo $combate["integrity_temp"]; ?>">
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -332,15 +333,15 @@ $info = $dados["info_basicas"];
                 <div class="form-row">
                     <div class="form-group">
                         <label>Deslocamento (metros)</label>
-                        <input type="number" id="movement" value="9" class="form-control">
+                        <input type="number" id="movement" value="9" class="form-control" value="<?php echo $combate["movement"]; ?>" disabled>
                     </div>
                     <div class="form-group">
                         <label>Iniciativa</label>
-                        <input type="number" id="initiative" class="form-control">
+                        <input type="number" id="initiative" class="form-control" value="<?php echo $combate["initiative"]; ?>" disabled>
                     </div>
                     <div class="form-group">
                         <label>Atenção</label>
-                        <input type="number" id="attention" class="form-control">
+                        <input type="number" id="attention" class="form-control" value="<?php echo $combate["attention"]; ?>" disabled>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,6 @@ $sql = "
 SELECT 
     f.id_ficha,
     f.nome_personagem,
-    f.nivel,
     f.dados_json,
     f.data_criacao,
     s.nome_sistema

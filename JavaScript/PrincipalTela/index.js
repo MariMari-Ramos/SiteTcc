@@ -234,7 +234,11 @@
         let dados = {};
         try { dados = JSON.parse(f.dados_json); } catch(e){}
 
-        const specialization = dados.specialization || dados.subclasse || "Não definido";
+        const specialization =
+          (dados.info_basicas && dados.info_basicas.specialization)
+          ? dados.info_basicas.specialization
+        : "Não definido";
+
 
         const dataCriacao = new Date(f.data_criacao)
           .toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
