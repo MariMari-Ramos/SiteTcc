@@ -45,16 +45,16 @@
 * { box-sizing: border-box; }
 
 body {
-  font-family: 'OpenDyslexic', Arial, sans-serif;
-  background: var(--bg-color);
-  color: var(--text-color);
-  min-height: 100vh;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 48px 20px;
-  line-height: 1.35;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 22px 20px; /* reduced top padding so content is closer to top */
+    line-height: 1.35;
 }
 
 .container-perfil {
@@ -72,29 +72,30 @@ body {
 .CaixaEditarPerfil {
     background: var(--box-bg);
     border: 1px solid var(--border-color);
-    border-radius: 16px;
-    padding: 38px 42px 34px;
+    border-radius: 12px;
+    padding: 28px 28px 32px;
     width: 100%;
-    max-width: 760px;
+    max-width: 720px; /* largura levemente aumentada */
     box-shadow: var(--shadow);
-    margin: 0 auto;
+    margin: 6px auto 0; /* bring the card slightly higher */
     position: relative;
 }
 
 h2 {
     text-align: center;
-    margin: 0 0 18px;
-    font-size: 2.1rem;
+    margin: 0 0 10px;
+    font-size: 1.9rem;
     font-weight: 700;
-    letter-spacing: 2px;
+    letter-spacing: 6px; /* espaçamento das letras mais aberto como na imagem 2 */
+    text-transform: none;
 }
 
 .CaixaEditarPerfil > p {
     text-align: center;
-    margin: 0 auto 28px;
+    margin: 6px auto 18px;
     font-size: 0.92rem;
-    max-width: 640px;
-    opacity: 0.78;
+    max-width: 460px;
+    opacity: 0.75;
 }
 
 .perfil-info {
@@ -129,6 +130,30 @@ h2 {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
 }
 
+/* Ensure the visible profile inputs are large and full width */
+.Coluna input[type="text"],
+.Coluna input[type="email"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1.02rem;
+    background: var(--input-bg);
+    color: var(--text-color);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
+    margin-bottom: 12px;
+}
+
+/* Make disabled / readonly inputs appear visually inactive (greyed-out) */
+.Coluna input[disabled],
+.Coluna input[readonly] {
+    background: var(--input-disabled-bg);
+    cursor: not-allowed;
+    opacity: 0.85;
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
 .input-group input[type="text"]:focus,
 .input-group input[type="email"]:focus {
     outline: none;
@@ -155,14 +180,14 @@ h2 {
 }
 
 .perfil-foto-preview {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     overflow: hidden;
-    border: 4px solid var(--preview-border);
-    margin: 0 auto;
+    border: 6px solid var(--preview-border);
+    margin: 18px auto;
     cursor: default; /* preview é apenas visual */
-    transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+    transition: border-color 220ms ease, box-shadow 220ms ease;
     position: relative;
 }
 
@@ -170,7 +195,7 @@ h2 {
 .perfil-foto-preview:hover {
     border-color: var(--button-primary);
     transform: scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
 }
 
 :root[data-theme="light"] .perfil-foto-preview:hover {
@@ -261,14 +286,14 @@ h2 {
 .btn-back:hover { transform: translateY(-2px); }
 
 /* Layout em duas colunas: conteúdo à esquerda, avatar/ações à direita */
-.Colunas { display:flex; gap:20px; align-items:flex-start; }
-.Coluna { flex: 1 1 0; }
-.Coluna:first-child { flex: 1.6; }
-.Coluna:last-child { flex: 1; display:flex; flex-direction:column; align-items:center; }
+.Colunas { display:block; }
+.Coluna { width:100%; }
+.Coluna:first-child { margin-bottom: 8px; }
+.Coluna:last-child { display:flex; flex-direction:column; align-items:center; }
 .Coluna label { display:block; margin-bottom:8px; font-weight:700; }
 
 /* avatar maior e consistente com o restante do design */
-.perfil-foto-preview { width: 150px; height: 150px; border-width:4px; margin: 8px auto 12px; }
+.perfil-foto-preview { width: 120px; height: 120px; border-width:6px; margin: 10px auto 12px; }
 
 /* hint mais discreto */
 .foto-hint { text-align:center; font-size:0.88rem; color:var(--text-color); opacity:0.75; margin-top:8px; }
@@ -402,17 +427,17 @@ h2 {
 
 /* PREVIEW DA FOTO: hover removido — preview é estritamente visual */
 .perfil-foto-preview {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     overflow: hidden;
-    border: 4px solid var(--preview-border);
+    border: 6px solid var(--preview-border);
     cursor: default;
     display:flex;
     align-items:center;
     justify-content:center;
     background:#f5f5f5;
-    margin:16px auto 10px;
+    margin:18px auto 12px;
     position:relative;
 }
 
@@ -572,47 +597,139 @@ h2 {
     background: #45a049;
 }
 
-/* ========== BOTÕES DE AÇÃO ========== */
+/* ========== BOTÕES E LINHAS DE AÇÃO ========== */
+/* action-row: caixas com label à esquerda e botão(s) compactos à direita */
+.action-row {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    width:100%;
+    padding:12px;
+    background: var(--button-secondary);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 12px;
+}
+.action-label { font-weight:700; }
+.action-controls { display:flex; gap:8px; align-items:center; }
+
+/* Photo action buttons (Upload / Escolher Avatar / Remover Foto) */
+.photo-action-buttons {
+    display:flex;
+    gap: 28px; /* increased gap as requested */
+    justify-content: center;
+    align-items: center;
+    margin-top: 18px;
+}
+
+.photo-action-buttons .btn-secondary,
+.photo-action-buttons .btn-danger {
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+/* Outlined button style for choosing avatar */
+.photo-action-buttons button {
+    min-width: 140px; /* ensure consistent button widths in the group */
+}
+
+.photo-action-buttons .btn-outline {
+    /* match Upload/Remover sizing */
+    background: var(--button-primary);
+    color: #fff;
+    border: 2px solid var(--button-primary);
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-action-buttons .btn-outline:hover {
+    background: var(--button-primary-hover);
+    color: #fff;
+}
+
+/* compact action buttons used inside action-row: ensure consistent size */
+.action-controls .btn-secondary,
+.action-controls .btn-warning,
+.action-controls .btn-danger {
+    padding:10px 16px; /* consistent padding */
+    border-radius:8px;
+    font-weight:700;
+    min-width: 140px; /* ensure similar width across actions */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* keep existing standalone button styles but slightly tune for image 2 */
 .btn-warning {
     background: #ff9800;
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s;
 }
+.btn-warning:hover { background: #e68900; }
+.btn-danger { background: #f44336; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+.btn-danger:hover { background: #da190b; }
+.btn-secondary { background: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+.btn-secondary:hover { background: #0b7dda; }
 
-.btn-warning:hover {
-    background: #e68900;
+/* container for final action buttons (Salvar / Voltar) */
+.button-container { display:flex; gap:12px; width:100%; margin-top:18px; }
+.btn-save { flex: 1; background: linear-gradient(180deg,#ff8c42 0%,#ff7a28 58%,#ff6a14 100%); color:#fff; padding:14px 18px; border-radius:12px; font-weight:700; box-shadow:0 8px 22px rgba(255,120,40,0.12); }
+.btn-back { flex: 1; background: linear-gradient(180deg,#f7f7f7 0%,#ececec 60%,#e2e2e2 100%); color:#333; padding:14px 18px; border-radius:12px; border:1px solid var(--border-color); }
+/* Align page title with the centered card and make final buttons slightly smaller */
+.page-title {
+    max-width: 720px;
+    margin: 2px auto 8px; /* tighten vertical spacing */
+    text-align: center;
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: 6px;
 }
 
-.btn-danger {
-    background: #f44336;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s;
+/* wrapper that centers the title + card together (avoids body flex row issues) */
+.perfil-column {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto 0; /* keep centered, card margin reduces top gap */
+    display: block;
 }
 
-.btn-danger:hover {
-    background: #da190b;
+.button-container .btn-save,
+.button-container .btn-back {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.btn-secondary {
-    background: #2196F3;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s;
+.button-container .btn-save { letter-spacing: 1px; }
+.button-container .btn-back { letter-spacing: 1px; }
+
+/* Make final action buttons smaller and avoid flex stretching */
+.button-container {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between; /* spread buttons to fill the row */
+    align-items: center;
 }
 
-.btn-secondary:hover {
-    background: #0b7dda;
+.button-container .btn-save,
+.button-container .btn-back {
+    flex: 0 0 48%; /* equal widths, responsive */
+    padding: 10px 14px !important;
+    font-size: 0.92rem !important;
+    text-align: center;
 }
 /* Alto contraste */
 body.high-contrast {
@@ -696,3 +813,198 @@ body.high-contrast {
         height: 100px;
     }
 }
+
+/* Ensure form controls use the OpenDyslexic webfont explicitly */
+input, textarea, select, button {
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+}
+
+/* Placeholders too */
+input::placeholder,
+textarea::placeholder {
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+    opacity: 0.8;
+}
+
+/* ========== GUIA (balão) - minimal styles reused from home.css ========== */
+.guide-trigger {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 2px solid #ffc38a;
+    background: linear-gradient(135deg, #fffaf5, #fff2e6);
+    box-shadow: 0 4px 12px rgba(255, 163, 94, 0.25);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.guide-speech {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 340px;
+    background: var(--box-bg, #fff);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.25);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.92) translateY(-8px);
+    transition: all 0.28s cubic-bezier(.2,.9,.2,1);
+    z-index: 9999;
+}
+.guide-speech.active { opacity:1; visibility: visible; transform: scale(1) translateY(0); }
+
+.guide-speech::before {
+    content: '';
+    position: absolute;
+    top: -12px; right: 34px;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 12px solid var(--box-bg, #fff);
+}
+
+.guide-speech-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.guide-speech-title { color: var(--button-primary, #ff8c42); font-weight:800; display:flex; align-items:center; gap:8px; }
+.guide-speech-close { background:none; border:none; font-size:20px; cursor:pointer; color: var(--text-color); }
+.guide-avatar { width:36px; height:36px; border-radius:50%; object-fit:cover; box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+.guide-speech-content { color: var(--text-color); margin-bottom:12px; line-height:1.4; }
+.guide-speech-options { display:flex; flex-direction:column; gap:8px; }
+.guide-option { padding:10px 12px; background: linear-gradient(135deg,#007BFF,#0056b3); color:#fff; border:none; border-radius:10px; cursor:pointer; text-align:left; font-weight:600; }
+.guide-option:hover { transform: translateX(6px); box-shadow: 0 6px 18px rgba(0,123,255,0.18); }
+
+@media (max-width: 768px) {
+    .guide-speech { width: calc(100vw - 40px); left:20px; right:20px; }
+    .guide-speech::before { right: 50px; }
+}
+
+/* Explicit theme-aware rules to avoid the bubble rendering with wrong colors
+   if variables are not applied at the time of render. These ensure the
+   guide bubble follows the page theme. */
+:root[data-theme="light"] .guide-speech {
+    background: var(--box-bg, #fff);
+    color: var(--text-color, #222);
+}
+:root[data-theme="dark"] .guide-speech {
+    background: var(--box-bg, #1b263b);
+    color: var(--text-color, #e0e1dd);
+}
+:root[data-theme="dark"] .guide-speech::before {
+    border-bottom-color: var(--box-bg, #1b263b);
+}
+:root[data-theme="dark"] .guide-speech .guide-option {
+    background: linear-gradient(135deg,#415a77,#274056);
+}
+
+/* Guide trigger avatar inside button */
+.guide-trigger-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; display:inline-block; }
+
+/* Theme-specific styling for the guide button to match references */
+/* Dark theme: deep blue pill with subtle outer glow / inner highlight */
+:root[data-theme="dark"] .guide-trigger {
+    background: linear-gradient(180deg,#0b2736,#07212a);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 8px 14px;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6), 0 0 14px rgba(0,0,0,0.45) inset;
+    position: fixed; /* keep position if inline style removed */
+    align-items: center;
+}
+
+:root[data-theme="dark"] .guide-trigger::after {
+    content: '';
+    position: absolute;
+    top: -6px; left: -6px; right: -6px; bottom: -6px;
+    border-radius: 999px;
+    box-shadow: 0 0 28px rgba(119,141,169,0.06);
+    pointer-events: none;
+}
+
+:root[data-theme="dark"] .guide-trigger span { font-weight: 700; letter-spacing: 0.6px; }
+
+/* Light theme: pale pill with peach border and soft inner light */
+:root[data-theme="light"] .guide-trigger {
+    background: linear-gradient(180deg,#fffaf5,#fff2e6);
+    color: #111;
+    border: 2px solid #ffdcbf;
+    padding: 8px 14px;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgba(255,140,66,0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+    position: fixed;
+    align-items: center;
+}
+
+:root[data-theme="light"] .guide-trigger::after {
+    content: '';
+    position: absolute;
+    top: -4px; left: -4px; right: -4px; bottom: -4px;
+    border-radius: 999px;
+    box-shadow: 0 0 0 6px rgba(255,235,215,0.18);
+    pointer-events: none;
+}
+
+/* Ensure the trigger uses proper z-index and does not get styled incorrectly */
+.guide-trigger { z-index: 99999; }
+
+/* ===== Replace/override: make guide trigger and speech identical to home.css ===== */
+.guide-trigger {
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
+    border: 2px solid #ffc38a !important;
+    background: linear-gradient(135deg, #fffaf5, #fff2e6) !important;
+    box-shadow: 0 4px 12px rgba(255, 163, 94, 0.25) !important;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease !important;
+    cursor: pointer !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    position: fixed !important;
+    top: 18px !important;
+    right: 18px !important;
+}
+
+.guide-trigger::before { display: none !important; }
+
+.guide-trigger:hover,
+.guide-trigger:focus-visible {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(255, 163, 94, 0.35) !important;
+    border-color: #ffb26b !important;
+}
+
+.guide-trigger::after {
+    content: "" !important;
+    position: absolute !important;
+    top: -6px !important;
+    right: -6px !important;
+    width: 14px !important;
+    height: 14px !important;
+    background: #ff3b30 !important;
+    border: 2px solid #fff !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 0 0 rgba(255,59,48,.6) !important;
+    animation: guide-badge-pulse 2s ease infinite !important;
+    z-index: 2 !important;
+}
+
+@keyframes guide-badge-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,59,48,.6); }
+  70%  { box-shadow: 0 0 0 10px rgba(255,59,48,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,59,48,0); }
+}
+
+/* Make the guide bubble content justified to match requested layout */
+.guide-speech-content { text-align: justify !important; }
+
+/* Ensure dark theme variant also follows home.css visuals */
+:root[data-theme="dark"] .guide-trigger {
+    background: linear-gradient(180deg,#0b2736,#07212a) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6), 0 0 14px rgba(0,0,0,0.45) inset !important;
+}
+
+:root[data-theme="dark"] .guide-trigger::after { box-shadow: 0 0 28px rgba(119,141,169,0.06) !important; }
+
+:root[data-theme="dark"] .guide-speech { background: var(--box-bg, #1b263b) !important; color: var(--text-color, #e0e1dd) !important; }

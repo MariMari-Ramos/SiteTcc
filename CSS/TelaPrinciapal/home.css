@@ -208,20 +208,37 @@ label[for="MinhasFichasRandomicas"] .highlight-word {
 
 /* ==================== "MINHAS FICHAS" BOX ==================== */
 .CaixaMinhasFichas {
-  width:100%; max-width:800px; min-width:220px; min-height:150px;
-  padding:20px; border-radius:15px; background:#fff; box-shadow: var(--shadow);
-  margin:0 auto 40px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; z-index:2;
+  width:100%; max-width:1200px; min-width:220px; min-height:150px;
+  padding:20px; border-radius:15px; background: var(--card-bg, #fff); box-shadow: var(--shadow);
+  margin:0 auto 40px; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; position:relative; z-index:2;
 }
 
 /* ====== Minhas Fichas (lista e chips) ====== */
-.fichas-list { display: flex; flex-direction: column; gap: 18px; width: 100%; }
+.fichas-list {
+  display: flex;
+  flex-direction: row;
+  /* manter grupos em linha e permitir overflow horizontal quando necessário */
+  flex-wrap: nowrap;
+  gap: 12px;
+  width: 100%;
+  align-items: flex-start;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 6px; /* espaço para a scrollbar visualizar melhor */
+}
 
 .fichas-group {
-  background: #ffffff;
-  border: 2px solid var(--peach, #ffe0cc);
+  background: var(--card-bg, #ffffff);
+  border: 1px solid color-mix(in srgb, var(--border-color, #e9dccf) 50%, transparent);
   border-radius: 12px;
   padding: 12px 14px 16px;
   box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,.08));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 220px; /* largura base reduzida para caber mais grupos */
+  max-width: 360px;
+  flex: 0 0 auto; /* não encolher abaixo do min-width */
 }
 
 .fichas-title {
@@ -233,26 +250,48 @@ label[for="MinhasFichasRandomicas"] .highlight-word {
 
 .fichas-chips {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px 14px;
+  flex-direction: row; /* garantir alinhamento horizontal dentro do grupo */
+  gap: 10px;
+  /* NÃO quebrar linhas - manter pílulas em uma linha e permitir scroll interno */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 6px 2px 10px;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .ficha-chip {
-  border: 2px solid #ffc38a;
-  background: var(--peach-weak, #ffefe4);
-  color: #333;
-  border-radius: 999px;
-  padding: 8px 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
+  border: 2px solid color-mix(in srgb, var(--accent, #ffc38a) 40%, transparent);
+  color: var(--text-on-panel, var(--text-strong, #222));
+  padding: 6px 10px; /* ainda menor para caber horizontalmente */
+  border-radius: 999px; /* mantém a forma de pílula */
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 110px;
+  max-width: 220px;
+  flex: 0 0 auto; /* não encolher para ocupar toda a linha */
+  box-sizing: border-box;
+  text-align: center;
+  white-space: normal;
+  overflow: hidden;
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0,0,0,.08);
   cursor: pointer;
   transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
 }
-.ficha-chip:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0,0,0,.12);
-  border-color: #ffb26b;
+.ficha-chip strong { font-size: 1rem; display:block; line-height:1.05; }
+.ficha-chip span { font-size: 12px; color: #cfcfcf; }
+.ficha-chip:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+
+@media (max-width: 1024px) {
+  .ficha-chip { min-width: 200px; }
+}
+
+@media (max-width: 600px) {
+  .ficha-chip { flex: 1 1 100%; max-width: 100%; }
+  .fichas-chips { justify-content: center; }
 }
 
 /* trilho visual */
@@ -267,16 +306,16 @@ label[for="MinhasFichasRandomicas"] .highlight-word {
 /* variação por sistema (exemplo) */
 .fichas-group[data-system*="cyberpunk"] .ficha-chip {
   border-color: #b7cffd;
-  background: #eaf2ff;
+  background: color-mix(in srgb, #eaf2ff 88%, transparent);
 }
 .fichas-group[data-system*="3det"] .ficha-chip {
   border-color: #ffc38a;
-  background: #fff7f0;
+  background: color-mix(in srgb, #fff7f0 88%, transparent);
 }
 .fichas-group[data-system*="d&d"] .ficha-chip,
 .fichas-group[data-system*="dungeons"] .ficha-chip {
   border-color: #d4a574;
-  background: #fef5e7;
+  background: color-mix(in srgb, #fef5e7 88%, transparent);
 }
 
 /* ==================== CARROSSEL ==================== */
@@ -589,3 +628,54 @@ body.high-contrast .legal-links a:hover { color: var(--hc-accent); }
 body.high-contrast .footer-bottom { border-top-color: var(--hc-text); }
 body.high-contrast .social-icon { color:#fff; }
 body.high-contrast .social-icon:hover { color: var(--hc-accent); }
+
+/* ==================== DARK THEME OVERRIDES FOR FICHAS ==================== */
+:root[data-theme="dark"] .CaixaMinhasFichas {
+  background: var(--card-bg, #1b263b);
+  box-shadow: 0 10px 30px rgba(2,10,18,0.6);
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+:root[data-theme="dark"] .fichas-list {
+  gap: 18px;
+}
+
+:root[data-theme="dark"] .fichas-group {
+  background: color-mix(in srgb, var(--card-bg, #1b263b) 92%, transparent);
+  border-color: var(--border-color, #415a77);
+  box-shadow: 0 6px 18px rgba(5,12,20,0.6);
+}
+
+:root[data-theme="dark"] .ficha-chip {
+  border-color: rgba(255,255,255,0.06);
+  background: color-mix(in srgb, var(--card-bg, #1b263b) 72%, transparent);
+  color: var(--text-primary, #e0e1dd);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+:root[data-theme="dark"] .ficha-chip:hover {
+  border-color: var(--highlight-bg, #778da9);
+  box-shadow: 0 8px 20px rgba(65,90,119,0.14);
+}
+
+/* System-specific dark variants */
+:root[data-theme="dark"] .fichas-group[data-system*="cyberpunk"] .ficha-chip {
+  border-color: #3b6ea3;
+  background: rgba(41,63,85,0.18);
+}
+:root[data-theme="dark"] .fichas-group[data-system*="3det"] .ficha-chip {
+  border-color: #b76f2f;
+  background: rgba(75,46,20,0.08);
+}
+:root[data-theme="dark"] .fichas-group[data-system*="d&d"] .ficha-chip,
+:root[data-theme="dark"] .fichas-group[data-system*="dungeons"] .ficha-chip {
+  border-color: #8a6b4a;
+  background: rgba(70,50,30,0.06);
+}
+
+@media (max-width: 768px) {
+  /* Manter layout horizontal em telas menores, permitir scroll e encolhimento */
+  .fichas-list { flex-wrap: nowrap; gap: 10px; overflow-x: auto; }
+  .fichas-group { min-width: 160px; max-width: 280px; flex: 0 0 auto; padding: 10px; }
+  .ficha-chip { min-width: 120px; flex: 1 1 140px; padding: 7px 10px; }
+}
