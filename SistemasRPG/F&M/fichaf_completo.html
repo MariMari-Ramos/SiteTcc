@@ -8,7 +8,7 @@
 </head>
 <body>
     <!-- Header Principal com Navegação -->
-    <header class="header page-theme-teal" action="Ficha_F&M.php" method="POST">
+    <header class="header page-theme-teal">
         <div class="header-content">
             <div class="header-left">
                 <h1 class="title">⚡ Feiticeiros & Maldições</h1>
@@ -26,7 +26,7 @@
             </div>
 
             <div class="header-actions" >
-                <button type="submit" id="save-btn" class="btn btn--sm btn--secondary" title="Salvar Ficha" >💾 Salvar</button>
+                <button type="submit" id="save-btn" class="btn btn--sm btn--secondary" title="Salvar Ficha" action="Ficha_F&M" method="post">💾 Salvar</button>
                 <button type="button" id="clear-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha">🗑️ Limpar</button>
                 <button type="button" id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir">📄 Exportar</button>
             </div>
@@ -469,6 +469,12 @@
         </div>
     </div>
     
+    <script>
+document.getElementById("character-form").addEventListener("keydown", e => {
+    if (e.key === "Enter") e.preventDefault();
+});
+</script>
+
     <script src="script_melhorado.js"></script>
 </body>
 </html>

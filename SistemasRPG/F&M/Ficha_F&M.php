@@ -88,7 +88,7 @@ if (!empty($id_ficha)) {
 
 $id_usuario = $_SESSION["usuario_id"] ?? null;
 
-var_dump($id_usuario);
+
 $stmt = $mysqli->prepare("
     INSERT INTO ficha_per (nome_personagem, dados_json, data_criacao, ultima_atualizacao, id_usuario, id_sistema)
     VALUES (?, ?, NOW(), NOW(), ?, 1)
@@ -99,3 +99,4 @@ $stmt->execute();
 
 $id_gerado = $stmt->insert_id;
 
+echo json_encode(["message" => "Ficha salva com sucesso!", "id_ficha" => $id_gerado]);

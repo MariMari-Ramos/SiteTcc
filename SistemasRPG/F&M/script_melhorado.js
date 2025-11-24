@@ -520,4 +520,18 @@ document.addEventListener('DOMContentLoaded', function() {
   }
     
 
+
+document.getElementById("save-btn").addEventListener("click", async () => {
+    const form = document.getElementById("character-form");
+    const dados = new FormData(form);
+
+    const resp = await fetch("Ficha_F&M.php", {
+        method: "POST",
+        body: dados
+    });
+
+    const json = await resp.json();
+    alert(json.message);
+});
+
 console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');
