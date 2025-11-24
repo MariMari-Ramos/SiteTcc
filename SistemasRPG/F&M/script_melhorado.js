@@ -534,4 +534,18 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     alert(json.message);
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.ID_FICHA) {
+        let form = document.getElementById("form-ficha");
+        if (form) {
+            let hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.name = "id_ficha";
+            hidden.value = window.ID_FICHA;
+            form.appendChild(hidden);
+        }
+    }
+});
+
+
 console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');

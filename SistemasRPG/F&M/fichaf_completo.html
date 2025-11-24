@@ -34,6 +34,7 @@
     </header>
     <form id="character-form" action="Ficha_F&M.php" method="POST">
     <!-- Container Principal -->
+     
     <div class="container">
 
         <!-- ===== PÁGINA 1: INFORMAÇÕES BÁSICAS ===== -->
@@ -407,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="navigation">
                 <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 3 de 7</span>
-                <button  class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -416,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2 class="section-header section-border-orange">✨ Habilidades de Especialização</h2>
 
             <div class="card section-border-orange">
-                <button class="btn-add" onclick="addAbility('abilities-list')">Adicionar Habilidade</button>
+                <button type="button" class="btn-add" onclick="addAbility('abilities-list')">Adicionar Habilidade</button>
                 <div id="abilities-list" style="margin-top: 20px;">
                     <!-- Habilidades adicionadas dinamicamente -->
                 </div>
@@ -435,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="card section-border-indigo">
                 <h3>🎖️ Talentos</h3>
-                <button class="btn-add" onclick="addTalent()">Adicionar Talento</button>
+                <button type="button" class="btn-add" onclick="addTalent()">Adicionar Talento</button>
                 <div id="talents-list" style="margin-top: 20px;">
                     <!-- Talentos adicionados dinamicamente -->
                 </div>
@@ -469,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="card section-border-indigo">
                 <h3>🏋️ Treinamentos</h3>
-                <button class="btn-add" onclick="addTraining()">Adicionar Treinamento</button>
+                <button type="button" class="btn-add" onclick="addTraining()">Adicionar Treinamento</button>
                 <div id="trainings-list" style="margin-top: 20px;">
                     <!-- Treinamentos adicionados dinamicamente -->
                 </div>
@@ -501,14 +502,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="card section-border-pink">
                 <h3>✨ Habilidades de Técnica</h3>
                 <div class="tabs">
-                    <button class="tab active">Nível 0</button>
-                    <button class="tab">Nível 1</button>
-                    <button class="tab">Nível 2</button>
-                    <button class="tab">Nível 3</button>
-                    <button class="tab">Nível 4</button>
-                    <button class="tab">Nível 5</button>
+                    <button type="button" class="tab active">Nível 0</button>
+                    <button type="button" class="tab">Nível 1</button>
+                    <button type="button" class="tab">Nível 2</button>
+                    <button type="button" class="tab">Nível 3</button>
+                    <button type="button" class="tab">Nível 4</button>
+                    <button type="button" class="tab">Nível 5</button>
                 </div>
-                <button class="btn-add" onclick="addAbility('technique-abilities')">Adicionar Habilidade de Técnica</button>
+                <button type="button" class="btn-add" onclick="addAbility('technique-abilities')">Adicionar Habilidade de Técnica</button>
                 <div id="technique-abilities" style="margin-top: 20px;">
                     <!-- Habilidades de técnica adicionadas dinamicamente -->
                 </div>
@@ -526,14 +527,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2 class="section-header section-border-cyan">👹 Invocações / Shikigamis</h2>
 
             <div class="card section-border-cyan">
-                <button class="btn-add" onclick="addInvocation()">Adicionar Invocação</button>
+                <button type="button" class="btn-add" onclick="addInvocation()">Adicionar Invocação</button>
                 <div id="invocations-list" style="margin-top: 20px;">
                     <!-- Invocações adicionadas dinamicamente -->
                 </div>
             </div>
 
             <div class="navigation">
-                <button class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 7 de 7</span>
                 <button class="btn btn--primary" onclick="nextPage()" disabled>Próxima →</button>
             </div>
@@ -567,10 +568,11 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     
     <script>
-document.getElementById("character-form").addEventListener("keydown", e => {
-    if (e.key === "Enter") e.preventDefault();
-});
-</script>
+        document.getElementById("character-form").addEventListener("keydown", e => {
+            if (e.key === "Enter") e.preventDefault();
+        });
+        
+    </script>
 
     <script src="script_melhorado.js"></script>
 </body>
