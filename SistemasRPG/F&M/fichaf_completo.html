@@ -159,61 +159,158 @@
             </div>
         </div>
 
-        <!-- ===== PÁGINA 2: PERÍCIAS ===== -->
+               <!-- ===== PÁGINA 2: PERÍCIAS ===== -->
         <div id="page-2" class="page">
             <h2 class="section-header section-border-purple">🎯 Perícias</h2>
 
-            <div class="card section-border-purple">
-                <h3> Perícias de Força</h3>
-                <div class="skill-row">
-                    <label><input type="checkbox" id="str-luta-es"> Es</label>
-                    <label><input type="checkbox" id="str-luta-mt"> Mt</label>
-                    <span>Luta</span>
-                    <input type="number" id="str-luta" class="form-control" style="width: 80px;">
-                </div>
-                <div class="skill-row">
-                    <label><input type="checkbox" id="str-atletismo-es"> Es</label>
-                    <label><input type="checkbox" id="str-atletismo-mt"> Mt</label>
-                    <span>Atletismo</span>
-                    <input type="number" id="str-atletismo" class="form-control" style="width: 80px;">
-                </div>
-            </div>
+             <!-- Cole no local desejado na sua página de perícias -->
+<div style="display: flex; gap:40px;">
+  <!-- Primeira coluna -->
+  <div style="flex:1;">
+    <table>
+      <thead>
+        <tr>
+          <th>Perícia</th>
+          <th>Atributo</th>
+          <th>Mt.</th>
+          <th>Es.</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="coluna1"></tbody>
+    </table>
+  </div>
+  <!-- Segunda coluna -->
+  <div style="flex:1;">
+    <table>
+      <thead>
+        <tr>
+          <th>Perícia</th>
+          <th>Atributo</th>
+          <th>Mt.</th>
+          <th>Es.</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="coluna2"></tbody>
+    </table>
+  </div>
+</div>
 
-            <div class="card section-border-purple">
-                <h3>🏃 Perícias de Destreza</h3>
-                <div class="skill-row">
-                    <label><input type="checkbox" id="dex-luta-es"> Es</label>
-                    <label><input type="checkbox" id="dex-luta-mt"> Mt</label>
-                    <span>Luta</span>
-                    <input type="number" id="dex-luta" class="form-control" style="width: 80px;">
-                </div>
-                <div class="skill-row">
-                    <label><input type="checkbox" id="dex-furtividade-es"> Es</label>
-                    <label><input type="checkbox" id="dex-furtividade-mt"> Mt</label>
-                    <span>Furtividade</span>
-                    <input type="number" id="dex-furtividade" class="form-control" style="width: 80px;">
-                </div>
-                <div class="skill-row">
-                    <label><input type="checkbox" id="dex-pontaria-es"> Es</label>
-                    <label><input type="checkbox" id="dex-pontaria-mt"> Mt</label>
-                    <span>Pontaria</span>
-                    <input type="number" id="dex-pontaria" class="form-control" style="width: 80px;">
-                </div>
-                <div class="skill-row">
-                    <label><input type="checkbox" id="dex-prestidigitacao-es"> Es</label>
-                    <label><input type="checkbox" id="dex-prestidigitacao-mt"> Mt</label>
-                    <span>Prestidigitação</span>
-                    <input type="number" id="dex-prestidigitacao" class="form-control" style="width: 80px;">
-                </div>
-                <div class="skill-row">
-                    <label><input type="checkbox" id="dex-reflexos-es"> Es</label>
-                    <label><input type="checkbox" id="dex-reflexos-mt"> Mt</label>
-                    <span>Reflexos</span>
-                    <input type="number" id="dex-reflexos" class="form-control" style="width: 80px;">
-                </div>
-            </div>
+<script>
+const pericias = [
+  { nome: 'Luta', attr: 'str' }, { nome: 'Atletismo', attr: 'str' },
+  { nome: 'Acrobacia', attr: 'dex' }, { nome: 'Furtividade', attr: 'dex' },
+  { nome: 'Pontaria', attr: 'dex' }, { nome: 'Prestidigitação', attr: 'dex' },
+  { nome: 'Reflexos', attr: 'dex' }, { nome: 'Fortitude', attr: 'con' },
+  { nome: 'Integridade', attr: 'con' }, { nome: 'Intuição', attr: 'wis' },
+  { nome: 'Medicina', attr: 'wis' }, { nome: 'Percepção', attr: 'wis' },
+  { nome: 'Ocultismo', attr: 'wis' }
+];
+const pericias2 = [
+  { nome: 'Vontade', attr: 'wis' }, { nome: 'Astúcia', attr: 'int' },
+  { nome: 'Feitiçaria', attr: 'int' }, { nome: 'Investigação', attr: 'int' },
+  { nome: 'História', attr: 'int' }, { nome: 'Ofício (_____1)', attr: 'int' },
+  { nome: 'Ofício (_____2)', attr: 'int' }, { nome: 'Ofício (_____3)', attr: 'int' },
+  { nome: 'Religião', attr: 'int' }, { nome: 'Tecnologia', attr: 'int' },
+  { nome: 'Persuasão', attr: 'cha' }, { nome: 'Enganação', attr: 'cha' },
+  { nome: 'Intimidação', attr: 'cha' }, { nome: 'Performance', attr: 'cha' }
+];
 
-            <!-- Adicionar perícias de Constituição, Sabedoria, Inteligência e Carisma seguindo o mesmo padrão -->
+const attrName = { str:'FOR', dex:'DES', con:'CON', int:'INT', wis:'SAB', cha:'CAR' };
+
+function getMod(attr) {
+  const el = document.getElementById(attr);
+  const val = el ? parseInt(el.value) : 10;
+  return Math.floor((val - 10)/2);
+}
+function getProficiencyBonus() {
+  const el = document.getElementById('proficiency-bonus');
+  if (!el) return 0;
+  const val = el.value.replace('+','');
+  return parseInt(val) || 0;
+}
+
+// Adiciona duas checkboxes em cada linha: proficiência e especialização
+function renderPericias(lista, id, colunaIndex) {
+  document.getElementById(id).innerHTML = lista
+    .map((p, idx) => {
+      const attrId = p.attr;
+      const mod = getMod(attrId);
+      const profId = `prof_${colunaIndex}_${idx}`;
+      const especId = `espec_${colunaIndex}_${idx}`;
+      const totalId = `total_${colunaIndex}_${idx}`;
+      return `
+        <tr>
+          <td>${p.nome}</td>
+          <td>${attrName[attrId]}</td>
+          <td><input type="checkbox" id="${profId}" data-attr="${attrId}"></td>
+          <td><input type="checkbox" id="${especId}" data-attr="${attrId}"></td>
+          <td><input type="number" value="${mod}" readonly style="width:50px" id="${totalId}"></td>
+        </tr>
+      `;
+    }).join('');
+}
+
+// Atualiza total das perícias, soma proficiência se checkbox marcada e soma 1.5x proficiência se especialização marcada
+function updateTotals(lista, colunaIndex) {
+  lista.forEach((p, idx) => {
+    const attrId = p.attr;
+    const mod = getMod(attrId);
+    const totalId = `total_${colunaIndex}_${idx}`;
+    const profId = `prof_${colunaIndex}_${idx}`;
+    const especId = `espec_${colunaIndex}_${idx}`;
+    const checkProf = document.getElementById(profId);
+    const checkEspec = document.getElementById(especId);
+    const input = document.getElementById(totalId);
+    let total = mod;
+    if (checkProf && checkProf.checked) total += getProficiencyBonus();
+    if (checkEspec && checkEspec.checked) total += Math.floor(getProficiencyBonus() * 1.5);
+    if (input) input.value = total;
+  });
+}
+
+// Eventos para os checkboxes e atributos
+function setupListeners() {
+  [...pericias, ...pericias2].forEach((p, idx) => {
+    const colunaIndex = idx < pericias.length ? 1 : 2;
+    const arrayIdx = colunaIndex === 1 ? idx : idx - pericias.length;
+    const profId = `prof_${colunaIndex}_${arrayIdx}`;
+    const especId = `espec_${colunaIndex}_${arrayIdx}`;
+    const elemProf = document.getElementById(profId);
+    const elemEspec = document.getElementById(especId);
+    if (elemProf) elemProf.addEventListener('change', () => updateTotals(
+      colunaIndex === 1 ? pericias : pericias2, colunaIndex));
+    if (elemEspec) elemEspec.addEventListener('change', () => updateTotals(
+      colunaIndex === 1 ? pericias : pericias2, colunaIndex));
+  });
+
+  ['str','dex','con','int','wis','cha'].forEach(id => {
+    if (document.getElementById(id)) {
+      document.getElementById(id).addEventListener('input', () => {
+        updateTotals(pericias, 1);
+        updateTotals(pericias2, 2);
+      });
+    }
+  });
+  // Proficiência bônus change
+  const el = document.getElementById('proficiency-bonus');
+  if (el) {
+    el.addEventListener('input', () => {
+      updateTotals(pericias, 1);
+      updateTotals(pericias2, 2);
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderPericias(pericias, 'coluna1', 1);
+  renderPericias(pericias2, 'coluna2', 2);
+  updateTotals(pericias, 1);
+  updateTotals(pericias2, 2);
+  setupListeners();
+});
+</script>
 
             <div class="navigation">
                 <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
