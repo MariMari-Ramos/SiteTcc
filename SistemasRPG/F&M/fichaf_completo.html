@@ -513,6 +513,55 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="technique-abilities" style="margin-top: 20px;">
                     <!-- Habilidades de técnica adicionadas dinamicamente -->
                 </div>
+                <script>
+// Registro das habilidades por nível
+const abilitiesByLevel = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] };
+let currentLevel = 0;
+
+// Função de renderização: exibe só habilidades do nível ativo
+function renderAbilities() {
+  const container = document.getElementById('technique-abilities');
+  container.innerHTML = '';
+  abilitiesByLevel[currentLevel].forEach((ability, idx) => {
+    const node = document.createElement('div');
+    node.className = 'technique-ability-card';
+    node.textContent = ability;
+    // Botão remover (opcional)
+    const rmBtn = document.createElement('button');
+    rmBtn.textContent = 'Remover';
+    rmBtn.onclick = () => {
+      abilitiesByLevel[currentLevel].splice(idx,1);
+      renderAbilities();
+    };
+    rmBtn.style.marginLeft = '12px';
+    node.appendChild(rmBtn);
+    container.appendChild(node);
+  });
+}
+
+// Altera aba ativa e atualiza habilidades mostradas
+document.querySelectorAll('.tabs .tab').forEach((btn, idx) => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    currentLevel = idx;
+    renderAbilities();
+  });
+});
+
+// Sobrescreve o addAbility usando a assinatura original
+window.addAbility = function(targetId) {
+  const abilityName = prompt(`Nome da habilidade para Nível ${currentLevel}:`);
+  if(abilityName && abilityName.trim()) {
+    abilitiesByLevel[currentLevel].push(abilityName.trim());
+    renderAbilities();
+  }
+}
+
+// Inicializa mostrando habilidades do nível 0
+document.addEventListener('DOMContentLoaded', renderAbilities);
+
+                </script>
             </div>
 
             <div class="navigation">
