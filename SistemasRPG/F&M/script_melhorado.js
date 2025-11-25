@@ -614,9 +614,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 
-<<<<<<< HEAD
-console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');
-=======
 
 document.getElementById("save-btn").addEventListener("click", async () => {
     const form = document.getElementById("character-form");
@@ -693,4 +690,3 @@ function getTrainingsJson() {
 
 
 console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');
->>>>>>> ef4678da590ef3781e82867799e58f9ee25839fa

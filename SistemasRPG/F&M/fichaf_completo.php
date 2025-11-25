@@ -46,10 +46,7 @@
     </header>
     <form id="character-form" action="Ficha_F&M.php" method="POST">
     <!-- Container Principal -->
-<<<<<<< HEAD:SistemasRPG/F&M/fichaf_completo.html
-=======
      <input type="hidden" id="pericias-json" name="pericias">
->>>>>>> ef4678da590ef3781e82867799e58f9ee25839fa:SistemasRPG/F&M/fichaf_completo.php
     <div class="container">
 
         <!-- ===== PÁGINA 1: INFORMAÇÕES BÁSICAS ===== -->
@@ -609,12 +606,7 @@ document.getElementById('btn-add-technique').addEventListener('click', function(
     abilitiesByLevel[currentLevel].push(name.trim());
     renderAbilities();
   }
-<<<<<<< HEAD:SistemasRPG/F&M/fichaf_completo.html
 });
-
-=======
-}
->>>>>>> ef4678da590ef3781e82867799e58f9ee25839fa:SistemasRPG/F&M/fichaf_completo.php
 // Inicializa mostrando habilidades do nível 0
 document.addEventListener('DOMContentLoaded', renderAbilities);
 </script>
@@ -707,8 +699,6 @@ document.addEventListener('DOMContentLoaded', renderAbilities);
         </div>
     </div>
     
-<<<<<<< HEAD:SistemasRPG/F&M/fichaf_completo.html
-=======
     <script>
         document.getElementById("character-form").addEventListener("keydown", e => {
             if (e.key === "Enter") e.preventDefault();
@@ -766,7 +756,6 @@ document.getElementById("character-form").addEventListener("submit", () => {
 
     </script>
 
->>>>>>> ef4678da590ef3781e82867799e58f9ee25839fa:SistemasRPG/F&M/fichaf_completo.php
     <script src="script_melhorado.js"></script>
 </body>
 </html>
