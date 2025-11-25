@@ -26,7 +26,7 @@
             </div>
 
             <div class="header-actions" >
-                <button type="submit" id="save-btn" class="btn btn--sm btn--secondary" title="Salvar Ficha" action="Ficha_F&M" method="post">💾 Salvar</button>
+                
                 <button type="button" id="clear-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha">🗑️ Limpar</button>
                 <button type="button" id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir">📄 Exportar</button>
             </div>
@@ -34,7 +34,10 @@
     </header>
     <form id="character-form" action="Ficha_F&M.php" method="POST">
     <!-- Container Principal -->
+     <input type="hidden" name="habilidades" id="habilidades-json">
      <input type="hidden" id="pericias-json" name="pericias">
+     <input type="hidden" name="talentos" id="talentos-json">
+     <input type="hidden" name="treinamentos" id="treinamentos-json">
     <div class="container">
 
         <!-- ===== PÁGINA 1: INFORMAÇÕES BÁSICAS ===== -->
@@ -316,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="navigation">
                 <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página <span id="nav-current-page">2</span> de 7</span>
-                <button class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -447,23 +450,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Energia</label>
-                        <input type="number" min="0" max="5" value="0" class="form-control">
+                        <input name="energy" id="energy" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Controle/Leitura</label>
-                        <input type="number" min="0" max="5" value="0" class="form-control">
+                        <input name="control-reading" id="control-reading" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Barreira</label>
-                        <input type="number" min="0" max="5" value="0" class="form-control">
+                        <input name="barrier" id="barrier" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Domínio</label>
-                        <input type="number" min="0" max="5" value="0" class="form-control">
+                        <input name="domain" id="domain" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Energia Reversa</label>
-                        <input type="number" min="0" max="5" value="0" class="form-control">
+                        <input name="reverse-energy" id="reverse-energy" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                 </div>
             </div>
@@ -479,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="navigation">
                 <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 5 de 7</span>
-                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="submit" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -666,6 +669,7 @@ document.getElementById("character-form").addEventListener("submit", (ev) => {
 
 document.getElementById("character-form").addEventListener("submit", () => {
     const pericias = montarPericiasJSON();
+    const habilidades = montarHabilidadesJSON();
     document.getElementById("pericias-json").value = JSON.stringify(pericias);
 });
 

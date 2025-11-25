@@ -192,6 +192,16 @@ function updatePageDisplay() {
 function saveCharacter() {
     const characterData = {};
 
+    // Gera o JSON de habilidades
+    const abilitiesJson = getAbilitiesJson();
+    
+
+
+    // Salva no input hidden
+    document.getElementById("habilidades-json").value = abilitiesJson;
+    document.getElementById("talentos-json").value = getTalentsJson();
+    document.getElementById("treinamentos-json").value = getTrainingsJson();
+
     // Salvar todos os inputs, selects e textareas
     document.querySelectorAll('input, select, textarea').forEach(el => {
         if (el.id) {
@@ -544,6 +554,60 @@ document.getElementById("save-btn").addEventListener("click", async () => {
 });
 
 
+function getAbilitiesJson() {
+    const abilityCards = document.querySelectorAll('.ability-card');
+    const abilities = [];
+
+    abilityCards.forEach(card => {
+        const name = card.querySelector('.ability-name')?.value || "";
+        const cost = card.querySelector('input[type="number"]')?.value || 0;
+        const type = card.querySelector('select')?.value || "";
+        const description = card.querySelector('textarea')?.value || "";
+
+        abilities.push({
+            nome: name,
+            custo: Number(cost),
+            tipo: type,
+            descricao: description
+        });
+    });
+
+    return JSON.stringify(abilities);
+}
+
+function getTalentsJson() {
+    const talentCards = document.querySelectorAll('.talent-card');
+    const talents = [];
+
+    talentCards.forEach(card => {
+        const name = card.querySelector('input')?.value || "";
+        const description = card.querySelector('textarea')?.value || "";
+
+        talents.push({
+            nome: name,
+            descricao: description
+        });
+    });
+
+    return JSON.stringify(talents);
+}
+
+function getTrainingsJson() {
+    const trainingCards = document.querySelectorAll('.training-card');
+    const trainings = [];
+
+    trainingCards.forEach(card => {
+        const name = card.querySelector('input')?.value || "";
+        const description = card.querySelector('textarea')?.value || "";
+
+        trainings.push({
+            nome: name,
+            descricao: description
+        });
+    });
+
+    return JSON.stringify(trainings);
+}
 
 
 
