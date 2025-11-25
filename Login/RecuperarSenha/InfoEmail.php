@@ -149,7 +149,7 @@ $badgeTexto = $statusEnvio ? 'Solicitação registrada' : 'Processamento conclu�
         <p class="mensagem-principal"><?php echo htmlspecialchars($mensagemPrincipal); ?></p>
         <ul class="lista-passos">
             <li>Abra seu aplicativo de e-mail (Gmail, Outlook, etc.).</li>
-            <li>Procure por <strong>"Redefinição de senha"</strong> ou pelo remetente <em>noreply@example.com</em>.</li>
+            <li>Procure por <strong>"Redefinição de senha"</strong> ou pelo remetente <em>systemforgerpg@gmail.com</em>.</li>
             <li>Verifique a pasta de Spam/Lixo eletrônico caso não esteja na caixa de entrada.</li>
             <li>Clique no link para continuar o processo dentro de 30 minutos.</li>
         </ul>
