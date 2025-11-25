@@ -58,6 +58,31 @@ if(!empty($foto_perfil) && strpos($foto_perfil, '/') === 0){
 </head>
 <body>
 
+    <!-- Guia: trigger flutuante -->
+    <button class="guide-trigger" id="perfilGuideTrigger" aria-label="Abrir Guia" title="Guia" style="display:flex; position:fixed; top:18px; right:18px; z-index:9999; align-items:center; gap:8px;">
+        <img src="../../img/MascoteVesgo.png" alt="" class="guide-trigger-avatar">
+        <span>Guia</span>
+    </button>
+
+    <!-- Balão do Guia (escondido por padrão) -->
+    <div id="guideSpeech" class="guide-speech" aria-hidden="true" style="display:block;">
+        <div class="guide-speech-header">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <img id="guideAvatar" class="guide-avatar" src="../../img/MascoteVesgo.png" alt="Guia" />
+                <div class="guide-speech-title" id="guideTitle">Hefélio, o Guia</div>
+            </div>
+            <button class="guide-speech-close" id="closeGuideBtn" aria-label="Fechar Guia">×</button>
+        </div>
+        <div class="guide-speech-content" id="guideContent">Olá, aventureiro! 👋 Sou seu guia. Escolha um tópico abaixo para saber mais sobre esta página.</div>
+        <div class="guide-speech-options" id="guideOptions">
+            <button class="guide-option" data-topic="nome">Nome do Perfil — O que é?</button>
+            <button class="guide-option" data-topic="foto">Foto do Perfil — Como alterar?</button>
+            <button class="guide-option" data-topic="senha">Alterar senha — Quando usar?</button>
+            <button class="guide-option" data-topic="acoes">Ações da Conta — O que fazem?</button>
+            <button class="guide-option" data-topic="salvar">Salvar / Voltar — Como finalizar</button>
+        </div>
+    </div>
+
     <!-- Modal de Alerta -->
     <div class="overlay" id="alertOverlay" style="display: none;">
         <div class="modal">
@@ -97,64 +122,28 @@ if(!empty($foto_perfil) && strpos($foto_perfil, '/') === 0){
         </div>
     </div>
 
-    <section class="CaixaEditarPerfil">
-        <h2>Perfil do Usuário</h2>
-        <p>Nesta tela é possível a visualização e edição dos elementos da sua conta.</p>
-        
+    <div class="perfil-column">
+        <h2 class="page-title">Perfil do Usuário</h2>
+
+        <section class="CaixaEditarPerfil">
         <form id="formPerfil" enctype="multipart/form-data">
             <input type="hidden" id="avatarSelecionado" name="avatarSelecionado" value="<?php echo htmlspecialchars($avatar_atual ?? ''); ?>">
             <input type="hidden" id="tipoFoto" name="tipoFoto" value="<?php echo htmlspecialchars($tipo_foto ?? ''); ?>">
             <input type="hidden" id="removerFoto" name="removerFoto" value="0">
             
             <div class="Colunas">
+                <!-- 1. Nome do Perfil -->
                 <div class="Coluna">
                     <label for="username">Nome do Perfil:</label>
                     <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($nome_perfil); ?>" placeholder="Digite o nome do seu perfil">
-                    
-                    <hr>
-                    
+
                     <label for="email">Email Vinculado:</label>
                     <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" disabled readonly>
-                    
-                    <hr>
-                    
-                    <div class="acoes-conta">
-                        <h3>Ações da Conta</h3>
-
-                        <div class="action-row">
-                            <div class="action-label">Alterar senha:</div>
-                            <div class="action-controls">
-                                <button type="button" class="action-button btn-secondary" onclick="window.location.href='../../Login/RecuperarSenha/RedefinirSenha/RedefinicaoDeSenha.html'">
-                                    <i class="bi bi-key"></i> Alterar Senha
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="action-row">
-                            <div class="action-label">Sair da conta:</div>
-                            <div class="action-controls">
-                                <button type="button" class="action-button btn-warning" id="btnSair">
-                                    <i class="bi bi-box-arrow-right"></i> Sair
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="action-row">
-                            <div class="action-label">Excluir conta:</div>
-                            <div class="action-controls">
-                                <button type="button" class="action-button btn-danger" id="btnExcluirConta">
-                                    <i class="bi bi-trash"></i> Excluir Conta
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
-                <div class="divisor"></div>
-                
+                <!-- 2 / 3 / 4. Foto do Perfil + botões relacionados -->
                 <div class="Coluna">
                     <label>Foto do Perfil:</label>
-                    
                     <!-- Preview da foto atual -->
                     <div class="perfil-foto-preview" id="fotoPreviewContainer" title="Foto de perfil — apenas visualização">
                         <?php if(!empty($foto_perfil)): ?>
@@ -170,33 +159,64 @@ if(!empty($foto_perfil) && strpos($foto_perfil, '/') === 0){
                     </div>
 
                     <!-- Botões explícitos para manipular foto de perfil -->
-                    <div class="photo-action-buttons" style="text-align:center; margin-top:12px; display:flex; gap:8px; justify-content:center;">
+                    <div class="photo-action-buttons">
                         <button type="button" id="btnUploadPhoto" class="btn-secondary" title="Enviar foto">Upload</button>
-                        <button type="button" id="btnChooseAvatar" class="btn-secondary" title="Escolher avatar">Escolher Avatar</button>
+                        <button type="button" id="btnChooseAvatar" class="btn-outline" title="Escolher avatar">Escolher Avatar</button>
                         <button type="button" id="btnRemovePhoto" class="btn-danger" title="Remover foto">Remover Foto</button>
                     </div>
                     
-                    <p class="foto-hint">
-                        <i class="bi bi-info-circle"></i>
-                        Foto de perfil — apenas visualização. Use os botões abaixo para alterar ou remover.
-                    </p>
-                    
                     <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" style="display: none;">
-                    
-                    <hr>
-                    
+                </div>
+
+                <!-- 5. Área de ações da conta -->
+                <div class="Coluna">
+                    <div class="acoes-conta">
+                        <h3>Ações da Conta</h3>
+
+                        <div class="action-row">
+                            <div class="action-label">Alterar senha:</div>
+                            <div class="action-controls">
+                                <button type="button" class="action-button btn-secondary" onclick="window.location.href='../../Login/RecuperarSenha/RedefinirSenha/RedefinicaoDeSenha.html'">
+                                    Alterar Senha
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="action-row">
+                            <div class="action-label">Sair da conta:</div>
+                            <div class="action-controls">
+                                <button type="button" class="action-button btn-warning" id="btnSair">
+                                    Sair
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="action-row">
+                            <div class="action-label">Excluir conta:</div>
+                            <div class="action-controls">
+                                <button type="button" class="action-button btn-danger" id="btnExcluirConta">
+                                    Excluir Conta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Botões SALVAR / VOLTAR -->
+                <div class="Coluna">
                     <div class="button-container" style="display:flex; gap:12px; margin-top:18px;">
                         <button type="submit" id="ButtonSalvarPerfil" class="btn-save">
-                            <i class="bi bi-check-circle"></i> SALVAR ALTERAÇÕES
+                            SALVAR ALTERAÇÕES
                         </button>
                         <button type="button" id="btnVoltar" class="btn-back" onclick="window.location.href='../index.php'">
-                            <i class="bi bi-arrow-left"></i> VOLTAR
+                            VOLTAR
                         </button>
                     </div>
                 </div>
             </div>
         </form>
-    </section>
+        </section>
+    </div>
 
 </body>
 </html>

@@ -21,6 +21,12 @@ const especializacoes = [
     'Restringido'
 ];
 
+function adicionarPericiasNoFormData(fd) {
+    const pericias = montarPericiasJSON();
+    fd.set("pericias_json", JSON.stringify(pericias));
+}
+
+
 // Navegação entre páginas
 const pages = ['index', 'pagina2', 'pagina3', 'pagina4', 'pagina5', 'pagina6', 'pagina7'];
 let currentPage = 1;
@@ -598,4 +604,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 
+<<<<<<< HEAD
 console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');
+=======
+
+document.getElementById("save-btn").addEventListener("click", async () => {
+    const form = document.getElementById("character-form");
+    const dados = new FormData(form);
+
+    // 🔥 adiciona pericias ao form antes de enviar
+    adicionarPericiasNoFormData(dados);
+
+    const resp = await fetch("Ficha_F&M.php", {
+        method: "POST",
+        body: dados
+    });
+
+    const json = await resp.json();
+    alert(json.message);
+});
+
+
+
+
+
+console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');
+>>>>>>> ef4678da590ef3781e82867799e58f9ee25839fa

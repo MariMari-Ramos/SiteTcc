@@ -42,6 +42,10 @@
     </header>
     <form id="character-form" action="Ficha_F&M.php" method="POST">
     <!-- Container Principal -->
+<<<<<<< HEAD:SistemasRPG/F&M/fichaf_completo.html
+=======
+     <input type="hidden" id="pericias-json" name="pericias">
+>>>>>>> ef4678da590ef3781e82867799e58f9ee25839fa:SistemasRPG/F&M/fichaf_completo.php
     <div class="container">
 
         <!-- ===== PÁGINA 1: INFORMAÇÕES BÁSICAS ===== -->
@@ -341,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="navigation">
                 <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página <span id="nav-current-page">2</span> de 7</span>
-                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -601,8 +605,12 @@ document.getElementById('btn-add-technique').addEventListener('click', function(
     abilitiesByLevel[currentLevel].push(name.trim());
     renderAbilities();
   }
+<<<<<<< HEAD:SistemasRPG/F&M/fichaf_completo.html
 });
 
+=======
+}
+>>>>>>> ef4678da590ef3781e82867799e58f9ee25839fa:SistemasRPG/F&M/fichaf_completo.php
 // Inicializa mostrando habilidades do nível 0
 document.addEventListener('DOMContentLoaded', renderAbilities);
 </script>
@@ -695,6 +703,65 @@ document.addEventListener('DOMContentLoaded', renderAbilities);
         </div>
     </div>
     
+<<<<<<< HEAD:SistemasRPG/F&M/fichaf_completo.html
+=======
+    <script>
+        document.getElementById("character-form").addEventListener("keydown", e => {
+            if (e.key === "Enter") e.preventDefault();
+        });
+        
+       function montarPericiasJSON() {
+    const resultado = {};
+
+    const todasPericias = [...pericias, ...pericias2];
+
+    todasPericias.forEach((p, idx) => {
+        const colunaIndex = idx < pericias.length ? 1 : 2;
+        const arrayIdx = colunaIndex === 1 ? idx : idx - pericias.length;
+
+        const profId = `prof_${colunaIndex}_${arrayIdx}`;
+        const especId = `espec_${colunaIndex}_${arrayIdx}`;
+
+        const profChecked  = document.getElementById(profId)?.checked ?? false;
+        const especChecked = document.getElementById(especId)?.checked ?? false;
+
+        resultado[p.nome] = {
+            proficient: profChecked,
+            specialized: especChecked
+        };
+    });
+
+    
+    return resultado;
+}
+document.getElementById("character-form").addEventListener("submit", (ev) => {
+    const form = ev.target;
+
+    const fd = new FormData(form);
+
+    // 🔥 coloca pericias no FormData igualmente
+    adicionarPericiasNoFormData(fd);
+
+    // impedimos envio automático
+    ev.preventDefault();
+
+    // enviamos igual ao fetch do botão salvar
+    fetch("Ficha_F&M.php", {
+        method: "POST",
+        body: fd
+    })
+    .then(r => r.json())
+    .then(json => alert(json.message));
+});
+
+document.getElementById("character-form").addEventListener("submit", () => {
+    const pericias = montarPericiasJSON();
+    document.getElementById("pericias-json").value = JSON.stringify(pericias);
+});
+
+    </script>
+
+>>>>>>> ef4678da590ef3781e82867799e58f9ee25839fa:SistemasRPG/F&M/fichaf_completo.php
     <script src="script_melhorado.js"></script>
 </body>
 </html>

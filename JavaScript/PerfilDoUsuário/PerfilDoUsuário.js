@@ -25,10 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFormFocused = false;
     let interactive = true;
 
-    // Settings stored in localStorage (fallbacks provided)
+    // Settings stored in localStorage (fallbacks provided).
+    // NOTE: theme is intentionally NOT stored inside `profileSettings` anymore.
+    // The site-wide/global theme is read from `localStorage['theme']` only.
     let settings = JSON.parse(localStorage.getItem('profileSettings') || 'null') || {
         enableWaves: true,
-        theme: 'light',
         enableClickEffect: true,
         enableHoldEffect: true,
         highContrast: false,
@@ -316,15 +317,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if(canvas) canvas.style.display = settings.enableWaves ? 'block' : 'none';
         }
 
-        const themeInputs = document.querySelectorAll('input[name="theme"]');
-        themeInputs.forEach(input => {
-            if (input.value === settings.theme) {
-                input.checked = true;
-            }
-        });
-        document.documentElement.setAttribute('data-theme', settings.theme);
+        // Use the global theme (stored in localStorage['theme']) — profile settings
+        // no longer contain a theme value. This keeps the profile page consistent
+        // with the rest of the site.
+        const globalTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', globalTheme);
         if(canvas && ctx) {
-            currentPalette = settings.theme === 'dark' ? baseColorPalette.dark : baseColorPalette.light;
+            currentPalette = globalTheme === 'dark' ? baseColorPalette.dark : baseColorPalette.light;
         }
 
         const enableClickEffectCheckbox = document.getElementById('enableClickEffect');
@@ -354,17 +353,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveSettings() {
         settings.enableWaves = document.getElementById('enableWaves')?.checked ?? true;
-        settings.theme = document.querySelector('input[name="theme"]:checked')?.value ?? 'light';
         settings.enableClickEffect = document.getElementById('enableClickEffect')?.checked ?? true;
         settings.enableHoldEffect = document.getElementById('enableHoldEffect')?.checked ?? true;
         settings.highContrast = document.getElementById('highContrast')?.checked ?? false;
         settings.largerText = document.getElementById('largerText')?.checked ?? false;
 
+        // Persist profile-specific settings, but intentionally do NOT persist theme here.
         localStorage.setItem('profileSettings', JSON.stringify(settings));
+        // Re-apply settings (theme will come from global localStorage['theme']).
         applySettings();
     }
 
     document.querySelectorAll('.settings-option input').forEach(input => {
         input.addEventListener('change', saveSettings);
     });
+
+    /* ===== Guia local da página de Perfil (perguntas e respostas) ===== */
+    const perfilGuideTrigger = document.getElementById('perfilGuideTrigger');
+    const guideSpeech = document.getElementById('guideSpeech');
+    const guideCloseBtn = document.getElementById('closeGuideBtn');
+    const guideContentEl = document.getElementById('guideContent');
+    const guideOptionsHost = document.getElementById('guideOptions');
+
+    function openPerfilGuide() {
+        if (!guideSpeech) return;
+        guideSpeech.classList.add('active');
+        guideSpeech.setAttribute('aria-hidden', 'false');
+        // mark trigger as viewed if present
+        perfilGuideTrigger && perfilGuideTrigger.classList.add('viewed');
+    }
+
+    function closePerfilGuide() {
+        if (!guideSpeech) return;
+        guideSpeech.classList.remove('active');
+        guideSpeech.setAttribute('aria-hidden', 'true');
+    }
+
+    function showPerfilGuideTopic(topic) {
+        // Prefer translations if available
+        const lang = localStorage.getItem('language') || 'pt-BR';
+        const T = (window.TRANSLATIONS && window.TRANSLATIONS[lang]) || null;
+
+        const texts = {
+            nome: T && T.perfil_guide_nome ? T.perfil_guide_nome : 'Nome do Perfil: Este campo define como outros usuários verão seu perfil. Você pode editar para mostrar um apelido ou seu nome de jogo.',
+            foto: T && T.perfil_guide_foto ? T.perfil_guide_foto : 'Foto do Perfil: Use "Upload" para enviar uma imagem sua ou "Escolher Avatar" para selecionar uma das imagens prontas. Clique em "Salvar" para confirmar.' ,
+            senha: T && T.perfil_guide_senha ? T.perfil_guide_senha : 'Alterar senha: Redireciona para a página de redefinição. Use quando quiser trocar sua senha por motivos de segurança.',
+            acoes: T && T.perfil_guide_acoes ? T.perfil_guide_acoes : 'Ações da Conta: "Alterar Senha", "Sair" e "Excluir Conta". A exclusão é permanente — tenha cuidado.',
+            salvar: T && T.perfil_guide_salvar ? T.perfil_guide_salvar : 'Salvar / Voltar: "Salvar alterações" grava suas mudanças (foto e nome) no servidor. "Voltar" retorna à tela principal sem salvar.'
+        };
+
+        const message = texts[topic] || (T && T.guide_intro) || 'Escolha um tópico para saber mais.';
+        if (guideContentEl) guideContentEl.textContent = message;
+        openPerfilGuide();
+    }
+
+    if (perfilGuideTrigger) {
+        perfilGuideTrigger.addEventListener('click', () => {
+            // toggle
+            if (guideSpeech && guideSpeech.classList.contains('active')) closePerfilGuide();
+            else openPerfilGuide();
+        });
+    }
+
+    if (guideCloseBtn) guideCloseBtn.addEventListener('click', closePerfilGuide);
+
+    if (guideOptionsHost) {
+        guideOptionsHost.addEventListener('click', (e) => {
+            const btn = e.target.closest('.guide-option');
+            if (!btn) return;
+            const topic = btn.dataset.topic;
+            showPerfilGuideTopic(topic);
+        });
+    }
 });

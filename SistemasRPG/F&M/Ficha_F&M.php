@@ -32,7 +32,8 @@ $integrity_temp = $_POST['integrity-temp'] ?? null;
 $movement = $_POST['movement'] ?? null;
 $initiative = $_POST['initiative'] ?? null;
 $attention = $_POST['attention'] ?? null;
-
+$pericias_json = $_POST["pericias_json"] ?? "{}";
+$pericias = json_decode($pericias_json, true);
 
 $id_ficha = $_POST['id_ficha'] ?? null;
 
@@ -71,12 +72,16 @@ $dados = [
         "initiative" => $initiative,
         "attention" => $attention,
     ],
+    "pericias" => $pericias
 ];
 
 $dados_json = json_encode($dados, JSON_UNESCAPED_UNICODE);
+$id_ficha = isset($_POST['id_ficha']) ? intval($_POST['id_ficha']) : 0;
+$id_usuario = $_SESSION["usuario_id"] ?? null;
+
 
 // Se for update (ficha já existe)
-if (!empty($id_ficha)) {
+if ($id_ficha > 0){
 
     $stmt = $mysqli->prepare("UPDATE ficha_per SET dados_json = ?, ultima_atualizacao = NOW()
                               WHERE id_ficha = ?");
@@ -86,9 +91,7 @@ if (!empty($id_ficha)) {
     exit;
 }
 
-$id_usuario = $_SESSION["usuario_id"] ?? null;
-
-
+else {
 $stmt = $mysqli->prepare("
     INSERT INTO ficha_per (nome_personagem, dados_json, data_criacao, ultima_atualizacao, id_usuario, id_sistema)
     VALUES (?, ?, NOW(), NOW(), ?, 1)
@@ -98,5 +101,5 @@ $stmt->bind_param("ssi", $nome, $dados_json, $id_usuario);
 $stmt->execute();
 
 $id_gerado = $stmt->insert_id;
-
-echo json_encode(["message" => "Ficha salva com sucesso!", "id_ficha" => $id_gerado]);
+}
+echo json_encode(["message" => "Ficha salva com sucesso!"]);
