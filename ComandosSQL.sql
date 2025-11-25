@@ -1,4 +1,4 @@
-CREATE DATABASE bancotcc
+CREATE DATABASE bancotcc;
 
 USE bancotcc;
 

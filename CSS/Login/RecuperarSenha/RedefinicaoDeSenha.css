@@ -166,7 +166,7 @@ input[type="password"] {
 
 .input-group input{
     width:100%;
-    padding:.8em 2.6em .8em 1.3em;
+    padding:.8em 3.2em .8em 1.3em; /* espaço maior para o botão */
     border:2px solid var(--input-border);
     border-radius:2em;
     background:var(--input-bg);
@@ -183,22 +183,36 @@ input[type="password"] {
 }
 .input-group input::placeholder{color:var(--input-placeholder);font-size:0.85em;}
 
+
 .toggle-pass{
     position:absolute;
-    right:14px;
+    right:8px;
     top:50%;
     transform:translateY(-50%);
-    background:none;
+    background:transparent;
     border:none;
     cursor:pointer;
-    font-size:24px; /* levemente maior para melhor usabilidade */
+    font-size:1.45rem;
     color:color-mix(in srgb, var(--text) 70%, transparent);
     display:flex;
     align-items:center;
-    padding:0;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    border-radius:50%;
     transition:.3s;
+    box-shadow:none;
+    padding:0;
 }
-.toggle-pass:hover{color:var(--accent);}
+.toggle-pass i {
+    font-size:1.45rem;
+    line-height:1;
+}
+.toggle-pass:hover{
+    background:transparent;
+    color:var(--accent);
+    transform:translateY(-50%) scale(1.08);
+}
 
 body.high-contrast .input-group input{border-width:3px;font-weight:600;}
 

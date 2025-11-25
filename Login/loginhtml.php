@@ -36,7 +36,7 @@
                 <label>🎨 Exibição</label>
                 <div class="settings-option">
                     <input type="checkbox" id="enableWaves" checked>
-                    <span>Ativar Ondas Animadas</span>
+                    <span>Ondas Animadas</span>
                 </div>
             </div>
 

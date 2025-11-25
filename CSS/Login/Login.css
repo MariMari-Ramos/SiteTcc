@@ -281,6 +281,14 @@ input[type="password"] {
     font-family: system-ui, "Segoe UI", Arial, sans-serif;
 }
 
+/* Fix específico: algumas fontes (ex: OpenDyslexic) podem não ter o glifo de máscara
+   e exibir um bloco/linha preta. Forçar a fonte do sistema apenas neste campo garante
+   que o navegador desenho as bolinhas corretamente. */
+#senha[type="password"], input[type="password"]#senha {
+    -webkit-text-security: disc;
+    font-family: system-ui, "Segoe UI", Arial, sans-serif !important;
+}
+
 /* ==================== PASSWORD CONTAINER ==================== */
 .password-container {
     position: relative;
@@ -815,6 +823,25 @@ body.high-contrast.dark-theme {
 
 body.high-contrast .CaixaLogin {
     border: 3px solid var(--accent);
+}
+
+/* Fix visual: garantir contraste dos botões circulares (voltar/configurações)
+   em tema escuro e modo alto-contraste — força ícone branco e fundo contrastante. */
+body.dark-theme .back-btn,
+body.high-contrast.dark-theme .back-btn,
+body.dark-theme #settingsBtn,
+body.high-contrast.dark-theme #settingsBtn {
+    background: var(--accent);
+    border-color: color-mix(in srgb, var(--accent-2) 80%, transparent);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+body.dark-theme .back-btn i,
+body.high-contrast.dark-theme .back-btn i,
+body.dark-theme #settingsBtn i,
+body.high-contrast.dark-theme #settingsBtn i {
+    color: #ffffff !important;
+    filter: none !important;
 }
 
 body.high-contrast #email,

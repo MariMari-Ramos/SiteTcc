@@ -52,21 +52,7 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
 
             <div class="settings-divider"></div>
 
-            <div class="settings-group">
-                <label>🖱️ Interação</label>
-                <div class="settings-option">
-                    <input type="checkbox" id="enableClickEffect">
-                    <span>Efeito ao clicar</span>
-                </div>
-                <div class="settings-option">
-                    <input type="checkbox" id="enableHoldEffect">
-                    <span>Efeito ao segurar</span>
-                </div>
-            </div>
-
-            <div class="settings-divider"></div>
-
-            <div class="settings-group">
+ <div class="settings-group">
                 <label>🌙 Tema</label>
                 <div class="settings-option">
                     <input type="radio" name="theme" value="light">
@@ -80,6 +66,20 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
                     <input type="radio" name="theme" value="auto">
                     <span>Automático</span>
                 </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-group">
+                <label>🖱️ Interação</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableClickEffect">
+                    <span>Efeito ao clicar</span>
+                </div>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableHoldEffect">
+                    <span>Efeito ao segurar</span>
+                </div>
+            </div>
             </div>
 
             <div class="settings-divider"></div>
@@ -96,7 +96,6 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
                 </div>
             </div>
 
-            <div class="settings-divider"></div>
         </div>
     </div>
 

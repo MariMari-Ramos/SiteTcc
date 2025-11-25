@@ -5,6 +5,8 @@
     <title>Recuperar Senha</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="../../CSS/Login/RecuperarSenha/RecSenha.css">
+        <script src="../../JavaScript/RecSenha/RecuperarSenha.js" defer></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 <body>
@@ -35,21 +37,7 @@
 
             <div class="settings-divider"></div>
 
-            <div class="settings-group">
-                <label>🖱️ Interação</label>
-                <div class="settings-option">
-                    <input type="checkbox" id="enableClickEffect">
-                    <span>Efeito ao clicar</span>
-                </div>
-                <div class="settings-option">
-                    <input type="checkbox" id="enableHoldEffect">
-                    <span>Efeito ao segurar</span>
-                </div>
-            </div>
-
-            <div class="settings-divider"></div>
-
-            <div class="settings-group">
+<div class="settings-group">
                 <label>🌙 Tema</label>
                 <div class="settings-option">
                     <input type="radio" name="theme" value="light">
@@ -64,7 +52,22 @@
                     <span>Automático</span>
                 </div>
             </div>
+                      
 
+            <div class="settings-divider"></div>
+
+            
+  <div class="settings-group">
+                <label>🖱️ Interação</label>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableClickEffect">
+                    <span>Efeito ao clicar</span>
+                </div>
+                <div class="settings-option">
+                    <input type="checkbox" id="enableHoldEffect">
+                    <span>Efeito ao segurar</span>
+                </div>
+            </div>
             <div class="settings-divider"></div>
 
             <div class="settings-group">
@@ -92,7 +95,6 @@
             </div>
             <div class="button-container">
                 <button id="btnEnviar" type="submit">Enviar Código</button>
-                <button id="btnVoltar" type="button">Voltar</button>
             </div>
             <div id="message" class="message" aria-live="polite"></div>
         </div>
@@ -106,6 +108,5 @@
         </div>
     </div>
 
-    <script src="../../JavaScript/RecSenha/RecuperarSenha.js" defer></script>
 </body>
 </html>

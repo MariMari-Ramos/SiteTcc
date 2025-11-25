@@ -4,7 +4,7 @@
     // ===== Form =====
     const form = document.getElementById('formRecSenha');
     const btnEnviar = document.getElementById('btnEnviar');
-    const btnVoltar = document.getElementById('btnVoltar');
+    const backBtn = document.getElementById('backBtn');
     const emailInput = document.getElementById('email');
     const messageDiv = document.getElementById('message');
     // Modal de alerta (mesmo estilo do Login)
@@ -59,7 +59,7 @@
             showMessage('Código enviado! Verifique seu e-mail.','success');
         },1500);
     });
-    btnVoltar?.addEventListener('click',()=> window.location.href='../loginhtml.php');
+    backBtn?.addEventListener('click',()=> window.location.href='../loginhtml.php');
     // Mensagem inline removida (substituída por modal)
     emailInput?.focus();
 
@@ -129,37 +129,39 @@
             document.documentElement.classList.add('large-text');
         }
 
+        const previousWavesState = wavesEnabled;
         wavesEnabled = s.enableWaves;
-        if(canvas){
-            if(s.enableWaves){
-                if(!wavesEnabled){
+
+        if (canvas) {
+            if (s.enableWaves) {
+                if (!previousWavesState) {
                     wavesFadingOut = false;
                     waveFadeOpacity = 0;
                     canvas.style.display = 'block';
-                    
+
                     const fadeInInterval = setInterval(() => {
                         waveFadeOpacity += 0.02;
-                        if(waveFadeOpacity >= 1){
+                        if (waveFadeOpacity >= 1) {
                             waveFadeOpacity = 1;
                             clearInterval(fadeInInterval);
                         }
                     }, 16);
                 }
             } else {
-                if(wavesEnabled){
+                if (previousWavesState) {
                     wavesFadingOut = true;
-                    
+
                     setTimeout(() => {
-                        if(!wavesEnabled){
+                        if (!wavesEnabled && !wavesFadingOut) {
                             canvas.style.display = 'none';
-                            ctx.clearRect(0,0,canvas.width,canvas.height);
-                            
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
                             heat = 0;
                             clickAmp = 0;
                             clickHeight = 0;
                             targetClickHeight = 0;
                             speedBoost = 0;
-                            wavesFadingOut = false;
+                            // wavesFadingOut flag will be cleared by draw() when opacity hits 0
                         }
                     }, 1500);
                 }
@@ -371,6 +373,14 @@
     settingsBtn?.addEventListener('mouseenter',()=> interactive=false);
     settingsBtn?.addEventListener('mouseleave',()=>{
         if(!isFieldFocused && !isSettingsOpen) interactive=true;
+    });
+
+    // Quando o mouse estiver sobre o botão de voltar, desativa a interatividade das ondas
+    backBtn?.addEventListener('mouseenter', () => {
+        interactive = false;
+    });
+    backBtn?.addEventListener('mouseleave', () => {
+        if(!isFieldFocused && !isSettingsOpen) interactive = true;
     });
 
     // Eventos do modal de alerta
