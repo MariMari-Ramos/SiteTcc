@@ -913,3 +913,169 @@ h6 { font-size: var(--font-size-md); }
   box-shadow: 0 8px 24px var(--color-focus-ring);
   transform: translateY(-2px);
 }
+/* Estilização focada apenas para as células das checkboxes da tabela de perícias */
+td input[type="checkbox"] {
+  display: inline-block;
+  vertical-align: middle;
+  width: 22px;
+  height: 22px;
+  margin: 0 6px;
+  accent-color: #5988c4;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+  border-radius: 6px;
+  transition: box-shadow 0.2s, outline 0.2s;
+}
+
+td input[type="checkbox"]:hover {
+  outline: 2px solid #90c2ff;
+  box-shadow: 0 0 0 4px #5988c441;
+}
+
+/* Células só de checkbox recebem espaço extra */
+td input[type="checkbox"] + input[type="checkbox"] {
+  margin-left: 14px;
+}
+
+/* Opcional: diminui espaço entre os checkboxes sem mexer nos outros elementos */
+td {
+  white-space: nowrap;
+}
+
+/* Opcional: se quiser que cada checkbox pareça mais "em coluna", coloque assim:
+td input[type="checkbox"] {
+  margin-right: 0;
+  display: block;
+}
+*/
+
+/* ===== ESTILOS PARA AJUDA DE SEÇÕES (SECTION HEADER HELP) ===== */
+
+.section-header-help {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast) var(--ease-standard);
+  margin-left: var(--space-12);
+  padding: 0;
+}
+
+.section-header-help:hover {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px rgba(var(--color-red-400-rgb), 0.3);
+}
+
+.section-header-help:active {
+  transform: scale(0.95);
+}
+
+/* Modal de ajuda da seção */
+#section-help-modal {
+  display: none;
+  position: fixed;
+  z-index: 3000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s var(--ease-standard);
+}
+
+#section-help-modal[style*="display: flex"] {
+  display: flex !important;
+}
+
+.section-help-content {
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-28);
+  max-width: 450px;
+  width: 90%;
+  text-align: left;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  position: relative;
+  animation: slideUp 0.3s var(--ease-standard);
+}
+
+#modal-header-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin-bottom: var(--space-16);
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: var(--space-12);
+}
+
+#modal-header-desc {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+#close-help-modal {
+  position: absolute;
+  top: var(--space-12);
+  right: var(--space-12);
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--color-secondary);
+  color: var(--color-text);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  transition: all var(--duration-fast) var(--ease-standard);
+  padding: 0;
+}
+
+#close-help-modal:hover {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  transform: rotate(90deg);
+}
+
+#close-help-modal:active {
+  transform: rotate(90deg) scale(0.9);
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

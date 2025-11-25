@@ -61,9 +61,38 @@ function fillSelectionBoxes() {
 function calculateModifier(attributeValue) {
     return Math.floor((parseInt(attributeValue) - 10) / 2);
 }
+// ===== CÁLCULO DE Classe de Armadura =====
+
+function setupArmorClass() {
+    const acInputs = ['ac-natural', 'ac-armor', 'ac-shield', 'ac-dex', 'ac-other'];
+
+    acInputs.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', calculateTotalAC);
+        }
+    });
+
+    calculateTotalAC();
+}
+
+function calculateTotalAC() {
+    const natural = parseInt(document.getElementById('ac-natural')?.value) || 0;
+    const armor = parseInt(document.getElementById('ac-armor')?.value) || 0;
+    const shield = parseInt(document.getElementById('ac-shield')?.value) || 0;
+    const dex = parseInt(document.getElementById('ac-dex')?.value) || 0;
+    const other = parseInt(document.getElementById('ac-other')?.value) || 0;
+
+    const total = natural + armor + shield + dex + other;
+    const totalElement = document.getElementById('ac-total');
+    if (totalElement) {
+        totalElement.value = total;
+    }
+}
 
 function setupAttributeModifiers() {
     const attributes = ['str', 'dex', 'con', 'wis', 'int', 'cha'];
+
 
     attributes.forEach(attr => {
         const input = document.getElementById(attr);
@@ -96,40 +125,19 @@ function setupProficiencyBonus() {
     if (levelInput && bonusInput) {
         levelInput.addEventListener('input', function() {
             const level = parseInt(this.value) || 1;
-            const bonus = Math.floor((level - 1) / 4) + 2;
-            bonusInput.value = `+${bonus}`;
+            let bonus;
+            if (level < 1) {
+                bonus = -1 * (Math.floor((level - 1) / 4) + 2); // valor negativo quando menor que 10
+            } else {
+                bonus = Math.floor((level - 1) / 4) + 2; // lógica padrão para 10 ou mais
+            }
+            bonusInput.value = `${bonus >= 0 ? '+' : ''}${bonus}`;
         });
         levelInput.dispatchEvent(new Event('input'));
     }
 }
 
-// ===== CÁLCULO DE CLASSE DE ARMADURA =====
-function setupArmorClass() {
-    const acInputs = ['ac-natural', 'ac-armor', 'ac-shield', 'ac-dex', 'ac-other'];
 
-    acInputs.forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            input.addEventListener('input', calculateTotalAC);
-        }
-    });
-
-    calculateTotalAC();
-}
-
-function calculateTotalAC() {
-    const natural = parseInt(document.getElementById('ac-natural')?.value) || 0;
-    const armor = parseInt(document.getElementById('ac-armor')?.value) || 0;
-    const shield = parseInt(document.getElementById('ac-shield')?.value) || 0;
-    const dex = parseInt(document.getElementById('ac-dex')?.value) || 0;
-    const other = parseInt(document.getElementById('ac-other')?.value) || 0;
-
-    const total = natural + armor + shield + dex + other;
-    const totalElement = document.getElementById('ac-total');
-    if (totalElement) {
-        totalElement.value = total;
-    }
-}
 
 // ===== NAVEGAÇÃO ENTRE PÁGINAS =====
 function goToPage(pageNumber) {
@@ -452,6 +460,12 @@ function rollD20() {
     if (modal) modal.classList.add('active');
 }
 
+// ===== FECHAR MODAL DO D20 =====
+function closeDiceModal() {
+    const modal = document.getElementById('dice-modal');
+    if (modal) modal.classList.remove('active');
+}
+
 // ===== EXPORTAR FICHA =====
 function exportCharacter() {
     window.print();
@@ -482,14 +496,9 @@ dots.forEach((dot, index) => {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const closeModalBtn = document.querySelector('.modal-close');
-    const diceModal = document.getElementById('dice-modal');
-    if (closeModalBtn && diceModal) {
-      closeModalBtn.addEventListener('click', function() {
-        diceModal.classList.remove('active');
-      });
-    }
-  });
+    // Setup de rolagem automática e outras inicializações
+    window.scrollTo(0, 0);
+});
 
   function nextPage() {
     if (currentPage < totalPages) {
@@ -518,34 +527,75 @@ document.addEventListener('DOMContentLoaded', function() {
       updateNavButtons();
     }
   }
-    
 
+  // ===== SISTEMA DE AJUDA POR SEÇÃO =====
+// Descrições de ajuda associadas aos headers via data-help
+// Para adicionar uma descrição individual, simplesmente adicione data-help="Sua descrição" no HTML do header
+const sectionHelpDescriptions = {
+  "Informações Básicas do Personagem": "Dados pessoais do personagem, como nome, origem e especialização.",
+  "Atributos": "Aqui você define os atributos principais que caracterizam seu personagem.",
+  "Classe de Armadura": "Informações e cálculo de defesa do personagem.",
+  "Perícias": "Listagem das habilidades e conhecimentos específicos do personagem.",
+  "Valores de Combate": "Configura pontos de vida, energia, integridade e valores relevantes para batalhas.",
+  "Habilidades de Especialização": "Habilidades exclusivas relacionadas à especialização do personagem.",
+  "Perfil Amaldiçoado": "Traços e histórico de personagens com maldição ou poderes especiais.",
+  "Técnica Amaldiçoada": "Área para definir e explicar a técnica amaldiçoada do personagem.",
+  "Invocações Shikigami": "Configure e registre as invocações que seu personagem pode usar."
+};
 
-document.getElementById("save-btn").addEventListener("click", async () => {
-    const form = document.getElementById("character-form");
-    const dados = new FormData(form);
+document.addEventListener('DOMContentLoaded', function() {
+  // Setup botões de ajuda das seções
+  document.querySelectorAll('.section-header').forEach(function(header) {
+    // Evita botão duplicado se alterar demais o DOM
+    if (!header.querySelector('.section-header-help')) {
+      const btn = document.createElement('button');
+      btn.className = 'section-header-help';
+      btn.type = 'button';
+      btn.innerHTML = "?";
+      btn.title = "Ajuda sobre esta seção";
 
-    const resp = await fetch("Ficha_F&M.php", {
-        method: "POST",
-        body: dados
-    });
-
-    const json = await resp.json();
-    alert(json.message);
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (window.ID_FICHA) {
-        let form = document.getElementById("form-ficha");
-        if (form) {
-            let hidden = document.createElement("input");
-            hidden.type = "hidden";
-            hidden.name = "id_ficha";
-            hidden.value = window.ID_FICHA;
-            form.appendChild(hidden);
+      btn.onclick = function(e) {
+        e.stopPropagation(); // Previne propagação
+        const modal = document.getElementById('section-help-modal');
+        if (modal) {
+          const headerText = header.innerText.trim();
+          // Prioriza descrição no data-help do header, depois usa o mapa global
+          const description = header.getAttribute('data-help') || 
+                            sectionHelpDescriptions[headerText] || 
+                            "Descrição não disponível para esta seção.";
+          
+          document.getElementById('modal-header-title').innerText = headerText;
+          document.getElementById('modal-header-desc').innerText = description;
+          modal.style.display = "flex";
         }
+      };
+
+      header.appendChild(btn);
     }
+  });
+
+  // Fecha o modal de ajuda ao clicar no botão [X]
+  const closeHelpBtn = document.getElementById('close-help-modal');
+  if (closeHelpBtn) {
+    closeHelpBtn.onclick = function(e) {
+      e.stopPropagation();
+      const modal = document.getElementById('section-help-modal');
+      if (modal) modal.style.display = "none";
+    };
+  }
+
+  // Fecha o modal de ajuda ao clicar fora do conteúdo
+  const helpModal = document.getElementById('section-help-modal');
+  if (helpModal) {
+    helpModal.onclick = function(e) {
+      // Só fecha se clicar especificamente no modal, não no conteúdo
+      if (e.target === this) {
+        this.style.display = "none";
+      }
+    };
+  }
 });
 
+    
 
 console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');
