@@ -33,18 +33,20 @@
                 <span class="page-dot" title="Invocações"></span>
             </div>
 
-            <div class="header-actions" >
-                
-                <button type="button" id="clear-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha">🗑️ Limpar</button>
-                <button type="button" id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir">📄 Exportar</button>
             <div class="header-actions">
                 <button id="save-btn" class="btn btn--sm btn--secondary" title="Salvar Ficha">💾 Salvar</button>
-                <button id="clear-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha">🗑️ Limpar</button>
-                <button id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir">📄 Exportar</button>
+                <button type="button" id="clear-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha">🗑️ Limpar</button>
+                <button  type="button" id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir">📄 Exportar</button>
             </div>
         </div>
     </header>
     <form id="character-form" action="Ficha_F&M.php" method="POST">
+        <input type="hidden" name="talentos" id="talentos-json">
+        <input type="hidden" name="treinamentos" id="treinamentos-json">
+        <input type="hidden" name="habilidades" id="habilidades-json">
+        <input type="hidden" name="tecnica_amaldiçoada" id="tecnica-amaldicada-json">
+        <input type="hidden" name="invocations" id="invocations-json">
+
     <!-- Container Principal -->
      <input type="hidden" id="pericias-json" name="pericias">
     <div class="container">
@@ -363,15 +365,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input type="number" id="hp-max" value="100" class="form-control" onchange="updateProgressBar('hp')">
+                        <input name="hp-max" type="number" id="hp-max" value="100" class="form-control" onchange="updateProgressBar('hp')">
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input type="number" id="hp-current" value="100" class="form-control" onchange="updateProgressBar('hp')">
+                        <input name="hp-current" type="number" id="hp-current" value="100" class="form-control" onchange="updateProgressBar('hp')">
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input type="number" id="hp-temp" value="0" class="form-control">
+                        <input name="hp-temp" type="number" id="hp-temp" value="0" class="form-control">
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -384,15 +386,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input type="number" id="pe-max" value="50" class="form-control" onchange="updateProgressBar('pe')">
+                        <input name="pe-max" type="number" id="pe-max" value="50" class="form-control" onchange="updateProgressBar('pe')">
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input type="number" id="pe-current" value="50" class="form-control" onchange="updateProgressBar('pe')">
+                        <input name="pe-current" type="number" id="pe-current" value="50" class="form-control" onchange="updateProgressBar('pe')">
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input type="number" id="pe-temp" value="0" class="form-control">
+                        <input name="pe-temp" type="number" id="pe-temp" value="0" class="form-control">
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -405,15 +407,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input type="number" id="integrity-max" value="100" class="form-control" onchange="updateProgressBar('integrity')">
+                        <input name="integrity-max" type="number" id="integrity-max" value="100" class="form-control" onchange="updateProgressBar('integrity')">
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input type="number" id="integrity-current" value="100" class="form-control" onchange="updateProgressBar('integrity')">
+                        <input name="integrity-current" type="number" id="integrity-current" value="100" class="form-control" onchange="updateProgressBar('integrity')">
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input type="number" id="integrity-temp" value="0" class="form-control">
+                        <input name="integrity-temp" type="number" id="integrity-temp" value="0" class="form-control">
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -426,15 +428,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Deslocamento (metros)</label>
-                        <input type="number" id="movement" value="9" class="form-control">
+                        <input name="movement" type="number" id="movement" value="9" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Iniciativa</label>
-                        <input type="number" id="initiative" class="form-control">
+                        <input name="initiative" type="number" id="initiative" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Atenção</label>
-                        <input type="number" id="attention" class="form-control">
+                        <input name="attention" type="number" id="attention" class="form-control">
                     </div>
                 </div>
             </div>
@@ -451,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2 class="section-header section-border-orange" data-help="São as habilidades concedidas pela especialização escolhida, anote todas aqui para que fique facil de se lembrar!">✨ Habilidades de Especialização</h2>
 
             <div class="card section-border-orange">
-                <button class="btn-add" onclick="addAbility('abilities-list')">Adicionar Habilidade</button>
+                <button type="button" class="btn-add" onclick="addAbility('abilities-list')">Adicionar Habilidade</button>
                 <div id="abilities-list" style="margin-top: 20px;">
                     <!-- Habilidades adicionadas dinamicamente -->
                 </div>
@@ -484,7 +486,7 @@ E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do l
 
             <div class="card section-border-indigo">
                 <h3>🎖️ Talentos</h3>
-                <button class="btn-add" onclick="addTalent()">Adicionar Talento</button>
+                <button type="button" class="btn-add" onclick="addTalent()">Adicionar Talento</button>
                 <div id="talents-list" style="margin-top: 20px;">
                     <!-- Talentos adicionados dinamicamente -->
                 </div>
@@ -518,7 +520,7 @@ E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do l
 
             <div class="card section-border-indigo">
                 <h3>🏋️ Treinamentos</h3>
-                <button class="btn-add" onclick="addTraining()">Adicionar Treinamento</button>
+                <button type="button" class="btn-add" onclick="addTraining()">Adicionar Treinamento</button>
                 <div id="trainings-list" style="margin-top: 20px;">
                     <!-- Treinamentos adicionados dinamicamente -->
                 </div>
@@ -527,7 +529,7 @@ E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do l
             <div class="navigation">
                 <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 5 de 7</span>
-                <button type="submit" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
             </div>
         </div>
 
@@ -550,14 +552,14 @@ E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do l
             <div class="card section-border-pink">
   <h3>✨ Habilidades de Técnica</h3>
   <div class="tabs" id="technique-tabs">
-    <button class="tab active" data-level="0">Nível 0</button>
-    <button class="tab" data-level="1">Nível 1</button>
-    <button class="tab" data-level="2">Nível 2</button>
-    <button class="tab" data-level="3">Nível 3</button>
-    <button class="tab" data-level="4">Nível 4</button>
-    <button class="tab" data-level="5">Nível 5</button>
+    <button type="button" class="tab active" data-level="0">Nível 0</button>
+    <button type="button" class="tab" data-level="1">Nível 1</button>
+    <button type="button" class="tab" data-level="2">Nível 2</button>
+    <button type="button" class="tab" data-level="3">Nível 3</button>
+    <button type="button" class="tab" data-level="4">Nível 4</button>
+    <button type="button" class="tab" data-level="5">Nível 5</button>
   </div>
-  <button class="btn-add" id="btn-add-technique">Adicionar Habilidade de Técnica</button>
+  <button type="button" class="btn-add" id="btn-add-technique">Adicionar Habilidade de Técnica</button>
   <div id="technique-abilities" style="margin-top: 20px;">
     <!-- Habilidades de técnica criadas são exibidas aqui -->
   </div>
@@ -572,11 +574,10 @@ function renderAbilities() {
   const container = document.getElementById('technique-abilities');
   container.innerHTML = '';
   abilitiesByLevel[currentLevel].forEach((ability, idx) => {
-    // Exemplo simples: apenas título. Personalize se quiser.
     const div = document.createElement('div');
-    div.textContent = ability;
+    div.textContent = `${idx + 1}. ${ability}`;
     div.className = "technique-ability-card";
-    // Adiciona botão de remover se desejar
+
     const removeBtn = document.createElement('button');
     removeBtn.textContent = "Remover";
     removeBtn.style.marginLeft = "12px";
@@ -584,10 +585,16 @@ function renderAbilities() {
       abilitiesByLevel[currentLevel].splice(idx, 1);
       renderAbilities();
     };
+
     div.appendChild(removeBtn);
     container.appendChild(div);
+    saveCharacter();
   });
 }
+
+// Torna global
+window.renderAbilities = renderAbilities;
+
 
 // Troca de aba
 document.getElementById('technique-tabs').addEventListener('click', function(e) {
@@ -605,6 +612,7 @@ document.getElementById('btn-add-technique').addEventListener('click', function(
   if (name && name.trim()) {
     abilitiesByLevel[currentLevel].push(name.trim());
     renderAbilities();
+    saveCharacter();
   }
 });
 // Inicializa mostrando habilidades do nível 0
@@ -659,16 +667,16 @@ document.addEventListener('DOMContentLoaded', renderAbilities);
             <h2 class="section-header section-border-cyan" data-help="Aqui você deve anotar, as invocações que você como Controlador ou como qualquer outra especialização, obter durante a campanha!">👹 Invocações / Shikigamis</h2>
 
             <div class="card section-border-cyan">
-                <button class="btn-add" onclick="addInvocation()">Adicionar Invocação</button>
+                <button type="button" class="btn-add" onclick="addInvocation()">Adicionar Invocação</button>
                 <div id="invocations-list" style="margin-top: 20px;">
                     <!-- Invocações adicionadas dinamicamente -->
                 </div>
             </div>
 
             <div class="navigation">
-                <button class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
                 <span class="page-info">Página 7 de 7</span>
-                <button class="btn btn--primary" onclick="nextPage()" disabled>Salvar</button>
+                <button type="submit" class="btn btn--primary" onclick="nextPage()" >Salvar</button>
             </div>
         </div>
 
@@ -750,7 +758,6 @@ document.getElementById("character-form").addEventListener("submit", (ev) => {
 
 document.getElementById("character-form").addEventListener("submit", () => {
     const pericias = montarPericiasJSON();
-    const habilidades = montarHabilidadesJSON();
     document.getElementById("pericias-json").value = JSON.stringify(pericias);
 });
 

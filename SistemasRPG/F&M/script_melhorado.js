@@ -202,13 +202,18 @@ function saveCharacter() {
 
     // Gera o JSON de habilidades
     const abilitiesJson = getAbilitiesJson();
-    
+
+    // 🔥 Adicionar técnica amaldiçoada
+    document.getElementById("tecnica-amaldicada-json").value = getTechniquesJson();
 
 
     // Salva no input hidden
-    document.getElementById("habilidades-json").value = abilitiesJson;
+    document.getElementById("habilidades-json").value = getAbilitiesJson();
     document.getElementById("talentos-json").value = getTalentsJson();
     document.getElementById("treinamentos-json").value = getTrainingsJson();
+    document.getElementById('invocations-json').value =
+    JSON.stringify(getInvocations());
+
 
     // Salvar todos os inputs, selects e textareas
     document.querySelectorAll('input, select, textarea').forEach(el => {
@@ -363,13 +368,13 @@ function addInvocation() {
     invocationCard.className = 'invocation-card';
     invocationCard.innerHTML = `
         <div class="card-header">
-            <input type="text" placeholder="Nome da Invocação" class="form-control">
+            <input type="text" placeholder="Nome da Invocação" class="form-control invocation-name">
             <button class="btn-remove" onclick="this.parentElement.parentElement.remove(); saveCharacter();">×</button>
         </div>
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label">Grau</label>
-                <select class="form-control styled-select">
+                <select class="form-control styled-select invocation-grade">
                     <option>4º Grau</option>
                     <option>3º Grau</option>
                     <option>2º Grau</option>
@@ -379,20 +384,20 @@ function addInvocation() {
             </div>
             <div class="form-group">
                 <label class="form-label">Custo (PE)</label>
-                <input type="number" class="form-control" min="0">
+                <input type="number" class="form-control invocation-cost" min="0">
             </div>
             <div class="form-group">
                 <label class="form-label">PV</label>
-                <input type="number" class="form-control">
+                <input type="number" class="form-control invocation-pv">
             </div>
             <div class="form-group">
                 <label class="form-label">CA</label>
-                <input type="number" class="form-control">
+                <input type="number" class="form-control invocation-ca">
             </div>
         </div>
         <div class="form-group">
             <label class="form-label">Características</label>
-            <textarea class="form-control" rows="3" placeholder="Descreva as características da invocação..."></textarea>
+            <textarea class="form-control invocation-description" rows="3" placeholder="Descreva as características da invocação..."></textarea>
         </div>
     `;
     container.appendChild(invocationCard);
@@ -685,6 +690,37 @@ function getTrainingsJson() {
     });
 
     return JSON.stringify(trainings);
+}
+
+function getTechniquesJson() {
+    const name = document.getElementById("technique-name")?.value || "";
+    const description = document.getElementById("technique-description")?.value || "";
+    
+    const data = {
+        nome: name,
+        descricao: description,
+        habilidades: abilitiesByLevel   // já está no seu código
+    };
+
+    return JSON.stringify(data);
+}
+
+function getInvocations() {
+    const cards = document.querySelectorAll('.invocation-card');
+    const invocations = [];
+
+    cards.forEach(card => {
+        invocations.push({
+            name: card.querySelector('.invocation-name').value.trim(),
+            grade: card.querySelector('.invocation-grade').value,
+            cost: Number(card.querySelector('.invocation-cost').value) || 0,
+            pv: Number(card.querySelector('.invocation-pv').value) || 0,
+            ca: Number(card.querySelector('.invocation-ca').value) || 0,
+            description: card.querySelector('.invocation-description').value.trim()
+        });
+    });
+
+    return invocations;
 }
 
 
