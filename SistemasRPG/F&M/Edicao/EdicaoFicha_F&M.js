@@ -21,6 +21,12 @@ const especializacoes = [
     'Restringido'
 ];
 
+function adicionarPericiasNoFormData(fd) {
+    const pericias = montarPericiasJSON();
+    fd.set("pericias_json", JSON.stringify(pericias));
+}
+
+
 // Navegação entre páginas
 const pages = ['index', 'pagina2', 'pagina3', 'pagina4', 'pagina5', 'pagina6', 'pagina7'];
 let currentPage = 1;
@@ -35,46 +41,64 @@ document.addEventListener('DOMContentLoaded', function() {
     setupArmorClass();
     setupProficiencyBonus();
     updatePageDisplay();
+    loadCharacter();
     setupAutoSave();
     initializeProgressBars();
 });
 
 // ===== PREENCHER SELECT BOXES =====
-
 function fillSelectionBoxes() {
     const origemSelect = document.getElementById('origin');
     if (origemSelect && origemSelect.tagName === 'SELECT') {
         origemSelect.innerHTML = '<option value="">Selecione...</option>' + 
             origens.map(o => `<option value="${o}">${o}</option>`).join('');
-        origemSelect.classList.add('styled-select');
-
-        // 🔥 AQUI! Setando o valor depois de criar as opções
-        if (typeof fichaOrigin !== "undefined") {
-            origemSelect.value = fichaOrigin;
-        }
+        origemSelect.className += ' styled-select';
     }
 
     const especSelect = document.getElementById('specialization');
     if (especSelect && especSelect.tagName === 'SELECT') {
         especSelect.innerHTML = '<option value="">Selecione...</option>' + 
             especializacoes.map(e => `<option value="${e}">${e}</option>`).join('');
-        especSelect.classList.add('styled-select');
-
-        if (typeof fichaSpec !== "undefined") {
-            especSelect.value = fichaSpec;
-        }
+        especSelect.className += ' styled-select';
     }
 }
-
-
 
 // ===== CÁLCULO DE MODIFICADORES DE ATRIBUTOS =====
 function calculateModifier(attributeValue) {
     return Math.floor((parseInt(attributeValue) - 10) / 2);
 }
+// ===== CÁLCULO DE Classe de Armadura =====
+
+function setupArmorClass() {
+    const acInputs = ['ac-natural', 'ac-armor', 'ac-shield', 'ac-dex', 'ac-other'];
+
+    acInputs.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', calculateTotalAC);
+        }
+    });
+
+    calculateTotalAC();
+}
+
+function calculateTotalAC() {
+    const natural = parseInt(document.getElementById('ac-natural')?.value) || 0;
+    const armor = parseInt(document.getElementById('ac-armor')?.value) || 0;
+    const shield = parseInt(document.getElementById('ac-shield')?.value) || 0;
+    const dex = parseInt(document.getElementById('ac-dex')?.value) || 0;
+    const other = parseInt(document.getElementById('ac-other')?.value) || 0;
+
+    const total = natural + armor + shield + dex + other;
+    const totalElement = document.getElementById('ac-total');
+    if (totalElement) {
+        totalElement.value = total;
+    }
+}
 
 function setupAttributeModifiers() {
     const attributes = ['str', 'dex', 'con', 'wis', 'int', 'cha'];
+
 
     attributes.forEach(attr => {
         const input = document.getElementById(attr);
@@ -107,40 +131,19 @@ function setupProficiencyBonus() {
     if (levelInput && bonusInput) {
         levelInput.addEventListener('input', function() {
             const level = parseInt(this.value) || 1;
-            const bonus = Math.floor((level - 1) / 4) + 2;
-            bonusInput.value = `+${bonus}`;
+            let bonus;
+            if (level < 1) {
+                bonus = -1 * (Math.floor((level - 1) / 4) + 2); // valor negativo quando menor que 10
+            } else {
+                bonus = Math.floor((level - 1) / 4) + 2; // lógica padrão para 10 ou mais
+            }
+            bonusInput.value = `${bonus >= 0 ? '+' : ''}${bonus}`;
         });
         levelInput.dispatchEvent(new Event('input'));
     }
 }
 
-// ===== CÁLCULO DE CLASSE DE ARMADURA =====
-function setupArmorClass() {
-    const acInputs = ['ac-natural', 'ac-armor', 'ac-shield', 'ac-dex', 'ac-other'];
 
-    acInputs.forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            input.addEventListener('input', calculateTotalAC);
-        }
-    });
-
-    calculateTotalAC();
-}
-
-function calculateTotalAC() {
-    const natural = parseInt(document.getElementById('ac-natural')?.value) || 0;
-    const armor = parseInt(document.getElementById('ac-armor')?.value) || 0;
-    const shield = parseInt(document.getElementById('ac-shield')?.value) || 0;
-    const dex = parseInt(document.getElementById('ac-dex')?.value) || 0;
-    const other = parseInt(document.getElementById('ac-other')?.value) || 0;
-
-    const total = natural + armor + shield + dex + other;
-    const totalElement = document.getElementById('ac-total');
-    if (totalElement) {
-        totalElement.value = total;
-    }
-}
 
 // ===== NAVEGAÇÃO ENTRE PÁGINAS =====
 function goToPage(pageNumber) {
@@ -197,6 +200,21 @@ function updatePageDisplay() {
 function saveCharacter() {
     const characterData = {};
 
+    // Gera o JSON de habilidades
+    const abilitiesJson = getAbilitiesJson();
+
+    // 🔥 Adicionar técnica amaldiçoada
+    document.getElementById("tecnica-amaldicada-json").value = getTechniquesJson();
+
+
+    // Salva no input hidden
+    document.getElementById("habilidades-json").value = getAbilitiesJson();
+    document.getElementById("talentos-json").value = getTalentsJson();
+    document.getElementById("treinamentos-json").value = getTrainingsJson();
+    document.getElementById('invocations-json').value =
+    JSON.stringify(getInvocations());
+
+
     // Salvar todos os inputs, selects e textareas
     document.querySelectorAll('input, select, textarea').forEach(el => {
         if (el.id) {
@@ -218,7 +236,48 @@ function saveCharacter() {
     }
 }
 
+function loadCharacter() {
+    try {
+        const saved = localStorage.getItem('fichaPersonagemFM');
+        if (saved) {
+            const data = JSON.parse(saved);
 
+            Object.entries(data).forEach(([id, value]) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (el.type === 'checkbox') {
+                        el.checked = value;
+                    } else {
+                        el.value = value;
+                    }
+                    // Trigger eventos para recalcular valores
+                    el.dispatchEvent(new Event('input'));
+                }
+
+                // Carregar histórico do dado
+            if (data['diceHistory']) {
+                diceHistory = data['diceHistory'];
+            } else {
+                diceHistory = []; // Garantir que está limpo se não houver nada salvo
+            }
+            updateDiceHistory(); // Popular a UI
+            });
+
+            console.log('Ficha carregada:', Object.keys(data).length, 'campos');
+        }
+    } catch (e) {
+        console.error('Erro ao carregar:', e);
+    }
+}
+
+function clearCharacter() {
+    if (confirm('Tem certeza que deseja limpar toda a ficha? Esta ação não pode ser desfeita.')) {
+        localStorage.removeItem('fichaPersonagemFM');
+        diceHistory = []; // Limpa o array em memória
+        showNotification('Ficha limpa!');
+        setTimeout(() => location.reload(), 1000);
+    }
+}
 
 // ===== AUTO-SAVE =====
 function setupAutoSave() {
@@ -309,13 +368,13 @@ function addInvocation() {
     invocationCard.className = 'invocation-card';
     invocationCard.innerHTML = `
         <div class="card-header">
-            <input type="text" placeholder="Nome da Invocação" class="form-control">
+            <input type="text" placeholder="Nome da Invocação" class="form-control invocation-name">
             <button class="btn-remove" onclick="this.parentElement.parentElement.remove(); saveCharacter();">×</button>
         </div>
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label">Grau</label>
-                <select class="form-control styled-select">
+                <select class="form-control styled-select invocation-grade">
                     <option>4º Grau</option>
                     <option>3º Grau</option>
                     <option>2º Grau</option>
@@ -325,20 +384,20 @@ function addInvocation() {
             </div>
             <div class="form-group">
                 <label class="form-label">Custo (PE)</label>
-                <input type="number" class="form-control" min="0">
+                <input type="number" class="form-control invocation-cost" min="0">
             </div>
             <div class="form-group">
                 <label class="form-label">PV</label>
-                <input type="number" class="form-control">
+                <input type="number" class="form-control invocation-pv">
             </div>
             <div class="form-group">
                 <label class="form-label">CA</label>
-                <input type="number" class="form-control">
+                <input type="number" class="form-control invocation-ca">
             </div>
         </div>
         <div class="form-group">
             <label class="form-label">Características</label>
-            <textarea class="form-control" rows="3" placeholder="Descreva as características da invocação..."></textarea>
+            <textarea class="form-control invocation-description" rows="3" placeholder="Descreva as características da invocação..."></textarea>
         </div>
     `;
     container.appendChild(invocationCard);
@@ -422,6 +481,12 @@ function rollD20() {
     if (modal) modal.classList.add('active');
 }
 
+// ===== FECHAR MODAL DO D20 =====
+function closeDiceModal() {
+    const modal = document.getElementById('dice-modal');
+    if (modal) modal.classList.remove('active');
+}
+
 // ===== EXPORTAR FICHA =====
 function exportCharacter() {
     window.print();
@@ -435,12 +500,8 @@ document.addEventListener('DOMContentLoaded', function() {
         showNotification('Ficha salva com sucesso!');
     });
 
-    const btnEdit = document.getElementById('edit-btn');
-    if (btnEdit) btnEdit.addEventListener('click', () => {
-        saveCharacter();
-        showNotification('Modo de edição ativado!');
-    });
-
+    const btnClear = document.getElementById('clear-btn');
+    if (btnClear) btnClear.addEventListener('click', clearCharacter);
 
     const btnExport = document.getElementById('export-btn');
     if (btnExport) btnExport.addEventListener('click', exportCharacter);
@@ -456,14 +517,9 @@ dots.forEach((dot, index) => {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const closeModalBtn = document.querySelector('.modal-close');
-    const diceModal = document.getElementById('dice-modal');
-    if (closeModalBtn && diceModal) {
-      closeModalBtn.addEventListener('click', function() {
-        diceModal.classList.remove('active');
-      });
-    }
-  });
+    // Setup de rolagem automática e outras inicializações
+    window.scrollTo(0, 0);
+});
 
   function nextPage() {
     if (currentPage < totalPages) {
@@ -492,6 +548,74 @@ document.addEventListener('DOMContentLoaded', function() {
       updateNavButtons();
     }
   }
-    
+
+  // ===== SISTEMA DE AJUDA POR SEÇÃO =====
+// Descrições de ajuda associadas aos headers via data-help
+// Para adicionar uma descrição individual, simplesmente adicione data-help="Sua descrição" no HTML do header
+const sectionHelpDescriptions = {
+  "Informações Básicas do Personagem": "Dados pessoais do personagem, como nome, origem e especialização.",
+  "Atributos": "Aqui você define os atributos principais que caracterizam seu personagem.",
+  "Classe de Armadura": "Informações e cálculo de defesa do personagem.",
+  "Perícias": "Listagem das habilidades e conhecimentos específicos do personagem.",
+  "Valores de Combate": "Configura pontos de vida, energia, integridade e valores relevantes para batalhas.",
+  "Habilidades de Especialização": "Habilidades exclusivas relacionadas à especialização do personagem.",
+  "Perfil Amaldiçoado": "Traços e histórico de personagens com maldição ou poderes especiais.",
+  "Técnica Amaldiçoada": "Área para definir e explicar a técnica amaldiçoada do personagem.",
+  "Invocações Shikigami": "Configure e registre as invocações que seu personagem pode usar."
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Setup botões de ajuda das seções
+  document.querySelectorAll('.section-header').forEach(function(header) {
+    // Evita botão duplicado se alterar demais o DOM
+    if (!header.querySelector('.section-header-help')) {
+      const btn = document.createElement('button');
+      btn.className = 'section-header-help';
+      btn.type = 'button';
+      btn.innerHTML = "?";
+      btn.title = "Ajuda sobre esta seção";
+
+      btn.onclick = function(e) {
+        e.stopPropagation(); // Previne propagação
+        const modal = document.getElementById('section-help-modal');
+        if (modal) {
+          const headerText = header.innerText.trim();
+          // Prioriza descrição no data-help do header, depois usa o mapa global
+          const description = header.getAttribute('data-help') || 
+                            sectionHelpDescriptions[headerText] || 
+                            "Descrição não disponível para esta seção.";
+          
+          document.getElementById('modal-header-title').innerText = headerText;
+          document.getElementById('modal-header-desc').innerText = description;
+          modal.style.display = "flex";
+        }
+      };
+
+      header.appendChild(btn);
+    }
+  });
+
+  // Fecha o modal de ajuda ao clicar no botão [X]
+  const closeHelpBtn = document.getElementById('close-help-modal');
+  if (closeHelpBtn) {
+    closeHelpBtn.onclick = function(e) {
+      e.stopPropagation();
+      const modal = document.getElementById('section-help-modal');
+      if (modal) modal.style.display = "none";
+    };
+  }
+
+  // Fecha o modal de ajuda ao clicar fora do conteúdo
+  const helpModal = document.getElementById('section-help-modal');
+  if (helpModal) {
+    helpModal.onclick = function(e) {
+      // Só fecha se clicar especificamente no modal, não no conteúdo
+      if (e.target === this) {
+        this.style.display = "none";
+      }
+    };
+  }
+});
+
 
 console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');

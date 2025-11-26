@@ -103,7 +103,7 @@ $dados = [
     "pericias" => $pericias,
     "habilidades" => $habilidades,
 
-    "perfil_amaldiçoado" => [
+    "perfil_amaldicoado" => [
         "talentos" => $talentos,
         "energy" => $energy,
         "control_reading" => $control_reading,
@@ -113,7 +113,7 @@ $dados = [
         "treinamentos" => $treinamentos,
     ],
 
-    "tecnica_amaldiçoada" => $tecnica_amaldiçoada,
+    "tecnica_amaldicoada" => $tecnica_amaldiçoada,
     "invocations" => $invocations
 
 ];
