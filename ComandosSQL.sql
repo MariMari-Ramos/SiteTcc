@@ -40,9 +40,6 @@ CREATE TABLE user_settings (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-UPDATE perfis
-SET foto_perfil = CONCAT('/SiteTcc/', REPLACE(foto_perfil, '../', ''))
-WHERE foto_perfil LIKE '../%';
 
 CREATE TABLE Sis_RPG (
     id_sistema INT AUTO_INCREMENT PRIMARY KEY,

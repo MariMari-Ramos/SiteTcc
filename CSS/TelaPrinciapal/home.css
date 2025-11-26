@@ -1,3 +1,10 @@
+/* Expande o grupo D&D 5e para ocupar toda a largura da lista de fichas */
+.fichas-group[data-system*="d&d"] {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
 /* ==================== FONT FACE ==================== */
 @font-face {
   font-family: 'OpenDyslexic';
@@ -208,23 +215,21 @@ label[for="MinhasFichasRandomicas"] .highlight-word {
 
 /* ==================== "MINHAS FICHAS" BOX ==================== */
 .CaixaMinhasFichas {
-  width:100%; max-width:1200px; min-width:220px; min-height:150px;
-  padding:20px; border-radius:15px; background: var(--card-bg, #fff); box-shadow: var(--shadow);
-  margin:0 auto 40px; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; position:relative; z-index:2;
+  width:100%; max-width:1200px; min-width:220px; min-height:220px; height:320px;
+   padding:20px; border-radius:15px; background: var(--card-bg, #fff); box-shadow: var(--shadow);
+   margin:0 auto 40px; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; position:relative; z-index:2;
 }
 
 /* ====== Minhas Fichas (lista e chips) ====== */
 .fichas-list {
-  display: flex;
-  flex-direction: row;
-  /* manter grupos em linha e permitir overflow horizontal quando necessário */
-  flex-wrap: nowrap;
-  gap: 12px;
-  width: 100%;
-  align-items: flex-start;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 6px; /* espaço para a scrollbar visualizar melhor */
+   display: flex;
+   flex-direction: column;
+   gap: 18px;
+   overflow-x: auto;
+   overflow-y: auto;
+   flex: 1 1 auto;
+   max-height: none;
+   min-height: 80px;
 }
 
 .fichas-group {

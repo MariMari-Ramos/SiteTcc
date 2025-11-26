@@ -471,6 +471,17 @@ document.addEventListener('DOMContentLoaded', () => {
         backBtn.addEventListener('click', () => {
             window.location.href = '../index.html';
         });
+        // Efeito de reset das waves ao passar o mouse (igual ao settingsBtn)
+        backBtn.addEventListener('mouseenter', () => {
+            interactive = false;
+            console.log('[waves] Mouse entrou no botão de voltar — interactive OFF');
+        });
+        backBtn.addEventListener('mouseleave', () => {
+            if (!isFormFocused && !isSettingsOpen) {
+                interactive = true;
+                console.log('[waves] Mouse saiu do botão de voltar — interactive ON');
+            }
+        });
     }
 
     /* ========== CONFIGURAÇÕES DA PÁGINA ========== */

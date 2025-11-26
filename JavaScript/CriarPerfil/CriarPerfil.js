@@ -20,6 +20,22 @@ let settings = loadSettings();
 /* ==================== FORMULÁRIO DE CRIAR PERFIL ==================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+        // Utilitário para habilitar/desabilitar o botão de voltar
+        function setBackBtnEnabled(enabled) {
+            if (!backBtn) return;
+            backBtn.disabled = !enabled;
+            if (!enabled) {
+                backBtn.classList.add('disabled-back-btn');
+                backBtn.setAttribute('aria-disabled', 'true');
+                backBtn.style.pointerEvents = 'none';
+                backBtn.style.opacity = '0.5';
+            } else {
+                backBtn.classList.remove('disabled-back-btn');
+                backBtn.removeAttribute('aria-disabled');
+                backBtn.style.pointerEvents = '';
+                backBtn.style.opacity = '';
+            }
+        }
     const formCriarPerfil = document.getElementById('formCriarPerfil');
     const backBtn = document.getElementById('backBtn');
     const nomePerfil = document.getElementById('NomePerfil');
@@ -33,12 +49,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertMessage = document.getElementById('alertMessage');
     const alertOk = document.getElementById('alertOk');
     const alertCancel = document.getElementById('alertCancel');
-    
+    // Skip profile creation modal
+    const skipProfileBtn = document.getElementById('skipProfileBtn');
+    const skipProfileOverlay = document.getElementById('skipProfileOverlay');
+    const confirmSkipProfile = document.getElementById('confirmSkipProfile');
+    const cancelSkipProfile = document.getElementById('cancelSkipProfile');
+
     let avatarSelecionado = null;
     let nameSource = null; // 'typed' | 'suggested' | null
     let photoSource = null; // 'avatar' | 'upload' | null
+    // Botão de pular criação de perfil
+    if (skipProfileBtn && skipProfileOverlay && confirmSkipProfile && cancelSkipProfile) {
+        skipProfileBtn.addEventListener('click', () => {
+            skipProfileOverlay.style.display = 'flex';
+        });
+        cancelSkipProfile.addEventListener('click', () => {
+            skipProfileOverlay.style.display = 'none';
+        });
+        confirmSkipProfile.addEventListener('click', () => {
+            // Redireciona para o login
+            window.location.href = '../Login/loginhtml.php';
+        });
+    }
 
-    /* ========== CANVAS WAVES ==================== */
+
+    /* ========== CANVAS WAVES (CÓPIA EXATA DO LOGIN) ==================== */
     const canvas = document.getElementById('waveCanvas');
     const ctx = canvas.getContext('2d');
     let wavesEnabled = true;
@@ -98,25 +133,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const cs = getComputedStyle(sourceEl);
         let val = cs.getPropertyValue(name).trim();
         if (!val) {
-            val = cs.getPropertyValue(name);
+            const rootVal = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+            return rootVal;
         }
         return val;
     }
 
     function setWavePalettesFromCSS() {
+        const isDark = document.body.classList.contains('dark-theme') || document.documentElement.getAttribute('data-theme') === 'dark';
         coresBase = [
-            getCssVar('--wave1') || 'rgba(173,216,230,0.7)',
-            getCssVar('--wave2') || 'rgba(135,206,235,0.6)',
-            getCssVar('--wave3') || 'rgba(30,144,255,0.5)'
+            getCssVar('--wave1') || (isDark ? 'rgba(140,185,250,0.60)' : 'rgba(255,192,192,0.5)'),
+            getCssVar('--wave2') || (isDark ? 'rgba(110,160,245,0.52)' : 'rgba(255,170,150,0.45)'),
+            getCssVar('--wave3') || (isDark ? 'rgba(70,130,235,0.42)' : 'rgba(255,210,180,0.4)')
         ];
-        coresQuentes = [
-            getCssVar('--waveHot1') || 'rgba(0,170,255,0.9)',
-            getCssVar('--waveHot2') || 'rgba(0,140,255,0.85)',
-            getCssVar('--waveHot3') || 'rgba(0,100,255,0.8)'
-        ];
+        // Heat/click effect: azul no escuro, laranja no claro
+        coresQuentes = isDark
+            ? [
+                getCssVar('--waveHot1') || 'rgba(0,170,255,0.9)',
+                getCssVar('--waveHot2') || 'rgba(0,140,255,0.85)',
+                getCssVar('--waveHot3') || 'rgba(0,100,255,0.8)'
+            ]
+            : [
+                getCssVar('--waveHot1') || 'rgba(255,120,40,0.85)',
+                getCssVar('--waveHot2') || 'rgba(255,90,0,0.80)',
+                getCssVar('--waveHot3') || 'rgba(255,60,0,0.75)'
+            ];
         ondas.forEach((o, i) => {
-            o.corBase = coresBase[i];
-            o.corQuente = coresQuentes[i];
+            o.corBase = coresBase[i % coresBase.length];
+            o.corQuente = coresQuentes[i % coresQuentes.length];
         });
     }
 
@@ -183,8 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
         o.corAtual = o.corBase;
     });
 
+    // Movimento do mouse controla ondas somente fora do formulário e do modal de avatar
     window.addEventListener('mousemove', e => {
-        if (isMouseInsideForm) {
+        if (isMouseInsideForm || (avatarModal && avatarModal.style.display === 'flex')) {
+            // Bloqueia direção e alvo do mouse
             targetMouseX = window.innerWidth / 2;
             targetMouseY = window.innerHeight / 2;
             return;
@@ -192,18 +238,26 @@ document.addEventListener('DOMContentLoaded', () => {
         targetMouseX = e.clientX;
         targetMouseY = e.clientY;
         const centerX = window.innerWidth / 2;
-        targetWaveDirection = (e.clientX < centerX) ? 1 : -1;
+        if (e.clientX < centerX) {
+            targetWaveDirection = 1;
+        } else if (e.clientX > centerX) {
+            targetWaveDirection = -1;
+        }
     });
 
     window.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
+        // Bloqueia efeitos de clique/segurar se o mouse estiver dentro do formulário ou em elementos sem interação de ondas
         if (isMouseInsideForm || e.target.closest('[data-no-wave]')) return;
         isMousePressed = true;
-        const currentSettings = loadSettings();
-        if (currentSettings.enableClickEffect && wavesEnabled && interactive && !isSettingsOpen && !isFormFocused) {
-            heatIntensity = 1;
+        const settings = loadSettings();
+        if (!isFormFocused && interactive && wavesEnabled && !isSettingsOpen && settings.enableClickEffect) {
+            heatIntensity = 1.0;
             clickAmplitude = maxClickAmplitude;
             targetClickHeight = -(canvas.height / 2 - e.clientY);
+        }
+        if (settings.enableHoldEffect) {
+            // BOOST começa a aumentar
         }
     });
 
@@ -262,6 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function desenhar() {
         if (!wavesEnabled && !wavesFadingOut) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            animationFrameId = requestAnimationFrame(desenhar);
             return;
         }
 
@@ -276,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (waveFadeOpacity <= 0) {
                 waveFadeOpacity = 0;
                 wavesFadingOut = false;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                animationFrameId = requestAnimationFrame(desenhar);
                 return;
             }
         }
@@ -287,14 +342,15 @@ document.addEventListener('DOMContentLoaded', () => {
         mouseX += (targetMouseX - mouseX) * easeAmount;
         mouseY += (targetMouseY - mouseY) * easeAmount;
 
-        waveDirection += (targetWaveDirection - waveDirection) * directionEaseAmount * interactiveTransition;
+        waveDirection += (targetWaveDirection - waveDirection) * directionEaseAmount;
 
         const smoothMouseY = window.innerHeight / 2 + (mouseY - window.innerHeight / 2) * interactiveTransition;
 
-        const currentSettings = loadSettings();
-        if (currentSettings.enableHoldEffect && !isFormFocused && interactive && !isSettingsOpen) {
+        const settings = loadSettings();
+        if (settings.enableHoldEffect && !isFormFocused && interactive && !isSettingsOpen) {
             if (isMousePressed && speedBoost < maxSpeedBoost) {
                 speedBoost += boostBuildRate;
+                if (speedBoost > maxSpeedBoost) speedBoost = maxSpeedBoost;
             } else if (!isMousePressed && speedBoost > 0) {
                 speedBoost *= boostDecayRate;
                 if (speedBoost < 0.01) speedBoost = 0;
@@ -314,46 +370,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         clickHeight += (targetClickHeight - clickHeight) * clickHeightEaseAmount;
-        targetClickHeight *= 0.9;
 
         ondas.forEach((o, idx) => {
-            o.fase += (o.vel + speedBoost * 0.0005) * waveDirection * interactiveTransition;
-            
+            let newTargetAmp;
+            const influence = Math.abs(smoothMouseY - canvas.height / 2) * 0.03;
+            const extraAmp = clickAmplitude * (60 + idx * 10);
+            newTargetAmp = (45 + idx * 8) + influence * interactiveTransition + extraAmp;
+
+            o.targetAmp = newTargetAmp;
             o.amp += (o.targetAmp - o.amp) * o.ampEase;
 
-            const colorTransition = Math.min(1, heatIntensity + clickAmplitude * 0.6);
-            o.corAtual = interpolarCor(o.corBase, o.corQuente, colorTransition);
+            const verticalInfluence = ((smoothMouseY - canvas.height / 2) * 0.04 * (idx + 1) * interactiveTransition) + clickHeight;
+
+            o.corAtual = interpolarCor(o.corBase, o.corQuente, heatIntensity);
 
             ctx.beginPath();
-            for (let x = 0; x <= canvas.width; x += 5) {
-                const distanceFromMouse = Math.abs(x - mouseX);
-                const mouseInfluence = Math.max(0, 1 - distanceFromMouse / 300) * interactiveTransition;
+            
+            const freqMultiplier = 1 + clickAmplitude * 0.8;
+            const adjustedFreq = o.freq * freqMultiplier;
+            
+            for (let x = 0; x <= canvas.width; x += 10) {
+                const baseY = Math.sin(x * adjustedFreq + o.fase) * o.amp;
+                const harmonic = Math.sin(x * adjustedFreq * 2.5 + o.fase) * (o.amp * clickAmplitude * 0.6);
+                const y = baseY + harmonic + canvas.height / 2 + verticalInfluence;
                 
-                const baseY = canvas.height / 2 + idx * 50;
-                const waveY = Math.sin(x * o.freq + o.fase) * o.amp;
-                const mouseDistortion = Math.sin(distanceFromMouse * 0.01 + o.fase * 2) * mouseInfluence * 50;
-                const clickDistortion = clickAmplitude * Math.exp(-Math.pow(distanceFromMouse / 150, 2)) * 60;
-                
-                const y = baseY + waveY + mouseDistortion - clickHeight * mouseInfluence + clickDistortion;
-
-                if (x === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
+                x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
             }
-
             ctx.lineTo(canvas.width, canvas.height);
             ctx.lineTo(0, canvas.height);
             ctx.closePath();
 
-            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            const currentColorWithOpacity = applyOpacityToCor(o.corAtual, waveFadeOpacity);
-            gradient.addColorStop(0, currentColorWithOpacity);
-            gradient.addColorStop(1, applyOpacityToCor(o.corAtual, waveFadeOpacity * 0.6));
+            const gradBottom = ctx.createLinearGradient(0, 0, 0, canvas.height);
             
-            ctx.fillStyle = gradient;
+            const corMeio = interpolarCor(o.corBase, coresQuentes[1] || o.corBase, heatIntensity);
+            const corBorda = interpolarCor(o.corBase, coresQuentes[2] || o.corBase, heatIntensity);
+            
+            const corBaseComOpacity = applyOpacityToCor(o.corBase, waveFadeOpacity);
+            const corMeioComOpacity = applyOpacityToCor(corMeio, waveFadeOpacity);
+            const corBordaComOpacity = applyOpacityToCor(corBorda, waveFadeOpacity);
+            
+            gradBottom.addColorStop(0, corBaseComOpacity);
+            gradBottom.addColorStop(0.5, corMeioComOpacity);
+            gradBottom.addColorStop(1, corBordaComOpacity);
+            
+            ctx.fillStyle = gradBottom;
             ctx.fill();
+
+            const baseSpeed = 0.8;
+            const speedBoostMultiplier = 1 + speedBoost;
+            const speedMultiplier = baseSpeed * speedBoostMultiplier * (1 + Math.sin(Date.now() * 0.0005) * 0.1);
+            
+            o.fase += o.vel * speedMultiplier * waveDirection;
         });
 
         animationFrameId = requestAnimationFrame(desenhar);
@@ -453,24 +520,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     // Abrir modal de avatares
     if(chooseAvatar) {
         chooseAvatar.addEventListener('click', () => {
-            if (avatarModal) avatarModal.style.display = 'flex';
+            if (avatarModal) {
+                avatarModal.style.display = 'flex';
+                isSettingsOpen = true; // Bloqueia interatividade das waves
+                interactive = false;
+            }
         });
     }
 
     // Fechar modal de avatares
     if(closeAvatar) {
         closeAvatar.addEventListener('click', () => {
-            if (avatarModal) avatarModal.style.display = 'none';
+            if (avatarModal) {
+                avatarModal.style.display = 'none';
+                setBackBtnEnabled(true);
+                isSettingsOpen = false;
+                if (!isFormFocused && !isMouseInsideForm) interactive = true;
+            }
         });
     }
 
     // Fechar modal clicando fora
     if(avatarModal) {
         avatarModal.addEventListener('click', (e) => {
-            if (e.target === avatarModal) avatarModal.style.display = 'none';
+            if (e.target === avatarModal) {
+                avatarModal.style.display = 'none';
+                setBackBtnEnabled(true);
+                isSettingsOpen = false;
+                if (!isFormFocused && !isMouseInsideForm) interactive = true;
+            }
         });
     }
 
@@ -701,7 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
             settingsModal.classList.add('active');
             isSettingsOpen = true;
             interactive = false;
-            
+            setBackBtnEnabled(false);
             const currentSettings = loadSettings();
             document.getElementById('enableWaves').checked = currentSettings.enableWaves;
             document.getElementById('enableClickEffect').checked = currentSettings.enableClickEffect;
@@ -719,13 +801,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (settingsContent) {
             settingsContent.classList.add('closing');
         }
-        
         setTimeout(() => {
             settingsModal.classList.remove('active', 'closing');
             if (settingsContent) {
                 settingsContent.classList.remove('closing');
             }
             isSettingsOpen = false;
+            setBackBtnEnabled(true);
             if (!isFormFocused && !isMouseInsideForm) {
                 interactive = true;
             }

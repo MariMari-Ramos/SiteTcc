@@ -34,13 +34,13 @@ $stmt->close();
     <title>Criar Perfil</title>
 </head>
 <body>
-
     <!-- Canvas para ondas animadas -->
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
     <!-- Botão Voltar - Canto Superior Esquerdo -->
-    <button class="back-btn" id="backBtn" title="Voltar" data-no-wave>
+    <button class="back-btn" id="backBtn" title="Voltar" data-no-wave style="position: fixed; top: 20px; left: 20px; z-index: 1201;">
         <i class="bi bi-arrow-left"></i>
+        <span>Voltar ao cadastro</span>
     </button>
 
     <!-- Modal de Alerta/Confirmação Reutilizável -->
@@ -145,14 +145,17 @@ $stmt->close();
                         <option value="Optimus Oprime">Optimus Oprime</option>
                         <option value="Vladimir Putinks">Vladimir Putinks</option>
                         <option value="Valdemar Glaive">Valdemar Glaive</option>
-                        <option value="Vaarus">Vaarus</option>
-                        <option value="Aatrox">Aatrox</option>
-                        <option value="Rhaast">Rhaast</option>
-                        <option value="Naafiri">Naafiri</option>
+                        <option value="Vaarus">Anão Gigante</option>
+                        <option value="Aatrox">O olho que não ve nada</option>
+                        <option value="Rhaast">Pedro Magias</option>
+                        <option value="Naafiri">Pedro Dark Souls</option>
                     </select>
                     <hr>
                     <div class="button-container">
                         <button type="submit" id="ButtonCriarPerfil">Criar Perfil</button>
+                        <button id="skipProfileBtn" class="skip-profile-btn alt-skip-profile-btn" type="button">
+                            Pular criação de perfil
+                        </button>
                     </div>
                 </div>
 
@@ -190,6 +193,19 @@ $stmt->close();
                 </div>
             </div>
             <button type="button" id="confirmAvatar" class="confirm-button">Confirmar</button>
+        </div>
+    </div>
+
+
+    <!-- Modal de confirmação de pulo -->
+    <div class="overlay" id="skipProfileOverlay" style="display:none;">
+        <div class="modal">
+            <h2>Pular criação de perfil?</h2>
+            <p>Você pode pular a criação do perfil agora, pois não é obrigatório. Porém, para executar algumas ações futuras na sua conta, será necessário criar um perfil.<br><br>Tem certeza que deseja pular?</p>
+            <div class="modal-actions">
+                <button type="button" id="cancelSkipProfile">Cancelar</button>
+                <button type="button" id="confirmSkipProfile">Confirmar</button>
+            </div>
         </div>
     </div>
 </body>

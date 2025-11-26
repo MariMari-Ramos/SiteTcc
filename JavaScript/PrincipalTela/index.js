@@ -213,52 +213,185 @@
 
     const frag = document.createDocumentFragment();
 
+
     Object.entries(bySys).forEach(([sistema, list]) => {
       const group = document.createElement('div');
       group.className = 'fichas-group';
-      group.setAttribute('data-system', sistema.toLowerCase().replace(/\s+/g, ''));
+      const sysKey = sistema.toLowerCase().replace(/\s+/g, '');
+      group.setAttribute('data-system', sysKey);
 
+      // Título + botão (apenas para D&D 5e)
       const title = document.createElement('div');
       title.className = 'fichas-title';
-      title.textContent = sistema;
+      title.style.display = 'flex';
+      title.style.alignItems = 'center';
+      title.style.justifyContent = 'space-between';
+      title.style.gap = '12px';
+
+      let showDatas = false;
+      let order = 'default'; // 'default', 'newest', 'oldest'
+      let menuBtn = null;
+      let dropdown = null;
+      let toggleDataBtn = null;
+      if (sysKey === 'd&d5e' || sysKey === 'd&d') {
+        // Container para alinhar botões à direita
+        const btnContainer = document.createElement('div');
+        btnContainer.style.display = 'flex';
+        btnContainer.style.gap = '8px';
+
+        // Botão de exibir data
+        toggleDataBtn = document.createElement('button');
+        toggleDataBtn.type = 'button';
+        toggleDataBtn.textContent = 'Exibir data';
+        toggleDataBtn.className = 'btn-toggle-datas';
+        toggleDataBtn.style.fontSize = '0.9em';
+        toggleDataBtn.style.padding = '2px 10px';
+        toggleDataBtn.style.borderRadius = '8px';
+        toggleDataBtn.style.border = '1px solid #d4a574';
+        toggleDataBtn.style.background = '#fef5e7';
+        toggleDataBtn.style.cursor = 'pointer';
+        toggleDataBtn.addEventListener('click', function() {
+          showDatas = !showDatas;
+          toggleDataBtn.textContent = showDatas ? 'Ocultar data' : 'Exibir data';
+          renderChips();
+        });
+
+        // Botão de ordenação
+        menuBtn = document.createElement('button');
+        menuBtn.type = 'button';
+        menuBtn.textContent = 'Ordenar fichas';
+        menuBtn.className = 'btn-toggle-datas';
+        menuBtn.style.fontSize = '0.9em';
+        menuBtn.style.padding = '2px 10px';
+        menuBtn.style.borderRadius = '8px';
+        menuBtn.style.border = '1px solid #d4a574';
+        menuBtn.style.background = '#fef5e7';
+        menuBtn.style.cursor = 'pointer';
+        menuBtn.style.position = 'relative';
+
+        dropdown = document.createElement('div');
+        dropdown.className = 'dropdown-ordem-fichas';
+        dropdown.style.display = 'none';
+        dropdown.style.position = 'absolute';
+        dropdown.style.top = '110%';
+        dropdown.style.left = '0';
+        dropdown.style.background = '#fff';
+        dropdown.style.border = '1px solid #d4a574';
+        dropdown.style.borderRadius = '8px';
+        dropdown.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)';
+        dropdown.style.zIndex = '10';
+        dropdown.style.minWidth = '160px';
+
+        const opt1 = document.createElement('button');
+        opt1.type = 'button';
+        opt1.textContent = 'Mais nova primeiro';
+        opt1.className = 'dropdown-opt';
+        opt1.style.width = '100%';
+        opt1.style.padding = '8px 12px';
+        opt1.style.background = 'none';
+        opt1.style.border = 'none';
+        opt1.style.textAlign = 'left';
+        opt1.style.cursor = 'pointer';
+        opt1.addEventListener('click', function() {
+          order = 'newest';
+          dropdown.style.display = 'none';
+          renderChips();
+        });
+
+        const opt2 = document.createElement('button');
+        opt2.type = 'button';
+        opt2.textContent = 'Mais velha primeiro';
+        opt2.className = 'dropdown-opt';
+        opt2.style.width = '100%';
+        opt2.style.padding = '8px 12px';
+        opt2.style.background = 'none';
+        opt2.style.border = 'none';
+        opt2.style.textAlign = 'left';
+        opt2.style.cursor = 'pointer';
+        opt2.addEventListener('click', function() {
+          order = 'oldest';
+          dropdown.style.display = 'none';
+          renderChips();
+        });
+
+        dropdown.appendChild(opt1);
+        dropdown.appendChild(opt2);
+        menuBtn.appendChild(dropdown);
+
+        menuBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function(e) {
+          if (dropdown && !menuBtn.contains(e.target)) {
+            dropdown.style.display = 'none';
+          }
+        });
+
+        btnContainer.appendChild(toggleDataBtn);
+        btnContainer.appendChild(menuBtn);
+
+        // Título à esquerda, botões à direita
+        const titleText = document.createElement('span');
+        titleText.textContent = sistema;
+        title.appendChild(titleText);
+        title.appendChild(btnContainer);
+      } else {
+        // Apenas o nome do sistema
+        title.textContent = sistema;
+      }
 
       const chips = document.createElement('div');
       chips.className = 'fichas-chips';
 
-      list.forEach(f => {
-        const chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'ficha-chip';
-        chip.dataset.id = f.id_ficha;
+      function renderChips() {
+        chips.innerHTML = '';
+        const now = new Date();
+        let fichasOrdenadas = [...list];
+        if (sysKey === 'd&d5e' || sysKey === 'd&d') {
+          if (order === 'newest') {
+            fichasOrdenadas.sort((a, b) => new Date(b.data_criacao) - new Date(a.data_criacao));
+          } else if (order === 'oldest') {
+            fichasOrdenadas.sort((a, b) => new Date(a.data_criacao) - new Date(b.data_criacao));
+          }
+        }
+        fichasOrdenadas.forEach(f => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'ficha-chip';
+          chip.dataset.id = f.id_ficha;
 
-        let dados = {};
-        try { dados = JSON.parse(f.dados_json); } catch(e){}
+          let dados = {};
+          try { dados = JSON.parse(f.dados_json); } catch(e){}
 
-        const specialization =
-          (dados.info_basicas && dados.info_basicas.specialization)
-          ? dados.info_basicas.specialization
-        : "Não definido";
+          const specialization =
+            (dados.info_basicas && dados.info_basicas.specialization)
+            ? dados.info_basicas.specialization
+          : "Não definido";
 
+          const dataObj = new Date(f.data_criacao);
+          const dataCriacao = dataObj.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
 
-        const dataCriacao = new Date(f.data_criacao)
-          .toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
+          chip.innerHTML = `
+            <strong>${f.nome_personagem}</strong><br>
+            <span style="font-size: 12px; color: #ccc;">
+                ${specialization}
+                ${showDatas ? `• Criada em ${dataCriacao}` : ''}
+            </span>
+          `;
 
-        chip.innerHTML = `
-          <strong>${f.nome_personagem}</strong><br>
-          <span style="font-size: 12px; color: #ccc;">
-              ${specialization} • Criada em ${dataCriacao}
-          </span>
-        `;
+          chip.title = `${f.nome_personagem} (${sistema})`;
 
-        chip.title = `${f.nome_personagem} (${sistema})`;
+          chip.addEventListener('click', () => {
+            window.location.href = `/SiteTcc/SistemasRPG/F&M/Edicao/EdicaoFicha_F&M.php?id=${f.id_ficha}`;
+          });
 
-        chip.addEventListener('click', () => {
-          window.location.href = `/SiteTcc/SistemasRPG/F&M/Edicao/EdicaoFicha_F&M.php?id=${f.id_ficha}`;
+          chips.appendChild(chip);
         });
+      }
 
-        chips.appendChild(chip);
-      });
-
+      renderChips();
 
       const rail = document.createElement('div');
       rail.className = 'fichas-rail';

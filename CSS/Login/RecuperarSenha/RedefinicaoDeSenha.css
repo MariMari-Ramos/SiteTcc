@@ -1,3 +1,10 @@
+/* Placeholder dos campos de senha com fonte personalizada */
+input[type="password"]::placeholder {
+    font-family: 'OpenDyslexic', 'OpenDyslexic-Regular', Arial, sans-serif;
+    font-size: 1rem;
+    color: #888;
+    opacity: 1;
+}
 :root {
     --bg:#ffffff;
     --text:#222222;
@@ -157,9 +164,14 @@ label {
 }
 
 input[type="password"] {
-  font-variant-ligatures:none;
-  font-feature-settings:"liga" 0,"clig" 0;
-  font-family:system-ui,"Segoe UI",Arial,sans-serif;
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "clig" 0;
+        font-family: Arial, Tahoma, Verdana, sans-serif !important;
+    letter-spacing: normal;
+        font-weight: normal;
+        text-shadow: none;
+        background: inherit;
+        color: inherit;
 }
 
 .input-group{width:100%;margin-bottom:1.05rem;position:relative;}

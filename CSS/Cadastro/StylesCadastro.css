@@ -375,6 +375,11 @@ label[for="PolitcaPrivada"], label[for="TermoDeUso"] {
     overflow: hidden;
 }
 
+/* Garante OpenDyslexic no texto do botão voltar */
+#backBtn span {
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif !important;
+}
+
 #ButtonCriarCadastro {
     background: var(--btn-primary);
     color: #fff;
