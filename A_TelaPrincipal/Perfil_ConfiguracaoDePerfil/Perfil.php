@@ -34,14 +34,7 @@ if($result->num_rows > 0) {
 
 $stmt->close();
 
-// Se foto_perfil for um caminho público (ex: "/SiteTcc/uploads/.."), verifica se o arquivo existe
-if(!empty($foto_perfil) && strpos($foto_perfil, '/') === 0){
-    $physical = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . $foto_perfil;
-    if(!file_exists($physical)){
-        // arquivo não encontrado no servidor — não mostrar imagem
-        $foto_perfil = null;
-    }
-}
+// Não há mais verificação de arquivo local, pois imagens são servidas via Azure Blob Storage ou avatares locais.
 ?>
 
 <!DOCTYPE html>
