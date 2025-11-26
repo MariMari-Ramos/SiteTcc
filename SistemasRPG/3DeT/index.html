@@ -443,7 +443,8 @@
             <span class="nav-dot" data-page="7"></span>
         </nav>
     </header>
-
+<form id="character-form" action="3d&t.php" method="POST">
+    <input type="hidden" id="pericias-json" name="pericias">
     <main>
         <!-- Página 1: Informações Básicas -->
         <div class="page active" id="page-1">
@@ -451,11 +452,11 @@
                 <h2>📋 Informações Básicas</h2>
                 <div class="form-group">
                     <label for="char-name">Nome do Personagem</label>
-                    <input type="text" id="char-name" placeholder="Digite o nome do personagem">
+                    <input type="text" name="char-name" id="char-name" placeholder="Digite o nome do personagem">
                 </div>
                 <div class="form-group">
                     <label for="char-archetype">Arquétipo
-                        <button onclick="toggleArchetypeInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
+                        <button type="button" onclick="toggleArchetypeInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                     </label>
                     <div id="archetype-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
                         <strong>💡 O que são Arquétipos?</strong>
@@ -463,7 +464,7 @@
                         <p style="margin: 10px 0 0 0; line-height: 1.6;">Um arquétipo representa o tipo de ser que seu personagem é: pode ser um povo diferente dos humanos, uma etnia específica dentro de uma espécie, um ser artificial, fantástico, alienígena ou sobrenatural.</p>
                         <p style="margin: 10px 0 0 0; line-height: 1.6;">Você não é obrigado a escolher um arquétipo — porém, usar um ajuda bastante, pois já oferece uma base pronta, com pedaços de história, cultura e até partes da construção do personagem.</p>
                     </div>
-                    <select id="char-archetype">
+                    <select id="char-archetype" name="char-archetype">
                         <option value="">Selecione um arquétipo...</option>
                     </select>
                 </div>
@@ -471,7 +472,7 @@
 
             <div class="card card--teal">
                 <h2>💪 Atributos
-                    <button onclick="toggleAttributesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
+                    <button type="button" onclick="toggleAttributesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="attributes-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
                     <strong>💡 O que são Atributos?</strong>
@@ -482,25 +483,25 @@
                 <div class="attribute-row">
                     <div class="attribute-box">
                         <label for="attr-poder">Poder</label>
-                        <input type="number" id="attr-poder" value="0" min="0" max="10">
+                        <input type="number" id="attr-poder" name="attr-poder" value="0" min="0" max="10">
                         <div class="calculated-value">PA: <span id="calc-pa">0</span></div>
                     </div>
                     <div class="attribute-box">
                         <label for="attr-habilidade">Habilidade</label>
-                        <input type="number" id="attr-habilidade" value="0" min="0" max="10">
+                        <input type="number" id="attr-habilidade" name="attr-habilidade" value="0" min="0" max="10">
                         <div class="calculated-value">PM: <span id="calc-pm">0</span></div>
                     </div>
                     <div class="attribute-box">
                         <label for="attr-resistencia">Resistência</label>
-                        <input type="number" id="attr-resistencia" value="0" min="0" max="10">
+                        <input type="number" id="attr-resistencia" name="attr-resistencia" value="0" min="0" max="10">
                         <div class="calculated-value">PV: <span id="calc-pv">0</span></div>
                     </div>
                 </div>
             </div>
 
             <div class="btn-navigation">
-                <button class="btn-secondary" disabled>← Anterior</button>
-                <button onclick="goToPage(2)">Próxima →</button>
+                <button type="button" class="btn-secondary" disabled>← Anterior</button>
+                <button type="button" onclick="goToPage(2)">Próxima →</button>
             </div>
         </div>
 
@@ -508,7 +509,7 @@
         <div class="page" id="page-2">
             <div class="card">
                 <h2>🎯 Perícias
-                    <button onclick="toggleSkillsInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
+                    <button type="button" onclick="toggleSkillsInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="skills-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
                     <strong>💡 Dica:</strong> Se estiver com uma perícia selecionada e precisar rolar esse atributo, você pode rolar com mais um dado!
@@ -518,8 +519,8 @@
             </div>
 
             <div class="btn-navigation">
-                <button onclick="goToPage(1)">← Anterior</button>
-                <button onclick="goToPage(3)">Próxima →</button>
+                <button type="button" onclick="goToPage(1)">← Anterior</button>
+                <button type="button" onclick="goToPage(3)">Próxima →</button>
             </div>
         </div>
 
@@ -527,7 +528,7 @@
         <div class="page" id="page-3">
             <div class="card">
                 <h2>⚔️ Vantagens Ofensivas
-                    <button onclick="toggleAdvantagesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
+                    <button type="button" onclick="toggleAdvantagesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="advantages-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
                     <strong>💡 O que são Vantagens?</strong>
@@ -542,8 +543,8 @@
             </div>
 
             <div class="btn-navigation">
-                <button onclick="goToPage(2)">← Anterior</button>
-                <button onclick="goToPage(4)">Próxima →</button>
+                <button type="button" onclick="goToPage(2)">← Anterior</button>
+                <button type="button" onclick="goToPage(4)">Próxima →</button>
             </div>
         </div>
 
@@ -551,7 +552,7 @@
         <div class="page" id="page-4">
             <div class="card card--teal">
                 <h2>🛡️ Vantagens Defensivas
-                    <button onclick="toggleDefensiveAdvantagesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
+                    <button type="button" onclick="toggleDefensiveAdvantagesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="defensive-advantages-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
                     <strong>💡 O que são Vantagens?</strong>
@@ -566,8 +567,8 @@
             </div>
 
             <div class="btn-navigation">
-                <button onclick="goToPage(3)">← Anterior</button>
-                <button onclick="goToPage(5)">Próxima →</button>
+                <button type="button" onclick="goToPage(3)">← Anterior</button>
+                <button type="button" onclick="goToPage(5)">Próxima →</button>
             </div>
         </div>
 
@@ -575,7 +576,7 @@
         <div class="page" id="page-5">
             <div class="card card--teal">
                 <h2>⚠️ Desvantagens
-                    <button onclick="toggleDisadvantagesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
+                    <button type="button" onclick="toggleDisadvantagesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="disadvantages-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
                     <strong>💡 O que são Desvantagens?</strong>
@@ -588,8 +589,8 @@
             </div>
 
             <div class="btn-navigation">
-                <button onclick="goToPage(4)">← Anterior</button>
-                <button onclick="goToPage(6)">Próxima →</button>
+                <button type="button" onclick="goToPage(4)">← Anterior</button>
+                <button type="button" onclick="goToPage(6)">Próxima →</button>
             </div>
         </div>
 
@@ -597,7 +598,7 @@
         <div class="page" id="page-6">
             <div class="card">
                 <h2>✨ Truques e Técnicas
-                    <button onclick="toggleTricksInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
+                    <button type="button" onclick="toggleTricksInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="tricks-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
                     <strong>💡 O que são Truques e Técnicas?</strong>
@@ -614,8 +615,8 @@
             </div>
 
             <div class="btn-navigation">
-                <button onclick="goToPage(5)">← Anterior</button>
-                <button onclick="goToPage(7)">Próxima →</button>
+                <button type="button" onclick="goToPage(5)">← Anterior</button>
+                <button type="button" onclick="goToPage(7)">Próxima →</button>
             </div>
         </div>
 
@@ -627,13 +628,13 @@
             </div>
 
             <div class="btn-navigation">
-                <button onclick="goToPage(6)">← Anterior</button>
-                <button onclick="showToast('Ficha completa! 🎉')">Finalizar</button>
+                <button type="button" onclick="goToPage(6)">← Anterior</button>
+                <button type="submit" onclick="showToast('Ficha completa! 🎉')">Finalizar</button>
             </div>
         </div>
     </main>
-
-    <button id="d20-roller">🎲</button>
+</form>
+    <button type="button" id="d20-roller">🎲</button>
     <div class="toast" id="toast"></div>
 
     <script>
