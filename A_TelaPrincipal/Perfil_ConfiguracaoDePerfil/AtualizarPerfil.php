@@ -34,52 +34,38 @@ $stmt->close();
 
 // Remover foto de perfil
 if($remover_foto === '1'){
-    // Deletar arquivo se for upload
-    if($foto_atual && $perfil_atual['tipo_foto'] === 'upload' && file_exists($foto_atual)){
-        unlink($foto_atual);
-    }
+    // Se for upload, remover do Azure Blob Storage (opcional: não implementado aqui)
     $foto_perfil = null;
     $tipo_foto = null;
     $avatar_selecionado = null;
 }
-// Processar upload de nova foto
+// Processar upload de nova foto para Azure Blob Storage
 elseif(isset($_FILES['profilePhoto']) && $_FILES['profilePhoto']['error'] === UPLOAD_ERR_OK){
-    $diretorio = "../../uploads/perfis/";
-    
-    if(!is_dir($diretorio)){
-        mkdir($diretorio, 0777, true);
-    }
-    
-    // Deletar foto antiga se for upload
-    if($foto_atual && $perfil_atual['tipo_foto'] === 'upload' && file_exists($foto_atual)){
-        unlink($foto_atual);
-    }
-    
+    require_once __DIR__ . '/../../src/azure_blob_upload.php';
     $extensao = strtolower(pathinfo($_FILES['profilePhoto']['name'], PATHINFO_EXTENSION));
     $extensoes_permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-    
     if(!in_array($extensao, $extensoes_permitidas)){
         echo json_encode(['success' => false, 'message' => 'Formato de imagem não permitido']);
         exit();
     }
-    
     $nome_arquivo = $usuario_id . '_' . time() . '.' . $extensao;
-    $caminho_completo = $diretorio . $nome_arquivo;
-    
-    if(move_uploaded_file($_FILES['profilePhoto']['tmp_name'], $caminho_completo)){
-        $foto_perfil = $caminho_completo;
+    $erroBlob = null;
+    $urlBlob = uploadToAzureBlob($_FILES['profilePhoto']['tmp_name'], $nome_arquivo, $erroBlob);
+    if($urlBlob){
+        $foto_perfil = $urlBlob;
         $tipo_foto = 'upload';
         $avatar_selecionado = null;
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Erro ao enviar imagem para Azure Blob: ' . $erroBlob]);
+        exit();
     }
 }
 // Avatar selecionado
 elseif(!empty($avatar_selecionado)){
-    // Deletar foto antiga se for upload
-    if($foto_atual && $perfil_atual['tipo_foto'] === 'upload' && file_exists($foto_atual)){
-        unlink($foto_atual);
-    }
-    
-    $foto_perfil = $avatar_selecionado;
+    // Normaliza avatares que venham com ../ para um caminho público
+    $normalized = $avatar_selecionado;
+    $normalized = preg_replace('#^\.\./#', '', $normalized);
+    $foto_perfil = '/' . trim('SiteTcc/' . ltrim($normalized, '/'), '/');
     $tipo_foto = 'avatar';
 }
 // Manter foto atual

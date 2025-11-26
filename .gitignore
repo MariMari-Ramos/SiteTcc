@@ -9,3 +9,6 @@ Thumbs.db
 # PHPStorm / VSCode
 .idea/
 .vscode/
+
+/vendor/
+/node_modules/

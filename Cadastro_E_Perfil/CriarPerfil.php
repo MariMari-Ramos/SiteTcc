@@ -39,34 +39,25 @@ if(empty($nome_perfil)){
     exit();
 }
 
-// Processar upload de foto
+// Processar upload de foto para Azure Blob Storage
 if(isset($_FILES['FotoPerfil']) && $_FILES['FotoPerfil']['error'] === UPLOAD_ERR_OK){
-    // pasta no disco relativa ao script: manter para salvar o arquivo
-    $diretorio = __DIR__ . "/../uploads/perfis/";
-    // caminho público (URL) que será salvo no banco, a partir da raiz do projeto
-    $publicBase = '/SiteTcc/uploads/perfis/';
-
-    if(!is_dir($diretorio)){
-        mkdir($diretorio, 0777, true);
-    }
-
+    require_once __DIR__ . '/../src/azure_blob_upload.php';
     $extensao = strtolower(pathinfo($_FILES['FotoPerfil']['name'], PATHINFO_EXTENSION));
     $extensoes_permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-
     if(!in_array($extensao, $extensoes_permitidas)){
         echo json_encode(['success' => false, 'message' => 'Formato de imagem não permitido']);
         exit();
     }
-
     $nome_arquivo = $usuario_id . '_' . time() . '.' . $extensao;
-    $caminho_no_disco = rtrim($diretorio, '/') . '/' . $nome_arquivo;
-    $caminho_publico = $publicBase . $nome_arquivo;
-
-    if(move_uploaded_file($_FILES['FotoPerfil']['tmp_name'], $caminho_no_disco)){
-        // salvar caminho público no banco para uso direto em <img src>
-        $foto_perfil = $caminho_publico;
+    $erroBlob = null;
+    $urlBlob = uploadToAzureBlob($_FILES['FotoPerfil']['tmp_name'], $nome_arquivo, $erroBlob);
+    if($urlBlob){
+        $foto_perfil = $urlBlob;
         $tipo_foto = 'upload';
         $avatar_selecionado = null;
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Erro ao enviar imagem para Azure Blob: ' . $erroBlob]);
+        exit();
     }
 } elseif(!empty($avatar_selecionado)){
     // Normaliza avatares que venham com ../ para um caminho público
