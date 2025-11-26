@@ -15,7 +15,7 @@
   </div>
 </div>
 <body>
-    <!-- Header Principal com Navegação -->
+    <!-- Header Principal com Navegação -->'
     <header class="header page-theme-teal">
         <div class="header-content">
             <div class="header-left">
