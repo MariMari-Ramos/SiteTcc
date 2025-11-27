@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ficha F&M - Feiticeiros e Maldições</title>
+    <!-- CSS Global de configurações -->
+    <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
     <link rel="stylesheet" href="style_melhorado.css">
+    <!-- JS Global de configurações -->
+    <script src="../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
 </head>
 <!-- Adicione este modal ao final do seu HTML antes do </body> -->
 <div id="section-help-modal" class="modal" style="display:none;">
@@ -15,7 +19,15 @@
   </div>
 </div>
 <body>
-    <!-- Header Principal com Navegação -->'
+<script>
+// Aplica tema, fonte, contraste, etc. conforme configuração global do usuário
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.applyGlobalSettings) {
+        window.applyGlobalSettings();
+    }
+});
+</script>
+    <!-- Header Principal com Navegação -->
     <header class="header page-theme-teal">
         <div class="header-content">
             <div class="header-left">

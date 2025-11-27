@@ -108,13 +108,13 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
             
             <label class="TextoSobreOsCampos" for="NovaSenha">Nova senha:</label>
             <div class="input-group">
-                <input type="password" name="NovaSenha" id="NovaSenha" placeholder="Insira sua nova senha" minlength="8" required>
+                <input type="password" name="NovaSenha" id="NovaSenha" placeholder="Insira sua nova senha" minlength="6" required>
                 <button type="button" class="toggle-pass" data-target="NovaSenha" aria-label="Mostrar/ocultar senha"><i class="bi bi-eye-fill"></i></button>
             </div>
 
             <label class="TextoSobreOsCampos" for="ConfirmarNovaSenha">Confirmar a nova senha:</label>
             <div class="input-group">
-                <input type="password" name="ConfirmarNovaSenha" id="ConfirmarNovaSenha" placeholder="Confirme a sua nova senha" minlength="8" required>
+                <input type="password" name="ConfirmarNovaSenha" id="ConfirmarNovaSenha" placeholder="Confirme a sua nova senha" minlength="6" required>
                 <button type="button" class="toggle-pass" data-target="ConfirmarNovaSenha" aria-label="Mostrar/ocultar confirmação"><i class="bi bi-eye-fill"></i></button>
             </div>
 

@@ -7,6 +7,7 @@ require_once __DIR__ . "/../password.php";
 // Garantir que sempre retornemos JSON (evita que warnings/erros imprimam HTML)
 ini_set('display_errors', '0');
 ini_set('display_startup_errors', '0');
+error_reporting(E_ALL);
 header('Content-Type: application/json; charset=utf-8');
 
 // Verificar se está logado

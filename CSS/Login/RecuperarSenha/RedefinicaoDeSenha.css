@@ -1,3 +1,15 @@
+/* Garante que o botão de configurações fique atrás do overlay/modal */
+/* Garante que o botão de configurações fique atrás do overlay/modal */
+#settingsBtn, .settings-fab {
+    z-index: 1000 !important;
+}
+.overlay,
+.overlay[style*="display: flex"],
+.overlay.active,
+.settings-modal,
+.settings-modal.active {
+    z-index: 2000 !important;
+}
 /* Placeholder dos campos de senha com fonte personalizada */
 input[type="password"]::placeholder {
     font-family: 'OpenDyslexic', 'OpenDyslexic-Regular', Arial, sans-serif;
@@ -308,7 +320,7 @@ body.high-contrast #btnRedefinirSenha{border:2px solid var(--text);font-weight:7
     cursor:pointer;
     font-size:24px;
     color:#fff;
-    z-index:1380; /* abaixo do modal (1390) para não ficar por cima */
+    z-index:1000 !important; /* sempre atrás do overlay/modal */
     box-shadow:0 4px 15px color-mix(in srgb,var(--accent) 45%,transparent);
     transition:.35s;
 }

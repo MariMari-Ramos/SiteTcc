@@ -10,38 +10,55 @@ class SettingsManager {
     }
 
     loadSettings() {
-        return {
-            theme: localStorage.getItem('theme') || 'light',
-            language: localStorage.getItem('language') || 'pt-BR',
-            carousel: localStorage.getItem('carouselHoverEnabled') !== 'false',
-            guide: localStorage.getItem('guideEnabled') !== 'false',
-            alerts: localStorage.getItem('alertsEnabled') !== 'false',
-            fontSize: localStorage.getItem('fontSize') || '16',
-            fontType: localStorage.getItem('fontType') || 'OpenDyslexic',
-            lineSpacing: localStorage.getItem('lineSpacing') || '1.5',
-            highContrast: localStorage.getItem('highContrast') === 'true',
-            autoRead: localStorage.getItem('autoRead') === 'true'
+        // Busca configurações do servidor via AJAX (síncrono para inicialização)
+        let settings = {
+            theme: 'light',
+            language: 'pt-BR',
+            carousel: true,
+            guide: true,
+            alerts: true,
+            fontSize: '16',
+            fontType: 'OpenDyslexic',
+            lineSpacing: '1.5',
+            highContrast: false,
+            autoRead: false
         };
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/SiteTcc/A_TelaPrincipal/Configurações/getConfig.php', false); // síncrono para garantir carregamento
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    Object.assign(settings, data);
+                } catch (e) {
+                    // fallback para padrão
+                }
+            }
+        };
+        try { xhr.send(); } catch (e) {}
+        return settings;
     }
 
     saveSettings() {
-        localStorage.setItem('theme', this.savedSettings.theme);
-        localStorage.setItem('language', this.savedSettings.language);
-        localStorage.setItem('carouselHoverEnabled', this.savedSettings.carousel.toString());
-        localStorage.setItem('guideEnabled', this.savedSettings.guide.toString());
-        localStorage.setItem('alertsEnabled', this.savedSettings.alerts.toString());
-        localStorage.setItem('fontSize', this.savedSettings.fontSize);
-        localStorage.setItem('fontType', this.savedSettings.fontType);
-        localStorage.setItem('lineSpacing', this.savedSettings.lineSpacing);
-        localStorage.setItem('highContrast', this.savedSettings.highContrast.toString());
-        localStorage.setItem('autoRead', this.savedSettings.autoRead.toString());
-        this.unsavedChanges = false;
-
-        if (window.updateGlobalSettings) {
-            window.updateGlobalSettings();
-        }
-
-        this.showMessage('Configurações salvas com sucesso!');
+        // Salva configurações no servidor via AJAX
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/SiteTcc/A_TelaPrincipal/Configurações/saveConfig.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    this.unsavedChanges = false;
+                    if (window.updateGlobalSettings) {
+                        window.updateGlobalSettings();
+                    }
+                    this.showMessage('Configurações salvas com sucesso!');
+                } else {
+                    this.showMessage('Erro ao salvar configurações.');
+                }
+            }
+        };
+        xhr.send(JSON.stringify(this.savedSettings));
     }
 
     init() {
@@ -539,18 +556,19 @@ class SettingsManager {
 }
 
 // ==================== FUNÇÕES GLOBAIS ====================
+
 window.showAlert = function(message) {
-    const alertsEnabled = localStorage.getItem('alertsEnabled') !== 'false';
-    if (alertsEnabled && window.SITE_ALERTS_ENABLED !== false) {
+    // Usa variável global, não localStorage
+    if (window.SITE_ALERTS_ENABLED !== false) {
         alert(message);
     } else {
         console.log('[ALERT GLOBAL BLOQUEADO]:', message);
     }
 };
 
+
 window.showConfirm = function(message) {
-    const alertsEnabled = localStorage.getItem('alertsEnabled') !== 'false';
-    if (alertsEnabled && window.SITE_ALERTS_ENABLED !== false) {
+    if (window.SITE_ALERTS_ENABLED !== false) {
         return confirm(message);
     } else {
         console.log('[CONFIRM GLOBAL BLOQUEADO]:', message);
@@ -560,7 +578,8 @@ window.showConfirm = function(message) {
 
 // ==================== SISTEMA DE GUIA (ESTILO INDEX.PHP) ====================
 function openGuide() {
-    if (localStorage.getItem('guideEnabled') === 'false') return;
+    // Usa settings carregado, não localStorage
+    if (window.settingsManager && window.settingsManager.savedSettings && window.settingsManager.savedSettings.guide === false) return;
     
     const el = document.getElementById('guideSpeech');
     if (!el) return;
@@ -635,7 +654,10 @@ const GUIDE_TEXTS = {
 };
 
 function showGuideInfo(topic) {
-    const lang = localStorage.getItem('language') || 'pt-BR';
+    let lang = 'pt-BR';
+    if (window.settingsManager && window.settingsManager.savedSettings && window.settingsManager.savedSettings.language) {
+        lang = window.settingsManager.savedSettings.language;
+    }
     const texts = GUIDE_TEXTS[lang] || GUIDE_TEXTS['pt-BR'];
     const el = document.getElementById('guideContent');
     if (!el) return;

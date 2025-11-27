@@ -30,15 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return saved ? JSON.parse(saved) : defaultSettings;
     }
 
+
     function mostrarAlerta(mensagem){
         if(!overlay || !textoModal) return console.warn('overlay/textoModal ausentes');
         textoModal.textContent = mensagem;
         overlay.style.display = "flex";
+        document.body.classList.add('modal-open');
     }
 
     function fecharModal(){
         if(!overlay) return;
         overlay.style.display = "none";
+        document.body.classList.remove('modal-open');
     }
 
     if(btnFecharModal) btnFecharModal.addEventListener('click', fecharModal);

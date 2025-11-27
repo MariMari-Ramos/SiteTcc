@@ -1,66 +1,54 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
 session_start();
 
-require_once __DIR__ . '/../../conexao.php';
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode([ 'success' => false, 'message' => 'invalid_method' ]);
+require_once '../../conexao.php'; // ajuste o caminho se necessário
+if (!isset($conn) || !$conn) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Conexão com o banco não estabelecida.']);
     exit;
 }
 
-if (empty($_SESSION['usuario_id'])) {
-    echo json_encode([ 'success' => false, 'message' => 'not_authenticated' ]);
+if (!isset($_SESSION['usuario_id'])) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Usuário não autenticado']);
     exit;
 }
 
-$usuario_id = intval($_SESSION['usuario_id']);
+$usuario_id = $_SESSION['usuario_id'];
 
-$raw = file_get_contents('php://input');
-if (empty($raw)) {
-    echo json_encode([ 'success' => false, 'message' => 'empty_payload' ]);
+$input = file_get_contents('php://input');
+$config = json_decode($input, true);
+// Debug temporário para ver o que chega
+//file_put_contents('debug_save.txt', $input . "\n" . print_r($config, true));
+
+if (!is_array($config)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Configuração inválida']);
     exit;
 }
 
-$data = json_decode($raw, true);
-if (!is_array($data)) {
-    echo json_encode([ 'success' => false, 'message' => 'invalid_json' ]);
-    exit;
-}
+// Upsert (insere ou atualiza)
+$sql = "INSERT INTO configuracoes_principal (usuario_id, configuracoes) VALUES (?, ?)
+        ON DUPLICATE KEY UPDATE configuracoes = VALUES(configuracoes)";
 
-// Sanitize/validate basics if needed (this example accepts any JSON object)
-$settingsJson = json_encode($data, JSON_UNESCAPED_UNICODE);
-if ($settingsJson === false) {
-    echo json_encode([ 'success' => false, 'message' => 'encode_error' ]);
-    exit;
-}
-
-// Usar INSERT ... ON DUPLICATE KEY UPDATE para manter um registro por usuário
-$sql = "INSERT INTO user_settings (usuario_id, settings) VALUES (?, ?) ON DUPLICATE KEY UPDATE settings = VALUES(settings), updated_at = CURRENT_TIMESTAMP";
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
-    echo json_encode([ 'success' => false, 'message' => 'db_prepare_failed', 'error' => $conn->error ]);
+    http_response_code(500);
+    echo json_encode(['error' => 'Erro no prepare: ' . $conn->error]);
     exit;
 }
-
-$stmt->bind_param('is', $usuario_id, $settingsJson);
-$ok = $stmt->execute();
-
-if ($ok) {
-    echo json_encode([ 'success' => true, 'message' => 'saved' ]);
-} else {
-    echo json_encode([ 'success' => false, 'message' => 'db_execute_failed', 'error' => $stmt->error ]);
+$json = json_encode($config, JSON_UNESCAPED_UNICODE);
+if (!$stmt->bind_param('is', $usuario_id, $json)) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Erro no bind_param: ' . $stmt->error]);
+    exit;
 }
-
+if ($stmt->execute()) {
+    echo json_encode(['success' => true]);
+} else {
+    http_response_code(500);
+    echo json_encode(['error' => 'Erro ao salvar configurações: ' . $stmt->error]);
+}
 $stmt->close();
-exit;
-
-/*
- * Cliente (exemplo):
- * fetch('/A_TelaPrincipal/Configurações/saveConfig.php', {
- *   method: 'POST',
- *   credentials: 'include',
- *   headers: { 'Content-Type': 'application/json' },
- *   body: JSON.stringify({ theme: 'dark', highContrast: true })
- * }).then(r => r.json()).then(console.log);
- */
+$conn->close();
+?>

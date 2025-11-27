@@ -38,10 +38,11 @@ $stmt->close();
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
     <!-- Botão Voltar - Canto Superior Esquerdo -->
-    <button class="back-btn" id="backBtn" title="Voltar" data-no-wave style="position: fixed; top: 20px; left: 20px; z-index: 1201;">
+    <button class="back-btn" id="backBtn" title="Voltar">
         <i class="bi bi-arrow-left"></i>
         <span>Voltar ao cadastro</span>
-    </button>
+</button>
+
 
     <!-- Modal de Alerta/Confirmação Reutilizável -->
     <div class="overlay" id="alertOverlay" role="dialog" aria-modal="true" aria-labelledby="alertMessage" style="display:none;">

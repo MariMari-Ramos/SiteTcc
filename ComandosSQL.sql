@@ -33,14 +33,13 @@ WHERE foto_perfil LIKE '../%';
 
 
 /* Tabela para armazenar as configurações do usuário, não funciona, ainda */
-CREATE TABLE user_settings (
+CREATE TABLE configuracoes_principal (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT(11) UNSIGNED NOT NULL UNIQUE,
-    settings JSON NOT NULL,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+    usuario_id INT NOT NULL,
+    configuracoes JSON NOT NULL,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY (usuario_id)
+);
 
 CREATE TABLE Sis_RPG (
     id_sistema INT AUTO_INCREMENT PRIMARY KEY,

@@ -1,56 +1,47 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
 session_start();
 
-// Conexão com DB
-require_once __DIR__ . '/../../conexao.php';
-
-// Defaults unificados
-$defaults = [
-    'enableWaves' => true,
-    'theme' => 'light',
-    'enableClickEffect' => true,
-    'enableHoldEffect' => true,
-    'highContrast' => false,
-    'largerText' => false,
-    'fontSize' => '16',
-    'fontType' => 'OpenDyslexic',
-    'lineSpacing' => '1.5',
-    'carousel' => true,
-    'guide' => true,
-    'alerts' => true,
-    'language' => 'pt-BR',
-    'autoRead' => false
-];
-
-if (empty($_SESSION['usuario_id'])) {
-    echo json_encode([ 'success' => false, 'message' => 'not_authenticated', 'settings' => $defaults ]);
+require_once '../../conexao.php'; // ajuste o caminho se necessário
+if (!isset($conn) || !$conn) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Conexão com o banco não estabelecida.']);
     exit;
 }
 
-$usuario_id = intval($_SESSION['usuario_id']);
-
-// Buscar configurações do usuário
-$stmt = $conn->prepare('SELECT settings FROM user_settings WHERE usuario_id = ? LIMIT 1');
-if (!$stmt) {
-    echo json_encode([ 'success' => false, 'message' => 'db_error', 'error' => $conn->error, 'settings' => $defaults ]);
+if (!isset($_SESSION['usuario_id'])) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Usuário não autenticado']);
     exit;
 }
 
+$usuario_id = $_SESSION['usuario_id'];
+
+
+$sql = "SELECT configuracoes FROM configuracoes_principal WHERE usuario_id = ?";
+$stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $usuario_id);
 $stmt->execute();
-$res = $stmt->get_result();
+$stmt->bind_result($config_json);
 
-if ($res && $res->num_rows > 0) {
-    $row = $res->fetch_assoc();
-    $settings = json_decode($row['settings'], true);
-    if (!is_array($settings)) $settings = $defaults;
-    echo json_encode([ 'success' => true, 'settings' => $settings ]);
+if ($stmt->fetch() && $config_json) {
+    header('Content-Type: application/json');
+    echo $config_json;
 } else {
-    // sem registro -> retorna defaults
-    echo json_encode([ 'success' => true, 'settings' => $defaults ]);
+    // Retorna padrão se não houver config
+    echo json_encode([
+        "theme" => "light",
+        "language" => "pt-BR",
+        "carousel" => true,
+        "guide" => true,
+        "alerts" => true,
+        "fontSize" => "16",
+        "fontType" => "OpenDyslexic",
+        "lineSpacing" => "1.5",
+        "highContrast" => false,
+        "autoRead" => false
+    ]);
 }
 
 $stmt->close();
-exit;
-
+$conn->close();
+?>

@@ -127,11 +127,12 @@
                         </h5>
                     </span>
 
+                    <!-- Modal de Alerta -->
                     <div class="overlay" id="overlay">
                         <div class="modal">
-                            <h2>Alerta:</h2>
+                            <h2>Alerta</h2>
                             <p></p>
-                            <button id="fecharModal">X</button>
+                            <button id="fecharModal">Fechar</button>
                         </div>
                     </div>
                 </form>

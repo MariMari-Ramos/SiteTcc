@@ -191,7 +191,7 @@
         
         // Redireciona para a página de criação de ficha baseado no sistema
         if (currentSystem === '3DeT Victory') {
-          window.location.href = '../SistemasRPG/Pasta3DeT/Ficha_3DeT.html';
+          window.location.href = '../SistemasRPG/3DeT/Ficha3DeT.html';
         } else if (currentSystem === 'Dungeons and Dragons') {
           window.location.href = '../SistemasRPG/DnD5e/CriarFichaDnD.html';
         } else if (currentSystem === 'Cyberpunk') {

@@ -17,24 +17,31 @@ $avatar_selecionado = $_POST['avatarSelecionado'] ?? null;
 $remover_foto = $_POST['removerFoto'] ?? '0';
 $foto_perfil = null;
 
-// Validar nome do perfil
-if(empty($nome_perfil)){
-    echo json_encode(['success' => false, 'message' => 'Nome do perfil é obrigatório']);
-    exit();
-}
 
-// Buscar foto atual
+// Nome do perfil não é mais obrigatório
+
+
+// Buscar foto atual e verificar se perfil existe
 $stmt = $conn->prepare("SELECT foto_perfil, tipo_foto FROM perfis WHERE usuario_id = ?");
 $stmt->bind_param("i", $usuario_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $perfil_atual = $result->fetch_assoc();
 $foto_atual = $perfil_atual['foto_perfil'] ?? null;
+$perfil_existe = $perfil_atual ? true : false;
 $stmt->close();
 
 // Remover foto de perfil
 if($remover_foto === '1'){
-    // Se for upload, remover do Azure Blob Storage (opcional: não implementado aqui)
+    // Se for upload, remover do Azure Blob Storage
+    if (!empty($foto_atual) && ($perfil_atual['tipo_foto'] ?? '') === 'upload') {
+        require_once __DIR__ . '/../../src/azure_blob_upload.php';
+        $parts = explode('/', $foto_atual);
+        $azureFileName = end($parts);
+        $erroDel = null;
+        deleteFromAzureBlob($azureFileName, $erroDel);
+        // Opcional: logar $erroDel se necessário
+    }
     $foto_perfil = null;
     $tipo_foto = null;
     $avatar_selecionado = null;
@@ -84,23 +91,32 @@ else {
     $tipo_foto = $perfil_atual['tipo_foto'];
 }
 
-// Atualizar perfil no banco
-$stmt = $conn->prepare("UPDATE perfis SET nome_perfil = ?, foto_perfil = ?, tipo_foto = ?, avatar_selecionado = ? WHERE usuario_id = ?");
-$stmt->bind_param("ssssi", $nome_perfil, $foto_perfil, $tipo_foto, $avatar_selecionado, $usuario_id);
 
-if($stmt->execute()){
+if ($perfil_existe) {
+    // Atualizar perfil existente
+    $stmt = $conn->prepare("UPDATE perfis SET nome_perfil = ?, foto_perfil = ?, tipo_foto = ?, avatar_selecionado = ? WHERE usuario_id = ?");
+    $stmt->bind_param("ssssi", $nome_perfil, $foto_perfil, $tipo_foto, $avatar_selecionado, $usuario_id);
+    $ok = $stmt->execute();
+    $stmt->close();
+} else {
+    // Criar novo perfil
+    $stmt = $conn->prepare("INSERT INTO perfis (usuario_id, nome_perfil, foto_perfil, tipo_foto, avatar_selecionado, data_criacao) VALUES (?, ?, ?, ?, ?, NOW())");
+    $stmt->bind_param("issss", $usuario_id, $nome_perfil, $foto_perfil, $tipo_foto, $avatar_selecionado);
+    $ok = $stmt->execute();
+    $stmt->close();
+}
+
+if($ok){
     $_SESSION['nome_perfil'] = $nome_perfil;
     $_SESSION['foto_perfil'] = $foto_perfil;
-    
     echo json_encode([
-        'success' => true, 
-        'message' => 'Perfil atualizado com sucesso!',
+        'success' => true,
+        'message' => $perfil_existe ? 'Perfil atualizado com sucesso!' : 'Perfil criado com sucesso!',
         'foto_perfil' => $foto_perfil
     ]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Erro ao atualizar perfil: ' . $conn->error]);
+    echo json_encode(['success' => false, 'message' => 'Erro ao salvar perfil: ' . $conn->error]);
 }
 
-$stmt->close();
 $conn->close();
 ?>
