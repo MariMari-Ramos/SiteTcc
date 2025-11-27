@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 // conectar ao banco para buscar perfil (se o usuário estiver logado)
@@ -62,6 +63,47 @@ window.MinhasFichas = {
   <script src="../JavaScript/PrincipalTela/index.js" defer ></script>
 </head>
 <body>
+    <!-- Modal / Mapa Mental da Ficha -->
+    <div id="fichaMindmapOverlay" class="overlay" aria-hidden="true" style="z-index: 1001;" onclick="closeFichaModal()">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="fichaMindmapTitle" onclick="event.stopPropagation()" style="position: relative; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr; gap: 0; min-width: 520px; min-height: 220px; max-width: 95vw; max-height: 90vh; align-items: center; justify-items: center;">
+        <svg class="connections" aria-hidden="true" focusable="false" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;">
+          <line class="connection-line" x1="42%" y1="50%" x2="25%" y2="50%"></line>
+          <line class="connection-line" x1="58%" y1="50%" x2="75%" y2="50%"></line>
+        </svg>
+
+        <div class="section top-left" data-action="edit" onclick="selectFichaSection(event, 'edit')" style="position: relative; z-index: 2; grid-column: 1; grid-row: 1; margin-right: 24px;">
+          <div class="section-icon">✏️</div>
+          <div class="section-title">Editar ficha</div>
+          <div class="section-description">Abrir edição da ficha</div>
+        </div>
+
+        <div class="section center" style="position: relative; z-index: 2; grid-column: 2; grid-row: 1;">
+          <i class="bi bi-person-badge" style="font-size:2.5em;"></i>
+          <div id="fichaMindmapTitle" class="section-title">Ações da Ficha</div>
+        </div>
+
+        <div class="section top-right" data-action="delete" onclick="selectFichaSection(event, 'delete')" style="position: relative; z-index: 2; grid-column: 3; grid-row: 1; margin-left: 24px;">
+          <div class="section-icon">🗑️</div>
+          <div class="section-title">Excluir ficha</div>
+          <div class="section-description">Remover esta ficha</div>
+        </div>
+
+        <button class="close-button" type="button" onclick="closeFichaModal()" style="grid-column: 1 / span 3; margin-top: 32px; z-index: 3;">← Voltar</button>
+      </div>
+    </div>
+
+    <!-- Modal de confirmação de exclusão de ficha -->
+    <div id="modalConfirmDeleteFicha" class="modal-confirm-delete-ficha" aria-hidden="true">
+      <div class="modal-confirm-content">
+        <div class="modal-confirm-icon">🗑️</div>
+        <div class="modal-confirm-title">Excluir ficha</div>
+        <div class="modal-confirm-message">Tem certeza que deseja excluir esta ficha? Essa ação não pode ser desfeita.</div>
+        <div class="modal-confirm-actions">
+          <button type="button" class="btn-cancel-delete" onclick="closeModalConfirmDeleteFicha()">Cancelar</button>
+          <button type="button" class="btn-confirm-delete" id="btnConfirmDeleteFicha">Excluir</button>
+        </div>
+      </div>
+    </div>
   <header>
     <div class="logo">
       <a href="#">

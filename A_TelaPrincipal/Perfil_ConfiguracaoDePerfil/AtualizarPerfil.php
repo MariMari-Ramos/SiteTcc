@@ -48,6 +48,16 @@ elseif(isset($_FILES['profilePhoto']) && $_FILES['profilePhoto']['error'] === UP
         echo json_encode(['success' => false, 'message' => 'Formato de imagem não permitido']);
         exit();
     }
+    // Se já existe uma foto anterior do tipo upload (Azure), apaga do blob
+    if (!empty($foto_atual) && ($perfil_atual['tipo_foto'] ?? '') === 'upload') {
+        // Extrai apenas o nome do arquivo do final da URL
+        $parts = explode('/', $foto_atual);
+        $azureFileName = end($parts);
+        $erroDel = null;
+        require_once __DIR__ . '/../../src/azure_blob_upload.php';
+        deleteFromAzureBlob($azureFileName, $erroDel);
+        // Não bloqueia o upload se falhar, mas poderia logar $erroDel
+    }
     $nome_arquivo = $usuario_id . '_' . time() . '.' . $extensao;
     $erroBlob = null;
     $urlBlob = uploadToAzureBlob($_FILES['profilePhoto']['tmp_name'], $nome_arquivo, $erroBlob);

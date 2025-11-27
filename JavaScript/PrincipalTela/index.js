@@ -1,3 +1,110 @@
+  // ===== Modal da Ficha (Mapa Mental de Ações) =====
+  let fichaIdSelecionada = null;
+
+  window.openFichaModal = function (idFicha) {
+    fichaIdSelecionada = idFicha;
+    const overlay = document.getElementById('fichaMindmapOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('closing');
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    restartFichaLineAnimations();
+  };
+
+  window.closeFichaModal = function () {
+    const overlay = document.getElementById('fichaMindmapOverlay');
+    if (!overlay) return;
+    overlay.classList.add('closing');
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      overlay.classList.remove('closing');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      fichaIdSelecionada = null;
+    }, 600);
+  };
+
+  function restartFichaLineAnimations() {
+    const overlay = document.getElementById('fichaMindmapOverlay');
+    if (!overlay) return;
+    const lines = overlay.querySelectorAll('.connection-line');
+    lines.forEach((line) => {
+      line.style.animation = 'none';
+      line.offsetHeight;
+      line.style.animation = '';
+    });
+  }
+
+  window.selectFichaSection = function (evt, action) {
+    if (evt && typeof evt.stopPropagation === 'function') evt.stopPropagation();
+    if (!fichaIdSelecionada) return closeFichaModal();
+    switch (action) {
+      case 'edit':
+        // Redireciona para edição da ficha
+        window.location.href = `/SiteTcc/SistemasRPG/F&M/Edicao/EdicaoFicha_F&M.php?id=${fichaIdSelecionada}`;
+        break;
+      case 'delete':
+        openModalConfirmDeleteFicha();
+        break;
+      default:
+        closeFichaModal();
+        break;
+    }
+  };
+
+  // Modal de confirmação de exclusão de ficha
+  function openModalConfirmDeleteFicha() {
+    const modal = document.getElementById('modalConfirmDeleteFicha');
+    if (modal) {
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  window.closeModalConfirmDeleteFicha = function() {
+    const modal = document.getElementById('modalConfirmDeleteFicha');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  };
+
+  // Handler do botão "Excluir" do modal customizado
+  document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('btnConfirmDeleteFicha');
+    if (btn) {
+      btn.onclick = function() {
+        if (!fichaIdSelecionada) return window.closeModalConfirmDeleteFicha();
+        btn.disabled = true;
+        btn.textContent = 'Excluindo...';
+        fetch('/SiteTcc/SistemasRPG/F&M/Edicao/phpFichaF&M.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `delete_ficha=1&id_ficha=${encodeURIComponent(fichaIdSelecionada)}`
+        })
+          .then(r => r.json())
+          .then(resp => {
+            btn.disabled = false;
+            btn.textContent = 'Excluir';
+            if (resp && resp.success) {
+              window.closeModalConfirmDeleteFicha();
+              closeFichaModal();
+              window.dispatchEvent(new Event('minhasFichas:changed'));
+              alert('Ficha excluída com sucesso!');
+            } else {
+              alert('Erro ao excluir ficha.');
+            }
+          })
+          .catch(() => {
+            btn.disabled = false;
+            btn.textContent = 'Excluir';
+            alert('Erro ao excluir ficha.');
+          });
+      };
+    }
+  });
 (function () {
   const linesSelector = '.connection-line';
 
@@ -383,8 +490,9 @@
 
           chip.title = `${f.nome_personagem} (${sistema})`;
 
-          chip.addEventListener('click', () => {
-            window.location.href = `/SiteTcc/SistemasRPG/F&M/Edicao/EdicaoFicha_F&M.php?id=${f.id_ficha}`;
+          chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.openFichaModal(f.id_ficha);
           });
 
           chips.appendChild(chip);

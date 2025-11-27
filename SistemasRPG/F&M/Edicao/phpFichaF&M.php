@@ -7,6 +7,25 @@ if (!isset($_SESSION['usuario_id'])) {
 
 include("../../../conexao.php");
 
+
+// ========== EXCLUSÃO DE FICHA ========== //
+if (isset($_POST['delete_ficha']) && isset($_POST['id_ficha'])) {
+    $id_ficha = intval($_POST['id_ficha']);
+    $id_usuario = intval($_SESSION['usuario_id']);
+    $sql = "DELETE FROM ficha_per WHERE id_ficha = ? AND id_usuario = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $id_ficha, $id_usuario);
+    if ($stmt->execute()) {
+        header('Content-Type: application/json');
+        echo json_encode(["success" => true]);
+    } else {
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "error" => "Erro ao excluir ficha."]);
+    }
+    exit;
+}
+
+// ========== SALVAR/EDITAR FICHA ========== //
 if (!isset($_POST["id_ficha"])) {
     echo "ID não enviado.";
     exit;
