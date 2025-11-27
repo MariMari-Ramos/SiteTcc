@@ -26,12 +26,13 @@ CREATE TABLE perfis (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
+/*Use esse comando depois de criar a tabela de perfis*/
 UPDATE perfis
 SET foto_perfil = CONCAT('/SiteTcc/', REPLACE(foto_perfil, '../', ''))
 WHERE foto_perfil LIKE '../%';
 
 
-/* Tabela para armazenar as configurações do usuário (JSON) */
+/* Tabela para armazenar as configurações do usuário, não funciona, ainda */
 CREATE TABLE user_settings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT(11) UNSIGNED NOT NULL UNIQUE,
@@ -56,7 +57,7 @@ VALUES
  'https://dnd5e.wikidot.com/');
 
 
-
+/*Esse é o certo, na teoria*/
 CREATE TABLE Ficha_Per (
     id_ficha INT AUTO_INCREMENT PRIMARY KEY,
     nome_personagem VARCHAR(150) NOT NULL,
@@ -73,6 +74,28 @@ CREATE TABLE Ficha_Per (
         ON UPDATE CASCADE,
 
     FOREIGN KEY (id_sistema) REFERENCES Sis_RPG(id_sistema)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+
+/*SQL que funciona no USBwebserver, muito comoco isso, nada que está nessa bomba de está um lixo*/
+CREATE TABLE ficha_per (
+    id_ficha INT AUTO_INCREMENT PRIMARY KEY,
+    nome_personagem VARCHAR(150) NOT NULL,
+    nivel INT DEFAULT 1,
+    dados_json TEXT,
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ultima_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    id_usuario INT(11) UNSIGNED NOT NULL,
+    id_sistema INT NOT NULL,
+
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    FOREIGN KEY (id_sistema) REFERENCES sis_rpg(id_sistema)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
