@@ -240,6 +240,8 @@ function saveCharacter() {
 }
 
 
+
+
 function loadCharacter() {
     try {
         const saved = localStorage.getItem('fichaPersonagemFM');

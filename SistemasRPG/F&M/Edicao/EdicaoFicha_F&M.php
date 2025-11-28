@@ -35,6 +35,7 @@ $perfil_amaldicoado = $dados['perfil_amaldicoado'] ?? [];
 $tecnica_amaldicoada = $dados['tecnica_amaldicoada'] ?? [];
 $invocations = $dados['invocations'] ?? [];
 
+
 ?>
 
 
@@ -203,17 +204,17 @@ destreza. Representa o quão difícil é acertar seu personagem.">🛡️ Classe
 
                     <div class="form-group">
                         <label class="form-label" for="ac-armor">Uniforme</label>
-                        <input type="number" id="ac-armor" class="form-control" name="ac-armor" value="<?php echo htmlspecialchars($info['ac_armor'] ?? '0'); ?>">
+                        <input type="number" id="ac-armor" class="form-control" name="ac-armor" value="<?php echo htmlspecialchars($info['ac_armor'] ?? '0'); ?>" disabled>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-shield">Escudo</label>
-                        <input type="number" id="ac-shield" class="form-control" name="ac-shield" value="<?php echo htmlspecialchars($info['ac_shield'] ?? '0'); ?>">
+                        <input type="number" id="ac-shield" class="form-control" name="ac-shield" value="<?php echo htmlspecialchars($info['ac_shield'] ?? '0'); ?>" disabled>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="ac-dex">Destreza</label>
-                        <input type="number" id="ac-dex" readonly class="form-control" name="ac-dex" value="<?php echo htmlspecialchars($info['ac_dex'] ?? '0'); ?>">
+                        <input type="number" id="ac-dex" readonly class="form-control" name="ac-dex" value="<?php echo htmlspecialchars($info['ac_dex'] ?? '0'); ?>" disabled>
                     </div>
 
                     <div class="form-group">
@@ -326,9 +327,10 @@ function renderPericias(lista, id, colunaIndex) {
         <tr>
           <td>${p.nome}</td>
           <td>${attrName[attrId]}</td>
-          <td><input type="checkbox" id="${profId}" data-attr="${attrId}"></td>
-          <td><input type="checkbox" id="${especId}" data-attr="${attrId}"></td>
-          <td><input type="number" value="${mod}" readonly style="width:50px" id="${totalId}"></td>
+          <td><input type="checkbox" id="${profId}" data-attr="${attrId}" disabled></td>
+<td><input type="checkbox" id="${especId}" data-attr="${attrId}" disabled></td>
+<td><input type="number" value="${mod}" readonly style="width:50px" id="${totalId}"></td>
+
         </tr>
       `;
     }).join('');
@@ -451,15 +453,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input name="hp-max" type="number" id="hp-max"  class="form-control" onchange="updateProgressBar('hp')" value="<?php echo htmlspecialchars($combate['hp_max'] ?? '100'); ?>">
+                        <input name="hp-max" type="number" id="hp-max"  class="form-control" onchange="updateProgressBar('hp')" value="<?php echo htmlspecialchars($combate['hp_max'] ?? '100'); ?>" disabled>
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input name="hp-current" type="number" id="hp-current" value="<?php echo htmlspecialchars($combate['hp_current'] ?? '100'); ?>" class="form-control" onchange="updateProgressBar('hp')">
+                        <input name="hp-current" type="number" id="hp-current" value="<?php echo htmlspecialchars($combate['hp_current'] ?? '100'); ?>" class="form-control" onchange="updateProgressBar('hp')" disabled>
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input name="hp-temp" type="number" id="hp-temp" value="<?php echo htmlspecialchars($combate['hp_temp'] ?? '0'); ?>" class="form-control">
+                        <input name="hp-temp" type="number" id="hp-temp" value="<?php echo htmlspecialchars($combate['hp_temp'] ?? '0'); ?>" class="form-control" disabled>
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -472,15 +474,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input name="pe-max" type="number" id="pe-max" value="<?php echo htmlspecialchars($combate['pe_max'] ?? '50'); ?>" class="form-control" onchange="updateProgressBar('pe')">
+                        <input name="pe-max" type="number" id="pe-max" value="<?php echo htmlspecialchars($combate['pe_max'] ?? '50'); ?>" class="form-control" onchange="updateProgressBar('pe')" disabled>
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input name="pe-current" type="number" id="pe-current" value="<?php echo htmlspecialchars($combate['pe_current'] ?? '5'); ?>" class="form-control" onchange="updateProgressBar('pe')">
+                        <input name="pe-current" type="number" id="pe-current" value="<?php echo htmlspecialchars($combate['pe_current'] ?? '5'); ?>" class="form-control" onchange="updateProgressBar('pe')" disabled>
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input name="pe-temp" type="number" id="pe-temp" value="<?php echo htmlspecialchars($combate['pe_temp'] ?? '0'); ?>" class="form-control">
+                        <input name="pe-temp" type="number" id="pe-temp" value="<?php echo htmlspecialchars($combate['pe_temp'] ?? '0'); ?>" class="form-control" disabled>
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -493,15 +495,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Máximo</label>
-                        <input name="integrity-max" type="number" id="integrity-max" value="<?php echo htmlspecialchars($combate['integrity_max'] ?? '100'); ?>" class="form-control" onchange="updateProgressBar('integrity')">
+                        <input name="integrity-max" type="number" id="integrity-max" value="<?php echo htmlspecialchars($combate['integrity_max'] ?? '100'); ?>" class="form-control" onchange="updateProgressBar('integrity')" disabled>
                     </div>
                     <div class="form-group">
                         <label>Atuais</label>
-                        <input name="integrity-current" type="number" id="integrity-current" value="<?php echo htmlspecialchars($combate['integrity_current'] ?? '100'); ?>" class="form-control" onchange="updateProgressBar('integrity')">
+                        <input name="integrity-current" type="number" id="integrity-current" value="<?php echo htmlspecialchars($combate['integrity_current'] ?? '100'); ?>" class="form-control" onchange="updateProgressBar('integrity')" disabled>
                     </div>
                     <div class="form-group">
                         <label>Temporários</label>
-                        <input name="integrity-temp" type="number" id="integrity-temp" value="<?php echo htmlspecialchars($combate['integrity_temp'] ?? '0'); ?>" class="form-control">
+                        <input name="integrity-temp" type="number" id="integrity-temp" value="<?php echo htmlspecialchars($combate['integrity_temp'] ?? '0'); ?>" class="form-control" disabled>
                     </div>
                 </div>
                 <div class="progress-bar">
@@ -514,15 +516,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Deslocamento (metros)</label>
-                        <input name="movement" type="number" id="movement" value="<?php echo htmlspecialchars($combate['movement'] ?? ''); ?>" class="form-control">
+                        <input name="movement" type="number" id="movement" value="<?php echo htmlspecialchars($combate['movement'] ?? ''); ?>" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label>Iniciativa</label>
-                        <input name="initiative" type="number" id="initiative" value="<?php echo htmlspecialchars($combate['initiative'] ?? ''); ?>" class="form-control">
+                        <input name="initiative" type="number" id="initiative" value="<?php echo htmlspecialchars($combate['initiative'] ?? ''); ?>" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label>Atenção</label>
-                        <input name="attention" type="number" id="attention" value="<?php echo htmlspecialchars($combate['attention'] ?? ''); ?>" class="form-control">
+                        <input name="attention" type="number" id="attention" value="<?php echo htmlspecialchars($combate['attention'] ?? ''); ?>" class="form-control" disabled>
                     </div>
                 </div>
             </div>
@@ -583,23 +585,23 @@ E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do l
                 <div class="form-row">
                     <div class="form-group">
                         <label>Energia</label>
-                        <input name="energy" id="energy" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['energy'] ?? '0'); ?>" class="form-control">
+                        <input name="energy" id="energy" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['energy'] ?? '0'); ?>" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label>Controle/Leitura</label>
-                        <input name="control-reading" id="control-reading" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['control_reading'] ?? '0'); ?>" class="form-control">
+                        <input name="control-reading" id="control-reading" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['control_reading'] ?? '0'); ?>" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label>Barreira</label>
-                        <input name="barrier" id="barrier" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['barrier'] ?? '0'); ?>" class="form-control">
+                        <input name="barrier" id="barrier" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['barrier'] ?? '0'); ?>" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label>Domínio</label>
-                        <input name="domain" id="domain" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['domain'] ?? '0'); ?>" class="form-control">
+                        <input name="domain" id="domain" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['domain'] ?? '0'); ?>" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label>Energia Reversa</label>
-                        <input name="reverse-energy" id="reverse-energy" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['reverse_energy'] ?? '0'); ?>" class="form-control">
+                        <input name="reverse-energy" id="reverse-energy" type="number" min="0" max="5" value="<?php echo htmlspecialchars($perfil_amaldicoado['reverse_energy'] ?? '0'); ?>" class="form-control" disabled>
                     </div>
                 </div>
             </div>
@@ -626,12 +628,12 @@ E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do l
             <div class="card section-border-pink">
                 <div class="form-group">
                     <label class="form-label">Nome da Técnica</label>
-                    <input type="text" id="technique-name" class="form-control" placeholder="Ex: Limitless, Ten Shadows, etc." value="<?php echo htmlspecialchars($tecnica_amaldicoada['nome'] ?? ''); ?>">
+                    <input type="text" id="technique-name" class="form-control" placeholder="Ex: Limitless, Ten Shadows, etc." value="<?php echo htmlspecialchars($tecnica_amaldicoada['nome'] ?? ''); ?>" disabled>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Funcionamento Básico</label>
-                    <textarea id="technique-description" class="form-control" rows="5" placeholder="Descreva o funcionamento básico da sua técnica amaldiçoada..."><?php echo htmlspecialchars($tecnica_amaldicoada['descricao'] ?? ''); ?></textarea>
+                    <textarea id="technique-description" class="form-control" rows="5" placeholder="Descreva o funcionamento básico da sua técnica amaldiçoada..." disabled><?php echo htmlspecialchars($tecnica_amaldicoada['descricao'] ?? ''); ?></textarea>
                 </div>
             </div>
 
@@ -652,10 +654,10 @@ E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do l
 </div>
 
 <script>
-const abilitiesByLevel = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] };
+// abilitiesByLevel já preenchido pelo PHP
+const abilitiesByLevel = <?= json_encode($tecnica_amaldicoada['habilidades'] ?? [[],[],[],[],[],[]], JSON_UNESCAPED_UNICODE) ?>;
 let currentLevel = 0;
 
-// Atualiza o container mostrando apenas habilidades do nível selecionado
 function renderAbilities() {
   const container = document.getElementById('technique-abilities');
   container.innerHTML = '';
@@ -674,21 +676,16 @@ function renderAbilities() {
 
     div.appendChild(removeBtn);
     container.appendChild(div);
-    saveCharacter();
   });
+  saveCharacter();
 }
-
-// Torna global
-window.renderAbilities = renderAbilities;
-
 
 // Troca de aba
 document.getElementById('technique-tabs').addEventListener('click', function(e) {
   if (!e.target.classList.contains('tab')) return;
-  // Remove 'active' de todas e define atual
   [...this.children].forEach(btn => btn.classList.remove('active'));
   e.target.classList.add('active');
-  currentLevel = e.target.getAttribute('data-level');
+  currentLevel = parseInt(e.target.getAttribute('data-level'));
   renderAbilities();
 });
 
@@ -698,11 +695,12 @@ document.getElementById('btn-add-technique').addEventListener('click', function(
   if (name && name.trim()) {
     abilitiesByLevel[currentLevel].push(name.trim());
     renderAbilities();
-    saveCharacter();
   }
 });
+
 // Inicializa mostrando habilidades do nível 0
 document.addEventListener('DOMContentLoaded', renderAbilities);
+
 </script>
 
 <style>
@@ -794,58 +792,58 @@ document.addEventListener('DOMContentLoaded', renderAbilities);
     </div>
 
     <script>
-    const id_Ficha = <?= $id_ficha ?>;
-    const dados = <?= json_encode($dados, JSON_UNESCAPED_UNICODE); ?>;
-    
-    const fichaAbilities = <?= json_encode($habilidades ?? []) ?>;
-    carregarHabilidades(fichaAbilities, 'abilities-list');
-    let modoEdicao = false;
+const id_Ficha = <?= $id_ficha ?>;
+const dados = <?= json_encode($dados, JSON_UNESCAPED_UNICODE); ?>;
 
-    document.addEventListener('DOMContentLoaded', () => {
-    carregarHabilidades(fichaAbilities, 'abilities-list');
+const fichaAbilities = <?= json_encode($habilidades ?? []); ?>;
+
+let modoEdicao = false;
+
+document.addEventListener('DOMContentLoaded', () => {
+
     const talentos = 
-      dados.perfil_amaldiçoado?.talentos 
+      dados.perfil_amaldicoado?.talentos 
    || dados.talentos_json 
    || [];
 
-carregarTalentos(talentos, 'talents-list');
-;
-
-const treinamentos = 
-      dados.perfil_amaldiçoado?.treinamentos 
+    const treinamentos = 
+      dados.perfil_amaldicoado?.treinamentos 
    || dados.treinamentos_json 
    || [];
 
-carregarTalentos(talentos, 'talents-list');
-
+    carregarHabilidades(fichaAbilities, 'abilities-list');
+    carregarTalentos(talentos, 'talents-list');
+    carregarTreinamentos(treinamentos, 'trainings-list');
     carregarInvocations(dados.invocations, 'invocations-list');
-    desabilitarEdicao();  // começa em modo visualização
+    carregarTecnicaAmaldicoada(dados.tecnica_json ?? dados.perfil_amaldicoado?.tecnica);
+
 });
+
+
+
+
+
 
 
         
 
 function habilitarEdicao() {
-    document.querySelectorAll("input, select, textarea, button").forEach(el => {
-        if (!el.classList.contains("bloquear")) {
-            el.disabled = false;
-            modoEdicao = true;
-            // mostra o botão Salvar
-    document.getElementById("btn-salvar").style.display = "inline-block";
+    // Habilita checkboxes de perícias
+    document.querySelectorAll('#coluna1 input[type="checkbox"], #coluna2 input[type="checkbox"]').forEach(el => {
+        el.disabled = false;
+    });
 
-    // esconde o botão Editar
-    document.getElementById("btn-editar").style.display = "none";
-
-    // Habilita botão de adicionar habilidade
+    // Habilita botões adicionar/remover talentos/habilidades
     document.querySelectorAll('.btn-add').forEach(b => b.disabled = false);
-
-    // Habilita botões de remover habilidade
     document.querySelectorAll('.btn-remove').forEach(b => b.style.display = 'block');
 
+    // Mostra botão salvar / esconde botão editar
+    document.getElementById("btn-salvar").style.display = "inline-block";
+    document.getElementById("btn-editar").style.display = "none";
 
-        }
-    });
+    modoEdicao = true;
 }
+
     function salvarEdicao() {
     const fd = new FormData();
 
@@ -1174,6 +1172,25 @@ function carregarTreinamentos(lista, containerId) {
     });
 }
 
+function carregarTecnicaAmaldicoada(tecnica) {
+    if (!tecnica) return;
+
+    document.getElementById("technique-name").value = tecnica.nome ?? "";
+    document.getElementById("technique-description").value = tecnica.descricao ?? "";
+
+    // reset global abilities
+    Object.keys(abilitiesByLevel).forEach(n => abilitiesByLevel[n] = []);
+
+    if (tecnica.habilidades) {
+        for (let nivel in tecnica.habilidades) {
+            abilitiesByLevel[nivel] = tecnica.habilidades[nivel] ?? [];
+        }
+    }
+
+    renderAbilities(); // mostra nível 0 ao abrir a página
+}
+
+
 function carregarInvocations(listaInvocations) {
     const container = document.getElementById('invocations-list');
     container.innerHTML = ""; // limpa antes
@@ -1185,7 +1202,7 @@ function carregarInvocations(listaInvocations) {
         card.innerHTML = `
             <div class="card-header">
                 <input type="text" placeholder="Nome da Invocação" class="form-control invocation-name" value="${inv.name || ''}">
-                <button class="btn-remove" onclick="onclick="this.parentElement.parentElement.remove(); salvarEdicao();">x</button>
+                <button class="btn-remove" onclick="this.parentElement.parentElement.remove(); salvarEdicao();">x</button>
             </div>
 
             <div class="form-row">
