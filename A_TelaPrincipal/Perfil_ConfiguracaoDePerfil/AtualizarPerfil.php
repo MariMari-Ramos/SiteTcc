@@ -32,58 +32,62 @@ $perfil_atual = $result->fetch_assoc();
 $foto_atual = $perfil_atual['foto_perfil'] ?? null;
 $stmt->close();
 
-// Remover foto de perfil
+// Remover foto
 if($remover_foto === '1'){
-    // Se for upload, remover do Azure Blob Storage (opcional: não implementado aqui)
     $foto_perfil = null;
     $tipo_foto = null;
     $avatar_selecionado = null;
 }
-// Processar upload de nova foto para Azure Blob Storage
+
+// Upload local
 elseif(isset($_FILES['profilePhoto']) && $_FILES['profilePhoto']['error'] === UPLOAD_ERR_OK){
-    require_once __DIR__ . '/../../src/azure_blob_upload.php';
+
+    // Extensões
     $extensao = strtolower(pathinfo($_FILES['profilePhoto']['name'], PATHINFO_EXTENSION));
-    $extensoes_permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-    if(!in_array($extensao, $extensoes_permitidas)){
+    $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+    if(!in_array($extensao, $permitidas)){
         echo json_encode(['success' => false, 'message' => 'Formato de imagem não permitido']);
         exit();
     }
-    $nome_arquivo = $usuario_id . '_' . time() . '.' . $extensao;
-    $erroBlob = null;
-    $urlBlob = uploadToAzureBlob($_FILES['profilePhoto']['tmp_name'], $nome_arquivo, $erroBlob);
-    if($urlBlob){
-        $foto_perfil = $urlBlob;
-        $tipo_foto = 'upload';
-        $avatar_selecionado = null;
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Erro ao enviar imagem para Azure Blob: ' . $erroBlob]);
+
+    // Gera nome
+    $nome_arquivo = $usuario_id . "_" . time() . "." . $extensao;
+    $caminho = __DIR__ . "/../../uploads/" . $nome_arquivo;
+
+
+    // Move para uploads
+    if (!move_uploaded_file($_FILES['profilePhoto']['tmp_name'], $caminho)) {
+        echo json_encode(['success' => false, 'message' => 'Erro ao salvar imagem local.']);
         exit();
     }
+
+    // Caminho público
+    $foto_perfil = "/SiteTcc/uploads/" . $nome_arquivo;
+    $tipo_foto = "upload";
+    $avatar_selecionado = null;
 }
+
 // Avatar selecionado
 elseif(!empty($avatar_selecionado)){
-    // Normaliza avatares que venham com ../ para um caminho público
-    $normalized = $avatar_selecionado;
-    $normalized = preg_replace('#^\.\./#', '', $normalized);
-    $foto_perfil = '/' . trim('SiteTcc/' . ltrim($normalized, '/'), '/');
-    $tipo_foto = 'avatar';
+    $normalized = preg_replace('#^\.\./#', '', $avatar_selecionado);
+    $foto_perfil = "/SiteTcc/" . $normalized;
+    $tipo_foto = "avatar";
 }
-// Manter foto atual
+
+// Mantém foto antiga
 else {
     $foto_perfil = $foto_atual;
     $tipo_foto = $perfil_atual['tipo_foto'];
 }
 
-// Atualizar perfil no banco
+// Atualizar no banco
 $stmt = $conn->prepare("UPDATE perfis SET nome_perfil = ?, foto_perfil = ?, tipo_foto = ?, avatar_selecionado = ? WHERE usuario_id = ?");
 $stmt->bind_param("ssssi", $nome_perfil, $foto_perfil, $tipo_foto, $avatar_selecionado, $usuario_id);
 
 if($stmt->execute()){
-    $_SESSION['nome_perfil'] = $nome_perfil;
-    $_SESSION['foto_perfil'] = $foto_perfil;
-    
     echo json_encode([
-        'success' => true, 
+        'success' => true,
         'message' => 'Perfil atualizado com sucesso!',
         'foto_perfil' => $foto_perfil
     ]);

@@ -70,7 +70,7 @@ $barrier = $_POST["barrier"] ?? 0;
 $domain = $_POST["domain"] ?? 0;
 $reverse_energy = $_POST["reverse_energy"] ?? 0;
 
-$tecnica_amaldiçoada = json_decode($_POST["tecnica_json"] ?? "{}", true);
+$tecnica_amaldicoada = json_decode($_POST["tecnica_json"] ?? "{}", true);
 $invocations = json_decode($_POST["invocations_json"] ?? "[]", true);
 
 /* =======================================================
@@ -126,7 +126,7 @@ $dados = [
         "treinamentos" => $treinamentos,
     ],
 
-    "tecnica_amaldiçoada" => $tecnica_amaldiçoada,
+    "tecnica_amaldicoada" => $tecnica_amaldicoada,
     "invocations" => $invocations
 ];
 

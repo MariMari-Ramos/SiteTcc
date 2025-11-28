@@ -10,32 +10,35 @@ $profilePhoto = '';
 if (!empty($_SESSION['usuario_id'])) {
   $usuario_id = intval($_SESSION['usuario_id']);
   $stmt = $conn->prepare("SELECT p.nome_perfil, p.foto_perfil FROM perfis p WHERE p.usuario_id = ? LIMIT 1");
+  
   if ($stmt) {
     $stmt->bind_param('i', $usuario_id);
     $stmt->execute();
     $res = $stmt->get_result();
+
     if ($res && $res->num_rows > 0) {
       $row = $res->fetch_assoc();
       $profileName = $row['nome_perfil'] ?? '';
       $foto = $row['foto_perfil'] ?? '';
-      // Se o caminho começar com '/', trate como caminho público e verifique arquivo físico
+
       if (!empty($foto)) {
-        if (strpos($foto, '/') === 0) {
-          $physical = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . $foto;
-          if (file_exists($physical)) {
-            $profilePhoto = $foto;
-          }
+        // Se for upload local "/uploads/xxx.jpg"
+        if (strpos($foto, '/uploads/') === 0) {
+          // Ajusta para URL acessável
+          $profilePhoto = '/SiteTcc' . $foto;
         } else {
-          // pode ser caminho relativo ou URL — usamos diretamente (assume válido)
+          // Caso seja URL completa (Azure)
           $profilePhoto = $foto;
         }
       }
+
       $showProfileName = true;
     }
     $stmt->close();
   }
 }
 ?>
+
 
 <script>
 window.MinhasFichas = {

@@ -57,7 +57,7 @@ $reverse_energy = $_POST['reverse-energy'] ?? null;
 $talentos = json_decode($_POST["talentos"] ?? "[]", true);
 $treinamentos = json_decode($_POST["treinamentos"] ?? "[]", true);
 
-$tecnica_amaldiçoada = json_decode($_POST["tecnica_amaldiçoada"] ?? "{}", true);
+$tecnica_amaldicoada = json_decode($_POST["tecnica_amaldicoada"] ?? "{}", true);
 $invocations = json_decode($_POST["invocations"] ?? "[]", true);
 
 $id_usuario = $_SESSION["usuario_id"] ?? null;
@@ -113,7 +113,7 @@ $dados = [
         "treinamentos" => $treinamentos,
     ],
 
-    "tecnica_amaldicoada" => $tecnica_amaldiçoada,
+    "tecnica_amaldicoada" => $tecnica_amaldicoada,
     "invocations" => $invocations
 
 ];
