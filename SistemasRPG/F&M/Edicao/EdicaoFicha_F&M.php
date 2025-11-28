@@ -92,6 +92,11 @@ $invocations = $dados['invocations'] ?? [];
     </header>
     <form id="character-form" action="Ficha_F&M.php" method="POST">
         <input type="hidden" id="json_ficha" name="dados_json">
+        <input type=hidden name=tecnica-amaldicada-json id=tecnica-amaldicada-json>
+        <input type=hidden name=habilidades-json id=habilidades-json>
+        <input type=hidden name=talentos-json id=talentos-json>
+        <input type=hidden name=treinamentos-json id=treinamentos-json>
+        <input type=hidden name=invocations-json id=invocations-json>
     <div class="container">
 
         <!-- ===== PÁGINA 1: INFORMAÇÕES BÁSICAS ===== -->

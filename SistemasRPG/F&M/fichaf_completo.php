@@ -50,7 +50,7 @@
         <input type="hidden" name="talentos" id="talentos-json">
         <input type="hidden" name="treinamentos" id="treinamentos-json">
         <input type="hidden" name="habilidades" id="habilidades-json">
-        <input type="hidden" name="tecnica_amaldiçoada" id="tecnica-amaldicada-json">
+        <input type="hidden" name="tecnica_amaldicoada" id="tecnica-amaldicada-json">
         <input type="hidden" name="invocations" id="invocations-json">
 
     <!-- Container Principal -->
