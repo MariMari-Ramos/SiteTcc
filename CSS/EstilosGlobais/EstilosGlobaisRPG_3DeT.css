@@ -1,0 +1,244 @@
+/* Tema escuro e acessibilidade para 3DeT */
+
+
+
+:root[data-theme='dark'] {
+  --background: #20293a;
+  --surface: #232936;
+  --text: #e0e1dd;
+  --gray-light: #232936;
+  --gray-mid: #415a77;
+  --border: #415a77;
+  --primary: #ff8c42;
+  --teal: #2dd4bf;
+  --header-gradient: linear-gradient(90deg, #232936 60%, #415a77 100%);
+  --shadow: 0 2px 14px rgba(65,90,119,0.18);
+}
+
+/* ====== Tema escuro: textos principais, labels, headers ====== */
+:root[data-theme="dark"] label,
+:root[data-theme="dark"] .skill-name,
+:root[data-theme="dark"] .advantage-name,
+
+:root[data-theme="dark"] .calculated-value {
+  color: #ffb366 !important;
+}
+
+/* PA, PM, PV: cor distinta no tema escuro */
+:root[data-theme="dark"] #calc-pa,
+:root[data-theme="dark"] .calculated-value:has(#calc-pa) {
+  color: #e0e1dd !important;
+}
+:root[data-theme="dark"] #calc-pm,
+:root[data-theme="dark"] .calculated-value:has(#calc-pm) {
+  color: #e0e1dd !important;
+}
+:root[data-theme="dark"] #calc-pv,
+:root[data-theme="dark"] .calculated-value:has(#calc-pv) {
+  color: #e0e1dd !important;
+}
+
+/* Placeholders */
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: #b8c1d1 !important;
+  opacity: 1 !important;
+}
+
+/* Textos secundários e descritivos */
+:root[data-theme="dark"] .text-secondary,
+:root[data-theme="dark"] .description,
+:root[data-theme="dark"] .subtitle {
+  color: #a0aec0 !important;
+}
+
+/* ====== Containers, cards, modais, grids ====== */
+:root[data-theme="dark"] .main-header,
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .card--teal,
+:root[data-theme="dark"] .card--gray,
+:root[data-theme="dark"] .attribute-box,
+:root[data-theme="dark"] .summary-item,
+:root[data-theme="dark"] .page,
+:root[data-theme="dark"] .skill-item,
+:root[data-theme="dark"] .container {
+  background: #20293a !important;
+  color: #e0e1dd !important;
+  border-color: #415a77 !important;
+  box-shadow: 0 4px 24px rgba(65,90,119,0.18);
+}
+
+/* Modal padrão */
+:root[data-theme="dark"] .modal,
+:root[data-theme="dark"] #dice-modal {
+  background: #1b263b !important;
+  color: #e0e1dd !important;
+  border: 2px solid #ff8c42 !important;
+  box-shadow: 0 8px 32px rgba(65,90,119,0.25);
+}
+
+:root[data-theme="dark"] .modal-content,
+:root[data-theme="dark"] #dice-modal .modal-content {
+  background: #222c3c !important;
+  color: #ff8c42 !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(65,90,119,0.25);
+  padding: 24px 32px;
+}
+
+/* Botões */
+:root[data-theme="dark"] button,
+:root[data-theme="dark"] .btn-navigation button,
+:root[data-theme="dark"] #d20-roller {
+  background: #415a77 !important;
+  color: #e0e1dd !important;
+  border: 1px solid #778da9 !important;
+  box-shadow: 0 2px 8px rgba(65,90,119,0.12);
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+:root[data-theme="dark"] button:hover,
+:root[data-theme="dark"] .btn-navigation button:hover,
+:root[data-theme="dark"] #d20-roller:hover {
+  background: #778da9 !important;
+  color: #fff !important;
+  border-color: #ff8c42 !important;
+}
+:root[data-theme="dark"] .btn-navigation button.btn-secondary {
+  background: #415a77 !important;
+  color: #e0e1dd !important;
+}
+
+/* Inputs, selects, textareas */
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  background: #192133 !important;
+  color: #e0e1dd !important;
+  border: 1px solid #415a77 !important;
+}
+
+/* Toast */
+:root[data-theme="dark"] .toast {
+  background: #ff8c42 !important;
+  color: #232936 !important;
+}
+
+/* ====== Herdar fonte global para todos os elementos ====== */
+body, body *:not(i):not(svg):not([class*="bi-"]) {
+  font-family: inherit !important;
+}
+body {
+  font-family: var(--global-font-family, OpenDyslexic, Arial, sans-serif) !important;
+}
+
+/* ====== Tema escuro para cards, inputs, headers ====== */
+:root[data-theme="dark"] body {
+  background-color: var(--bg-primary, #20293a);
+  color: var(--text-primary, #e0e1dd);
+}
+
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .attribute-row,
+:root[data-theme="dark"] .section-header {
+  background-color: var(--card-bg, #232936) !important;
+  color: var(--text-primary, #e0e1dd) !important;
+  border-color: var(--border-color, #415a77) !important;
+}
+
+:root[data-theme="dark"] .section-header {
+  background: linear-gradient(90deg, #232936 60%, #415a77 100%) !important;
+  color: #ff8c42 !important;
+  border-left: 6px solid #ff8c42 !important;
+}
+
+:root[data-theme="dark"] .section-header.section-border-teal {
+  border-left: 6px solid #2dd4bf !important;
+}
+:root[data-theme="dark"] .section-header.section-border-purple {
+  border-left: 6px solid #a78bfa !important;
+}
+:root[data-theme="dark"] .section-header.section-border-indigo {
+  border-left: 6px solid #6366f1 !important;
+}
+
+/* ====== Acessibilidade: alto contraste ====== */
+body.high-contrast {
+  --bg-primary: #000000;
+  --bg-secondary: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #ffffff;
+  --border-color: #ffffff;
+}
+body.high-contrast * {
+  border-color: var(--border-color, #ffffff) !important;
+  color: var(--text-primary, #ffffff) !important;
+}
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid #fff !important;
+}
+
+body[data-theme='dark'],
+:root[data-theme='dark'] body {
+  background: var(--background) !important;
+  color: var(--text) !important;
+}
+
+.main-header,
+.card,
+.card--teal,
+.card--gray,
+.attribute-box,
+.summary-item {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--teal) !important;
+}
+
+label,
+.skill-name,
+.advantage-name,
+.calculated-value {
+  color: var(--text) !important;
+}
+
+input,
+select,
+textarea {
+  background: var(--gray-light) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  background: #23272a !important;
+  color: var(--text) !important;
+}
+
+.btn-navigation button,
+button,
+#d20-roller {
+  background: var(--primary) !important;
+  color: #fff !important;
+}
+
+.btn-navigation button.btn-secondary {
+  background: var(--gray-mid) !important;
+  color: var(--text) !important;
+}
+
+.toast {
+  background: var(--primary) !important;
+  color: #fff !important;
+}
+
+/* Acessibilidade: fonte global */
+
+body, html {
+  font-family: var(--global-font-family, var(--font-opendyslexic, 'OpenDyslexic', Arial, sans-serif));
+}

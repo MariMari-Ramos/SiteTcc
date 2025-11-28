@@ -479,7 +479,12 @@ function rollD20() {
     // Abrir modal se existir
     const modal = document.getElementById('dice-modal');
     if (modal) modal.classList.add('active');
-}
+        // ...código original da rolagem...
+        // Após exibir o modal do dado, aplicar configurações globais
+        setTimeout(function() {
+            if (window.updateGlobalSettings) window.updateGlobalSettings();
+        }, 10);
+    }
 
 // ===== FECHAR MODAL DO D20 =====
 function closeDiceModal() {

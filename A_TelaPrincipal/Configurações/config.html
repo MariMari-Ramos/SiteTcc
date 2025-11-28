@@ -185,26 +185,24 @@
         </div>
     </div>
 
+    <!-- Overlay de fundo para desfoque do modal de alerta -->
+    <div id="alertsWarningBackdrop" class="modal-backdrop" style="display:none;"></div>
     <!-- Modal de Aviso de Alertas -->
     <div id="alertsWarningModal" class="modal alerts-warning-modal">
         <div class="modal-content warning-content">
             <h2 data-translate="alertsWarningTitle">⚠️ Aviso Importante</h2>
-            
             <p data-translate="alertsWarningMessage">
                 Ao desativar os alertas, você não receberá mais notificações importantes do sistema, incluindo:
             </p>
-            
             <ul class="warning-list">
                 <li data-translate="alertsWarningItem1">Avisos de segurança</li>
                 <li data-translate="alertsWarningItem2">Notificações de erro</li>
                 <li data-translate="alertsWarningItem3">Confirmações de ações importantes</li>
                 <li data-translate="alertsWarningItem4">Mensagens de validação</li>
             </ul>
-            
             <p class="warning-question" data-translate="alertsWarningQuestion">
                 Isso pode ser prejudicial para sua experiência no site. Tem certeza que deseja continuar?
             </p>
-            
             <div class="warning-buttons">
                 <button id="confirmDisableAlerts" class="modal-button danger" data-translate="confirmDisable">
                     Sim, desativar alertas
@@ -215,5 +213,26 @@
             </div>
         </div>
     </div>
+    <script>
+    // Exibe/oculta o overlay junto com o modal de alerta
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('alertsWarningModal');
+        const backdrop = document.getElementById('alertsWarningBackdrop');
+        const showBackdrop = () => { backdrop.style.display = 'block'; };
+        const hideBackdrop = () => { backdrop.style.display = 'none'; };
+        // Observa mudanças de visibilidade do modal
+        const observer = new MutationObserver(() => {
+            if (modal.style.display === 'block' || getComputedStyle(modal).display === 'block') {
+                showBackdrop();
+            } else {
+                hideBackdrop();
+            }
+        });
+        observer.observe(modal, { attributes: true, attributeFilter: ['style', 'class'] });
+        // Garante que ao fechar pelo botão, o overlay suma
+        document.getElementById('cancelDisableAlerts').addEventListener('click', hideBackdrop);
+        document.getElementById('confirmDisableAlerts').addEventListener('click', hideBackdrop);
+    });
+    </script>
 </body>
 </html>

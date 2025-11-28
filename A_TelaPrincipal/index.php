@@ -58,11 +58,17 @@ window.MinhasFichas = {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
 
   <!-- JS Global (sem defer para aplicar tema/estado inicial) -->
-  <script src="../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js" defer></script>
+  <script src="../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
   <!-- JS da página (defer) -->
   <script src="../JavaScript/PrincipalTela/index.js" defer ></script>
 </head>
 <body>
+      <script>
+        // Garante aplicação das configurações globais (fonte, acessibilidade, etc.)
+        document.addEventListener('DOMContentLoaded', function() {
+          if (window.updateGlobalSettings) window.updateGlobalSettings();
+        });
+      </script>
     <!-- Modal / Mapa Mental da Ficha -->
     <div id="fichaMindmapOverlay" class="overlay" aria-hidden="true" style="z-index: 1001;" onclick="closeFichaModal()">
       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="fichaMindmapTitle" onclick="event.stopPropagation()" style="position: relative; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr; gap: 0; min-width: 520px; min-height: 220px; max-width: 95vw; max-height: 90vh; align-items: center; justify-items: center;">
@@ -71,24 +77,24 @@ window.MinhasFichas = {
           <line class="connection-line" x1="58%" y1="50%" x2="75%" y2="50%"></line>
         </svg>
 
-        <div class="section top-left" data-action="edit" onclick="selectFichaSection(event, 'edit')" style="position: relative; z-index: 2; grid-column: 1; grid-row: 1; margin-right: 24px;">
-          <div class="section-icon">✏️</div>
-          <div class="section-title">Editar ficha</div>
-          <div class="section-description">Abrir edição da ficha</div>
-        </div>
+		<div class="section top-left" data-action="edit" onclick="selectFichaSection(event, 'edit')" style="position: relative; z-index: 2; grid-column: 1; grid-row: 1; margin-right: 24px;">
+		  <div class="section-icon">✏️</div>
+		  <div class="section-title" data-translate="modal_edit_title">Editar ficha</div>
+		  <div class="section-description" data-translate="modal_edit_desc">Abrir edição da ficha</div>
+		</div>
 
-        <div class="section center" style="position: relative; z-index: 2; grid-column: 2; grid-row: 1;">
-          <i class="bi bi-person-badge" style="font-size:2.5em;"></i>
-          <div id="fichaMindmapTitle" class="section-title">Ações da Ficha</div>
-        </div>
+		<div class="section center" style="position: relative; z-index: 2; grid-column: 2; grid-row: 1;">
+		  <i class="bi bi-person-badge" style="font-size:2.5em;"></i>
+		  <div id="fichaMindmapTitle" class="section-title" data-translate="modal_ficha_actions">Ações da Ficha</div>
+		</div>
 
-        <div class="section top-right" data-action="delete" onclick="selectFichaSection(event, 'delete')" style="position: relative; z-index: 2; grid-column: 3; grid-row: 1; margin-left: 24px;">
-          <div class="section-icon">🗑️</div>
-          <div class="section-title">Excluir ficha</div>
-          <div class="section-description">Remover esta ficha</div>
-        </div>
+		<div class="section top-right" data-action="delete" onclick="selectFichaSection(event, 'delete')" style="position: relative; z-index: 2; grid-column: 3; grid-row: 1; margin-left: 24px;">
+		  <div class="section-icon">🗑️</div>
+		  <div class="section-title" data-translate="modal_delete_title">Excluir ficha</div>
+		  <div class="section-description" data-translate="modal_delete_desc">Remover esta ficha</div>
+		</div>
 
-        <button class="close-button" type="button" onclick="closeFichaModal()" style="grid-column: 1 / span 3; margin-top: 32px; z-index: 3;">← Voltar</button>
+        <button class="close-button" type="button" onclick="closeFichaModal()" style="grid-column: 1 / span 3; margin-top: 32px; z-index: 3;" data-translate="voltar">← Voltar</button>
       </div>
     </div>
 
@@ -96,11 +102,11 @@ window.MinhasFichas = {
     <div id="modalConfirmDeleteFicha" class="modal-confirm-delete-ficha" aria-hidden="true">
       <div class="modal-confirm-content">
         <div class="modal-confirm-icon">🗑️</div>
-        <div class="modal-confirm-title">Excluir ficha</div>
-        <div class="modal-confirm-message">Tem certeza que deseja excluir esta ficha? Essa ação não pode ser desfeita.</div>
+        <div class="modal-confirm-title" data-translate="modal_delete_title">Excluir ficha</div>
+        <div class="modal-confirm-message" data-translate="modal_delete_confirm">Tem certeza que deseja excluir esta ficha? Essa ação não pode ser desfeita.</div>
         <div class="modal-confirm-actions">
-          <button type="button" class="btn-cancel-delete" onclick="closeModalConfirmDeleteFicha()">Cancelar</button>
-          <button type="button" class="btn-confirm-delete" id="btnConfirmDeleteFicha">Excluir</button>
+          <button type="button" class="btn-cancel-delete" onclick="closeModalConfirmDeleteFicha()" data-translate="cancelar">Cancelar</button>
+          <button type="button" class="btn-confirm-delete" id="btnConfirmDeleteFicha" data-translate="excluir">Excluir</button>
         </div>
       </div>
     </div>

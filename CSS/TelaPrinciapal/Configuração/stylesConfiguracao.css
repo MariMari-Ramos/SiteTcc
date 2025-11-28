@@ -1,3 +1,38 @@
+/* Overlay de fundo para desfoque do modal de alerta */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    transition: opacity 0.3s;
+    pointer-events: auto;
+}
+
+
+
+/* Overlay de fundo para desfoque do modal de alerta - mesmo para claro e escuro */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    transition: opacity 0.3s;
+    pointer-events: auto;
+    will-change: backdrop-filter, opacity;
+}
+
+/* Garante overlay acima do body, abaixo do modal */
+.modal-backdrop {
+    pointer-events: auto;
+    will-change: backdrop-filter, opacity;
+}
+
+/* Garante que o modal fique acima do overlay */
+.alerts-warning-modal {
+    z-index: 1010;
+}
 @font-face {
     font-family: 'OpenDyslexic';
     src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
@@ -345,7 +380,8 @@ input:checked + .slider:before {
 .close {
     color: #aaa;
     float: right;
-    font-size: 28px;
+        text-align: justify;
+        margin-bottom: 20px; /* Existing code retained */
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
@@ -953,8 +989,12 @@ body.high-contrast {
 .guide-speech-content {
     color: #333;
     line-height: 1.6;
-    margin-bottom: 20px;
+        margin-bottom: 20px !important;
 }
+
+    :root[data-theme="dark"] .guide-speech-content {
+        text-align: justify !important;
+    }
 
 .guide-speech-options {
     display: flex;

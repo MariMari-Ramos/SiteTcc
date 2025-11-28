@@ -49,6 +49,19 @@ class SettingsManager {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                     this.unsavedChanges = false;
+                    // Salva no localStorage para refletir globalmente
+                    try {
+                        localStorage.setItem('theme', this.savedSettings.theme);
+                        localStorage.setItem('language', this.savedSettings.language);
+                        localStorage.setItem('carouselHoverEnabled', this.savedSettings.carousel ? 'true' : 'false');
+                        localStorage.setItem('guideEnabled', this.savedSettings.guide ? 'true' : 'false');
+                        localStorage.setItem('alertsEnabled', this.savedSettings.alerts ? 'true' : 'false');
+                        localStorage.setItem('fontSize', this.savedSettings.fontSize);
+                        localStorage.setItem('fontType', this.savedSettings.fontType);
+                        localStorage.setItem('lineSpacing', this.savedSettings.lineSpacing);
+                        localStorage.setItem('highContrast', this.savedSettings.highContrast ? 'true' : 'false');
+                        localStorage.setItem('autoRead', this.savedSettings.autoRead ? 'true' : 'false');
+                    } catch (e) {}
                     if (window.updateGlobalSettings) {
                         window.updateGlobalSettings();
                     }

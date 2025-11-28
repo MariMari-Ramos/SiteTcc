@@ -1,4 +1,29 @@
 (function(){
+    // Bloqueia os botões de voltar e configurações quando o overlay/modal está aberto (igual login)
+    document.addEventListener('DOMContentLoaded', function() {
+        const overlay = document.getElementById('overlay');
+        const backBtn = document.getElementById('backBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        function updateBtnState() {
+            const isModalOpen = overlay && (overlay.style.display === 'flex' || overlay.classList.contains('active'));
+            if (backBtn) backBtn.disabled = isModalOpen;
+            if (settingsBtn) settingsBtn.disabled = isModalOpen;
+            if (isModalOpen) {
+                if (backBtn) backBtn.classList.add('btn-disabled');
+                if (settingsBtn) settingsBtn.classList.add('btn-disabled');
+            } else {
+                if (backBtn) backBtn.classList.remove('btn-disabled');
+                if (settingsBtn) settingsBtn.classList.remove('btn-disabled');
+            }
+        }
+        if (overlay) {
+            const observer = new MutationObserver(updateBtnState);
+            observer.observe(overlay, { attributes: true, attributeFilter: ['style', 'class'] });
+            updateBtnState();
+        }
+    });
+})();
+(function(){
     'use strict';
 
     // ===== Form =====

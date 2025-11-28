@@ -6,6 +6,7 @@
     <title>Ficha F&M - Feiticeiros e Maldições</title>
     <!-- CSS Global de configurações -->
     <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
+    <link rel="stylesheet" href="../../CSS/EstilosGlobais/EstilosGlobaisRPG_FM.css">
     <link rel="stylesheet" href="style_melhorado.css">
     <!-- JS Global de configurações -->
     <script src="../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
@@ -19,20 +20,13 @@
   </div>
 </div>
 <body>
-<script>
-// Aplica tema, fonte, contraste, etc. conforme configuração global do usuário
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.applyGlobalSettings) {
-        window.applyGlobalSettings();
-    }
-});
-</script>
+
     <!-- Header Principal com Navegação -->
     <header class="header page-theme-teal">
         <div class="header-content">
             <div class="header-left">
-                <h1 class="title">⚡ Feiticeiros & Maldições</h1>
-                <span class="subtitle">Sistema de RPG v2.0</span>
+                <h1 class="title" data-translate="fm_titulo">⚡ Feiticeiros & Maldições</h1>
+                <span class="subtitle" data-translate="fm_subtitulo">Sistema de RPG v2.0</span>
             </div>
 
             <div class="page-indicator">

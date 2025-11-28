@@ -151,93 +151,92 @@ h2 {
     cursor: not-allowed;
     opacity: 0.85;
     color: var(--text-color);
-    border-color: var(--border-color);
-}
 
-.input-group input[type="text"]:focus,
-.input-group input[type="email"]:focus {
-    outline: none;
-    border-color: var(--button-primary);
-    box-shadow: 0 0 0 3px rgba(119, 141, 169, 0.1);
-}
-
-:root[data-theme="light"] .input-group input[type="text"]:focus,
-:root[data-theme="light"] .input-group input[type="email"]:focus {
-    box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
-    border-color: var(--button-primary);
-}
-
-.input-group input:disabled,
-.input-group input:read-only {
-    background-color: var(--input-disabled-bg);
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-/* Upload de foto de perfil */
-.input-group input[type="file"] {
-    display: none;
-}
-
-.perfil-foto-preview {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 6px solid var(--preview-border);
-    margin: 18px auto;
-    cursor: default; /* preview é apenas visual */
-    transition: border-color 220ms ease, box-shadow 220ms ease;
-    position: relative;
-}
-
-/* hover mais discreto e suave */
-.perfil-foto-preview:hover {
-    border-color: var(--button-primary);
-    transform: scale(1.02);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
-}
-
-:root[data-theme="light"] .perfil-foto-preview:hover {
-    box-shadow: 0 4px 12px rgba(255, 140, 66, 0.08);
-}
-
-.perfil-foto-preview::before {
-    /* ícone de edição oculto — preview é visual apenas */
-    display: none !important;
-}
-
-.perfil-foto-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.foto-upload-hint {
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--text-color);
-    opacity: 0.6;
-    margin-top: 8px;
-}
-
-/* Grupos de ação (botões secundários) */
-.action-group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px;
-    background-color: var(--button-secondary);
-    border-radius: 8px;
-    border: 2px solid var(--border-color);
-}
-
-:root[data-theme="dark"] .action-group {
-    background-color: #0d1b2a;
-}
-
-.action-group label {
+    /* Guia Trigger — igual ao index.php */
+    .guide-trigger {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: fixed;
+        top: 18px;
+        right: 18px;
+        z-index: 9999;
+        padding: 6px 18px 6px 14px;
+        border-radius: 999px;
+        border: 2px solid #bfc9d1;
+        background: linear-gradient(180deg, #232e3a 0%, #1a222b 100%);
+        color: #fff;
+        font-family: 'OpenDyslexic', Arial, sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+        cursor: pointer;
+        outline: none;
+        transition: background 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s;
+        min-width: 90px;
+        min-height: 44px;
+        letter-spacing: 0.5px;
+    }
+    .guide-trigger .guide-emoji {
+        margin-right: 6px;
+        font-size: 1.6em;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+    }
+    .guide-trigger .guide-badge {
+        position: absolute;
+        top: -7px;
+        right: -7px;
+        width: 18px;
+        height: 18px;
+        background: #ff3b30;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 0 0 rgba(255,59,48,.6);
+        animation: guide-badge-pulse 2s ease infinite;
+        z-index: 2;
+    }
+    @keyframes guide-badge-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(255,59,48,.6); }
+      70%  { box-shadow: 0 0 0 10px rgba(255,59,48,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,59,48,0); }
+    }
+    .guide-trigger span {
+        font-family: 'OpenDyslexic', Arial, sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .guide-trigger:hover,
+    .guide-trigger:focus-visible {
+        background: linear-gradient(180deg, #2d3a48 0%, #232e3a 100%);
+        color: #fff;
+        border-color: #ffb26b;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+        transform: translateY(-1px) scale(1.03);
+    }
+    .guide-trigger:active {
+        background: #1a222b;
+        color: #fff;
+        transform: scale(0.98);
+    }
+    @media (max-width: 600px) {
+        .guide-trigger {
+            top: 10px;
+            right: 10px;
+            padding: 4px 10px 4px 8px;
+            font-size: 1rem;
+            min-width: 70px;
+            min-height: 36px;
+        }
+        .guide-trigger .guide-badge {
+            width: 13px;
+            height: 13px;
+            top: -5px;
+            right: -5px;
+        }
+    }
     margin: 0;
     font-weight: 600;
 }
@@ -828,13 +827,99 @@ textarea::placeholder {
 
 /* ========== GUIA (balão) - minimal styles reused from home.css ========== */
 .guide-trigger {
-    padding: 6px 12px;
-    border-radius: 999px;
-    border: 2px solid #ffc38a;
-    background: linear-gradient(135deg, #fffaf5, #fff2e6);
-    box-shadow: 0 4px 12px rgba(255, 163, 94, 0.25);
-    cursor: pointer;
-    font-weight: 700;
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
+    border: 2px solid #ffc38a !important;
+    background: linear-gradient(135deg, #fffaf5, #fff2e6) !important;
+    box-shadow: 0 4px 12px rgba(255, 163, 94, 0.25) !important;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease !important;
+    cursor: pointer !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    position: fixed !important;
+    top: 18px !important;
+    right: 18px !important;
+    z-index: 99999 !important;
+}
+
+.guide-trigger::before { display: none !important; }
+
+.guide-trigger:hover,
+.guide-trigger:focus-visible {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(255, 163, 94, 0.35) !important;
+    border-color: #ffb26b !important;
+}
+
+.guide-trigger::after {
+    content: "" !important;
+    position: absolute !important;
+    top: -6px !important;
+    right: -6px !important;
+    width: 14px !important;
+    height: 14px !important;
+    background: #ff3b30 !important;
+    border: 2px solid #fff !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 0 0 rgba(255,59,48,.6) !important;
+    animation: guide-badge-pulse 2s ease infinite !important;
+    z-index: 2 !important;
+}
+
+@keyframes guide-badge-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,59,48,.6); }
+  70%  { box-shadow: 0 0 0 10px rgba(255,59,48,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,59,48,0); }
+}
+
+.guide-trigger-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; display:inline-block; }
+
+:root[data-theme="dark"] .guide-trigger {
+    background: linear-gradient(180deg,#0b2736,#07212a) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    padding: 8px 14px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6), 0 0 14px rgba(0,0,0,0.45) inset !important;
+    align-items: center !important;
+}
+
+:root[data-theme="dark"] .guide-trigger::after {
+    content: '' !important;
+    position: absolute !important;
+    top: -6px !important;
+    left: -6px !important;
+    right: -6px !important;
+    bottom: -6px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 0 28px rgba(119,141,169,0.06) !important;
+    pointer-events: none !important;
+}
+
+:root[data-theme="dark"] .guide-trigger span { font-weight: 700 !important; letter-spacing: 0.6px !important; }
+
+:root[data-theme="light"] .guide-trigger {
+    background: linear-gradient(180deg,#fffaf5,#fff2e6) !important;
+    color: #111 !important;
+    border: 2px solid #ffdcbf !important;
+    padding: 8px 14px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 6px 18px rgba(255,140,66,0.12), inset 0 1px 0 rgba(255,255,255,0.6) !important;
+    align-items: center !important;
+}
+
+:root[data-theme="light"] .guide-trigger::after {
+    content: '' !important;
+    position: absolute !important;
+    top: -4px !important;
+    left: -4px !important;
+    right: -4px !important;
+    bottom: -4px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 0 0 6px rgba(255,235,215,0.18) !important;
+    pointer-events: none !important;
 }
 
 .guide-speech {

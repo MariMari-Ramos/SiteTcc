@@ -308,7 +308,9 @@
     const fichas = await fetchFichasDoServidor();
 
     if (!fichas.length) {
-      host.innerHTML = '<p style="color:#666;margin:6px 8px;">Nenhuma ficha salva ainda.</p>';
+      host.innerHTML = '<p style="color:#666;margin:6px 8px;text-align:center;display:block;" data-translate="nenhuma_ficha">Nenhuma ficha salva ainda.</p>';
+      if (window.applyTranslationsNow) window.applyTranslationsNow();
+      if (window.updateGlobalSettings) window.updateGlobalSettings();
       return;
     }
 
@@ -349,30 +351,34 @@
         // Botão de exibir data
         toggleDataBtn = document.createElement('button');
         toggleDataBtn.type = 'button';
+        toggleDataBtn.setAttribute('data-translate', 'exibir_data');
         toggleDataBtn.textContent = 'Exibir data';
-        toggleDataBtn.className = 'btn-toggle-datas';
+        toggleDataBtn.className = 'btn-toggle-datas global-btn-theme';
         toggleDataBtn.style.fontSize = '0.9em';
         toggleDataBtn.style.padding = '2px 10px';
         toggleDataBtn.style.borderRadius = '8px';
         toggleDataBtn.style.border = '1px solid #d4a574';
-        toggleDataBtn.style.background = '#fef5e7';
+        toggleDataBtn.style.background = '';
         toggleDataBtn.style.cursor = 'pointer';
         toggleDataBtn.addEventListener('click', function() {
           showDatas = !showDatas;
+          toggleDataBtn.setAttribute('data-translate', showDatas ? 'ocultar_data' : 'exibir_data');
           toggleDataBtn.textContent = showDatas ? 'Ocultar data' : 'Exibir data';
+          if (window.applyTranslationsNow) window.applyTranslationsNow();
           renderChips();
         });
 
         // Botão de ordenação
         menuBtn = document.createElement('button');
         menuBtn.type = 'button';
+        menuBtn.setAttribute('data-translate', 'ordenar_fichas');
         menuBtn.textContent = 'Ordenar fichas';
-        menuBtn.className = 'btn-toggle-datas';
+        menuBtn.className = 'btn-toggle-datas global-btn-theme';
         menuBtn.style.fontSize = '0.9em';
         menuBtn.style.padding = '2px 10px';
         menuBtn.style.borderRadius = '8px';
         menuBtn.style.border = '1px solid #d4a574';
-        menuBtn.style.background = '#fef5e7';
+        menuBtn.style.background = '';
         menuBtn.style.cursor = 'pointer';
         menuBtn.style.position = 'relative';
 
@@ -382,7 +388,7 @@
         dropdown.style.position = 'absolute';
         dropdown.style.top = '110%';
         dropdown.style.left = '0';
-        dropdown.style.background = '#fff';
+        dropdown.style.background = '';
         dropdown.style.border = '1px solid #d4a574';
         dropdown.style.borderRadius = '8px';
         dropdown.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)';
@@ -391,6 +397,7 @@
 
         const opt1 = document.createElement('button');
         opt1.type = 'button';
+        opt1.setAttribute('data-translate', 'mais_nova_primeiro');
         opt1.textContent = 'Mais nova primeiro';
         opt1.className = 'dropdown-opt';
         opt1.style.width = '100%';
@@ -407,6 +414,7 @@
 
         const opt2 = document.createElement('button');
         opt2.type = 'button';
+        opt2.setAttribute('data-translate', 'mais_velha_primeiro');
         opt2.textContent = 'Mais velha primeiro';
         opt2.className = 'dropdown-opt';
         opt2.style.width = '100%';
@@ -472,10 +480,13 @@
           let dados = {};
           try { dados = JSON.parse(f.dados_json); } catch(e){}
 
-          const specialization =
+          let specialization =
             (dados.info_basicas && dados.info_basicas.specialization)
             ? dados.info_basicas.specialization
-          : "Não definido";
+            : null;
+          if (!specialization) {
+            specialization = `<span data-translate="nao_definido">Não definido</span>`;
+          }
 
           const dataObj = new Date(f.data_criacao);
           const dataCriacao = dataObj.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
@@ -484,9 +495,10 @@
             <strong>${f.nome_personagem}</strong><br>
             <span style="font-size: 12px; color: #ccc;">
                 ${specialization}
-                ${showDatas ? `• Criada em ${dataCriacao}` : ''}
+                ${showDatas ? `• <span data-translate='criada_em'>Criada em</span> ${dataCriacao}` : ''}
             </span>
           `;
+          if (window.applyTranslationsNow) window.applyTranslationsNow();
 
           chip.title = `${f.nome_personagem} (${sistema})`;
 
@@ -500,6 +512,8 @@
       }
 
       renderChips();
+      if (window.applyTranslationsNow) window.applyTranslationsNow();
+      if (window.updateGlobalSettings) window.updateGlobalSettings();
 
       const rail = document.createElement('div');
       rail.className = 'fichas-rail';
@@ -512,6 +526,8 @@
 
     host.innerHTML = '';
     host.appendChild(frag);
+    if (window.applyTranslationsNow) window.applyTranslationsNow();
+    if (window.updateGlobalSettings) window.updateGlobalSettings();
 }
 
 
@@ -521,7 +537,9 @@
     if (!host) return;
     
     // Placeholder - ainda não há fichas randômicas salvas
-    host.innerHTML = '<p style="color:#666;margin:6px 8px;">Nenhuma ficha randômica salva ainda.</p>';
+    host.innerHTML = '<p style="color:#666;margin:6px 8px;text-align:center;display:block;" data-translate="nenhuma_ficha_randomica">Nenhuma ficha randômica salva ainda.</p>';
+    if (window.applyTranslationsNow) window.applyTranslationsNow();
+    if (window.updateGlobalSettings) window.updateGlobalSettings();
   }
 
   document.addEventListener('DOMContentLoaded', () => {

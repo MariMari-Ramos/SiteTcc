@@ -163,7 +163,15 @@ body.high-contrast .SubtituloRedefinir{font-weight:700;color:var(--text);}
     color:var(--text);
     margin-bottom:.35rem;
     margin-top:.3rem;
-    padding-left:.4rem;
+    margin-left:7%; /* Igual ao login */
+    white-space:nowrap;
+    display:flex;
+    align-items:center;
+}
+/* Placeholder dos campos de senha com margem igual ao login */
+input#NovaSenha::placeholder,
+input#ConfirmarNovaSenha::placeholder {
+    padding-left:7%;
 }
 
 /* Evita ligaturas problemáticas */

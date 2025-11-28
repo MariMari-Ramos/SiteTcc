@@ -7,10 +7,12 @@
 
     <!-- Estilos globais de acessibilidade e tema -->
     <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
+    <link rel="stylesheet" href="../../CSS/EstilosGlobais/EstilosGlobaisRPG_3DeT.css">
     <!-- Estilo específico da ficha -->
     <link rel="stylesheet" href="Ficha3DeT.css">
     <!-- JS de configurações globais (tema, fonte, contraste, etc) -->
     <script src="../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
+    <script src="../../JavaScript/ConfiguraçõesGlobais/GlobalConfigurationRPG_3DeT.js"></script>
     <!-- JS específico da ficha -->
     <script src="Ficha3DeT.js"></script>
 
@@ -19,7 +21,7 @@
     <header class="main-header">
         <div style="display: flex; align-items: center;">
             <span class="logo">🎲</span>
-            <h1>Ficha 3DeT — Estilo D&D</h1>
+            <h1 data-translate="3det_titulo">Ficha 3DeT — Estilo D&D</h1>
         </div>
         <nav class="nav-pages">
             <span class="nav-dot active" data-page="1"></span>
@@ -37,159 +39,159 @@
         <!-- Página 1: Informações Básicas -->
         <div class="page active" id="page-1">
             <div class="card">
-                <h2>📋 Informações Básicas</h2>
+                <h2 data-translate="3det_info_basica">📋 Informações Básicas</h2>
                 <div class="form-group">
-                    <label for="char-name">Nome do Personagem</label>
-                    <input type="text" name="char-name" id="char-name" placeholder="Digite o nome do personagem">
+                    <label for="char-name" data-translate="3det_nome">Nome do Personagem</label>
+                    <input type="text" name="char-name" id="char-name" placeholder="Digite o nome do personagem" data-translate-attr="placeholder" data-translate="3det_placeholder_nome">
                 </div>
                 <div class="form-group">
-                    <label for="char-archetype">Arquétipo
-                        <button type="button" onclick="toggleArchetypeInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
+                    <label for="char-archetype" data-translate="3det_arquetipo">Arquétipo
+                        <button type="button" onclick="toggleArchetypeInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;" data-translate="ajuda_arquetipo" aria-label="Ajuda sobre arquétipo">❓</button>
                     </label>
                     <div id="archetype-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
-                        <strong>💡 O que são Arquétipos?</strong>
+                        <strong data-translate="3det_dica_arquetipo">💡 O que são Arquétipos?</strong>
                         <p style="margin: 10px 0 0 0; line-height: 1.6;">Arquétipos funcionam como um ponto de partida para criar seu personagem. Eles ajudam quando você ainda não sabe exatamente quem ele é ou de onde veio.</p>
                         <p style="margin: 10px 0 0 0; line-height: 1.6;">Um arquétipo representa o tipo de ser que seu personagem é: pode ser um povo diferente dos humanos, uma etnia específica dentro de uma espécie, um ser artificial, fantástico, alienígena ou sobrenatural.</p>
                         <p style="margin: 10px 0 0 0; line-height: 1.6;">Você não é obrigado a escolher um arquétipo — porém, usar um ajuda bastante, pois já oferece uma base pronta, com pedaços de história, cultura e até partes da construção do personagem.</p>
                     </div>
                     <select id="char-archetype" name="char-archetype">
-                        <option value="">Selecione um arquétipo...</option>
+                        <option value="" data-translate="3det_selecione_arquetipo">Selecione um arquétipo...</option>
                     </select>
                 </div>
             </div>
 
             <div class="card card--teal">
-                <h2>💪 Atributos
+                <h2 data-translate="3det_atributos">💪 Atributos
                     <button type="button" onclick="toggleAttributesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="attributes-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
-                    <strong>💡 O que são Atributos?</strong>
+                    <strong data-translate="3det_dica_atributos">💡 O que são Atributos?</strong>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Os atributos são os traços fundamentais do personagem — a base de tudo o que ele consegue fazer. Eles vão de 0 a 5, e quanto maior o valor, melhor o desempenho.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Durante a criação do personagem, nenhum atributo pode passar de 5, mesmo que você tenha pontos sobrando. Porém, após ganhar experiência, é possível aumentar esse limite.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Algumas vantagens podem elevar um atributo temporariamente acima de 5, mas apenas enquanto o efeito durar — depois, o valor volta ao normal.</p>
                 </div>
                 <div class="attribute-row">
                     <div class="attribute-box">
-                        <label for="attr-poder">Poder</label>
+                        <label for="attr-poder" data-translate="3det_poder">Poder</label>
                         <input type="number" id="attr-poder" name="attr-poder" value="0" min="0" max="10">
-                        <div class="calculated-value">PA: <span id="calc-pa">0</span></div>
+                        <div class="calculated-value"><span data-translate="3det_pa">PA</span>: <span id="calc-pa">0</span></div>
                     </div>
                     <div class="attribute-box">
-                        <label for="attr-habilidade">Habilidade</label>
+                        <label for="attr-habilidade" data-translate="3det_habilidade">Habilidade</label>
                         <input type="number" id="attr-habilidade" name="attr-habilidade" value="0" min="0" max="10">
-                        <div class="calculated-value">PM: <span id="calc-pm">0</span></div>
+                        <div class="calculated-value"><span data-translate="3det_pm">PM</span>: <span id="calc-pm">0</span></div>
                     </div>
                     <div class="attribute-box">
-                        <label for="attr-resistencia">Resistência</label>
+                        <label for="attr-resistencia" data-translate="3det_resistencia">Resistência</label>
                         <input type="number" id="attr-resistencia" name="attr-resistencia" value="0" min="0" max="10">
-                        <div class="calculated-value">PV: <span id="calc-pv">0</span></div>
+                        <div class="calculated-value"><span data-translate="3det_pv">PV</span>: <span id="calc-pv">0</span></div>
                     </div>
                 </div>
             </div>
 
             <div class="btn-navigation">
-                <button type="button" class="btn-secondary" disabled>← Anterior</button>
-                <button type="button" onclick="goToPage(2)">Próxima →</button>
+                <button type="button" class="btn-secondary" disabled data-translate="voltar">← Anterior</button>
+                <button type="button" onclick="goToPage(2)" data-translate="proxima">Próxima →</button>
             </div>
         </div>
 
         <!-- Página 2: Perícias -->
         <div class="page" id="page-2">
             <div class="card">
-                <h2>🎯 Perícias
+                <h2 data-translate="3det_pericias">🎯 Perícias
                     <button type="button" onclick="toggleSkillsInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="skills-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
-                    <strong>💡 Dica:</strong> Se estiver com uma perícia selecionada e precisar rolar esse atributo, você pode rolar com mais um dado!
+                    <strong data-translate="dica">💡 Dica:</strong> <span data-translate="3det_dica_pericias">Se estiver com uma perícia selecionada e precisar rolar esse atributo, você pode rolar com mais um dado!</span>
                 </div>
-                <p>Selecione as perícias do seu personagem:</p>
+                <p data-translate="3det_selecione_pericias">Selecione as perícias do seu personagem:</p>
                 <div id="skills-container"></div>
             </div>
 
             <div class="btn-navigation">
-                <button type="button" onclick="goToPage(1)">← Anterior</button>
-                <button type="button" onclick="goToPage(3)">Próxima →</button>
+                <button type="button" onclick="goToPage(1)" data-translate="voltar">← Anterior</button>
+                <button type="button" onclick="goToPage(3)" data-translate="proxima">Próxima →</button>
             </div>
         </div>
 
         <!-- Página 3: Vantagens Ofensivas -->
         <div class="page" id="page-3">
             <div class="card">
-                <h2>⚔️ Vantagens Ofensivas
+                <h2 data-translate="3det_vantagens_ofensivas">⚔️ Vantagens Ofensivas
                     <button type="button" onclick="toggleAdvantagesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="advantages-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
-                    <strong>💡 O que são Vantagens?</strong>
+                    <strong data-translate="3det_dica_vantagens">💡 O que são Vantagens?</strong>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Além de atributos e perícias, você pode gastar seus pontos para comprar vantagens — poderes, técnicas especiais ou habilidades únicas do seu herói.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Cada vantagem dá um efeito mecânico específico no jogo, mas a origem do poder é totalmente livre:</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">• Seu <strong>Alcance</strong> pode vir de arco e flechas, lasers dos olhos, braços elásticos, ondas sonoras etc.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">• Ser <strong>Carismático</strong> pode vir de ser fofinho, inspirador, famoso ou manipulador.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">A mecânica é fixa, mas a explicação é 100% narrativa, definida por você.</p>
                 </div>
-                <p>Selecione as vantagens ofensivas do seu personagem:</p>
+                <p data-translate="3det_selecione_vantagens_ofensivas">Selecione as vantagens ofensivas do seu personagem:</p>
                 <div id="offensive-container"></div>
             </div>
 
             <div class="btn-navigation">
-                <button type="button" onclick="goToPage(2)">← Anterior</button>
-                <button type="button" onclick="goToPage(4)">Próxima →</button>
+                <button type="button" onclick="goToPage(2)" data-translate="voltar">← Anterior</button>
+                <button type="button" onclick="goToPage(4)" data-translate="proxima">Próxima →</button>
             </div>
         </div>
 
         <!-- Página 4: Vantagens Defensivas -->
         <div class="page" id="page-4">
             <div class="card card--teal">
-                <h2>🛡️ Vantagens Defensivas
+                <h2 data-translate="3det_vantagens_defensivas">🛡️ Vantagens Defensivas
                     <button type="button" onclick="toggleDefensiveAdvantagesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="defensive-advantages-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
-                    <strong>💡 O que são Vantagens?</strong>
+                    <strong data-translate="3det_dica_vantagens">💡 O que são Vantagens?</strong>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Além de atributos e perícias, você pode gastar seus pontos para comprar vantagens — poderes, técnicas especiais ou habilidades únicas do seu herói.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Cada vantagem dá um efeito mecânico específico no jogo, mas a origem do poder é totalmente livre:</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">• Seu <strong>Alcance</strong> pode vir de arco e flechas, lasers dos olhos, braços elásticos, ondas sonoras etc.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">• Ser <strong>Carismático</strong> pode vir de ser fofinho, inspirador, famoso ou manipulador.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">A mecânica é fixa, mas a explicação é 100% narrativa, definida por você.</p>
                 </div>
-                <p>Selecione as vantagens defensivas do seu personagem:</p>
+                <p data-translate="3det_selecione_vantagens_defensivas">Selecione as vantagens defensivas do seu personagem:</p>
                 <div id="defensive-container"></div>
             </div>
 
             <div class="btn-navigation">
-                <button type="button" onclick="goToPage(3)">← Anterior</button>
-                <button type="button" onclick="goToPage(5)">Próxima →</button>
+                <button type="button" onclick="goToPage(3)" data-translate="voltar">← Anterior</button>
+                <button type="button" onclick="goToPage(5)" data-translate="proxima">Próxima →</button>
             </div>
         </div>
 
         <!-- Página 5: Desvantagens -->
         <div class="page" id="page-5">
             <div class="card card--teal">
-                <h2>⚠️ Desvantagens
+                <h2 data-translate="3det_desvantagens">⚠️ Desvantagens
                     <button type="button" onclick="toggleDisadvantagesInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="disadvantages-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
-                    <strong>💡 O que são Desvantagens?</strong>
+                    <strong data-translate="3det_dica_desvantagens">💡 O que são Desvantagens?</strong>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Desvantagens são problemas, limitações ou obstáculos que o personagem carrega. Elas dificultam sua vida, mas também deixam seu herói mais humano, interessante e marcante — como nos filmes, games e HQs.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Elas não te deixam pior, apenas tornam seu personagem diferente e mais profundo.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Além disso, ao escolher desvantagens, você ganha pontos extras para gastar em atributos, vantagens e outras coisas importantes. Esse equilíbrio ajuda a criar um personagem forte e bem construído.</p>
                 </div>
-                <p>Selecione as desvantagens do seu personagem:</p>
+                <p data-translate="3det_selecione_desvantagens">Selecione as desvantagens do seu personagem:</p>
                 <div id="disadvantage-container"></div>
             </div>
 
             <div class="btn-navigation">
-                <button type="button" onclick="goToPage(4)">← Anterior</button>
-                <button type="button" onclick="goToPage(6)">Próxima →</button>
+                <button type="button" onclick="goToPage(4)" data-translate="voltar">← Anterior</button>
+                <button type="button" onclick="goToPage(6)" data-translate="proxima">Próxima →</button>
             </div>
         </div>
 
         <!-- Página 6: Truques -->
         <div class="page" id="page-6">
             <div class="card">
-                <h2>✨ Truques e Técnicas
+                <h2 data-translate="3det_truques">✨ Truques e Técnicas
                     <button type="button" onclick="toggleTricksInfo()" style="background: var(--teal); padding: 8px 12px; font-size: 0.9rem; border-radius: 50%; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; margin-left: 10px;">❓</button>
                 </h2>
                 <div id="tricks-info" style="display: none; background: var(--gray-light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal);">
-                    <strong>💡 O que são Truques e Técnicas?</strong>
+                    <strong data-translate="3det_dica_truques">💡 O que são Truques e Técnicas?</strong>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Um golpe lendário, um jutsu secreto, uma magia proibida… ou até um prato especial de um chef famoso — tudo isso representa técnicas únicas, raras e poderosas que seu personagem pode aprender.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Essas técnicas podem vir de diversas origens:</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">• Ensinadas por um mestre escondido em um monastério distante;</p>
@@ -198,31 +200,33 @@
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">• Ou até desenvolvidas por um chef famoso num reality show culinário.</p>
                     <p style="margin: 10px 0 0 0; line-height: 1.6;">Independente da forma, cada técnica lendária tem uma história, um estilo e um impacto poderoso, tornando o personagem mais marcante e único dentro do mundo.</p>
                 </div>
-                <p>Selecione os truques do seu personagem:</p>
+                <p data-translate="3det_selecione_truques">Selecione os truques do seu personagem:</p>
                 <div id="tricks-container"></div>
             </div>
 
             <div class="btn-navigation">
-                <button type="button" onclick="goToPage(5)">← Anterior</button>
-                <button type="button" onclick="goToPage(7)">Próxima →</button>
+                <button type="button" onclick="goToPage(5)" data-translate="voltar">← Anterior</button>
+                <button type="button" onclick="goToPage(7)" data-translate="proxima">Próxima →</button>
             </div>
         </div>
 
         <!-- Página 7: Resumo -->
         <div class="page" id="page-7">
             <div class="card card--gray">
-                <h2>📊 Resumo do Personagem</h2>
+                <h2 data-translate="3det_resumo">📊 Resumo do Personagem</h2>
                 <div id="summary-container"></div>
             </div>
 
             <div class="btn-navigation">
-                <button type="button" onclick="goToPage(6)">← Anterior</button>
-                <button type="submit" onclick="showToast('Ficha completa! 🎉')">Finalizar</button>
+                <button type="button" onclick="goToPage(6)" data-translate="voltar">← Anterior</button>
+                <button type="submit" onclick="showToast('Ficha completa! 🎉')" data-translate="finalizar">Finalizar</button>
             </div>
         </div>
     </main>
 </form>
     <button type="button" id="d20-roller">🎲</button>
+        <button type="button" id="d20-roller" data-translate="3det_rolar_dado" aria-label="Rolar D20">🎲</button>
     <div class="toast" id="toast"></div>
+    <div class="toast" id="toast" data-translate="3det_toast"></div>
 </body>
 </html>

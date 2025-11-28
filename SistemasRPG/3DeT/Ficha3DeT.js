@@ -88,6 +88,7 @@ function init() {
 		select.appendChild(option);
 	});
 
+
 	// Populate skills
 	const skillsContainer = document.getElementById('skills-container');
 	gameData.skills.forEach((skill, index) => {
@@ -96,12 +97,13 @@ function init() {
 		item.innerHTML = `
 			<input type="checkbox" id="skill-${index}" value="${skill.name}">
 			<div class="skill-content">
-				<div class="skill-name">${skill.name}</div>
-				<div class="skill-description">${skill.description}</div>
+				<div class="skill-name" data-translate="3det_skill_${index}">${skill.name}</div>
+				<div class="skill-description" data-translate="3det_skilldesc_${index}">${skill.description}</div>
 			</div>
 		`;
 		skillsContainer.appendChild(item);
 	});
+
 
 	// Populate offensive advantages
 	const offensiveContainer = document.getElementById('offensive-container');
@@ -111,12 +113,13 @@ function init() {
 		item.innerHTML = `
 			<input type="checkbox" id="off-${index}" value="${adv.name}">
 			<div class="advantage-content">
-				<div class="advantage-name">${adv.name}</div>
-				<div class="advantage-description">${adv.description}</div>
+				<div class="advantage-name" data-translate="3det_offadv_${index}">${adv.name}</div>
+				<div class="advantage-description" data-translate="3det_offadvdesc_${index}">${adv.description}</div>
 			</div>
 		`;
 		offensiveContainer.appendChild(item);
 	});
+
 
 	// Populate defensive advantages
 	const defensiveContainer = document.getElementById('defensive-container');
@@ -126,12 +129,13 @@ function init() {
 		item.innerHTML = `
 			<input type="checkbox" id="def-${index}" value="${adv.name}">
 			<div class="advantage-content">
-				<div class="advantage-name">${adv.name}</div>
-				<div class="advantage-description">${adv.description}</div>
+				<div class="advantage-name" data-translate="3det_defadv_${index}">${adv.name}</div>
+				<div class="advantage-description" data-translate="3det_defadvdesc_${index}">${adv.description}</div>
 			</div>
 		`;
 		defensiveContainer.appendChild(item);
 	});
+
 
 	// Populate disadvantages
 	const disadvantageContainer = document.getElementById('disadvantage-container');
@@ -141,12 +145,13 @@ function init() {
 		item.innerHTML = `
 			<input type="checkbox" id="dis-${index}" value="${dis.name}">
 			<div class="advantage-content">
-				<div class="advantage-name">${dis.name}</div>
-				<div class="advantage-description">${dis.description}</div>
+				<div class="advantage-name" data-translate="3det_disadv_${index}">${dis.name}</div>
+				<div class="advantage-description" data-translate="3det_disadvdesc_${index}">${dis.description}</div>
 			</div>
 		`;
 		disadvantageContainer.appendChild(item);
 	});
+
 
 	// Populate tricks
 	const tricksContainer = document.getElementById('tricks-container');
@@ -156,8 +161,8 @@ function init() {
 		item.innerHTML = `
 			<input type="checkbox" id="trick-${index}" value="${trick.name}">
 			<div class="advantage-content">
-				<div class="advantage-name">${trick.name}</div>
-				<div class="advantage-description">${trick.description}</div>
+				<div class="advantage-name" data-translate="3det_trick_${index}">${trick.name}</div>
+				<div class="advantage-description" data-translate="3det_trickdesc_${index}">${trick.description}</div>
 			</div>
 		`;
 		tricksContainer.appendChild(item);
@@ -315,22 +320,29 @@ function updateSummary() {
 function rollD20() {
 	const result = Math.floor(Math.random() * 20) + 1;
 	let message = `🎲 Resultado: ${result}`;
-    
+	let color = '#2196f3'; // blue for normal
 	if (result === 20) {
 		message += ' - CRÍTICO! 🎉';
+		color = '#43ea4a'; // green for critical
 	} else if (result === 1) {
 		message += ' - Falha Crítica! 💀';
+		color = '#ff2d2d'; // red for failure
 	}
-    
-	showToast(message);
+	showToast(message, color);
 }
 
-function showToast(message) {
+function showToast(message, color) {
 	const toast = document.getElementById('toast');
 	toast.textContent = message;
+	if (color) {
+		toast.style.background = color;
+	} else {
+		toast.style.background = '';
+	}
 	toast.classList.add('show');
 	setTimeout(() => {
 		toast.classList.remove('show');
+		toast.style.background = '';
 	}, 3000);
 }
 

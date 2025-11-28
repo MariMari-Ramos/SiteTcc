@@ -1,3 +1,26 @@
+/* ==================== BOTÕES DINÂMICOS DE TEMA GLOBAL ==================== */
+.global-btn-theme {
+    background: var(--peach-weak, #fff7f0);
+    color: var(--text-primary, #000);
+    border: 1px solid var(--border-color, #e0d4c8);
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.global-btn-theme:hover, .global-btn-theme:focus-visible {
+    background: var(--peach, #ffd9b3);
+    color: var(--text-primary, #000);
+    border-color: var(--highlight-bg, #ff8c42);
+}
+
+:root[data-theme="dark"] .global-btn-theme {
+    background: var(--card-bg, #1b263b);
+    color: var(--text-primary, #e0e1dd);
+    border: 1px solid var(--border-color, #415a77);
+}
+:root[data-theme="dark"] .global-btn-theme:hover, :root[data-theme="dark"] .global-btn-theme:focus-visible {
+    background: var(--highlight-bg, #778da9);
+    color: var(--text-primary, #e0e1dd);
+    border-color: var(--highlight-bg, #778da9);
+}
 :root[data-theme="light"] {
     --bg-primary: #ffffff;
     --bg-secondary: #f5f2f0;
@@ -304,8 +327,18 @@ body.auto-read *:hover {
 }
 
 /* ==================== ACESSIBILIDADE - TAMANHO DE FONTE ==================== */
+
 html {
     font-size: 16px;
+}
+
+/* ====== Herdar fonte global para todos os elementos ====== */
+body, body *:not(i):not(svg):not([class*="bi-"]) {
+    font-family: inherit !important;
+}
+
+body {
+    font-family: var(--global-font-family, OpenDyslexic, Arial, sans-serif) !important;
 }
 
 /* ==================== TRANSIÇÕES SUAVES ==================== */

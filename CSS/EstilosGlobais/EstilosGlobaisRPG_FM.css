@@ -1,0 +1,224 @@
+:root[data-theme="dark"] .form-label,
+:root[data-theme="dark"] .nm,
+:root[data-theme="dark"] .nb,
+:root[data-theme="dark"] .skill-header,
+:root[data-theme="dark"] .attribute-name,
+:root[data-theme="dark"] .attribute-value,
+:root[data-theme="dark"] .modal-close,
+:root[data-theme="dark"] .dice-result,
+:root[data-theme="dark"] .page-indicator,
+:root[data-theme="dark"] .help-btn,
+:root[data-theme="dark"] .section-header,
+:root[data-theme="dark"] .card-header,
+:root[data-theme="dark"] .dice-history,
+:root[data-theme="dark"] label,
+:root[data-theme="dark"] legend {
+	color: #ffb366 !important;
+}
+
+/* Placeholders */
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+	color: #b8c1d1 !important;
+	opacity: 1 !important;
+}
+
+/* Textos secundários e descritivos */
+:root[data-theme="dark"] .text-secondary,
+:root[data-theme="dark"] .description,
+:root[data-theme="dark"] .subtitle {
+	color: #a0aec0 !important;
+}
+:root[data-theme="dark"] .page,
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .modal-content,
+:root[data-theme="dark"] .skill-item,
+:root[data-theme="dark"] .skill-section,
+:root[data-theme="dark"] .container {
+	background: #20293a !important;
+	color: #e0e1dd !important;
+	border-color: #415a77 !important;
+	box-shadow: 0 4px 24px rgba(65,90,119,0.18);
+}
+:root[data-theme="dark"] #dice-modal,
+:root[data-theme="dark"] .dice-modal {
+	background: #1b263b !important;
+	color: #e0e1dd !important;
+	border: 2px solid #ff8c42 !important;
+	box-shadow: 0 8px 32px rgba(65,90,119,0.25);
+}
+
+:root[data-theme="dark"] #dice-modal .modal-content,
+:root[data-theme="dark"] .dice-modal .modal-content {
+	background: #222c3c !important;
+	color: #ff8c42 !important;
+	border-radius: 12px;
+	box-shadow: 0 4px 24px rgba(65,90,119,0.25);
+	padding: 24px 32px;
+}
+
+:root[data-theme="dark"] #dice-modal button,
+:root[data-theme="dark"] .dice-modal button {
+	background: #415a77 !important;
+	color: #fff !important;
+	border: 1.5px solid #ff8c42 !important;
+	box-shadow: 0 2px 8px rgba(65,90,119,0.12);
+}
+:root[data-theme="dark"] #dice-modal button:hover,
+:root[data-theme="dark"] .dice-modal button:hover {
+	background: #ff8c42 !important;
+	color: #1b263b !important;
+	border-color: #ff8c42 !important;
+}
+/* ====== Tema escuro: botões, tabelas, indicadores, tabs, dado ====== */
+:root[data-theme="dark"] button,
+:root[data-theme="dark"] .btn-add,
+:root[data-theme="dark"] .btn-cancel,
+:root[data-theme="dark"] .btn-confirm,
+:root[data-theme="dark"] .btn,
+:root[data-theme="dark"] input[type="button"],
+:root[data-theme="dark"] input[type="submit"] {
+	background: #415a77 !important;
+	color: #e0e1dd !important;
+	border: 1px solid #778da9 !important;
+	box-shadow: 0 2px 8px rgba(65,90,119,0.12);
+	transition: background 0.2s, color 0.2s, border 0.2s;
+}
+:root[data-theme="dark"] button:hover,
+:root[data-theme="dark"] .btn-add:hover,
+:root[data-theme="dark"] .btn-cancel:hover,
+:root[data-theme="dark"] .btn-confirm:hover,
+:root[data-theme="dark"] .btn:hover {
+	background: #778da9 !important;
+	color: #fff !important;
+	border-color: #ff8c42 !important;
+}
+
+:root[data-theme="dark"] table,
+:root[data-theme="dark"] th,
+:root[data-theme="dark"] td {
+	background: #1b263b !important;
+	color: #e0e1dd !important;
+	border-color: #415a77 !important;
+}
+
+:root[data-theme="dark"] .page-indicator {
+	background: transparent !important;
+}
+:root[data-theme="dark"] .page-dot {
+	background: #415a77 !important;
+	border: 1px solid #778da9 !important;
+}
+:root[data-theme="dark"] .page-dot.active {
+	background: #ff8c42 !important;
+	border-color: #ff8c42 !important;
+}
+
+:root[data-theme="dark"] .tabs .tab {
+	background: #1b263b !important;
+	color: #e0e1dd !important;
+	border: 1px solid #415a77 !important;
+}
+:root[data-theme="dark"] .tabs .tab.active {
+	background: #415a77 !important;
+	color: #ff8c42 !important;
+	border-color: #ff8c42 !important;
+}
+
+/* Modal do dado (dice modal) */
+:root[data-theme="dark"] #dice-modal,
+:root[data-theme="dark"] .dice-modal {
+	background: #1b263b !important;
+	color: #e0e1dd !important;
+	border: 1px solid #415a77 !important;
+	box-shadow: 0 8px 32px rgba(65,90,119,0.25);
+}
+:root[data-theme="dark"] #dice-modal button,
+:root[data-theme="dark"] .dice-modal button {
+	background: #415a77 !important;
+	color: #fff !important;
+	border: 1px solid #ff8c42 !important;
+}
+:root[data-theme="dark"] #dice-modal button:hover,
+:root[data-theme="dark"] .dice-modal button:hover {
+	background: #ff8c42 !important;
+	color: #1b263b !important;
+}
+/* ====== Herdar fonte global para todos os elementos ====== */
+body, body *:not(i):not(svg):not([class*="bi-"]) {
+	font-family: inherit !important;
+}
+body {
+	font-family: var(--global-font-family, OpenDyslexic, Arial, sans-serif) !important;
+}
+
+/* ====== Tema escuro para cards, inputs, headers ====== */
+:root[data-theme="dark"] body {
+	background-color: var(--bg-primary, #0d1b2a);
+	color: var(--text-primary, #e0e1dd);
+}
+
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .attribute-grid,
+:root[data-theme="dark"] .section-header {
+	background-color: var(--card-bg, #1b263b) !important;
+	color: var(--text-primary, #e0e1dd) !important;
+	border-color: var(--border-color, #415a77) !important;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+	background-color: #192133 !important;
+	color: #e0e1dd !important;
+	border: 1px solid #415a77 !important;
+}
+
+:root[data-theme="dark"] .section-header {
+	background: linear-gradient(90deg, #1b263b 60%, #415a77 100%) !important;
+	color: #ff8c42 !important;
+	border-left: 6px solid #ff8c42 !important;
+}
+
+:root[data-theme="dark"] .section-header.section-border-teal {
+	border-left: 6px solid #2dd4bf !important;
+}
+:root[data-theme="dark"] .section-header.section-border-purple {
+	border-left: 6px solid #a78bfa !important;
+}
+:root[data-theme="dark"] .section-header.section-border-indigo {
+	border-left: 6px solid #6366f1 !important;
+}
+
+:root[data-theme="dark"] .navigation button,
+:root[data-theme="dark"] .navigation input[type="button"] {
+	background: #415a77 !important;
+	color: #e0e1dd !important;
+	border: 1px solid #778da9 !important;
+}
+
+:root[data-theme="dark"] .modal {
+	background: #1b263b !important;
+	color: #e0e1dd !important;
+	border: 1px solid #415a77 !important;
+}
+
+/* ====== Acessibilidade: alto contraste ====== */
+body.high-contrast {
+	--bg-primary: #000000;
+	--bg-secondary: #ffffff;
+	--text-primary: #ffffff;
+	--text-secondary: #ffffff;
+	--border-color: #ffffff;
+}
+body.high-contrast * {
+	border-color: var(--border-color, #ffffff) !important;
+	color: var(--text-primary, #ffffff) !important;
+}
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea {
+	background: #000 !important;
+	color: #fff !important;
+	border: 1px solid #fff !important;
+}

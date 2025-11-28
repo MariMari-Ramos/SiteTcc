@@ -41,9 +41,13 @@ $invocations = $dados['invocations'] ?? [];
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+        <!-- JS Global de configurações -->
+        <script src="../../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ficha F&M - Feiticeiros e Maldições</title>
+    <link rel="stylesheet" href="../../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
+    <link rel="stylesheet" href="../../../CSS/EstilosGlobais/EstilosGlobaisRPG_FM.css">
     <link rel="stylesheet" href="EdicaoFicha_F&M.css">
 </head>
 <!-- Adicione este modal ao final do seu HTML antes do </body> -->
@@ -55,12 +59,18 @@ $invocations = $dados['invocations'] ?? [];
   </div>
 </div>
 <body>
+    <script>
+    // Aplica tema, fonte, contraste, etc. conforme configuração global do usuário
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.updateGlobalSettings) window.updateGlobalSettings();
+    });
+    </script>
     <!-- Header Principal com Navegação -->
     <header class="header page-theme-teal">
         <div class="header-content">
             <div class="header-left">
-                <h1 class="title">⚡ Feiticeiros & Maldições</h1>
-                <span class="subtitle">Sistema de RPG v2.0</span>
+                <h1 class="title" data-translate="fm_titulo">⚡ Feiticeiros & Maldições</h1>
+                <span class="subtitle" data-translate="fm_subtitulo">Sistema de RPG v2.0</span>
             </div>
 
             <div class="page-indicator">
