@@ -1,3 +1,114 @@
+/* ==================== DARK MODE: MODAL CONFIRMAÇÃO EXCLUSÃO FICHA ==================== */
+:root[data-theme="dark"] .modal-confirm-delete-ficha {
+  background: rgba(10, 12, 20, 0.75);
+}
+:root[data-theme="dark"] .modal-confirm-content {
+  background: #23263a;
+  color: #f3f3f3;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.32);
+}
+:root[data-theme="dark"] .modal-confirm-title {
+  color: #ff6b35;
+}
+:root[data-theme="dark"] .modal-confirm-message {
+  color: #e0e0e0;
+}
+:root[data-theme="dark"] .btn-cancel-delete {
+  background: #2d3147;
+  color: #eee;
+}
+:root[data-theme="dark"] .btn-cancel-delete:hover {
+  background: #23263a;
+}
+:root[data-theme="dark"] .btn-confirm-delete {
+  background: linear-gradient(90deg,#ff6b35,#d7263d);
+  color: #fff;
+}
+:root[data-theme="dark"] .btn-confirm-delete:hover {
+  background: linear-gradient(90deg,#ff6b35,#b71c2a);
+}
+/* ==================== MODAL CONFIRMAÇÃO EXCLUSÃO FICHA ==================== */
+.modal-confirm-delete-ficha {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(30, 34, 45, 0.55);
+  align-items: center;
+  justify-content: center;
+  transition: opacity .3s;
+}
+.modal-confirm-delete-ficha.active {
+  display: flex;
+  animation: fadeIn .3s;
+}
+.modal-confirm-content {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 36px 32px 28px 32px;
+  min-width: 320px;
+  max-width: 90vw;
+  text-align: center;
+  position: relative;
+  animation: slideInUp .4s;
+}
+.modal-confirm-icon {
+  font-size: 2.8em;
+  margin-bottom: 10px;
+}
+.modal-confirm-title {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: #d7263d;
+  margin-bottom: 8px;
+}
+.modal-confirm-message {
+  color: #333;
+  font-size: 1.05em;
+  margin-bottom: 22px;
+}
+.modal-confirm-actions {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+}
+.btn-cancel-delete {
+  background: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.btn-cancel-delete:hover {
+  background: #e0e0e0;
+}
+.btn-confirm-delete {
+  background: linear-gradient(90deg,#d7263d,#ff6b35);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(215,38,61,0.08);
+  transition: background .2s;
+}
+.btn-confirm-delete:hover {
+  background: linear-gradient(90deg,#b71c2a,#ff6b35);
+}
+/* Expande o grupo D&D 5e para ocupar toda a largura da lista de fichas */
+.fichas-group[data-system*="d&d"] {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
 /* ==================== FONT FACE ==================== */
 @font-face {
   font-family: 'OpenDyslexic';
@@ -208,23 +319,21 @@ label[for="MinhasFichasRandomicas"] .highlight-word {
 
 /* ==================== "MINHAS FICHAS" BOX ==================== */
 .CaixaMinhasFichas {
-  width:100%; max-width:1200px; min-width:220px; min-height:150px;
-  padding:20px; border-radius:15px; background: var(--card-bg, #fff); box-shadow: var(--shadow);
-  margin:0 auto 40px; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; position:relative; z-index:2;
+  width:100%; max-width:1200px; min-width:220px; min-height:220px; height:320px;
+   padding:20px; border-radius:15px; background: var(--card-bg, #fff); box-shadow: var(--shadow);
+   margin:0 auto 40px; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; position:relative; z-index:2;
 }
 
 /* ====== Minhas Fichas (lista e chips) ====== */
 .fichas-list {
-  display: flex;
-  flex-direction: row;
-  /* manter grupos em linha e permitir overflow horizontal quando necessário */
-  flex-wrap: nowrap;
-  gap: 12px;
-  width: 100%;
-  align-items: flex-start;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 6px; /* espaço para a scrollbar visualizar melhor */
+   display: flex;
+   flex-direction: column;
+   gap: 18px;
+   overflow-x: auto;
+   overflow-y: auto;
+   flex: 1 1 auto;
+   max-height: none;
+   min-height: 80px;
 }
 
 .fichas-group {

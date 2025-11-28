@@ -12,9 +12,10 @@
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
     <!-- Botão Voltar - Canto Superior Esquerdo -->
-    <button class="back-btn" id="backBtn" title="Voltar" data-no-wave>
-        <i class="bi bi-arrow-left"></i>
-    </button>
+        <button class="back-btn" id="backBtn" title="Voltar" data-no-wave>
+            <i class="bi bi-arrow-left"></i>
+            <span class="back-btn-text">Voltar ao início</span>
+        </button>
 
     <!-- Botão de Configurações - Canto Superior Direito -->
     <button class="settings-btn" id="settingsBtn" title="Configurações" data-no-wave>
@@ -101,7 +102,7 @@
                <form id="formLogin" method="POST" action="login.php" onsubmit="event.preventDefault()">
 
                     <label for="Subtitulo">Nome do Perfil ou E-mail:</label>
-                    <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou E-mail" required>
+                    <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou Email" required>
 
                     <label for="Subtitulo">Senha:</label>
                     <div class="password-container">
@@ -126,11 +127,12 @@
                         </h5>
                     </span>
 
+                    <!-- Modal de Alerta -->
                     <div class="overlay" id="overlay">
                         <div class="modal">
-                            <h2>Alerta:</h2>
+                            <h2>Alerta</h2>
                             <p></p>
-                            <button id="fecharModal">X</button>
+                            <button id="fecharModal">Fechar</button>
                         </div>
                     </div>
                 </form>

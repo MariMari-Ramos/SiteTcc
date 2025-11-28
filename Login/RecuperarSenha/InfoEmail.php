@@ -43,7 +43,8 @@ $badgeTexto = $statusEnvio ? 'Solicitação registrada' : 'Processamento conclu�
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redefinição de Senha - Confirmação</title>
+    <title>Redefinição de Senha - Confirmação</title>        
+    <script src="../../JavaScript/Login/RecuperarSenha/InfoEmail.js" defer></script>
     <link rel="stylesheet" href="../../CSS/Login/RecuperarSenha/InfoEmail.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script>
@@ -161,6 +162,5 @@ $badgeTexto = $statusEnvio ? 'Solicitação registrada' : 'Processamento conclu�
             <p style="color:#d9534f; font-size:.75rem; text-align:center; margin-top:8px;">Aviso interno: falha ao tentar enviar e-mail. Tente novamente mais tarde.</p>
         <?php endif; ?>
     </div>
-        <script src="../../JavaScript/Login/RecuperarSenha/InfoEmail.js" defer></script>
 </body>
 </html>

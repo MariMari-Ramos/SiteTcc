@@ -11,10 +11,11 @@ if (!isset($_SESSION['usuario_id'])) {
 $usuario_id = $_SESSION['usuario_id'];
 
 // Buscar dados do perfil do usuário
+
 $stmt = $conn->prepare("SELECT p.nome_perfil, p.foto_perfil, p.tipo_foto, p.avatar_selecionado, u.email 
-                        FROM perfis p 
-                        INNER JOIN usuarios u ON p.usuario_id = u.id 
-                        WHERE p.usuario_id = ?");
+                        FROM usuarios u 
+                        LEFT JOIN perfis p ON p.usuario_id = u.id 
+                        WHERE u.id = ?");
 $stmt->bind_param("i", $usuario_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -33,9 +34,12 @@ if (!empty($foto_perfil) && strpos($foto_perfil, '/uploads/') === 0) {
     $avatar_atual = $perfil['avatar_selecionado'];
     $email = $perfil['email'];
 } else {
-    // Se não tem perfil, redireciona para criar
-    header('Location: ../../Cadastro_E_Perfil/CPerfilhtml.php');
-    exit;
+    // Não deveria acontecer, mas fallback
+    $nome_perfil = '';
+    $foto_perfil = '';
+    $tipo_foto = '';
+    $avatar_atual = '';
+    $email = '';
 }
 
 $stmt->close();
@@ -55,7 +59,7 @@ $stmt->close();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script src="../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js" defer></script>
     <script src="../../JavaScript/PerfilDoUsuario/PerfilDoUsuario.js" defer></script>
-    <title>Editar Perfil - SystemForge</title>
+    <title>Ações e configurações de  Perfil - SystemForge</title>
 </head>
 <body>
 
@@ -124,7 +128,7 @@ $stmt->close();
     </div>
 
     <div class="perfil-column">
-        <h2 class="page-title">Perfil do Usuário</h2>
+        <h2 class="page-title">Ações e configurações do Usuário</h2>
 
         <section class="CaixaEditarPerfil">
         <form id="formPerfil" method="POST" action="AtualizarPerfil.php" enctype="multipart/form-data">

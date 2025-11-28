@@ -17,23 +17,23 @@ $avatar_selecionado = $_POST['avatarSelecionado'] ?? null;
 $remover_foto = $_POST['removerFoto'] ?? '0';
 $foto_perfil = null;
 
-// Validar nome do perfil
-if(empty($nome_perfil)){
-    echo json_encode(['success' => false, 'message' => 'Nome do perfil é obrigatório']);
-    exit();
-}
 
-// Buscar foto atual
+// Nome do perfil não é mais obrigatório
+
+
+// Buscar foto atual e verificar se perfil existe
 $stmt = $conn->prepare("SELECT foto_perfil, tipo_foto FROM perfis WHERE usuario_id = ?");
 $stmt->bind_param("i", $usuario_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $perfil_atual = $result->fetch_assoc();
 $foto_atual = $perfil_atual['foto_perfil'] ?? null;
+$perfil_existe = $perfil_atual ? true : false;
 $stmt->close();
 
 // Remover foto
 if($remover_foto === '1'){
+    // Se for upload, remover do Azure Blob Storage (opcional: não implementado aqui)
     $foto_perfil = null;
     $tipo_foto = null;
     $avatar_selecionado = null;
@@ -87,14 +87,13 @@ $stmt->bind_param("ssssi", $nome_perfil, $foto_perfil, $tipo_foto, $avatar_selec
 
 if($stmt->execute()){
     echo json_encode([
-        'success' => true,
+        'success' => true, 
         'message' => 'Perfil atualizado com sucesso!',
         'foto_perfil' => $foto_perfil
     ]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Erro ao atualizar perfil: ' . $conn->error]);
+    echo json_encode(['success' => false, 'message' => 'Erro ao salvar perfil: ' . $conn->error]);
 }
 
-$stmt->close();
 $conn->close();
 ?>

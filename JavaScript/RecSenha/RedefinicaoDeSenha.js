@@ -23,7 +23,7 @@
     function validar(){
         const v1 = nova.value.trim();
         const v2 = confirma.value.trim();
-        if(v1.length<8) return 'A senha deve ter pelo menos 8 caracteres.';
+        if(v1.length<6) return 'A senha deve ter pelo menos 6 caracteres.';
         if(v1!==v2) return 'As senhas não coincidem.';
         return null;
     }
