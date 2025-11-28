@@ -798,8 +798,21 @@ document.addEventListener('DOMContentLoaded', renderAbilities);
 
     document.addEventListener('DOMContentLoaded', () => {
     carregarHabilidades(fichaAbilities, 'abilities-list');
-    carregarTalentos(dados.perfil_amaldicoado.talentos, 'talents-list');
-    carregarTreinamentos(dados.perfil_amaldicoado.treinamentos, 'trainings-list');
+    const talentos = 
+      dados.perfil_amaldiçoado?.talentos 
+   || dados.talentos_json 
+   || [];
+
+carregarTalentos(talentos, 'talents-list');
+;
+
+const treinamentos = 
+      dados.perfil_amaldiçoado?.treinamentos 
+   || dados.treinamentos_json 
+   || [];
+
+carregarTalentos(talentos, 'talents-list');
+
     carregarInvocations(dados.invocations, 'invocations-list');
     desabilitarEdicao();  // começa em modo visualização
 });
@@ -881,16 +894,15 @@ function habilitarEdicao() {
     fd.append("habilidades_json", JSON.stringify(carregarHabilidadesParaSalvar()));
     fd.append("talentos_json", JSON.stringify(carregarTalentosParaSalvar()));
     fd.append("treinamentos_json", JSON.stringify(carregarTreinamentosParaSalvar()));
-    fd.append("tecnica_json", JSON.stringify(abilitiesByLevel));
+    fd.append("tecnica_json", JSON.stringify(carregarTecnicaAmaldicoadaParaSalvar()));
     fd.append("invocations_json", JSON.stringify(carregarInvocationsParaSalvar()));
 
     // ==== Envia ====
     fetch("phpFichaF&M.php", { method: "POST", body: fd })
         .then(r => r.text())
         .then(resp => {
-            if (resp === "OK") {
+            if (resp.trim() === "OK") {
                 alert("Ficha salva!");
-                location.reload();
             } else {
                 alert("Erro: " + resp);
             }
@@ -934,6 +946,30 @@ function carregarTreinamentosParaSalvar() {
         descricao: card.querySelector('textarea')?.value || ""
     }));
 }
+
+function carregarTecnicaAmaldicoadaParaSalvar() {
+    // Nome e descrição
+    const nome = document.getElementById("technique-name")?.value || "";
+    const descricao = document.getElementById("technique-description")?.value || "";
+
+    // abilitiesByLevel já é global no seu script
+    // Mas para segurança vamos garantir a estrutura correta:
+    const habilidadesPorNivel = {
+        0: abilitiesByLevel[0] ?? [],
+        1: abilitiesByLevel[1] ?? [],
+        2: abilitiesByLevel[2] ?? [],
+        3: abilitiesByLevel[3] ?? [],
+        4: abilitiesByLevel[4] ?? [],
+        5: abilitiesByLevel[5] ?? []
+    };
+
+    return {
+        nome: nome,
+        descricao: descricao,
+        habilidades: habilidadesPorNivel
+    };
+}
+
 
 function carregarInvocationsParaSalvar() {
     const cards = document.querySelectorAll('#invocations-list .invocation-card');
@@ -1144,7 +1180,7 @@ function carregarInvocations(listaInvocations) {
         card.innerHTML = `
             <div class="card-header">
                 <input type="text" placeholder="Nome da Invocação" class="form-control invocation-name" value="${inv.name || ''}">
-                <button class="btn-remove" onclick="this.parentElement.parentElement.remove(); saveCharacter();">×</button>
+                <button class="btn-remove" onclick="onclick="this.parentElement.parentElement.remove(); salvarEdicao();">x</button>
             </div>
 
             <div class="form-row">

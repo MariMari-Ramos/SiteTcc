@@ -22,10 +22,16 @@ $result = $stmt->get_result();
 
 if($result->num_rows > 0) {
     $perfil = $result->fetch_assoc();
-    $nome_perfil = $perfil['nome_perfil'] ?? '';
-    $foto_perfil = $perfil['foto_perfil'] ?? '';
-    $tipo_foto = $perfil['tipo_foto'] ?? '';
-    $avatar_atual = $perfil['avatar_selecionado'] ?? '';
+    $nome_perfil = $perfil['nome_perfil'];
+    $foto_perfil = $perfil['foto_perfil'];
+
+if (!empty($foto_perfil) && strpos($foto_perfil, '/uploads/') === 0) {
+    // Corrige caminho local
+    $foto_perfil = '/SiteTcc' . $foto_perfil;
+}
+
+    $tipo_foto = $perfil['tipo_foto'];
+    $avatar_atual = $perfil['avatar_selecionado'];
     $email = $perfil['email'];
 } else {
     // Não deveria acontecer, mas fallback
@@ -39,6 +45,8 @@ if($result->num_rows > 0) {
 $stmt->close();
 
 // Não há mais verificação de arquivo local, pois imagens são servidas via Azure Blob Storage ou avatares locais.
+
+
 ?>
 
 <!DOCTYPE html>
@@ -123,7 +131,9 @@ $stmt->close();
         <h2 class="page-title" data-translate="perfil_acoes_conta">Ações e configurações do Usuário</h2>
 
         <section class="CaixaEditarPerfil">
-        <form id="formPerfil" enctype="multipart/form-data">
+        <form id="formPerfil" method="POST" action="AtualizarPerfil.php" enctype="multipart/form-data">
+
+
             <input type="hidden" id="avatarSelecionado" name="avatarSelecionado" value="<?php echo htmlspecialchars($avatar_atual ?? ''); ?>">
             <input type="hidden" id="tipoFoto" name="tipoFoto" value="<?php echo htmlspecialchars($tipo_foto ?? ''); ?>">
             <input type="hidden" id="removerFoto" name="removerFoto" value="0">

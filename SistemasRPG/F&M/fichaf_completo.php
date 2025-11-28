@@ -727,21 +727,25 @@ document.addEventListener('DOMContentLoaded', renderAbilities);
         const colunaIndex = idx < pericias.length ? 1 : 2;
         const arrayIdx = colunaIndex === 1 ? idx : idx - pericias.length;
 
-        const profId = `prof_${colunaIndex}_${arrayIdx}`;
+        const profId  = `prof_${colunaIndex}_${arrayIdx}`;
         const especId = `espec_${colunaIndex}_${arrayIdx}`;
+        const totalId = `total_${colunaIndex}_${arrayIdx}`;
 
         const profChecked  = document.getElementById(profId)?.checked ?? false;
         const especChecked = document.getElementById(especId)?.checked ?? false;
 
+        const totalValue = parseInt(document.getElementById(totalId)?.value ?? 0);
+
         resultado[p.nome] = {
             proficient: profChecked,
-            specialized: especChecked
+            specialized: especChecked,
+            total: totalValue
         };
     });
 
-    
     return resultado;
 }
+
 document.getElementById("character-form").addEventListener("submit", (ev) => {
     const form = ev.target;
 
@@ -760,10 +764,12 @@ document.getElementById("character-form").addEventListener("submit", (ev) => {
     })
     .then(r => r.json())
     .then(json => alert(json.message));
+    window.location.href = "../../A_TelaPrincipal/index.php";
 });
 
 document.getElementById("character-form").addEventListener("submit", () => {
     const pericias = montarPericiasJSON();
+    fd.append("pericias_json", JSON.stringify(montarPericiasJSON()));
     document.getElementById("pericias-json").value = JSON.stringify(pericias);
 });
 

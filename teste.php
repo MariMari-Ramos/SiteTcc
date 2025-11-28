@@ -1,11 +1,4 @@
 <?php
-setcookie("cookieteste","content", [
-    'expires' => time() + 60,
-    'path' => '/SiteTcc/teste.php',
-    'domain' => '', // Adapte conforme necessário
-    'secure' => false, // true se estiver usando HTTPS
-    'httponly' => true,
-    'samesite' => 'Lax' // Pode ser 'Lax', 'Strict', ou 'None'
-]);
+$teste = @file_put_contents("test.txt", "oi");
+var_dump($teste);
 ?>
-

@@ -196,24 +196,26 @@ function updatePageDisplay() {
     });
 }
 
+
+
+
 // ===== SISTEMA DE PERSISTÊNCIA (localStorage) =====
 function saveCharacter() {
     const characterData = {};
 
-    // Gera o JSON de habilidades
-    const abilitiesJson = getAbilitiesJson();
+    // usa a função existente que retorna um array
+    const abilitiesArray = carregarHabilidadesParaSalvar(); // retorna array
+    const abilitiesJson = JSON.stringify(abilitiesArray);
 
-    // 🔥 Adicionar técnica amaldiçoada
-    document.getElementById("tecnica-amaldicada-json").value = getTechniquesJson();
+    // Técnica amaldicoada
+    const tecnicaObj = carregarTecnicaAmaldicoadaParaSalvar ? carregarTecnicaAmaldicoadaParaSalvar() : { nome: "", descricao: "", habilidades: {} };
+    document.getElementById("tecnica-amaldicada-json").value = JSON.stringify(tecnicaObj);
 
-
-    // Salva no input hidden
-    document.getElementById("habilidades-json").value = getAbilitiesJson();
-    document.getElementById("talentos-json").value = getTalentsJson();
-    document.getElementById("treinamentos-json").value = getTrainingsJson();
-    document.getElementById('invocations-json').value =
-    JSON.stringify(getInvocations());
-
+    // Salva no input hidden (strings)
+    document.getElementById("habilidades-json").value = abilitiesJson;
+    document.getElementById("talentos-json").value = JSON.stringify(carregarTalentosParaSalvar());
+    document.getElementById("treinamentos-json").value = JSON.stringify(carregarTreinamentosParaSalvar());
+    document.getElementById('invocations-json').value = JSON.stringify(carregarInvocationsParaSalvar());
 
     // Salvar todos os inputs, selects e textareas
     document.querySelectorAll('input, select, textarea').forEach(el => {
@@ -225,16 +227,18 @@ function saveCharacter() {
             }
         }
     });
-    // Salvar histórico do dado
-    characterData['diceHistory'] = diceHistory;
+
+    characterData['diceHistory'] = window.diceHistory || [];
+
     try {
         localStorage.setItem('fichaPersonagemFM', JSON.stringify(characterData));
         console.log('Ficha salva:', Object.keys(characterData).length, 'campos');
     } catch (e) {
         console.error('Erro ao salvar:', e);
-        showNotification('Erro ao salvar ficha!');
+        showNotification && showNotification('Erro ao salvar ficha!');
     }
 }
+
 
 function loadCharacter() {
     try {
@@ -621,6 +625,9 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   }
 });
+
+
+
 
 
 console.log('🎲 Sistema Feiticeiros & Maldições v2.0 carregado!');

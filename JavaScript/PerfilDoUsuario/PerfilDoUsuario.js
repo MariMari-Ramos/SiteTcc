@@ -1,5 +1,12 @@
+console.log("JS DO PERFIL CARREGADO!");
 
 /* ==================== FORMULÁRIO DE EDITAR PERFIL ==================== */
+
+document.getElementById("formPerfil").addEventListener("submit", () => {
+    console.log("FORM SUBMIT DISPAROU!");
+});
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const formPerfil = document.getElementById('formPerfil');
@@ -42,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let baseColorPalette = window.baseColorPalette || { dark: {}, light: {} };
     let currentPalette = window.currentPalette || baseColorPalette.light;
 
+    
+
     function mostrarAlerta(mensagem, callback = null, mostrarCancelar = false) {
         alertMessage.textContent = mensagem;
         alertOverlay.style.display = 'flex';
@@ -60,6 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if(callback) callback();
         };
     }
+
+    
 
     // Preview é somente visual — interações por botões abaixo
     if(fotoPreviewContainer) {
@@ -136,6 +147,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('tipoFoto').value = 'upload';
                     document.getElementById('avatarSelecionado').value = '';
                     document.getElementById('removerFoto').value = '0';
+
+                    if (btnUploadPhoto && profilePhoto) {
+        btnUploadPhoto.addEventListener("click", () => {
+            console.log("Botão Upload clicado!");
+            profilePhoto.click();
+        });
+
+        profilePhoto.addEventListener("change", () => {
+            console.log("Foto selecionada:", profilePhoto.files);
+            const file = profilePhoto.files[0];
+            if (file) {
+                const preview = document.getElementById("previewFoto");
+
+                if (preview) {
+                    preview.src = URL.createObjectURL(file);
+                }
+
+                // diz ao PHP que a foto é upload
+                tipoFoto.value = "upload";
+            }
+        });
+    }
                 };
                 reader.readAsDataURL(file);
             }
@@ -205,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Submit do formulário
     if(formPerfil) {
         formPerfil.addEventListener('submit', async (e) => {
-            e.preventDefault();
+            
 
             const formData = new FormData(formPerfil);
 
