@@ -183,7 +183,7 @@ $stmt->close();
                         <div class="action-row">
                             <div class="action-label" data-translate="perfil_alterar_senha">Alterar senha:</div>
                             <div class="action-controls">
-                                <button type="button" class="action-button btn-secondary" onclick="window.location.href='../../Login/RecuperarSenha/RedefinirSenha/RedefinicaoDeSenha.html'" data-translate="perfil_btn_alterar_senha">Alterar Senha</button>
+                                <button type="button" class="action-button btn-secondary" onclick="window.location.href='../../Login/RecuperarSenha/InfoEmail.html'" data-translate="perfil_btn_alterar_senha">Alterar Senha</button>
                             </div>
                         </div>
 
@@ -202,7 +202,7 @@ $stmt->close();
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- 6. Botões SALVAR / VOLTAR -->
                 <div class="Coluna">
                     <div class="button-container" style="display:flex; gap:12px; margin-top:18px;">
@@ -214,6 +214,17 @@ $stmt->close();
         </form>
         </section>
     </div>
+    <script>
+document.getElementById('btnSair').addEventListener('click', function() {
+    // Redireciona para o PHP que encerra a sessão
+    window.location.href = 'Logout.php';
+});
 
+document.getElementById('btnExcluirConta').addEventListener('click', function() {
+    if (confirm("Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.")) {
+        window.location.href = 'ExcluirConta.php';
+    }
+});
+</script>
 </body>
 </html>

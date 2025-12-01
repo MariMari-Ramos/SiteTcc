@@ -1,1 +1,6 @@
 [2025-11-27 22:11:13] uploadToAzureBlob não existe — pulando envio para Azure
+[2025-11-28 14:26:32] CATCH: session_start(): Ignoring session_start() because a session is already active in C:\Users\Matheus\Desktop\USBWebserver v10\root\SiteTcc\Cadastro_E_Perfil\CriarPerfil.php:40
+[2025-11-28 14:28:48] uploadToAzureBlob não existe — pulando envio para Azure
+[2025-11-28 14:42:12] uploadToAzureBlob não existe — pulando envio para Azure
+[2025-11-28 14:44:47] uploadToAzureBlob não existe — pulando envio para Azure
+[2025-11-28 15:11:17] uploadToAzureBlob não existe — pulando envio para Azure
