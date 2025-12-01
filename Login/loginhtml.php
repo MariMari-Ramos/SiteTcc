@@ -102,11 +102,11 @@
                <form id="formLogin" method="POST" action="login.php" onsubmit="event.preventDefault()">
 
                     <label for="Subtitulo">Nome do Perfil ou E-mail:</label>
-                    <input type="email" id="email" name="email" placeholder="Digite seu Perfil ou Email" required>
+                    <input type="text" id="email" name="email" placeholder="Digite seu Perfil ou Email">
 
                     <label for="Subtitulo">Senha:</label>
                     <div class="password-container">
-                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha">
                         <i class="bi bi-eye-fill" id="BtnVerSenha" title="Mostrar/ocultar senha"></i>
                     </div>
 
@@ -130,7 +130,7 @@
                     <!-- Modal de Alerta -->
                     <div class="overlay" id="overlay">
                         <div class="modal">
-                            <h2>Alerta</h2>
+                            <h2>Aviso</h2>
                             <p></p>
                             <button id="fecharModal">Fechar</button>
                         </div>

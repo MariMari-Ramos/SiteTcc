@@ -1,10 +1,11 @@
 
 @font-face {
   font-family: 'OpenDyslexic';
-  src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Bold-Italic.woff2') format('woff2'),
-       url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Bold-Italic.woff') format('woff');
-  font-weight: 700;
-  font-style: italic;
+  src: url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+       url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+       url('../../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -339,8 +340,71 @@ body.larger-text .acao-btns button {
 
 body.large-text .badge-status,
 body.larger-text .badge-status {
-  font-size: .95rem;
-  padding: 8px 18px;
+  font-size: 1.2rem;
+  padding: 10px 24px;
+}
+
+body.large-text .badge-status i,
+body.larger-text .badge-status i {
+  font-size: 1.3rem;
+}
+
+body.large-text .aviso-extra,
+body.larger-text .aviso-extra {
+  font-size: 0.9rem;
+}
+
+body.large-text .header-icon,
+body.larger-text .header-icon {
+  width: 90px;
+  height: 90px;
+  font-size: 42px;
+}
+
+body.large-text .back-btn,
+body.larger-text .back-btn {
+  font-size: 1.2rem;
+  min-width: 280px;
+  height: 64px;
+}
+
+body.large-text .back-btn i,
+body.larger-text .back-btn i {
+  font-size: 2rem;
+}
+
+body.large-text .settings-btn,
+body.larger-text .settings-btn {
+  width: 56px;
+  height: 56px;
+}
+
+body.large-text .settings-btn i,
+body.larger-text .settings-btn i {
+  font-size: 1.8rem;
+}
+
+/* Modal de configurações - igual ao login */
+body.large-text .settings-content h2,
+body.larger-text .settings-content h2 {
+  font-size: 1.5rem;
+}
+
+body.large-text .settings-group > label,
+body.larger-text .settings-group > label {
+  font-size: 1.1rem;
+}
+
+body.large-text .settings-option span,
+body.larger-text .settings-option span,
+body.large-text .settings-option label,
+body.larger-text .settings-option label {
+  font-size: 1rem;
+}
+
+body.large-text .close-settings,
+body.larger-text .close-settings {
+  font-size: 1.8rem;
 }
 
 @media (max-width: 480px) {
@@ -385,8 +449,8 @@ body.larger-text .badge-status {
   top: 20px;
   right: 20px;
   background: color-mix(in srgb, var(--accent) 90%, transparent);
-  border: 2px solid color-mix(in srgb, var(--accent-glow, var(--accent)) 80%, transparent);
-  color: #fff;
+  border: 2px solid color-mix(in srgb, var(--accent-2) 80%, transparent);
+  color: white;
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -396,13 +460,35 @@ body.larger-text .badge-status {
   justify-content: center;
   font-size: 24px;
   padding: 0;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 40%, transparent);
   z-index: 999;
+  filter: none !important;
+  animation: fadeInRight 0.5s ease-out;
 }
-.settings-btn:hover {background: var(--accent-glow); transform: scale(1.1) rotate(90deg); box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 60%, transparent);}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.settings-btn:hover {background: var(--accent-2); transform: scale(1.1) rotate(90deg); box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 60%, transparent);}
 .settings-btn:active {transform: scale(0.95) rotate(90deg);}
-.settings-btn i {margin:0;line-height:1;color:#fff;}
+.settings-btn i {position:static; transform:none !important; margin:0;line-height:1;color:white; transition:none;}
+
+body.high-contrast .settings-btn {
+  border: 2px solid var(--text);
+}
+
+body.high-contrast.dark-theme .settings-btn {
+  border: 2px solid #ffffff !important;
+}
 
 /* Modal de configurações */
 .settings-modal {
@@ -446,16 +532,16 @@ body.larger-text .badge-status {
   align-items: center;
   margin-bottom: 18px;
   padding-bottom: 12px;
-  border-bottom: 2px solid var(--panel-border, #e5e7eb);
+  border-bottom: 2px solid var(--panel-border);
 }
-.settings-content h2 {color: var(--accent-glow); font-size: 20px; margin: 0; text-align: left;}
+.settings-content h2 {color: var(--accent-2); font-size: 20px; margin: 0; text-align: left;}
 
 .close-settings {
   background: none;
   border: none;
   font-size: 28px;
   cursor: pointer;
-  color: var(--accent-glow);
+  color: var(--accent-2);
   transition: all 0.2s ease;
   padding: 0;
   width: 30px;
@@ -465,7 +551,7 @@ body.larger-text .badge-status {
   justify-content: center;
   line-height: 1;
 }
-.close-settings i {position:static; transform:none !important; margin:0; line-height:1; color:var(--accent-glow); transition:color 0.2s ease;}
+.close-settings i {position:static; transform:none !important; margin:0; line-height:1; color:var(--accent-2); transition:color 0.2s ease;}
 .close-settings:hover {color: var(--accent); transform: rotate(90deg);}
 .close-settings:hover i {color: var(--accent);}
 

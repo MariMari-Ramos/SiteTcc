@@ -16,12 +16,12 @@ body {
     --panel-bg: #ffffff;
     --panel-border: #e5e7eb;
     --text: #222222;
-    --wave1: rgba(255,192,192,0.55);
-    --wave2: rgba(255,170,150,0.5);
-    --wave3: rgba(255,210,180,0.45);
-    --waveHot1: rgba(255,200,0,0.75);
-    --waveHot2: rgba(255,140,0,0.7);
-    --waveHot3: rgba(255,69,0,0.65);
+    --wave1: rgba(255,192,192,0.5);
+    --wave2: rgba(255,170,150,0.45);
+    --wave3: rgba(255,210,180,0.4);
+    --waveHot1: rgba(255,200,0,0.7);
+    --waveHot2: rgba(255,140,0,0.65);
+    --waveHot3: rgba(255,69,0,0.6);
     --radius: 20px;
 }
 body.dark-theme {
@@ -31,11 +31,11 @@ body.dark-theme {
     --panel-border:#404040;
     --text:#e0e0e0;
     --wave1: rgba(140,185,250,0.60);
-    --wave2: rgba(110,160,245,0.54);
-    --wave3: rgba(70,130,235,0.46);
-    --waveHot1: rgba(70,135,235,0.90);
+    --wave2: rgba(110,160,245,0.52);
+    --wave3: rgba(70,130,235,0.42);
+    --waveHot1: rgba(70,135,235,0.9);
     --waveHot2: rgba(55,120,225,0.85);
-    --waveHot3: rgba(45,105,210,0.80);
+    --waveHot3: rgba(45,105,210,0.8);
 }
 
 #waveCanvas {
@@ -253,6 +253,12 @@ body.high-contrast #senha {
 /* Mostrar borda de alto contraste ao redor do container de resultado (paridade com caixa de login) */
 body.high-contrast .resultado-container {
     border: 3px solid var(--accent);
+}
+
+body.dark-theme .resultado-container {
+    background: #000000;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 /* Aprimoramento visual: adicionar brilho/contorno para paridade com o login */

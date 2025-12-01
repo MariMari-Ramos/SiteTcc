@@ -137,6 +137,16 @@ body {
     transform: scale(0.98);
 }
 
+body.high-contrast .skip-profile-btn {
+    border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast.dark-theme .skip-profile-btn {
+    border: 2px solid #ffffff;
+    font-weight: 700;
+}
+
 /* Cor alternativa para o botão de pular (azul) */
 .alt-skip-profile-btn {
     background: #ff4d2d;
@@ -175,6 +185,18 @@ body {
     transition: all 0.3s ease;
     position: relative;
     z-index: 10;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .CaixaCriarPerfil h2 {
@@ -372,9 +394,23 @@ select {
   }
 }
 
-body.high-contrast #ButtonCriarPerfil,
+body.high-contrast #ButtonCriarPerfil {
+    border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast.dark-theme #ButtonCriarPerfil {
+    border: 2px solid #ffffff;
+    font-weight: 700;
+}
+
 body.high-contrast #btnVoltar {
     border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast.dark-theme #btnVoltar {
+    border: 2px solid #ffffff;
     font-weight: 700;
 }
 
@@ -402,6 +438,16 @@ body.high-contrast #btnVoltar {
 .CustomFile:hover {
     background: var(--accent-soft);
     border-color: var(--accent-2);
+}
+
+body.high-contrast .CustomFile {
+    border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast.dark-theme .CustomFile {
+    border: 2px solid #ffffff;
+    font-weight: 700;
 }
 
 label[for="SubtituloDoAvatar"]{
@@ -557,27 +603,30 @@ label[for="SubtituloDoAvatar"]{
 }
 
 .confirm-button {
-    display: block;
-    width: auto;
-    min-width: 180px;
-    max-width: 220px;
-    margin: 0.7rem auto 0;
-    padding: 0.7em 2.2em;
-    background: var(--btn-primary);
-    color: #fff;
+    margin-top: 20px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 2em;
+    background-color: var(--accent);
+    color: #fff;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background 0.2s;
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
-    font-size: 1.13rem;
-    font-weight: 600;
-    transition: background 0.2s, transform 0.2s;
-    align-self: center;
+    width: 100%;
 }
 
 .confirm-button:hover {
-    background: var(--btn-primary-hover);
-    transform: translateY(-2px);
+    background-color: var(--accent-2);
+}
+
+body.high-contrast .confirm-button {
+    border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast.dark-theme .confirm-button {
+    border: 2px solid #ffffff;
+    font-weight: 700;
 }
 
 .avatar-preview {
@@ -609,6 +658,23 @@ label[for="SubtituloDoAvatar"]{
     height: 30px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid var(--accent);
+}
+
+body.high-contrast .avatar-preview {
+    border: 2px solid var(--text);
+}
+
+body.high-contrast.dark-theme .avatar-preview {
+    border: 2px solid #ffffff;
+}
+
+body.high-contrast .file-preview-image {
+    border: 2px solid var(--text);
+}
+
+body.high-contrast.dark-theme .file-preview-image {
+    border: 2px solid #ffffff;
 }
 
 /* Ajuste do z-index do modal */
@@ -821,6 +887,18 @@ label[for="SubtituloDoAvatar"]{
     box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 40%, transparent);
     z-index: 999;
     filter: none !important;
+    animation: fadeInRight 0.5s ease-out;
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .settings-btn i {
@@ -838,6 +916,14 @@ label[for="SubtituloDoAvatar"]{
 
 .settings-btn:active {
     transform: scale(0.95) rotate(90deg);
+}
+
+body.high-contrast .settings-btn {
+    border: 2px solid var(--text);
+}
+
+body.high-contrast.dark-theme .settings-btn {
+    border: 2px solid #ffffff;
 }
 
 /* ==================== BOTÃO VOLTAR (MESMO ESTILO CONFIGURAÇÕES) ==================== */
@@ -861,7 +947,20 @@ label[for="SubtituloDoAvatar"]{
     box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 40%, transparent);
     z-index: 999;
     filter: none !important;
+    animation: fadeInLeft 0.5s ease-out;
 }
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 .back-btn i {
     position: static;
     transform: none !important;
@@ -877,6 +976,14 @@ label[for="SubtituloDoAvatar"]{
 }
 .back-btn:active {
     transform: scale(0.95);
+}
+
+body.high-contrast .back-btn {
+    border: 2px solid var(--text);
+}
+
+body.high-contrast.dark-theme .back-btn {
+    border: 2px solid #ffffff;
 }
 
 /* ==================== MODAL DE CONFIGURAÇÕES ==================== */
@@ -1124,13 +1231,152 @@ body.high-contrast .CaixaCriarPerfil {
     border: 3px solid var(--accent);
 }
 
+body.high-contrast.dark-theme .CaixaCriarPerfil {
+    background: #000000;
+    color: #ffffff;
+}
+
+body.high-contrast.dark-theme .settings-content {
+    background: #000000;
+}
+
+body.high-contrast.dark-theme .avatar-modal-content {
+    background: #1d1d1d;
+}
+
+body.high-contrast .avatar-modal-content {
+    border: 3px solid var(--accent);
+}
+
+body.high-contrast.dark-theme .avatar-modal-content {
+    border: 3px solid var(--accent);
+}
+
+body.high-contrast.dark-theme .modal {
+    background: #1d1d1d;
+}
+
+body.high-contrast .modal {
+    border: 3px solid var(--accent);
+}
+
+body.high-contrast .modal button {
+    border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast.dark-theme .modal {
+    border: 3px solid var(--accent);
+}
+
+body.high-contrast.dark-theme .modal button {
+    border: 2px solid #ffffff;
+}
+
+body.high-contrast .divisor {
+    background-color: #000000;
+    width: 3px;
+}
+
+body.high-contrast.dark-theme .divisor {
+    background-color: #ffffff;
+    width: 3px;
+}
+
 body.large-text {
-    font-size: 1.25rem;
+    font-size: 18px !important;
 }
 
 body.large-text input[type="text"],
 body.large-text select {
-    font-size: 1.1em;
+    font-size: 1.15em;
+}
+
+body.large-text .CaixaCriarPerfil h2 {
+    font-size: 2rem;
+}
+
+body.large-text label {
+    font-size: 1.1rem;
+}
+
+body.large-text #ButtonCriarPerfil,
+body.large-text .skip-profile-btn {
+    font-size: 1em;
+}
+
+body.large-text .back-btn span {
+    font-size: 1.35rem;
+}
+
+body.large-text .back-btn i {
+    font-size: 2.4rem;
+}
+
+body.large-text .settings-btn i {
+    font-size: 2rem;
+}
+
+body.large-text .Aviso {
+    font-size: 0.9rem;
+}
+
+body.large-text .ou {
+    font-size: 1.1rem;
+}
+
+body.large-text .CustomFile {
+    font-size: 1.1rem;
+}
+
+/* Modal de alerta */
+body.large-text .modal {
+    font-size: 1.3rem;
+}
+
+body.large-text .modal h2 {
+    font-size: 1.8rem;
+}
+
+body.large-text .modal p {
+    font-size: 1.2rem;
+}
+
+body.large-text .modal button {
+    font-size: 1.1rem;
+    padding: 12px 24px;
+}
+
+/* Modal de avatar */
+body.large-text .avatar-modal-content h3 {
+    font-size: 1.7rem;
+}
+
+body.large-text .confirm-button {
+    font-size: 1.1rem;
+    padding: 12px 24px;
+}
+
+body.large-text .close-avatar i {
+    font-size: 2rem;
+}
+
+/* Modal de configurações - mesmo tamanho do login/cadastro */
+body.large-text .settings-content h2 {
+    font-size: 1.5rem;
+}
+
+body.large-text .settings-group > label {
+    font-size: 1.1rem;
+}
+
+body.large-text .settings-option span,
+body.large-text .settings-option label {
+    font-size: 1rem;
+}
+
+body.large-text .close-settings i {
+    font-size: 1.8rem;
 }
 
 body.reduce-motion * {
@@ -1175,6 +1421,10 @@ body.reduce-motion * {
     filter: none !important;
 }
 
+.modal h2 {
+    color: var(--accent);
+}
+
 /* Justifica o texto do modal */
 .modal p {
     text-align: justify;
@@ -1182,67 +1432,58 @@ body.reduce-motion * {
 
 .modal-actions { margin-top: 16px; display: flex; gap: 10px; justify-content: center; }
 .modal button {
-    padding: 10px 16px;
+    margin-top: 20px;
+    padding: 10px 20px;
     border: none;
-    background-color: var(--modal-btn-bg);
+    background-color: var(--accent);
     color: #fff;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background 0.2s;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
 }
-.modal button:hover { background-color: var(--modal-btn-hover); }
+.modal button:hover { background-color: var(--accent-2); }
+
+/* Botão cancelar - estilo secundário (cinza) */
+#alertCancel,
+#cancelSkipProfile {
+    background-color: #6c757d;
+}
+
+#alertCancel:hover,
+#cancelSkipProfile:hover {
+    background-color: #5a6268;
+}
+
+body.dark-theme #alertCancel,
+body.dark-theme #cancelSkipProfile {
+    background-color: #495057;
+}
+
+body.dark-theme #alertCancel:hover,
+body.dark-theme #cancelSkipProfile:hover {
+    background-color: #383d41;
+}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-8px); }
     to { opacity: 1; transform: translateY(0); }
 }
-        .modal-actions {
-            margin-top: 16px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        .modal button {
-            font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif !important;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 2em;
-            padding: 0.7em 1.8em;
-            cursor: pointer;
-            background: var(--modal-btn-bg);
-            color: #fff;
-            transition: background 0.2s, color 0.2s, transform 0.15s;
-            outline: none;
-            min-width: 120px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-            margin: 0 2px;
-        }
-        /* Hover diferenciado para o modal de pular criação de perfil */
-        #skipProfileOverlay .modal button:hover {
-            background: #ff4d2d;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(255,77,45,0.18);
-            transform: translateY(-2px) scale(1.04);
-        }
-        #skipProfileOverlay .modal button:active {
-            background: #c93400;
-            color: #fff;
-            transform: scale(0.98);
-        }
-        body.dark-theme #skipProfileOverlay .modal button {
-            background: #444;
-            color: #fff;
-        }
-        body.dark-theme #skipProfileOverlay .modal button:hover {
-            background: #3887e5;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(56,135,229,0.18);
-        }
-        body.dark-theme #skipProfileOverlay .modal button:active {
-            background: #1a4a8a;
-            color: #fff;
-        }
+
+/* Estilos específicos para o modal de pular criação de perfil */
+/* Os botões já herdam o estilo base do .modal button */
+/* Cancelar já fica cinza pelo ID #cancelSkipProfile */
+/* Confirmar já fica com accent pelo estilo padrão */
+
+body.high-contrast #skipProfileOverlay .modal button {
+    border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast.dark-theme #skipProfileOverlay .modal button {
+    border: 2px solid #ffffff;
+    font-weight: 700;
+}
 
         @media (max-width: 600px) {
     .skip-profile-btn {

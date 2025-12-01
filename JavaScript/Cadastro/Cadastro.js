@@ -110,6 +110,62 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formCadastro) {
         formCadastro.addEventListener("submit", async (e) => {
             e.preventDefault();
+            
+            // Validações personalizadas com modal
+            const emailInput = document.getElementById('CadastroEmail');
+            const senhaInput = document.getElementById('SenhaCadastro');
+            const confirmSenhaInput = document.getElementById('ConfirmSenhaCadastro');
+            const checkboxTermos = document.getElementById('CheckBoxTermosPoliticasPrivadas');
+            
+            // Valida email
+            if (!emailInput || !emailInput.value.trim()) {
+                mostrarAlerta('Preencha o E-mail.');
+                if (emailInput) emailInput.focus();
+                return;
+            }
+            
+            // Valida formato de email
+            if (!emailInput.validity.valid) {
+                mostrarAlerta("Inclua um '@' no endereço de email. '" + emailInput.value + "' não contém um '@'.");
+                emailInput.focus();
+                return;
+            }
+            
+            // Valida senha
+            if (!senhaInput || !senhaInput.value) {
+                mostrarAlerta('Preencha o campo da senha.');
+                if (senhaInput) senhaInput.focus();
+                return;
+            }
+            
+            // Valida tamanho mínimo da senha
+            if (senhaInput.value.length < 6) {
+                mostrarAlerta('Aumente esse texto para 6 caracteres ou mais (você está usando ' + senhaInput.value.length + ' caracteres no momento).');
+                senhaInput.focus();
+                return;
+            }
+            
+            // Valida confirmação de senha
+            if (!confirmSenhaInput || !confirmSenhaInput.value) {
+                mostrarAlerta('Preencha o campo do confirmar senha.');
+                if (confirmSenhaInput) confirmSenhaInput.focus();
+                return;
+            }
+            
+            // Valida se as senhas coincidem
+            if (senhaInput.value !== confirmSenhaInput.value) {
+                mostrarAlerta('As senhas não coincidem. Por favor, verifique.');
+                confirmSenhaInput.focus();
+                return;
+            }
+            
+            // Valida checkbox de termos
+            if (!checkboxTermos || !checkboxTermos.checked) {
+                mostrarAlerta('Marque esta caixa se quiser continuar.');
+                if (checkboxTermos) checkboxTermos.focus();
+                return;
+            }
+            
             const formData = new FormData(formCadastro);
 
             try {

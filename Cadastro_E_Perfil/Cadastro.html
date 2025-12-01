@@ -107,12 +107,12 @@
     <form id="formCadastro" method="POST" action="Cadastrar.php">
 
       <label for="Subtitulo">E-mail:</label>
-      <input type="email" id="CadastroEmail" name="email" placeholder="Digite seu e-mail" required>
+      <input type="email" id="CadastroEmail" name="email" placeholder="Digite seu e-mail">
 
       <div class="OlhoVerSenha">
         <div class="password-container">
           <label for="Subtitulo">Senha:</label>
-          <input type="password" id="SenhaCadastro" name="password" minlength="6" placeholder="Digite sua senha" required>
+          <input type="password" id="SenhaCadastro" name="password" placeholder="Digite sua senha">
           <i class="bi bi-eye-fill" id="BtnVerSenha" data-no-wave></i>
         </div>
       </div>
@@ -120,13 +120,13 @@
       <div class="OlhoVerSenha">
         <div class="password-container">
           <label for="Subtitulo">Confirme sua senha:</label>
-          <input type="password" id="ConfirmSenhaCadastro" name="confirm-password"  placeholder="Confirme sua senha" required>
+          <input type="password" id="ConfirmSenhaCadastro" name="confirm-password"  placeholder="Confirme sua senha">
           <i class="bi bi-eye-fill" id="BtnConfirmVerSenha" data-no-wave></i>
         </div>
       </div>
 
       <div class="terms-row">
-        <input type="checkbox" id="CheckBoxTermosPoliticasPrivadas" name="checkbox-termosPV" required/>
+        <input type="checkbox" id="CheckBoxTermosPoliticasPrivadas" name="checkbox-termosPV"/>
         <label for="CheckBoxTermosPoliticasPrivadas" class="terms-text">
           Li e concordo com os
           <a id="TermoDeUso" href="#" target="_blank" rel="noopener">Termos de Uso</a>
@@ -151,7 +151,7 @@
   <div class="modal">
     <h2>Aviso</h2>
     <p></p>
-    <button onclick="fecharModal()">X</button>
+    <button onclick="fecharModal()">Fechar</button>
   </div>
 </div>
 

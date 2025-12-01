@@ -31,7 +31,7 @@ if (strtotime($usuario["reset_token_expires_at"]) <= time()){
 <body>
     <canvas id="waveCanvas" aria-hidden="true"></canvas>
 
-    <button class="settings-fab" id="settingsBtn" title="Configurações">
+    <button class="settings-fab" id="settingsBtn" title="Configurações" data-no-wave>
         <i class="bi bi-gear-fill"></i>
     </button>
 

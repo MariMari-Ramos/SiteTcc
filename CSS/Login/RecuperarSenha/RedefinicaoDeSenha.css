@@ -135,6 +135,12 @@ body{
 }
 body.high-contrast .CaixaRedefinirSenha{border:3px solid var(--accent);}
 
+body.high-contrast.dark-theme .CaixaRedefinirSenha {
+    background: #000000;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
 @keyframes fadeInUp{from{opacity:0;transform:translateY(25px);}to{opacity:1;transform:translateY(0);}}
 
 h1{
@@ -312,27 +318,81 @@ body.high-contrast #btnRedefinirSenha{border:2px solid var(--text);font-weight:7
 }
 .modal button:hover{background:var(--accent-2);}
 
+body.high-contrast .modal {
+    border: 3px solid var(--accent);
+}
+
+body.high-contrast.dark-theme .modal {
+    background: #1d1d1d;
+}
+
+body.high-contrast .modal button {
+    border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast.dark-theme .modal button {
+    border: 2px solid #ffffff;
+    font-weight: 700;
+}
+
+body.dark-theme .modal h2 {
+    color: var(--accent);
+}
+
 /* FAB de configurações */
 .settings-fab{
     position:fixed;
-    top:18px;
-    right:18px;
+    top:20px;
+    right:20px;
     width:50px;
     height:50px;
     border-radius:50%;
-    background:var(--accent);
-    border:2px solid var(--accent-2);
+    background: color-mix(in srgb, var(--accent) 90%, transparent);
+    border:2px solid color-mix(in srgb, var(--accent-2) 80%, transparent);
     display:flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
     font-size:24px;
-    color:#fff;
-    z-index:1000 !important; /* sempre atrás do overlay/modal */
-    box-shadow:0 4px 15px color-mix(in srgb,var(--accent) 45%,transparent);
-    transition:.35s;
+    color:white;
+    z-index:1000 !important;
+    box-shadow:0 4px 15px color-mix(in srgb,var(--accent) 40%,transparent);
+    transition: all 0.3s ease;
+    filter: none !important;
+    animation: fadeInRight 0.5s ease-out;
 }
-.settings-fab:hover{transform:scale(1.1) rotate(90deg);background:var(--accent-2);}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.settings-fab i {
+    position: static;
+    transform: none !important;
+    margin: 0;
+    line-height: 1;
+    color: white;
+    transition: none;
+}
+
+.settings-fab:hover{transform:scale(1.1) rotate(90deg);background:var(--accent-2); box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 60%, transparent);}
+.settings-fab:active{transform: scale(0.95) rotate(90deg);}
+
+body.high-contrast .settings-fab {
+    border: 2px solid var(--text);
+}
+
+body.high-contrast.dark-theme .settings-fab {
+    border: 2px solid #ffffff !important;
+}
 
 .settings-modal{
     display:none;
@@ -372,16 +432,32 @@ body.high-contrast #btnRedefinirSenha{border:2px solid var(--text);font-weight:7
     padding-bottom:10px;
     border-bottom:2px solid var(--panel-border);
 }
-.settings-content h2{font-size:19px;margin:0;color:var(--accent-2);}
+.settings-content h2{font-size:20px;margin:0;color:var(--accent-2); text-align: left;}
 .close-settings{
     background:none;
     border:none;
     font-size:28px;
     cursor:pointer;
     color:var(--accent-2);
-    transition:.25s;
+    transition: all 0.2s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+.close-settings i {
+    position: static;
+    transform: none !important;
+    margin: 0;
+    line-height: 1;
+    color: var(--accent-2);
+    transition: color 0.2s ease;
 }
 .close-settings:hover{color:var(--accent);transform:rotate(90deg);}
+.close-settings:hover i{color: var(--accent);}
 
 .settings-group{margin-bottom:14px;}
 .settings-group>label{
@@ -420,10 +496,29 @@ body.high-contrast #btnRedefinirSenha{border:2px solid var(--text);font-weight:7
 }
 .settings-divider{height:1px;background:var(--panel-border);margin:14px 0;}
 
-body.large-text{font-size:18px !important;}
-body.large-text .input-group input{font-size:1.05rem;}
-body.large-text .TextoSobreOsCampos{font-size:.85rem;}
-body.large-text #btnRedefinirSenha{font-size:1rem;}
+body.large-text, body.larger-text{font-size:18px !important;}
+body.large-text h1, body.larger-text h1{font-size:clamp(1.9rem,6vw,2.4rem);}
+body.large-text .SubtituloRedefinir, body.larger-text .SubtituloRedefinir{font-size:clamp(.9rem,3vw,1.05rem);}
+body.large-text .input-group input, body.larger-text .input-group input{font-size:1.05rem;}
+body.large-text .TextoSobreOsCampos, body.larger-text .TextoSobreOsCampos{font-size:.85rem;}
+body.large-text #btnRedefinirSenha, body.larger-text #btnRedefinirSenha{font-size:1rem;}
+
+/* Modal de alerta */
+body.large-text .modal, body.larger-text .modal{font-size:1.3rem;}
+body.large-text .modal h2, body.larger-text .modal h2{font-size:1.8rem;}
+body.large-text .modal p, body.larger-text .modal p{font-size:1.2rem;}
+body.large-text .modal button, body.larger-text .modal button{font-size:1.1rem;padding:12px 24px;}
+
+/* Modal de configurações */
+body.large-text .settings-content h2, body.larger-text .settings-content h2{font-size:1.5rem;}
+body.large-text .settings-group>label, body.larger-text .settings-group>label{font-size:1.1rem;}
+body.large-text .settings-option span, body.larger-text .settings-option span{font-size:1rem;}
+body.large-text .close-settings, body.larger-text .close-settings{font-size:1.8rem;}
+
+/* Ícones dos botões de navegação */
+body.large-text .settings-fab i, body.larger-text .settings-fab i{font-size:1.8rem;}
+body.large-text .toggle-pass, body.larger-text .toggle-pass{font-size:1.6rem;}
+body.large-text .toggle-pass i, body.larger-text .toggle-pass i{font-size:1.6rem;}
 
 @media (max-width:480px){
     .CaixaRedefinirSenha{padding:1.8rem 1.3rem 2.1rem;width:94%;}

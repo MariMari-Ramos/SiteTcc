@@ -47,6 +47,7 @@ $stmt->close();
     <!-- Modal de Alerta/Confirmação Reutilizável -->
     <div class="overlay" id="alertOverlay" role="dialog" aria-modal="true" aria-labelledby="alertMessage" style="display:none;">
         <div class="modal">
+            <h2>Aviso</h2>
             <p id="alertMessage">Tem certeza que deseja substituir sua escolha anterior?</p>
             <div class="modal-actions">
                 <button type="button" id="alertCancel">Cancelar</button>
@@ -170,7 +171,7 @@ $stmt->close();
                     <p class="ou">ou</p>
                     <label for="NossosAvatares">Nossos Avatares:</label>
                     <button type="button" class="CustomFile" id="chooseAvatar" aria-label="Escolher Avatar">Escolher Avatar</button>
-                    <p class="Aviso">Aviso: A foto do perfil é opcional. A visualização aparecerá diretamente no botão de arquivo ou no avatar escolhido.</p>
+                    <p class="Aviso">Lembrete: A foto do perfil é opcional. A visualização aparecerá diretamente no botão de arquivo ou no avatar escolhido.</p>
                 </div>
             </div>
         </form>

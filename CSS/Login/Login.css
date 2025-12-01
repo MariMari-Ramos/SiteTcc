@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+         url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+         url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* Garante que os botões de voltar e configurações fiquem atrás do overlay/modal */
 #backBtn, #settingsBtn {
     z-index: 1 !important;
@@ -77,16 +87,6 @@ body.dark-theme {
     --modal-btn-bg: #555555;
     --modal-btn-hover: var(--accent);
 }
-@font-face {
-    font-family: 'OpenDyslexic';
-    src: url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
-         url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
-         url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -165,19 +165,24 @@ body.modal-open {
     filter: none !important;
 }
 
+.modal h2 {
+    color: var(--accent);
+}
+
 .modal button {
     margin-top: 20px;
     padding: 10px 20px;
     border: none;
-    background-color: var(--modal-btn-bg);
+    background-color: var(--accent);
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.2s;
+    font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
 }
 
 .modal button:hover {
-    background-color: var(--modal-btn-hover);
+    background-color: var(--accent-2);
 }
 
 @keyframes fadeIn {
@@ -204,6 +209,18 @@ body.modal-open {
     z-index: 2;
     filter: none !important;
     transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .CaixaLoginImg {
@@ -285,6 +302,7 @@ label[for="LembrarSenhaSubtitulo"] {
     font-family: 'OpenDyslexic', 'Segoe UI', Arial, sans-serif;
     font-size: 0.7em;
     color: var(--input-placeholder);
+    padding-left: 0.25em;
 }
 
 #email:focus,
@@ -490,6 +508,18 @@ input[type="password"] {
     z-index: 999;
     filter: none !important;
     text-decoration: none;
+    animation: fadeInLeft 0.5s ease-out;
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .back-btn i {
@@ -528,6 +558,14 @@ input[type="password"] {
     transform: scale(0.95);
 }
 
+body.high-contrast .back-btn {
+    border: 2px solid var(--text);
+}
+
+body.high-contrast.dark-theme .back-btn {
+    border: 2px solid #ffffff !important;
+}
+
 /* ==================== BOTÃO DE CONFIGURAÇÕES ==================== */
 #settingsBtn {
     position: fixed;
@@ -549,6 +587,18 @@ input[type="password"] {
     box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 40%, transparent);
     z-index: 999;
     filter: none !important;
+    animation: fadeInRight 0.5s ease-out;
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 #settingsBtn i {
@@ -572,6 +622,14 @@ input[type="password"] {
 
 #settingsBtn:active {
     transform: scale(0.95) rotate(90deg);
+}
+
+body.high-contrast #settingsBtn {
+    border: 2px solid var(--text);
+}
+
+body.high-contrast.dark-theme #settingsBtn {
+    border: 2px solid #ffffff !important;
 }
 
 /* ==================== MODAL DE CONFIGURAÇÕES ==================== */
@@ -784,7 +842,7 @@ body.dark-theme {
 body.dark-theme .CaixaLogin {
     background-color: #2d2d2d;
     color: #e0e0e0;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 20px rgba(200, 200, 200, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 body.dark-theme #email,
@@ -831,11 +889,15 @@ body.dark-theme .modal {
 }
 
 body.dark-theme .modal button {
-    background-color: #555555;
+    background-color: var(--accent);
 }
 
 body.dark-theme .modal button:hover {
-    background-color: var(--accent);
+    background-color: var(--accent-2);
+}
+
+body.dark-theme .modal h2 {
+    color: var(--accent);
 }
 
 body.dark-theme .CaixaLoginImg {
@@ -858,20 +920,39 @@ body.high-contrast.dark-theme {
     --input-border: #ffffff;
     --accent: #00bfff;
     --accent-2: #00a0ff;
+    background: #000000;
 }
 
 body.high-contrast .CaixaLogin {
     border: 3px solid var(--accent);
 }
 
+body.high-contrast .modal {
+    border: 3px solid var(--accent);
+}
+
+body.high-contrast.dark-theme .CaixaLogin {
+    background: #000000;
+    color: #ffffff;
+}
+
+body.high-contrast.dark-theme .modal {
+    background: #1d1d1d;
+}
+
 /* Fix visual: garantir contraste dos botões circulares (voltar/configurações)
    em tema escuro e modo alto-contraste — força ícone branco e fundo contrastante. */
 body.dark-theme .back-btn,
-body.high-contrast.dark-theme .back-btn,
-body.dark-theme #settingsBtn,
-body.high-contrast.dark-theme #settingsBtn {
+body.dark-theme #settingsBtn {
     background: var(--accent);
     border-color: color-mix(in srgb, var(--accent-2) 80%, transparent);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+body.high-contrast.dark-theme .back-btn,
+body.high-contrast.dark-theme #settingsBtn {
+    background: var(--accent);
+    border-color: #ffffff;
     box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
@@ -887,6 +968,19 @@ body.high-contrast #email,
 body.high-contrast #senha {
     border-width: 3px;
     font-weight: 600;
+}
+
+body.high-contrast.dark-theme #email,
+body.high-contrast.dark-theme #senha {
+    border-color: #ffffff;
+}
+
+body.high-contrast.dark-theme .password-container i {
+    color: #ffffff !important;
+}
+
+body.high-contrast.dark-theme .password-container i:hover {
+    color: var(--accent) !important;
 }
 
 body.high-contrast label,
@@ -906,25 +1000,115 @@ body.high-contrast .nao-quebrar-linha a {
     font-weight: 700;
 }
 
+body.high-contrast #CBXLembrarSenha:checked {
+    border-color: #000000;
+    border-width: 2px;
+}
+
+body.high-contrast #CBXLembrarSenha:checked::after {
+    border-color: #000000;
+}
+
+body.high-contrast.dark-theme #CBXLembrarSenha:checked {
+    border-color: #ffffff;
+    border-width: 2px;
+}
+
+body.high-contrast.dark-theme #CBXLembrarSenha:checked::after {
+    border-color: #ffffff;
+}
+
+body.high-contrast .modal button {
+    border: 2px solid var(--text);
+    font-weight: 700;
+}
+
+body.high-contrast.dark-theme .modal button {
+    border: 2px solid #ffffff;
+    font-weight: 700;
+}
+
 body.large-text {
     font-size: 18px !important;
 }
 
 body.large-text #email,
 body.large-text #senha {
-    font-size: 1.1em;
+    font-size: 1.15em;
 }
 
 body.large-text label[for="TituloLogin"] {
-    font-size: 2.2rem;
+    font-size: clamp(1.8rem, 6vw, 2.3rem);
 }
 
 body.large-text label[for="Subtitulo"] {
-    font-size: 0.95rem;
+    font-size: clamp(0.75rem, 3vw, 0.9rem);
+}
+
+body.large-text label[for="LembrarSenhaSubtitulo"] {
+    font-size: clamp(0.75rem, 3vw, 0.95rem);
 }
 
 body.large-text .nao-quebrar-linha {
+    font-size: 1.1rem;
+}
+
+body.large-text .LembrarMeContainer {
+    font-size: 1.15em;
+}
+
+body.large-text #ButtonEntrar,
+body.large-text #ButtonCriarConta {
+    font-size: 1em;
+}
+
+body.large-text .back-btn-text {
+    font-size: 1.35rem;
+}
+
+body.large-text .back-btn i {
+    font-size: 2.4rem;
+}
+
+body.large-text #settingsBtn i {
+    font-size: 2rem;
+}
+
+/* Modal de alerta */
+body.large-text .modal {
+    font-size: 1.3rem;
+}
+
+body.large-text .modal h2 {
+    font-size: 1.8rem;
+}
+
+body.large-text .modal p {
+    font-size: 1.2rem;
+}
+
+body.large-text .modal button {
+    font-size: 1.1rem;
+    padding: 12px 24px;
+}
+
+/* Modal de configurações */
+body.large-text .settings-content h2,
+body.large-text .SettingsContainer h2 {
+    font-size: 1.5rem;
+}
+
+body.large-text .settings-group > label {
+    font-size: 1.1rem;
+}
+
+body.large-text .settings-option span,
+body.large-text .settings-option label {
     font-size: 1rem;
+}
+
+body.large-text #closeSettings i {
+    font-size: 1.8rem;
 }
 
 body.reduce-motion * {
