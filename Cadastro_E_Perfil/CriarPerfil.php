@@ -39,9 +39,7 @@ ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
 try {
-    // session_start() já foi chamado no início do arquivo
-    include("../conexao.php");
-    require_once __DIR__ . "/../password.php";
+    
 
     // Verificar sessão
     if(!isset($_SESSION['usuario_id'])){

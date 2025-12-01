@@ -40,7 +40,7 @@
             </div>
 
             <div class="header-actions">
-                <button id="save-btn" class="btn btn--sm btn--secondary" title="Salvar Ficha">💾 Salvar</button>
+                
                 <button type="button" id="clear-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha">🗑️ Limpar</button>
                 <button  type="button" id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir">📄 Exportar</button>
             </div>
