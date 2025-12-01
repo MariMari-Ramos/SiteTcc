@@ -72,6 +72,25 @@ window.MinhasFichas = {
           if (window.updateGlobalSettings) window.updateGlobalSettings();
         });
       </script>
+    <!-- Botão flutuante do Guia do Mapa Mental da Ficha -->
+    <button id="fichaMindmapGuideBtn" title="Guia das Ações da Ficha" style="position:absolute;top:24px;right:24px;z-index:2100;background:#fff;border:2px solid #ffc38a;border-radius:50%;width:48px;height:48px;box-shadow:0 4px 16px rgba(0,0,0,0.13);display:none;align-items:center;justify-content:center;cursor:pointer;transition:box-shadow .2s;">
+      <img src="../img/MascoteCertoPNG.png" alt="Guia" style="width:32px;height:32px;" />
+    </button>
+    <!-- Guia do Mapa Mental da Ficha -->
+    <div id="fichaMindmapGuide" class="guide-speech" style="position:absolute;top:80px;right:24px;z-index:2000;display:none;max-width:370px;">
+      <div class="guide-speech-header">
+        <div class="guide-speech-title" id="fichaMindmapGuideTitle">Guia das Ações da Ficha</div>
+        <button class="guide-speech-close" onclick="document.getElementById('fichaMindmapGuide').style.display='none'" aria-label="Fechar">×</button>
+      </div>
+      <div class="guide-speech-content" id="fichaMindmapGuideContent">
+        <strong>Clique em um dos tópicos do mapa mental da ficha para ver o que faz:</strong>
+        <ul style="margin-top:10px;">
+          <li><b>Editar Ficha</b>: Permite modificar as informações e atributos do personagem.</li>
+          <li><b>Excluir Ficha</b>: Remove permanentemente esta ficha do sistema.</li>
+        </ul>
+        <span style="font-size:0.95em;color:#888;">Você pode fechar este guia a qualquer momento.</span>
+      </div>
+    </div>
     <!-- Modal / Mapa Mental da Ficha -->
     <div id="fichaMindmapOverlay" class="overlay" aria-hidden="true" style="z-index: 1001;" onclick="closeFichaModal()">
       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="fichaMindmapTitle" onclick="event.stopPropagation()" style="position: relative; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr; gap: 0; min-width: 520px; min-height: 220px; max-width: 95vw; max-height: 90vh; align-items: center; justify-items: center;">
@@ -141,7 +160,7 @@ window.MinhasFichas = {
         <span data-translate="configuracoes">Configurações</span>
       </a>
       <a href="#" class="guide-trigger" onclick="toggleGuide(); return false;">
-        <img src="../img/image-Photoroom (1).png" alt="Guia" />
+        <img src="../img/MascoteCertoPNG.png" alt="Guia" />
         <span data-translate="guia">Guia</span>
       </a>
     </nav>
@@ -275,6 +294,27 @@ window.MinhasFichas = {
 
   <!-- Modal / Mapa Mental -->
   <div id="mindmapOverlay" class="overlay" aria-hidden="true" onclick="closeModal()">
+    <!-- Botão flutuante do Guia do Mapa Mental -->
+    <button id="mindmapGuideBtn" title="Guia do Sistema" style="position:absolute;top:24px;right:24px;z-index:2100;background:#fff;border:2px solid #ffc38a;border-radius:50%;width:48px;height:48px;box-shadow:0 4px 16px rgba(0,0,0,0.13);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:box-shadow .2s;">
+      <img src="../img/MascoteCertoPNG.png" alt="Guia" style="width:32px;height:32px;" />
+    </button>
+    <!-- Guia do Mapa Mental -->
+    <div id="mindmapGuide" class="guide-speech" style="position:absolute;top:80px;right:24px;z-index:2000;display:none;max-width:370px;">
+      <div class="guide-speech-header">
+        <div class="guide-speech-title" id="mindmapGuideTitle">Guia do Sistema</div>
+        <button class="guide-speech-close" onclick="document.getElementById('mindmapGuide').style.display='none'" aria-label="Fechar">×</button>
+      </div>
+      <div class="guide-speech-content" id="mindmapGuideContent">
+        <strong>Clique em um dos tópicos do mapa mental para ver o que faz:</strong>
+        <ul style="margin-top:10px;">
+          <li><b>Criar Ficha</b>: Inicie uma nova ficha de personagem para este sistema.</li>
+          <li><b>Resumo do Sistema</b>: Veja um guia ou resumo das regras e recursos do sistema.</li>
+          <li><b>Fichas Randômicas</b>: Gere fichas de personagem aleatórias para inspiração ou diversão.</li>
+          <li><b>Recursos Presentes</b>: Acesse materiais, tabelas e extras do sistema.</li>
+        </ul>
+        <span style="font-size:0.95em;color:#888;">Você pode fechar este guia a qualquer momento.</span>
+      </div>
+    </div>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mindmapSystemName" onclick="event.stopPropagation()">
       <svg class="connections" aria-hidden="true" focusable="false">
         <line class="connection-line" x1="42%" y1="35%" x2="25%" y2="35%"></line>

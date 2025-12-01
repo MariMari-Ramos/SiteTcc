@@ -399,20 +399,3 @@ button.btn-secondary:hover {
 	font-size: 0.9rem;
 }
 
-@media (max-width: 768px) {
-	.main-header {/* Lines 389-393 omitted */}
-
-	.main-header h1 {/* Lines 396-397 omitted */}
-
-	main {/* Lines 400-402 omitted */}
-
-	.card {/* Lines 405-406 omitted */}
-
-	.attribute-row {/* Lines 409-410 omitted */}
-
-	.btn-navigation {/* Lines 413-414 omitted */}
-
-	button {/* Lines 417-418 omitted */}
-
-	#d20-roller {/* Lines 421-426 omitted */}
-}

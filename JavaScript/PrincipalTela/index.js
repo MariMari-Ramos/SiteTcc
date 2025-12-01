@@ -5,6 +5,24 @@
     fichaIdSelecionada = idFicha;
     const overlay = document.getElementById('fichaMindmapOverlay');
     if (!overlay) return;
+
+    // Exibe o guia ao abrir
+    const fichaGuide = document.getElementById('fichaMindmapGuide');
+    if (fichaGuide) fichaGuide.style.display = 'block';
+
+    // Botão do guia no canto superior direito
+    const fichaGuideBtn = document.getElementById('fichaMindmapGuideBtn');
+    if (fichaGuideBtn) {
+      fichaGuideBtn.onclick = null;
+      fichaGuideBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (fichaGuide) {
+          fichaGuide.style.display = fichaGuide.style.display === 'block' ? 'none' : 'block';
+        }
+      });
+      fichaGuideBtn.style.display = 'flex';
+    }
+
     overlay.classList.remove('closing');
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
@@ -15,6 +33,13 @@
   window.closeFichaModal = function () {
     const overlay = document.getElementById('fichaMindmapOverlay');
     if (!overlay) return;
+
+    // Esconde o guia e o botão ao fechar
+    const fichaGuide = document.getElementById('fichaMindmapGuide');
+    if (fichaGuide) fichaGuide.style.display = 'none';
+    const fichaGuideBtn = document.getElementById('fichaMindmapGuideBtn');
+    if (fichaGuideBtn) fichaGuideBtn.style.display = 'none';
+
     overlay.classList.add('closing');
     setTimeout(() => {
       overlay.classList.remove('active');
@@ -104,6 +129,9 @@
           });
       };
     }
+    // Garante que o botão do guia da ficha está oculto inicialmente
+    const fichaGuideBtn = document.getElementById('fichaMindmapGuideBtn');
+    if (fichaGuideBtn) fichaGuideBtn.style.display = 'none';
   });
 (function () {
   const linesSelector = '.connection-line';
@@ -145,6 +173,24 @@
       }
     }
 
+    // Exibe o guia do mapa mental ao abrir
+    const mindmapGuide = document.getElementById('mindmapGuide');
+    if (mindmapGuide) mindmapGuide.style.display = 'block';
+
+    // Botão do guia no canto superior direito
+    const mindmapGuideBtn = document.getElementById('mindmapGuideBtn');
+    if (mindmapGuideBtn) {
+      // Remove event listener antigo, se houver
+      mindmapGuideBtn.onclick = null;
+      mindmapGuideBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (mindmapGuide) {
+          mindmapGuide.style.display = mindmapGuide.style.display === 'block' ? 'none' : 'block';
+        }
+      });
+      mindmapGuideBtn.style.display = 'flex';
+    }
+
     overlay.classList.remove('closing');
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
@@ -156,9 +202,15 @@
   window.closeModal = function () {
     const overlay = getOverlay();
     if (!overlay) return;
-    
+
+    // Esconde o guia do mapa mental ao fechar
+    const mindmapGuide = document.getElementById('mindmapGuide');
+    if (mindmapGuide) mindmapGuide.style.display = 'none';
+    const mindmapGuideBtn = document.getElementById('mindmapGuideBtn');
+    if (mindmapGuideBtn) mindmapGuideBtn.style.display = 'none';
+
     overlay.classList.add('closing');
-    
+
     setTimeout(() => {
       overlay.classList.remove('active');
       overlay.classList.remove('closing');
@@ -547,6 +599,10 @@
 
     const iconEl = getCenterIconEl();
     if (iconEl) iconEl.style.display = 'none';
+
+    // Garante que o botão do guia está oculto inicialmente
+    const mindmapGuideBtn = document.getElementById('mindmapGuideBtn');
+    if (mindmapGuideBtn) mindmapGuideBtn.style.display = 'none';
 
     // Renderiza "Minhas Fichas"
     renderMinhasFichas();

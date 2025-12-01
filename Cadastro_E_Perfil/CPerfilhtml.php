@@ -186,8 +186,8 @@ $stmt->close();
                 <div class="avatar-option" role="button" tabindex="0" data-avatar="../img/bigorna.png">
                     <img src="../img/bigorna.png" alt="Avatar Bigorna">
                 </div>
-                <div class="avatar-option" role="button" tabindex="0" data-avatar="../img/MascoteVesgo.png">
-                    <img src="../img/MascoteVesgo.png" alt="Avatar Mascote Vesgo">
+                <div class="avatar-option" role="button" tabindex="0" data-avatar="../img/MascoteCertoPNG.png">
+                    <img src="../img/MascoteCertoPNG.png" alt="Avatar Mascote Vesgo">
                 </div>
                 <div class="avatar-option" role="button" tabindex="0" data-avatar="../img/cthulhu.png">
                     <img src="../img/cthulhu.png" alt="Avatar Cthulhu">

@@ -318,22 +318,42 @@ label[for="MinhasFichasRandomicas"] .highlight-word {
 }
 
 /* ==================== "MINHAS FICHAS" BOX ==================== */
+/* Sempre altura máxima fixa, não cresce com conteúdo */
 .CaixaMinhasFichas {
-  width:100%; max-width:1200px; min-width:220px; min-height:220px; height:320px;
-   padding:20px; border-radius:15px; background: var(--card-bg, #fff); box-shadow: var(--shadow);
-   margin:0 auto 40px; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; position:relative; z-index:2;
+  width:100%;
+  max-width:1200px;
+  min-width:220px;
+  height:320px;
+  min-height:320px;
+  max-height:320px;
+  padding:20px;
+  border-radius:15px;
+  background: var(--card-bg, #fff);
+  box-shadow: var(--shadow);
+  margin:0 auto 40px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+  position:relative;
+  z-index:2;
+  overflow: hidden;
 }
+
 
 /* ====== Minhas Fichas (lista e chips) ====== */
 .fichas-list {
-   display: flex;
-   flex-direction: column;
-   gap: 18px;
-   overflow-x: auto;
-   overflow-y: auto;
-   flex: 1 1 auto;
-   max-height: none;
-   min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-x: auto;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  max-width: 100%;
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
 }
 
 .fichas-group {
@@ -355,6 +375,11 @@ label[for="MinhasFichasRandomicas"] .highlight-word {
   color: var(--text-strong, #222);
   margin-bottom: 10px;
   font-size: 1.1em;
+  transition: color .3s;
+}
+
+:root[data-theme="dark"] .fichas-title {
+  color: #f3f3f3;
 }
 
 .fichas-chips {

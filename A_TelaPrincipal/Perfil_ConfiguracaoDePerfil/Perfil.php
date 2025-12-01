@@ -58,14 +58,14 @@ $stmt->close();
     <link rel="stylesheet" href="../../CSS/TelaPrinciapal/ConfiguraçõesDePerfil/Perfil.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script src="../../JavaScript/ConfiguraçõesGlobais/GlobalConfigurationPerfil.js" defer></script>
-    <script src="../../JavaScript/PerfilDoUsuário/PerfilDoUsuário.js" defer></script>
+    <script src="../../JavaScript/PerfilDoUsuario/PerfilDoUsuario.js" defer></script>
     <title data-translate="perfil_title">Ações e configurações de  Perfil - SystemForge</title>
 </head>
 <body>
 
     <!-- Guia: trigger flutuante -->
     <button class="guide-trigger" id="perfilGuideTrigger" aria-label="Abrir Guia" data-translate="perfil_abrir_guia" data-translate-attr="aria-label" title="Guia" data-translate-title="perfil_guia_title" style="display:flex; position:fixed; top:18px; right:18px; z-index:9999; align-items:center; gap:8px;">
-        <img src="../../img/image-Photoroom (1).png" alt="" class="guide-trigger-avatar">
+        <img src="../../img/MascoteCertoPNG.png" alt="" class="guide-trigger-avatar">
         <span data-translate="guia">Guia</span>
     </button>
 
@@ -73,7 +73,7 @@ $stmt->close();
     <div id="guideSpeech" class="guide-speech" aria-hidden="true" style="display:block;">
         <div class="guide-speech-header">
             <div style="display:flex;align-items:center;gap:10px;">
-                <img id="guideAvatar" class="guide-avatar" src="../../img/image-Photoroom (1).png" alt="Guia" data-translate-alt="perfil_guia_alt" />
+                <img id="guideAvatar" class="guide-avatar" src="../../img/MascoteCertoPNG.png" alt="Guia" data-translate-alt="perfil_guia_alt" />
                 <div class="guide-speech-title" id="guideTitle" data-translate="guide_title">Hefélio, o Guia</div>
             </div>
             <button class="guide-speech-close" id="closeGuideBtn" aria-label="Fechar Guia" data-translate="close" data-translate-attr="aria-label">×</button>
@@ -110,8 +110,8 @@ $stmt->close();
                 <div class="avatar-option" data-avatar="../../img/bigorna.png">
                     <img src="../../img/bigorna.png" alt="Avatar 1" data-translate-alt="perfil_avatar1_alt">
                 </div>
-                <div class="avatar-option" data-avatar="../../img/MascoteVesgo.png">
-                    <img src="../../img/MascoteVesgo.png" alt="Avatar 2" data-translate-alt="perfil_avatar2_alt">
+                <div class="avatar-option" data-avatar="../../img/MascoteCertoPNG.png">
+                    <img src="../../img/MascoteCertoPNG.png" alt="Avatar 2" data-translate-alt="perfil_avatar2_alt">
                 </div>
                 <div class="avatar-option" data-avatar="../../img/cthulhu.png">
                     <img src="../../img/cthulhu.png" alt="Avatar 3" data-translate-alt="perfil_avatar3_alt">
@@ -165,7 +165,6 @@ $stmt->close();
                         <?php endif; ?>
                     </div>
 
-                    <!-- Botões explícitos para manipular foto de perfil -->
                     <div class="photo-action-buttons">
                         <button type="button" id="btnUploadPhoto" class="btn-secondary" title="Enviar foto" data-translate="perfil_upload">Upload</button>
                         <button type="button" id="btnChooseAvatar" class="btn-outline" title="Escolher avatar" data-translate="perfil_escolher_avatar">Escolher Avatar</button>
@@ -183,7 +182,7 @@ $stmt->close();
                         <div class="action-row">
                             <div class="action-label" data-translate="perfil_alterar_senha">Alterar senha:</div>
                             <div class="action-controls">
-                                <button type="button" class="action-button btn-secondary" onclick="window.location.href='../../Login/RecuperarSenha/RedefinirSenha/RedefinicaoDeSenha.html'" data-translate="perfil_btn_alterar_senha">Alterar Senha</button>
+                                <button type="button" class="action-button btn-secondary" onclick="window.location.href='InfoEmailChange.html'" data-translate="perfil_btn_alterar_senha">Alterar Senha</button>
                             </div>
                         </div>
 

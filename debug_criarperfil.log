@@ -1,1 +1,6 @@
 [2025-11-27 22:11:13] uploadToAzureBlob não existe — pulando envio para Azure
+[2025-11-30 23:40:50] CATCH: session_start(): Ignoring session_start() because a session is already active (started from C:\wamp64\www\SiteTcc\Cadastro_E_Perfil\CriarPerfil.php on line 2) in C:\wamp64\www\SiteTcc\Cadastro_E_Perfil\CriarPerfil.php:40
+[2025-11-30 23:44:10] CATCH: session_start(): Ignoring session_start() because a session is already active (started from C:\wamp64\www\SiteTcc\Cadastro_E_Perfil\CriarPerfil.php on line 3) in C:\wamp64\www\SiteTcc\Cadastro_E_Perfil\CriarPerfil.php:42
+[2025-11-30 23:44:21] CATCH: session_start(): Ignoring session_start() because a session is already active (started from C:\wamp64\www\SiteTcc\Cadastro_E_Perfil\CriarPerfil.php on line 3) in C:\wamp64\www\SiteTcc\Cadastro_E_Perfil\CriarPerfil.php:42
+[2025-11-30 23:44:30] CATCH: session_start(): Ignoring session_start() because a session is already active (started from C:\wamp64\www\SiteTcc\Cadastro_E_Perfil\CriarPerfil.php on line 3) in C:\wamp64\www\SiteTcc\Cadastro_E_Perfil\CriarPerfil.php:42
+[2025-11-30 23:46:24] uploadToAzureBlob não existe — pulando envio para Azure
