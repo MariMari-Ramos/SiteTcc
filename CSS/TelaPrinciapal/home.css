@@ -222,6 +222,32 @@ header .menu a.guide-trigger:focus-visible {
   border-color: #ffb26b;
 }
 
+  /* Evita camuflagem no cabeçalho quando alto contraste + tema escuro */
+  :root[data-theme="dark"] body.high-contrast header {
+    background: #000;
+    border-bottom: 2px solid var(--hc-text);
+  }
+  :root[data-theme="dark"] body.high-contrast header .logo img {
+    /* Simplifica: áreas claras ficam pretas para evitar camuflagem */
+    filter: brightness(0);
+  }
+  :root[data-theme="dark"] body.high-contrast header .menu a {
+    color: var(--hc-text);
+  }
+  :root[data-theme="dark"] body.high-contrast header .menu a::before {
+    background: var(--hc-accent);
+  }
+  :root[data-theme="dark"] body.high-contrast header .menu a:focus-visible {
+    outline-color: var(--hc-accent);
+  }
+  :root[data-theme="dark"] body.high-contrast header .menu a.guide-trigger {
+    color: var(--hc-text);
+  }
+  :root[data-theme="dark"] body.high-contrast header .menu a.guide-trigger:hover,
+  :root[data-theme="dark"] body.high-contrast header .menu a.guide-trigger:focus-visible {
+    color: #fff;
+  }
+
 header .menu a.guide-trigger::after {
   content: "";
   position: absolute;
@@ -356,6 +382,20 @@ label[for="MinhasFichasRandomicas"] .highlight-word {
   justify-content: flex-start;
 }
 
+/* Centraliza mensagem quando não há fichas */
+.fichas-list > p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  color: #999;
+  font-style: italic;
+  font-size: 1.1rem;
+  margin: 0;
+  padding: 20px;
+}
+
 .fichas-group {
   background: var(--card-bg, #ffffff);
   border: 1px solid color-mix(in srgb, var(--border-color, #e9dccf) 50%, transparent);
@@ -381,6 +421,13 @@ label[for="MinhasFichasRandomicas"] .highlight-word {
 :root[data-theme="dark"] .fichas-title {
   color: #f3f3f3;
 }
+
+/* Alto contraste: força textos internos em preto para evitar camuflagem em fundos claros */
+body.high-contrast .fichas-title { color: #000; }
+body.high-contrast .fichas-group .fichas-title { color: #000; }
+body.high-contrast .section .section-title { color: #000; }
+body.high-contrast .section .section-description { color: #000; }
+body.high-contrast .card p { color: #000; }
 
 .fichas-chips {
   display: flex;
@@ -538,21 +585,11 @@ button.prev, button.next { display:none !important; }
   opacity:0; transform: translateY(20px);
 }
 
-/* Animações de abertura - ordem crescente de delay */
+/* Animações de abertura - sincronizadas (sem delay) */
 .overlay.active .section { animation: slideInUp .5s ease forwards; }
-.overlay.active .section.top-left { animation-delay:.10s }
-.overlay.active .section.center { animation-delay:.15s }
-.overlay.active .section.top-right { animation-delay:.20s }
-.overlay.active .section.bottom-left { animation-delay:.25s }
-.overlay.active .section.bottom-right { animation-delay:.30s }
 
-/* Animações de fechamento - ordem INVERSA (decrescente) */
+/* Animações de fechamento - sincronizadas (sem delay) */
 .overlay.closing .section { animation: slideOutDown .4s ease forwards; }
-.overlay.closing .section.bottom-right { animation-delay:0s } /* sai primeiro */
-.overlay.closing .section.bottom-left { animation-delay:.05s }
-.overlay.closing .section.top-right { animation-delay:.10s }
-.overlay.closing .section.center { animation-delay:.15s }
-.overlay.closing .section.top-left { animation-delay:.20s } /* sai por último */
 
 @keyframes slideInUp { from{opacity:0; transform: translateY(20px)} to{opacity:1; transform: translateY(0)} }
 @keyframes slideOutDown { from{opacity:1; transform: translateY(0)} to{opacity:0; transform: translateY(30px)} }
@@ -609,8 +646,8 @@ button.prev, button.next { display:none !important; }
   box-shadow: 0 8px 24px rgba(200,40,55,.18); transition: all .3s cubic-bezier(.4,0,.2,1);
   opacity:0; transform: translateY(20px);
 }
-.overlay.active .close-button { animation: slideInUp .5s ease .4s forwards; }
-.overlay.closing .close-button { animation: slideOutDown .3s ease forwards; }
+.overlay.active .close-button { animation: slideInUp .5s ease forwards; }
+.overlay.closing .close-button { animation: slideOutDown .4s ease forwards; }
 
 .close-button:hover {
   transform: translateY(-2px);
@@ -619,17 +656,17 @@ button.prev, button.next { display:none !important; }
 
 /* ==================== FOOTER ==================== */
 footer { background-color: #ffeee4; padding: 2rem 4rem; margin-top: 50px; }
-.footer-content { display:flex; justify-content:space-between; gap:2rem; margin-bottom:2rem; }
-.footer-links { display:flex; flex-direction:column; gap:.5rem; }
-.footer-links span { font-weight:700; color:#333; margin-bottom:.5rem; }
+.footer-content { display:flex; justify-content:space-between; gap:3rem; margin-bottom:2.5rem; }
+.footer-links { display:flex; flex-direction:column; gap:1rem; }
+.footer-links span { font-weight:700; color:#333; margin-bottom:1rem; }
 .footer-links a { color:#666; text-decoration:none; font-size:.9rem; transition: color .3s ease; }
 .footer-links a:hover { color:#333; }
-.footer-bottom { border-top:1px solid #e0d4c8; padding-top:1rem; }
-.social-media { display:flex; justify-content:center; gap:1rem; margin-bottom:1rem; }
+.footer-bottom { border-top:1px solid #e0d4c8; padding-top:1.5rem; }
+.social-media { display:flex; justify-content:center; gap:1.5rem; margin-bottom:1.5rem; }
 .social-icon { color:#666; font-size:1.5rem; transition: color .3s ease; }
 .social-icon:hover { color:#333; }
 .footer-legal { text-align:center; color:#666; font-size:.8rem; }
-.legal-links { display:flex; justify-content:center; gap:2.25rem; margin-top:.5rem; }
+.legal-links { display:flex; justify-content:center; gap:3rem; margin-top:1rem; }
 .legal-links a { color:#666; text-decoration:none; transition: color .3s ease; }
 .legal-links a:hover { color:#333; }
 
@@ -654,6 +691,18 @@ footer { background-color: #ffeee4; padding: 2rem 4rem; margin-top: 50px; }
   .card img { width:76px; height:76px; }
   .card p { font-size:.9em; }
 }
+
+  /* ==================== ENTRADA PROGRESSIVA (ANIMAÇÃO DE SURGIMENTO) ==================== */
+  /* As classes abaixo são reutilizadas para animar elementos ao entrar na tela.
+     JS adiciona .fx-pre e em seguida .fx-in com delays escalonados via --fx-delay. */
+  .fx-pre { opacity: 0; transform: translateY(18px) scale(.98); }
+  .fx-in { animation: fxEnter .6s cubic-bezier(.25,.8,.25,1) forwards; animation-delay: var(--fx-delay,0s); }
+  @keyframes fxEnter {
+    0% { opacity: 0; transform: translateY(18px) scale(.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  /* Leve variante para chips / itens menores se desejarmos (não usado ainda) */
+  .fx-in.fast { animation-duration: .45s; }
 
 /* ==================== ALTO CONTRASTE (conversa com tema escuro) ==================== */
 /* Paleta: claro (laranja) e escuro (azul), igual Login */

@@ -13,19 +13,20 @@
     
     <!-- JavaScript Global (SEMPRE PRIMEIRO - sem defer) -->
     <script src="../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
-    
+    <!-- i18n Translation Manager (deve vir antes de Configuracao.js) -->
+    <script src="../../JavaScript/Configuração/TranslationManager.js" defer></script>
     <!-- JavaScript da página -->
     <script src="../../JavaScript/Configuração/Configuracao.js" defer></script>
     
-    <title data-translate="title">Configurações</title>
+    <title data-i18n="title">Configurações</title>
 </head>
 <body>
-    <h1 data-translate="title">Configurações</h1>
+    <h1 data-i18n="title">Configurações</h1>
 
     <div class="CaixaConfig">
         <!-- Modo Escuro -->
         <div class="option-item">
-            <span data-translate="darkMode">Modo escuro</span>
+            <span data-i18n="darkMode">Modo escuro</span>
             <label class="switch">
                 <input type="checkbox" id="darkModeToggle">
                 <span class="slider"></span>
@@ -34,7 +35,7 @@
 
         <!-- Animação do Carrossel -->
         <div class="option-item">
-            <span data-translate="carousel">Animação do carrossel</span>
+            <span data-i18n="carousel">Animação do carrossel</span>
             <label class="switch">
                 <input type="checkbox" id="carouselToggle">
                 <span class="slider"></span>
@@ -43,7 +44,7 @@
 
         <!-- Guia -->
         <div class="option-item">
-            <span data-translate="guide">Guia</span>
+            <span data-i18n="guide">Guia</span>
             <label class="switch">
                 <input type="checkbox" id="guideToggle">
                 <span class="slider"></span>
@@ -52,7 +53,7 @@
 
         <!-- Alertas -->
         <div class="option-item">
-            <span data-translate="alerts">Alertas</span>
+            <span data-i18n="alerts">Alertas</span>
             <label class="switch">
                 <input type="checkbox" id="alertsToggle">
                 <span class="slider"></span>
@@ -61,7 +62,7 @@
 
         <!-- Idioma -->
         <div class="option-item">
-            <span data-translate="language">Idioma</span>
+            <span data-i18n="language">Idioma</span>
             <button id="openLanguageModal" class="config-button">
                 <span id="currentLanguage">Português (BR)</span>
             </button>
@@ -69,20 +70,20 @@
 
         <!-- Fonte e Acessibilidade -->
         <div class="option-item">
-            <span data-translate="accessibility">Fonte e Acessibilidade</span>
+            <span data-i18n="accessibility">Fonte e Acessibilidade</span>
             <button id="openAccessibilityModal" class="config-button">
                 Configurar
             </button>
         </div>
 
         <!-- Botões de Ação -->
-        <button id="saveChanges" class="action-button save" data-translate="saveChanges">
+        <button id="saveChanges" class="action-button save" data-i18n="saveChanges">
             Salvar alterações
         </button>
-        <button id="restoreChanges" class="action-button restore" data-translate="restoreChanges">
+        <button id="restoreChanges" class="action-button restore" data-i18n="restoreChanges">
             Voltar para os padrões iniciais
         </button>
-        <button id="backToMain" class="action-button back" data-translate="backToMain">
+        <button id="backToMain" class="action-button back" data-i18n="backToMain">
             Retornar para o lobby
         </button>
     </div>
@@ -90,30 +91,30 @@
     <!-- Link do Guia (IGUAL AO INDEX.PHP) -->
     <a href="#" class="guide-trigger" onclick="toggleGuide(); return false;">
         <img src="../../img/MascoteCertoPNG.png" alt="Guia" />
-        <span data-translate="guia">Guia</span>
+        <span data-i18n="guia">Guia</span>
     </a>
 
     <!-- Balão de fala do guia (IDÊNTICO AO INDEX.PHP) -->
     <div id="guideSpeech" class="guide-speech" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
         <div class="guide-speech-header">
-            <div class="guide-speech-title" id="guideTitle" data-translate="guide_title">
+            <div class="guide-speech-title" id="guideTitle" data-i18n="guide_title">
                 Hefélio, o Guia
             </div>
-            <button class="guide-speech-close" onclick="closeGuide()" aria-label="Fechar">×</button>
+            <button class="guide-speech-close" onclick="closeGuide()" aria-label="Fechar">x</button>
         </div>
-        <div class="guide-speech-content" id="guideContent" data-translate="guide_intro_config">
+        <div class="guide-speech-content" id="guideContent" data-i18n="guide_intro_config">
             Olá! 👋 Aqui você pode configurar o tema, alertas, idioma e acessibilidade. Escolha um tópico abaixo para entender cada opção.
         </div>
         <div class="guide-speech-options">
-            <button class="guide-option" onclick="showGuideInfo('dark')" data-translate="guide_opt_dark">🌓 Modo escuro</button>
-            <button class="guide-option" onclick="showGuideInfo('carousel')" data-translate="guide_opt_carousel">🎠 Carrossel</button>
-            <button class="guide-option" onclick="showGuideInfo('guide')" data-translate="guide_opt_guide">🎓 Guia</button>
-            <button class="guide-option" onclick="showGuideInfo('alerts')" data-translate="guide_opt_alerts">🔔 Alertas</button>
-            <button class="guide-option" onclick="showGuideInfo('language')" data-translate="guide_opt_language">🌐 Idioma</button>
-            <button class="guide-option" onclick="showGuideInfo('accessibility')" data-translate="guide_opt_accessibility">♿ Acessibilidade</button>
-            <button class="guide-option" onclick="showGuideInfo('save')" data-translate="guide_opt_save">💾 Salvar</button>
-            <button class="guide-option" onclick="showGuideInfo('restore')" data-translate="guide_opt_restore">♻️ Restaurar</button>
-            <button class="guide-option" onclick="showGuideInfo('back')" data-translate="guide_opt_back">🏠 Voltar</button>
+            <button class="guide-option" onclick="showGuideInfo('dark')" data-i18n="guide_opt_dark">🌓 Modo escuro</button>
+            <button class="guide-option" onclick="showGuideInfo('carousel')" data-i18n="guide_opt_carousel">🎠 Carrossel</button>
+            <button class="guide-option" onclick="showGuideInfo('guide')" data-i18n="guide_opt_guide">🎓 Guia</button>
+            <button class="guide-option" onclick="showGuideInfo('alerts')" data-i18n="guide_opt_alerts">🔔 Alertas</button>
+            <button class="guide-option" onclick="showGuideInfo('language')" data-i18n="guide_opt_language">🌐 Idioma</button>
+            <button class="guide-option" onclick="showGuideInfo('accessibility')" data-i18n="guide_opt_accessibility">♿ Acessibilidade</button>
+            <button class="guide-option" onclick="showGuideInfo('save')" data-i18n="guide_opt_save">💾 Salvar</button>
+            <button class="guide-option" onclick="showGuideInfo('restore')" data-i18n="guide_opt_restore">♻️ Restaurar</button>
+            <button class="guide-option" onclick="showGuideInfo('back')" data-i18n="guide_opt_back">🏠 Voltar</button>
         </div>
     </div>
 
@@ -121,13 +122,13 @@
     <div id="languageModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
-            <h2 data-translate="selectLanguage">Selecione o idioma</h2>
+            <h2 data-i18n="selectLanguage">Selecione o idioma</h2>
             <div class="lang-options">
                 <div class="lang-option" data-lang="pt-BR">Português (BR)</div>
                 <div class="lang-option" data-lang="en-US">English (US)</div>
                 <div class="lang-option" data-lang="es-ES">Español (ES)</div>
             </div>
-            <button id="saveLanguage" class="modal-button" data-translate="save">Salvar</button>
+            <button id="saveLanguage" class="modal-button" data-i18n="save">Salvar</button>
         </div>
     </div>
 
@@ -135,7 +136,7 @@
     <div id="accessibilityModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeAccessibilityModal">&times;</span>
-            <h2 data-translate="fontAccessibilityTitle">Fonte e Acessibilidade</h2>
+            <h2 data-i18n="fontAccessibilityTitle">Fonte e Acessibilidade</h2>
             
             <div class="accessibility-options">
                 <div class="accessibility-item">
@@ -178,10 +179,20 @@
                     <button id="toggleAutoRead" class="toggle-button">Ativar</button>
                 </div>
 
+                <div class="accessibility-item">
+                    <label data-translate="speechRate">Velocidade de fala:</label>
+                    <input id="speechRateInput" type="range" min="0.6" max="1.8" step="0.1" value="1" aria-label="Velocidade de fala">
+                </div>
+
+                <div class="accessibility-item">
+                    <label data-translate="speechPitch">Tom de fala:</label>
+                    <input id="speechPitchInput" type="range" min="0.8" max="1.5" step="0.1" value="1" aria-label="Tom de fala">
+                </div>
+
                 <div id="accessibilityWarning" class="warning-message" style="display: none;"></div>
             </div>
 
-            <button id="saveAccessibility" class="modal-button" data-translate="save">Salvar</button>
+            <button id="saveAccessibility" class="modal-button" data-i18n="save">Salvar</button>
         </div>
     </div>
 
@@ -190,7 +201,7 @@
     <!-- Modal de Aviso de Alertas -->
     <div id="alertsWarningModal" class="modal alerts-warning-modal">
         <div class="modal-content warning-content">
-            <h2 data-translate="alertsWarningTitle">⚠️ Aviso Importante</h2>
+            <h2 data-i18n="alertsWarningTitle">⚠️ Aviso Importante</h2>
             <p data-translate="alertsWarningMessage">
                 Ao desativar os alertas, você não receberá mais notificações importantes do sistema, incluindo:
             </p>

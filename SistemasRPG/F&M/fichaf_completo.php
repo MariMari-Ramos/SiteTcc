@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ficha F&M - Feiticeiros e Maldições</title>
+    <title data-i18n="fm_title">Ficha F&M - Feiticeiros e Maldições</title>
     <!-- CSS Global de configurações -->
     <link rel="stylesheet" href="../../CSS/EstilosGlobais/GlobalStylesConfigurationCss.css">
     <link rel="stylesheet" href="../../CSS/EstilosGlobais/EstilosGlobaisRPG_FM.css">
     <link rel="stylesheet" href="style_melhorado.css">
     <!-- JS Global de configurações -->
     <script src="../../JavaScript/ConfiguraçõesGlobais/GlobaConfigurationlJavaScript.js"></script>
+    <script src="script_melhorado.js" defer></script>
 </head>
 <!-- Adicione este modal ao final do seu HTML antes do </body> -->
 <div id="section-help-modal" class="modal" style="display:none;">
@@ -25,8 +26,8 @@
     <header class="header page-theme-teal">
         <div class="header-content">
             <div class="header-left">
-                <h1 class="title" data-translate="fm_titulo">⚡ Feiticeiros & Maldições</h1>
-                <span class="subtitle" data-translate="fm_subtitulo">Sistema de RPG v2.0</span>
+                <h1 class="title" data-i18n="fm_titulo">⚡ Feiticeiros & Maldições</h1>
+                <span class="subtitle" data-i18n="fm_subtitulo">Sistema de RPG v2.0</span>
             </div>
 
             <div class="page-indicator">
@@ -41,8 +42,8 @@
 
             <div class="header-actions">
                 
-                <button type="button" id="clear-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha">🗑️ Limpar</button>
-                <button  type="button" id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir">📄 Exportar</button>
+                <button type="button" id="clear-btn" class="btn btn--sm btn--secondary" title="Limpar Ficha" data-i18n="fm_limpar">🗑️ Limpar</button>
+                <button  type="button" id="export-btn" class="btn btn--sm btn--secondary" title="Exportar/Imprimir" data-i18n="fm_exportar">📄 Exportar</button>
             </div>
         </div>
     </header>
@@ -64,38 +65,38 @@
 da qual derivam suas capacidades e o motivo dele se destacar acima de um
 humano comum.
  Já uma especialização, como diz o nome, é a maneira que um feiticeiro encontrou
-ou desenvolveu para enfrentar o perigo das maldições e se tornar poderoso.">📋 Informações Básicas do Personagem</h2>
+ou desenvolveu para enfrentar o perigo das maldições e se tornar poderoso." data-i18n="fm_info_basicas">📋 Informações Básicas do Personagem</h2>
 
             <div class="card section-border-teal">
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" for="char-name">Nome do Personagem</label>
-                        <input type="text" id="char-name" class="form-control" placeholder="Digite o nome..." name="char-name">
+                        <label class="form-label" for="char-name" data-i18n="fm_nome_personagem">Nome do Personagem</label>
+                        <input type="text" id="char-name" class="form-control" placeholder="Digite o nome..." data-i18n-placeholder="fm_nome_placeholder" name="char-name">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="level">Nível</label>
+                        <label class="form-label" for="level" data-i18n="fm_nivel">Nível</label>
                         <input type="number" id="level" min="1" max="20" value="1" class="form-control" name="level">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="proficiency-bonus">Bônus de Maestria</label>
+                        <label class="form-label" for="proficiency-bonus" data-i18n="fm_bonus_maestria">Bônus de Maestria</label>
                         <input type="text" id="proficiency-bonus" readonly class="form-control" name="proficiency-bonus">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" for="origin">Origem</label>
+                        <label class="form-label" for="origin" data-i18n="fm_origem">Origem</label>
                         <select id="origin" name="origin" class="form-control styled-select">
-                            <option value="">Selecione...</option>
+                            <option value="" data-i18n="fm_selecione">Selecione...</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="specialization">Especialização</label>
+                        <label class="form-label" for="specialization" data-i18n="fm_especializacao">Especialização</label>
                         <select id="specialization" name="specialization" class="form-control styled-select">
-                            <option value="">Selecione...</option>
+                            <option value="" data-i18n="fm_selecione">Selecione...</option>
                         </select>
                     </div>
                 </div>
@@ -104,78 +105,78 @@ ou desenvolveu para enfrentar o perigo das maldições e se tornar poderoso.">�
             <h2 class="section-header" data-help="Os atributos representam os aspectos fisicos e caracteristivas variadas do seu personagem! O valor 10 é a média, e representa o padrão de um atributo, estando dentro do
 comum. Valores inferiores a 10 começam a representar um déficit naquele
 aspecto, enquanto valores maiores significam uma maior aptidão,
-desenvolvimento e qualidade.">💪 Atributos</h2>
+desenvolvimento e qualidade." data-i18n="fm_atributos">💪 Atributos</h2>
 
             <div class="attribute-grid card section-border-teal">
                 <div class="attribute-box">
-                    <div class="attribute-name">Força</div>
+                    <div class="attribute-name" data-i18n="fm_forca">Força</div>
                     <input type="number" id="str" value="10" min="0" max="30" class="form-control attribute-value" name="str">
-                    <div class="attribute-modifier">Modificador: <span id="str-mod" class="mod">+0</span></div>
+                    <div class="attribute-modifier"><span data-i18n="fm_modificador">Modificador:</span> <span id="str-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
-                    <div class="attribute-name">Destreza</div>
+                    <div class="attribute-name" data-i18n="fm_destreza">Destreza</div>
                     <input type="number" id="dex" value="10" min="0" max="30" class="form-control attribute-value" name="dex">
-                    <div class="attribute-modifier">Modificador: <span id="dex-mod" class="mod">+0</span></div>
+                    <div class="attribute-modifier"><span data-i18n="fm_modificador">Modificador:</span> <span id="dex-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
-                    <div class="attribute-name">Constituição</div>
+                    <div class="attribute-name" data-i18n="fm_constituicao">Constituição</div>
                     <input type="number" id="con" value="10" min="0" max="30" class="form-control attribute-value" name="con">
-                    <div class="attribute-modifier">Modificador: <span id="con-mod" class="mod">+0</span></div>
+                    <div class="attribute-modifier"><span data-i18n="fm_modificador">Modificador:</span> <span id="con-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
-                    <div class="attribute-name">Sabedoria</div>
+                    <div class="attribute-name" data-i18n="fm_sabedoria">Sabedoria</div>
                     <input type="number" id="wis" value="10" min="0" max="30" class="form-control attribute-value" name="wis">
-                    <div class="attribute-modifier">Modificador: <span id="wis-mod" class="mod">+0</span></div>
+                    <div class="attribute-modifier"><span data-i18n="fm_modificador">Modificador:</span> <span id="wis-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
-                    <div class="attribute-name">Inteligência</div>
+                    <div class="attribute-name" data-i18n="fm_inteligencia">Inteligência</div>
                     <input type="number" id="int" value="10" min="0" max="30" class="form-control attribute-value" name="int">
-                    <div class="attribute-modifier">Modificador: <span id="int-mod" class="mod">+0</span></div>
+                    <div class="attribute-modifier"><span data-i18n="fm_modificador">Modificador:</span> <span id="int-mod" class="mod">+0</span></div>
                 </div>
 
                 <div class="attribute-box">
-                    <div class="attribute-name">Carisma</div>
+                    <div class="attribute-name" data-i18n="fm_carisma">Carisma</div>
                     <input type="number" id="cha" value="10" min="0" max="30" class="form-control attribute-value" name="cha">
-                    <div class="attribute-modifier">Modificador: <span id="cha-mod" class="mod">+0</span></div>
+                    <div class="attribute-modifier"><span data-i18n="fm_modificador">Modificador:</span> <span id="cha-mod" class="mod">+0</span></div>
                 </div>
             </div>
 
             <h2 class="section-header" data-help="A Classe de Armadura, possui um valor base é igual a 10 + modificador de
-destreza. Representa o quão difícil é acertar seu personagem.">🛡️ Classe de Armadura</h2>
+destreza. Representa o quão difícil é acertar seu personagem." data-i18n="fm_classe_armadura">🛡️ Classe de Armadura</h2>
 
             <div class="card section-border-teal">
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" for="ac-natural">Natural</label>
+                        <label class="form-label" for="ac-natural" data-i18n="fm_natural">Natural</label>
                         <input type="number" id="ac-natural" value="10" class="form-control" name="ac-natural">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="ac-armor">Uniforme</label>
+                        <label class="form-label" for="ac-armor" data-i18n="fm_uniforme">Uniforme</label>
                         <input type="number" id="ac-armor" value="0" class="form-control" name="ac-armor">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="ac-shield">Escudo</label>
+                        <label class="form-label" for="ac-shield" data-i18n="fm_escudo">Escudo</label>
                         <input type="number" id="ac-shield" value="0" class="form-control" name="ac-shield">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="ac-dex">Destreza</label>
+                        <label class="form-label" for="ac-dex" data-i18n="fm_destreza">Destreza</label>
                         <input type="number" id="ac-dex" value="0" readonly class="form-control" name="ac-dex">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="ac-other">Outros</label>
+                        <label class="form-label" for="ac-other" data-i18n="fm_outros">Outros</label>
                         <input type="number" id="ac-other" value="0" class="form-control" name="ac-other">
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="ac-total"><strong>Total CA</strong></label>
+                        <label class="form-label" for="ac-total"><strong data-i18n="fm_total_ca">Total CA</strong></label>
                         <input type="number" id="ac-total" value="10" readonly class="form-control" style="font-weight: bold; font-size: 1.2em;" name="ac-total">
                     </div>
                 </div>
@@ -183,9 +184,9 @@ destreza. Representa o quão difícil é acertar seu personagem.">🛡️ Classe
 
             <!-- Navegação -->
             <div class="navigation">
-                <button id="prev-btn" type="button" class="btn btn--secondary" onclick="previousPage()" disabled>← Anterior</button>
-                <span class="page-info">Página <span id="current-page">1</span> de <span id="total-pages">7</span></span>
-                <button id="next-btn" type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button id="prev-btn" type="button" class="btn btn--secondary" onclick="previousPage()" disabled data-i18n="fm_anterior">← Anterior</button>
+                <span class="page-info"><span data-i18n="fm_pagina">Página</span> <span id="current-page">1</span> <span data-i18n="fm_de">de</span> <span id="total-pages">7</span></span>
+                <button id="next-btn" type="button" class="btn btn--primary" onclick="nextPage()" data-i18n="fm_proxima">Próxima →</button>
             </div>
         </div>
 
@@ -352,9 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- Adicionar perícias de Constituição, Sabedoria, Inteligência e Carisma seguindo o mesmo padrão -->
 
             <div class="navigation">
-                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
-                <span class="page-info">Página <span id="nav-current-page">2</span> de 7</span>
-                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()" data-i18n="fm_anterior">← Anterior</button>
+                <span class="page-info"><span data-i18n="fm_pagina">Página</span> <span id="nav-current-page">2</span> <span data-i18n="fm_de">de</span> 7</span>
+                <button type="button" class="btn btn--primary" onclick="nextPage()" data-i18n="fm_proxima">Próxima →</button>
             </div>
         </div>
 
@@ -364,21 +365,21 @@ document.addEventListener('DOMContentLoaded', () => {
             Vida: Que mede os pontos de vida do seu personagem, definidos pela sua especialização e nivel.
             Energia Amaldiçoada: Que mede os pontos de energia, o combustivel de suas técnicas, definido pela sua especialização e nivel.
             Integridade da Alma: São como os pontos de vida, mas medem a vida da sua alma.
-            A Parte Outros Valores: Serve para anotar valores secundarios mais importantes em combate! Como o deslocamento, que mede seu movimento em combate, sua iniciativa para manter a ordem de rodada e a sua Atenção passiva que é 10 + bônus na perícia percepção + outros.">⚔️ Valores de Combate</h2>
+            A Parte Outros Valores: Serve para anotar valores secundarios mais importantes em combate! Como o deslocamento, que mede seu movimento em combate, sua iniciativa para manter a ordem de rodada e a sua Atenção passiva que é 10 + bônus na perícia percepção + outros." data-i18n="fm_combate">⚔️ Valores de Combate</h2>
 
             <div class="card section-border-red">
-                <h3> Pontos de Vida</h3>
+                <h3 data-i18n="fm_pontos_vida">Pontos de Vida</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Máximo</label>
+                        <label data-i18n="fm_maximo">Máximo</label>
                         <input name="hp-max" type="number" id="hp-max" value="100" class="form-control" onchange="updateProgressBar('hp')">
                     </div>
                     <div class="form-group">
-                        <label>Atuais</label>
+                        <label data-i18n="fm_atuais">Atuais</label>
                         <input name="hp-current" type="number" id="hp-current" value="100" class="form-control" onchange="updateProgressBar('hp')">
                     </div>
                     <div class="form-group">
-                        <label>Temporários</label>
+                        <label data-i18n="fm_temporarios">Temporários</label>
                         <input name="hp-temp" type="number" id="hp-temp" value="0" class="form-control">
                     </div>
                 </div>
@@ -388,18 +389,18 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="card section-border-red">
-                <h3> Pontos de Energia</h3>
+                <h3 data-i18n="fm_pontos_energia">Pontos de Energia</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Máximo</label>
+                        <label data-i18n="fm_maximo">Máximo</label>
                         <input name="pe-max" type="number" id="pe-max" value="50" class="form-control" onchange="updateProgressBar('pe')">
                     </div>
                     <div class="form-group">
-                        <label>Atuais</label>
+                        <label data-i18n="fm_atuais">Atuais</label>
                         <input name="pe-current" type="number" id="pe-current" value="50" class="form-control" onchange="updateProgressBar('pe')">
                     </div>
                     <div class="form-group">
-                        <label>Temporários</label>
+                        <label data-i18n="fm_temporarios">Temporários</label>
                         <input name="pe-temp" type="number" id="pe-temp" value="0" class="form-control">
                     </div>
                 </div>
@@ -409,18 +410,18 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="card section-border-red">
-                <h3>👻 Integridade da Alma</h3>
+                <h3 data-i18n="fm_integridade_alma">👻 Integridade da Alma</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Máximo</label>
+                        <label data-i18n="fm_maximo">Máximo</label>
                         <input name="integrity-max" type="number" id="integrity-max" value="100" class="form-control" onchange="updateProgressBar('integrity')">
                     </div>
                     <div class="form-group">
-                        <label>Atuais</label>
+                        <label data-i18n="fm_atuais">Atuais</label>
                         <input name="integrity-current" type="number" id="integrity-current" value="100" class="form-control" onchange="updateProgressBar('integrity')">
                     </div>
                     <div class="form-group">
-                        <label>Temporários</label>
+                        <label data-i18n="fm_temporarios">Temporários</label>
                         <input name="integrity-temp" type="number" id="integrity-temp" value="0" class="form-control">
                     </div>
                 </div>
@@ -430,45 +431,45 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="card section-border-red">
-                <h3>📊 Outros Valores</h3>
+                <h3 data-i18n="fm_outros_valores">📊 Outros Valores</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Deslocamento (metros)</label>
+                        <label data-i18n="fm_deslocamento">Deslocamento (metros)</label>
                         <input name="movement" type="number" id="movement" value="9" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Iniciativa</label>
+                        <label data-i18n="fm_iniciativa">Iniciativa</label>
                         <input name="initiative" type="number" id="initiative" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Atenção</label>
+                        <label data-i18n="fm_atencao">Atenção</label>
                         <input name="attention" type="number" id="attention" class="form-control">
                     </div>
                 </div>
             </div>
 
             <div class="navigation">
-                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
-                <span class="page-info">Página 3 de 7</span>
-                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()" data-i18n="fm_anterior">← Anterior</button>
+                <span class="page-info"><span data-i18n="fm_pagina">Página</span> 3 <span data-i18n="fm_de">de</span> 7</span>
+                <button type="button" class="btn btn--primary" onclick="nextPage()" data-i18n="fm_proxima">Próxima →</button>
             </div>
         </div>
 
         <!-- ===== PÁGINA 4: HABILIDADES ===== -->
         <div id="page-4" class="page">
-            <h2 class="section-header section-border-orange" data-help="São as habilidades concedidas pela especialização escolhida, anote todas aqui para que fique facil de se lembrar!">✨ Habilidades de Especialização</h2>
+            <h2 class="section-header section-border-orange" data-help="São as habilidades concedidas pela especialização escolhida, anote todas aqui para que fique facil de se lembrar!" data-i18n="fm_habilidades_especializacao">✨ Habilidades de Especialização</h2>
 
             <div class="card section-border-orange">
-                <button type="button" class="btn-add" onclick="addAbility('abilities-list')">Adicionar Habilidade</button>
+                <button type="button" class="btn-add" onclick="addAbility('abilities-list')" data-i18n="fm_adicionar_habilidade">Adicionar Habilidade</button>
                 <div id="abilities-list" style="margin-top: 20px;">
                     <!-- Habilidades adicionadas dinamicamente -->
                 </div>
             </div>
 
             <div class="navigation">
-                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
-                <span class="page-info">Página 4 de 7</span>
-                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()" data-i18n="fm_anterior">← Anterior</button>
+                <span class="page-info"><span data-i18n="fm_pagina">Página</span> 4 <span data-i18n="fm_de">de</span> 7</span>
+                <button type="button" class="btn btn--primary" onclick="nextPage()" data-i18n="fm_proxima">Próxima →</button>
             </div>
         </div>
 
@@ -488,84 +489,84 @@ Aptidões de Energia Reversa, que permitem curar e regenerar o
 próprio corpo.
 Aptidões Especiais, que possuem um funcionamento distinto
 e único envolvendo a energia e as técnicas interagindo.
-E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do livro!">🔮 Perfil Amaldiçoado</h2>
+E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do livro!" data-i18n="fm_perfil_amaldicoado">🔮 Perfil Amaldiçoado</h2>
 
             <div class="card section-border-indigo">
-                <h3>🎖️ Talentos</h3>
-                <button type="button" class="btn-add" onclick="addTalent()">Adicionar Talento</button>
+                <h3 data-i18n="fm_talentos">🎖️ Talentos</h3>
+                <button type="button" class="btn-add" onclick="addTalent()" data-i18n="fm_adicionar_talento">Adicionar Talento</button>
                 <div id="talents-list" style="margin-top: 20px;">
                     <!-- Talentos adicionados dinamicamente -->
                 </div>
             </div>
 
             <div class="card section-border-indigo">
-                <h3>📊 Níveis de Aptidão</h3>
+                <h3 data-i18n="fm_niveis_aptidao">📊 Níveis de Aptidão</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Energia</label>
+                        <label data-i18n="fm_energia">Energia</label>
                         <input name="energy" id="energy" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Controle/Leitura</label>
+                        <label data-i18n="fm_controle_leitura">Controle/Leitura</label>
                         <input name="control-reading" id="control-reading" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Barreira</label>
+                        <label data-i18n="fm_barreira">Barreira</label>
                         <input name="barrier" id="barrier" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Domínio</label>
+                        <label data-i18n="fm_dominio">Domínio</label>
                         <input name="domain" id="domain" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Energia Reversa</label>
+                        <label data-i18n="fm_energia_reversa">Energia Reversa</label>
                         <input name="reverse-energy" id="reverse-energy" type="number" min="0" max="5" value="0" class="form-control">
                     </div>
                 </div>
             </div>
 
             <div class="card section-border-indigo">
-                <h3>🏋️ Treinamentos</h3>
-                <button type="button" class="btn-add" onclick="addTraining()">Adicionar Treinamento</button>
+                <h3 data-i18n="fm_treinamentos">🏋️ Treinamentos</h3>
+                <button type="button" class="btn-add" onclick="addTraining()" data-i18n="fm_adicionar_treinamento">Adicionar Treinamento</button>
                 <div id="trainings-list" style="margin-top: 20px;">
                     <!-- Treinamentos adicionados dinamicamente -->
                 </div>
             </div>
 
             <div class="navigation">
-                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
-                <span class="page-info">Página 5 de 7</span>
-                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()" data-i18n="fm_anterior">← Anterior</button>
+                <span class="page-info"><span data-i18n="fm_pagina">Página</span> 5 <span data-i18n="fm_de">de</span> 7</span>
+                <button type="button" class="btn btn--primary" onclick="nextPage()" data-i18n="fm_proxima">Próxima →</button>
             </div>
         </div>
 
         <!-- ===== PÁGINA 6: TÉCNICA AMALDIÇOADA ===== -->
         <div id="page-6" class="page">
-            <h2 class="section-header section-border-pink" data-help="Aqui você vai anotar, os aspectos da sua técnica amaldiçoada, que deve ser escolhida por você, no livro de técnicas!">🌀 Técnica Amaldiçoada</h2>
+            <h2 class="section-header section-border-pink" data-help="Aqui você vai anotar, os aspectos da sua técnica amaldiçoada, que deve ser escolhida por você, no livro de técnicas!" data-i18n="fm_tecnica_amaldicoada">🌀 Técnica Amaldiçoada</h2>
 
             <div class="card section-border-pink">
                 <div class="form-group">
-                    <label class="form-label">Nome da Técnica</label>
-                    <input type="text" id="technique-name" class="form-control" placeholder="Ex: Limitless, Ten Shadows, etc.">
+                    <label class="form-label" data-i18n="fm_nome_tecnica">Nome da Técnica</label>
+                    <input type="text" id="technique-name" class="form-control" data-i18n-placeholder="fm_nome_tecnica_placeholder" placeholder="Ex: Limitless, Ten Shadows, etc.">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Funcionamento Básico</label>
-                    <textarea id="technique-description" class="form-control" rows="5" placeholder="Descreva o funcionamento básico da sua técnica amaldiçoada..."></textarea>
+                    <label class="form-label" data-i18n="fm_funcionamento_basico">Funcionamento Básico</label>
+                    <textarea id="technique-description" class="form-control" rows="5" data-i18n-placeholder="fm_funcionamento_placeholder" placeholder="Descreva o funcionamento básico da sua técnica amaldiçoada..."></textarea>
                 </div>
             </div>
 
             <div class="card section-border-pink">
-  <h3>✨ Habilidades de Técnica</h3>
+  <h3 data-i18n="fm_habilidades_tecnica">✨ Habilidades de Técnica</h3>
   <div class="tabs" id="technique-tabs">
-    <button type="button" class="tab active" data-level="0">Nível 0</button>
-    <button type="button" class="tab" data-level="1">Nível 1</button>
-    <button type="button" class="tab" data-level="2">Nível 2</button>
-    <button type="button" class="tab" data-level="3">Nível 3</button>
-    <button type="button" class="tab" data-level="4">Nível 4</button>
-    <button type="button" class="tab" data-level="5">Nível 5</button>
+    <button type="button" class="tab active" data-level="0"><span data-i18n="fm_nivel">Nível</span> 0</button>
+    <button type="button" class="tab" data-level="1"><span data-i18n="fm_nivel">Nível</span> 1</button>
+    <button type="button" class="tab" data-level="2"><span data-i18n="fm_nivel">Nível</span> 2</button>
+    <button type="button" class="tab" data-level="3"><span data-i18n="fm_nivel">Nível</span> 3</button>
+    <button type="button" class="tab" data-level="4"><span data-i18n="fm_nivel">Nível</span> 4</button>
+    <button type="button" class="tab" data-level="5"><span data-i18n="fm_nivel">Nível</span> 5</button>
   </div>
-  <button type="button" class="btn-add" id="btn-add-technique">Adicionar Habilidade de Técnica</button>
+  <button type="button" class="btn-add" id="btn-add-technique" data-i18n="fm_adicionar_habilidade_tecnica">Adicionar Habilidade de Técnica</button>
   <div id="technique-abilities" style="margin-top: 20px;">
     <!-- Habilidades de técnica criadas são exibidas aqui -->
   </div>
@@ -662,27 +663,27 @@ document.addEventListener('DOMContentLoaded', renderAbilities);
 
 
             <div class="navigation">
-                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
-                <span class="page-info">Página 6 de 7</span>
-                <button type="button" class="btn btn--primary" onclick="nextPage()">Próxima →</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()" data-i18n="fm_anterior">← Anterior</button>
+                <span class="page-info"><span data-i18n="fm_pagina">Página</span> 6 <span data-i18n="fm_de">de</span> 7</span>
+                <button type="button" class="btn btn--primary" onclick="nextPage()" data-i18n="fm_proxima">Próxima →</button>
             </div>
         </div>
 
         <!-- ===== PÁGINA 7: INVOCAÇÕES ===== -->
         <div id="page-7" class="page">
-            <h2 class="section-header section-border-cyan" data-help="Aqui você deve anotar, as invocações que você como Controlador ou como qualquer outra especialização, obter durante a campanha!">👹 Invocações / Shikigamis</h2>
+            <h2 class="section-header section-border-cyan" data-help="Aqui você deve anotar, as invocações que você como Controlador ou como qualquer outra especialização, obter durante a campanha!" data-i18n="fm_invocacoes">👹 Invocações / Shikigamis</h2>
 
             <div class="card section-border-cyan">
-                <button type="button" class="btn-add" onclick="addInvocation()">Adicionar Invocação</button>
+                <button type="button" class="btn-add" onclick="addInvocation()" data-i18n="fm_adicionar_invocacao">Adicionar Invocação</button>
                 <div id="invocations-list" style="margin-top: 20px;">
                     <!-- Invocações adicionadas dinamicamente -->
                 </div>
             </div>
 
             <div class="navigation">
-                <button type="button" class="btn btn--secondary" onclick="previousPage()">← Anterior</button>
-                <span class="page-info">Página 7 de 7</span>
-                <button type="submit" class="btn btn--primary" onclick="nextPage()" >Salvar</button>
+                <button type="button" class="btn btn--secondary" onclick="previousPage()" data-i18n="fm_anterior">← Anterior</button>
+                <span class="page-info"><span data-i18n="fm_pagina">Página</span> 7 <span data-i18n="fm_de">de</span> 7</span>
+                <button type="submit" class="btn btn--primary" onclick="nextPage()" data-i18n="fm_salvar">💾 Salvar Ficha</button>
             </div>
         </div>
 
@@ -697,19 +698,19 @@ document.addEventListener('DOMContentLoaded', renderAbilities);
     <div class="modal" id="dice-modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeDiceModal()">×</button>
-            <h2>🎲 Rolagem de D20</h2>
+            <h2 data-i18n="fm_rolagem_d20">🎲 Rolagem de D20</h2>
             <div class="form-group">
-                <label>Bônus/Modificador</label>
+                <label data-i18n="fm_bonus_modificador">Bônus/Modificador</label>
                 <input type="number" id="dice-bonus" value="0" class="form-control" style="width: 100px; margin: 0 auto;">
             </div>
             <div class="dice-result" id="dice-result" style="font-size: 4em; text-align: center; margin: 20px 0; font-weight: bold;">--</div>
             
             <div class="dice-history-container">
-                <label class="form-label" style="text-align: center; display: block;">Últimas Rolagens:</label>
+                <label class="form-label" style="text-align: center; display: block;" data-i18n="fm_ultimas_rolagens">Últimas Rolagens:</label>
                 <div id="dice-history" class="dice-history">
                     </div>
             </div>
-            <button class="btn btn--primary" onclick="rollD20()">🎲 Rolar Novamente</button>
+            <button class="btn btn--primary" onclick="rollD20()" data-i18n="fm_rolar_novamente">🎲 Rolar Novamente</button>
         </div>
     </div>
     

@@ -77,10 +77,10 @@
 
 /* Alto contraste baseado na paleta do Login (conversa com o tema escuro) */
 body.high-contrast {
-    /* Paleta de alto contraste (claro) */
-    --bg-color: #000000;
+    /* Paleta de alto contraste (claro) - cinza mais escuro solicitado */
+    --bg-color: #1a1a1a;
     --text-color: #ffffff;
-    --box-bg: #000000;
+    --box-bg: #1a1a1a;
     --border-color: #ffffff;
     --button-primary: #ff4500;       /* accent do login */
     --button-primary-hover: #ff6432; /* accent-2 do login */
@@ -89,15 +89,15 @@ body.high-contrast {
 }
 
 :root[data-theme="dark"] body.high-contrast {
-    /* Paleta de alto contraste + escuro (igual Login) */
-    --bg-color: #000000;
+    /* Alto contraste no tema escuro mantendo paleta original com leve reforço e bordas pretas */
+    --bg-color: #0b1828; /* ligeiramente mais profundo que #0d1b2a */
     --text-color: #ffffff;
-    --box-bg: #000000;
-    --border-color: #ffffff;
-    --button-primary: #00bfff;       /* accent do login (dark) */
-    --button-primary-hover: #00a0ff; /* accent-2 do login (dark) */
-    --button-secondary: #000000;
-    --button-hover: rgba(0, 191, 255, 0.25);
+    --box-bg: #213347; /* um toque mais claro para destacar contra fundo */
+    --border-color: #000000; /* bordas pretas para contraste solicitado */
+    --button-primary: #8aa8c4; /* acentuação um pouco mais clara */
+    --button-primary-hover: #5e7f9b; /* hover mais definido */
+    --button-secondary: #152636; /* secundário reforçado */
+    --button-hover: rgba(0,0,0,0.35); /* escurecimento suave ao hover */
 }
 
 * {
@@ -345,6 +345,13 @@ input:checked + .slider:before {
     position: relative;
 }
 
+/* Modal blur enhancement specifically for dark theme (frosted glass effect) */
+:root[data-theme="dark"] .modal-content {
+    background: rgba(27, 38, 59, 0.65); /* semi-transparente para evidenciar desfoque */
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+
 /* Personalizar scrollbar do modal */
 .modal-content::-webkit-scrollbar {
     width: 8px;
@@ -511,9 +518,9 @@ input:checked + .slider:before {
 .toggle-button.active,
 .contrast-toggle.active,
 .auto-read-toggle.active {
-    background: #000;
-    color: #fff;
-    border-color: #000;
+    background: #1a1a1a; /* cinza mais escuro solicitado */
+    color: #ffffff;
+    border-color: #ffffff; /* borda branca reforça contraste */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -627,6 +634,36 @@ input:checked + .slider:before {
     font-size: 1rem;
 }
 
+    .accessibility-item input[type="range"] {
+        width: 100%;
+        appearance: none;
+        height: 6px;
+        border-radius: 6px;
+        background: var(--border-color);
+        outline: none;
+        transition: background 0.3s ease;
+    }
+    .accessibility-item input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--button-primary);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        cursor: pointer;
+    }
+    .accessibility-item input[type="range"]::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--button-primary);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        cursor: pointer;
+    }
+    .accessibility-item input[type="range"]:hover {
+        background: var(--button-hover);
+    }
+    
 .warning-buttons, .modal-buttons {
     display: flex;
     gap: 12px;
@@ -1193,3 +1230,141 @@ body.high-contrast {
     background: var(--box-bg);
     color: var(--text-color);
 }
+
+/* ==================== HIGH CONTRAST ENHANCEMENTS (CONFIG PAGE) ==================== */
+body.high-contrast .CaixaConfig {
+    border: 3px solid var(--border-color);
+}
+body.high-contrast .option-item {
+    border-bottom: 2px solid var(--border-color);
+}
+body.high-contrast .option-item:last-child {
+    border-bottom: none;
+}
+body.high-contrast .modal-content {
+    border: 3px solid var(--border-color);
+}
+body.high-contrast .guide-speech {
+    border: 3px solid var(--border-color);
+}
+body.high-contrast .config-button,
+body.high-contrast .action-button,
+body.high-contrast .modal-button,
+body.high-contrast .language-button,
+body.high-contrast .accessibility-button {
+    border: 3px solid var(--border-color);
+}
+body.high-contrast .slider {
+    outline: 2px solid var(--border-color);
+}
+body.high-contrast input:checked + .slider {
+    outline: 2px solid var(--border-color);
+}
+
+/* High contrast: ensure guide trigger text is black for better readability */
+body.high-contrast .guide-trigger,
+body.high-contrast .guide-trigger span {
+    color: #000 !important;
+}
+
+/* High contrast + dark theme: white borders/text for guide elements */
+:root[data-theme="dark"] body.high-contrast .guide-trigger {
+    border: 3px solid #ffffff !important;
+    color: #ffffff !important;
+}
+:root[data-theme="dark"] body.high-contrast .guide-trigger span {
+    color: #ffffff !important;
+}
+:root[data-theme="dark"] body.high-contrast .guide-speech {
+    border: 3px solid #ffffff !important;
+}
+:root[data-theme="dark"] body.high-contrast .guide-option {
+    border: 2px solid #ffffff !important;
+}
+
+/* High contrast (tema claro): balão do guia com fundo cinza escuro e texto claro */
+:root[data-theme="light"] body.high-contrast .guide-speech {
+    background: #1a1a1a !important; /* cinza mais escuro */
+    border: 3px solid #ffffff !important; /* borda branca para destaque */
+    color: #ffffff !important;
+}
+:root[data-theme="light"] body.high-contrast .guide-speech::before {
+    border-bottom-color: #1a1a1a !important; /* seta combinando com o novo fundo */
+}
+:root[data-theme="light"] body.high-contrast .guide-speech-title,
+:root[data-theme="light"] body.high-contrast .guide-speech-content,
+:root[data-theme="light"] body.high-contrast .guide-speech,
+:root[data-theme="light"] body.high-contrast .guide-speech-close {
+    color: #ffffff !important; /* texto claro sobre fundo escuro para legibilidade */
+}
+/* Borda branca em cada tópico (option) do guia no alto contraste claro */
+:root[data-theme="light"] body.high-contrast .guide-option {
+    border: 2px solid #ffffff !important;
+}
+
+/* ==================== GUIDE DISABLED DURING MODALS ==================== */
+body.modal-open .guide-trigger,
+body.modal-open #guideSpeech {
+    pointer-events: none !important;
+    opacity: 0.45;
+    filter: grayscale(70%);
+}
+body.modal-open .guide-trigger::after {
+    animation-play-state: paused;
+    opacity: 0; /* esconde badge enquanto desativado */
+}
+body.modal-open .guide-speech.active {
+    /* garante não ficar visível se estava aberto */
+    display: none;
+}
+/* ==================== BACKGROUND OVERLAY BLUR WHEN MODAL OPEN ==================== */
+/* Em vez de aplicar blur nos elementos (que não aparece em cores sólidas),
+   criamos um overlay semi-transparente com backdrop-filter para evidenciar o desfoque. */
+body.modal-open::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(13,27,42,0.55); /* leve escurecimento */
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    z-index: 950; /* abaixo do modal (1000+), acima do conteúdo */
+    pointer-events: none;
+}
+/* Para tema claro ajustar tonalidade */
+body[data-theme="light"].modal-open::before {
+    background: rgba(255,238,228,0.55);
+}
+
+/* Fade (desbote) suave apenas no tema escuro ao abrir modal */
+@keyframes darkBackdropFadeIn {
+    0% { background: rgba(13,27,42,0); }
+    100% { background: rgba(13,27,42,0.55); }
+}
+:root[data-theme="dark"] body.modal-open::before {
+    animation: darkBackdropFadeIn .35s ease forwards;
+}
+/* Garantir que conteúdo principal fique abaixo do overlay */
+.CaixaConfig, h1, .guide-trigger, #guideSpeech { z-index: 900; }
+/* Modal mantém z-index superior */
+.modal { z-index: 1000; }
+
+/* ==================== ENTRADA DO CONTAINER PRINCIPAL ==================== */
+.pre-enter { opacity: 0; transform: translateY(25px) scale(0.97); }
+.config-enter { animation: configEnter .6s ease forwards; }
+@keyframes configEnter {
+    0% { opacity: 0; transform: translateY(25px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==================== ANIMAÇÃO DE FECHAMENTO DOS MODAIS ==================== */
+.modal-content.closing { animation: modalClose .35s ease forwards; }
+@keyframes modalClose {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-25px) scale(0.95); }
+}
+.alerts-warning-modal .modal-content.closing { animation: modalCloseZoom .35s cubic-bezier(0.68,-0.55,0.265,1.2) forwards; }
+@keyframes modalCloseZoom {
+    0% { opacity:1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity:0; transform: translate(-50%, -50%) scale(0.85); }
+}
+/* Removido fade do backdrop para evitar transparência perceptível ao fechar */

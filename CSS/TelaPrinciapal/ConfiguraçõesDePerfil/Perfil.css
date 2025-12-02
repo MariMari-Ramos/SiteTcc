@@ -596,6 +596,25 @@ h2 {
     background: #45a049;
 }
 
+/* ===== High-contrast themed avatar modal ===== */
+/* Light theme + High-contrast: white modal, black text and border */
+:root[data-theme="light"] body.high-contrast .avatar-modal-content {
+    background: #ffffff !important;
+    color: #000 !important;
+    border: 3px solid #000 !important;
+}
+:root[data-theme="light"] body.high-contrast .avatar-modal-content * { color: #000 !important; }
+:root[data-theme="light"] body.high-contrast .close-avatar { color: #000 !important; }
+
+/* Dark theme + High-contrast: black modal, white text and border */
+:root[data-theme="dark"] body.high-contrast .avatar-modal-content {
+    background: #000 !important;
+    color: #fff !important;
+    border: 3px solid #fff !important;
+}
+:root[data-theme="dark"] body.high-contrast .avatar-modal-content * { color: #fff !important; }
+:root[data-theme="dark"] body.high-contrast .close-avatar { color: #fff !important; }
+
 /* ========== BOTÕES E LINHAS DE AÇÃO ========== */
 /* action-row: caixas com label à esquerda e botão(s) compactos à direita */
 .action-row {
@@ -612,6 +631,11 @@ h2 {
 }
 .action-label { font-weight:700; }
 .action-controls { display:flex; gap:8px; align-items:center; }
+/* Ensure action labels are white where needed */
+:root[data-theme="dark"] .action-label,
+body.high-contrast .action-label {
+    color: #fff !important;
+}
 
 /* Photo action buttons (Upload / Escolher Avatar / Remover Foto) */
 .photo-action-buttons {
@@ -730,6 +754,26 @@ h2 {
     font-size: 0.92rem !important;
     text-align: center;
 }
+/* ===== High-contrast (light theme) focused fixes for specific texts ===== */
+:root[data-theme="light"] body.high-contrast .Coluna label,
+:root[data-theme="light"] body.high-contrast .input-group label,
+:root[data-theme="light"] body.high-contrast .action-label {
+    color: #000 !important;
+}
+
+:root[data-theme="light"] body.high-contrast .Coluna input[type="text"],
+:root[data-theme="light"] body.high-contrast .Coluna input[type="email"],
+:root[data-theme="light"] body.high-contrast .input-group input[type="text"],
+:root[data-theme="light"] body.high-contrast .input-group input[type="email"] {
+    color: #000 !important;
+    background: #fff !important;
+}
+
+:root[data-theme="light"] body.high-contrast .Coluna input[disabled],
+:root[data-theme="light"] body.high-contrast .Coluna input[readonly] {
+    color: #000 !important;
+    background: #f5f5f5 !important;
+}
 /* Alto contraste */
 body.high-contrast {
     background: #000 !important;
@@ -823,6 +867,30 @@ input::placeholder,
 textarea::placeholder {
     font-family: 'OpenDyslexic', Arial, sans-serif;
     opacity: 0.8;
+}
+
+/* ===== Labels visibility and color fixes ===== */
+/* Restore visibility and set color context-aware */
+.Coluna label[for="username"],
+.Coluna label[for="email"],
+.Coluna label[data-translate="perfil_foto"] { color: inherit; user-select: text; }
+
+/* Dark theme or High-Contrast: make these labels white for readability */
+:root[data-theme="dark"] .Coluna label[for="username"],
+:root[data-theme="dark"] .Coluna label[for="email"],
+:root[data-theme="dark"] .Coluna label[data-translate="perfil_foto"],
+body.high-contrast .Coluna label[for="username"],
+body.high-contrast .Coluna label[for="email"],
+body.high-contrast .Coluna label[data-translate="perfil_foto"] {
+    color: #fff !important;
+}
+
+/* High-contrast + Light theme: ensure modal text is black on white backgrounds */
+:root[data-theme="light"] body.high-contrast .overlay .modal,
+:root[data-theme="light"] body.high-contrast .overlay .modal *,
+:root[data-theme="light"] body.high-contrast .avatar-modal-content,
+:root[data-theme="light"] body.high-contrast .avatar-modal-content * {
+    color: #000 !important;
 }
 
 /* ========== GUIA (balão) - minimal styles reused from home.css ========== */
@@ -927,7 +995,7 @@ textarea::placeholder {
     top: 80px;
     right: 20px;
     width: 340px;
-    background: var(--box-bg, #fff);
+    background: #ffffff;
     border-radius: 18px;
     padding: 20px;
     box-shadow: 0 12px 36px rgba(0,0,0,0.25);
@@ -936,6 +1004,7 @@ textarea::placeholder {
     transform: scale(0.92) translateY(-8px);
     transition: all 0.28s cubic-bezier(.2,.9,.2,1);
     z-index: 9999;
+    border: 2px solid #000;
 }
 .guide-speech.active { opacity:1; visibility: visible; transform: scale(1) translateY(0); }
 
@@ -945,16 +1014,16 @@ textarea::placeholder {
     top: -12px; right: 34px;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
-    border-bottom: 12px solid var(--box-bg, #fff);
+    border-bottom: 12px solid #ffffff;
 }
 
 .guide-speech-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
-.guide-speech-title { color: var(--button-primary, #ff8c42); font-weight:800; display:flex; align-items:center; gap:8px; }
-.guide-speech-close { background:none; border:none; font-size:20px; cursor:pointer; color: var(--text-color); }
+.guide-speech-title { color: #ff8c42; font-weight:800; display:flex; align-items:center; gap:8px; }
+.guide-speech-close { background:none; border:none; font-size:20px; cursor:pointer; color: #000; }
 .guide-avatar { width:36px; height:36px; border-radius:50%; object-fit:cover; box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
-.guide-speech-content { color: var(--text-color); margin-bottom:12px; line-height:1.4; }
+.guide-speech-content { color: #000; margin-bottom:12px; line-height:1.4; }
 .guide-speech-options { display:flex; flex-direction:column; gap:8px; }
-.guide-option { padding:10px 12px; background: linear-gradient(135deg,#007BFF,#0056b3); color:#fff; border:none; border-radius:10px; cursor:pointer; text-align:left; font-weight:600; }
+.guide-option { padding:10px 12px; background: linear-gradient(135deg,#007BFF,#0056b3); color:#fff; border:2px solid #000; border-radius:10px; cursor:pointer; text-align:left; font-weight:600; }
 .guide-option:hover { transform: translateX(6px); box-shadow: 0 6px 18px rgba(0,123,255,0.18); }
 
 @media (max-width: 768px) {
@@ -1030,6 +1099,8 @@ textarea::placeholder {
 
 /* Ensure the trigger uses proper z-index and does not get styled incorrectly */
 .guide-trigger { z-index: 99999; }
+/* Force "Guia" text to black as requested */
+.guide-trigger span { color: #000 !important; }
 
 /* ===== Replace/override: make guide trigger and speech identical to home.css ===== */
 .guide-trigger {
@@ -1093,3 +1164,47 @@ textarea::placeholder {
 :root[data-theme="dark"] .guide-trigger::after { box-shadow: 0 0 28px rgba(119,141,169,0.06) !important; }
 
 :root[data-theme="dark"] .guide-speech { background: var(--box-bg, #1b263b) !important; color: var(--text-color, #e0e1dd) !important; }
+
+/* ===== Custom requests: borders and modal title styling ===== */
+/* Guide bubble and its topics: add black borders */
+.guide-speech { border: 2px solid #000 !important; }
+.guide-option { border: 2px solid #000 !important; }
+
+/* Action buttons (Alterar Senha / Sair / Excluir Conta): add black borders */
+.action-controls .btn-secondary,
+.action-controls .btn-warning,
+.action-controls .btn-danger { border: 2px solid #000 !important; }
+
+/* Alert modal buttons (e.g., remover foto confirmation): add black borders */
+.overlay .modal button { border: 2px solid #000 !important; }
+
+/* Generic modal title styling for all modals using .modal-title */
+.modal-title {
+    margin: 0 0 10px;
+    font-weight: 800;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+/* ===== Alto Contraste: modal do guia com fundo branco, textos pretos e bordas pretas ===== */
+body.high-contrast .guide-speech {
+    background: #ffffff !important;
+    border: 2px solid #000 !important;
+}
+
+body.high-contrast .guide-speech::before {
+    border-bottom-color: #ffffff !important;
+}
+
+body.high-contrast .guide-speech-title,
+body.high-contrast .guide-speech-content,
+body.high-contrast .guide-speech-close {
+    color: #000 !important;
+}
+
+body.high-contrast .guide-option {
+    border: 2px solid #000 !important;
+}

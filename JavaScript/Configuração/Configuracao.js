@@ -6,6 +6,16 @@ class SettingsManager {
         this.originalConfirm = window.confirm;
         this.originalConsoleWarn = console.warn;
         this.originalConsoleError = console.error;
+        // Web Speech API state
+        this.speech = {
+            supported: 'speechSynthesis' in window,
+            utterance: null,
+            speaking: false,
+            voice: null,
+            rate: 1,
+            pitch: 1,
+            lang: (navigator.language || 'pt-BR')
+        };
         this.init();
     }
 
@@ -21,7 +31,9 @@ class SettingsManager {
             fontType: 'OpenDyslexic',
             lineSpacing: '1.5',
             highContrast: false,
-            autoRead: false
+            autoRead: false,
+            speechRate: '1',
+            speechPitch: '1'
         };
         const xhr = new XMLHttpRequest();
         xhr.open('GET', '/SiteTcc/A_TelaPrincipal/Configurações/getConfig.php', false); // síncrono para garantir carregamento
@@ -61,6 +73,8 @@ class SettingsManager {
                         localStorage.setItem('lineSpacing', this.savedSettings.lineSpacing);
                         localStorage.setItem('highContrast', this.savedSettings.highContrast ? 'true' : 'false');
                         localStorage.setItem('autoRead', this.savedSettings.autoRead ? 'true' : 'false');
+                        localStorage.setItem('speechRate', String(this.savedSettings.speechRate || '1'));
+                        localStorage.setItem('speechPitch', String(this.savedSettings.speechPitch || '1'));
                     } catch (e) {}
                     if (window.updateGlobalSettings) {
                         window.updateGlobalSettings();
@@ -83,6 +97,428 @@ class SettingsManager {
         this.setupAlertsWarning();
         this.applyAllSettings();
         this.setupGuideBubble();
+        this.initSpeechVoices();
+        this.setupWordClickRead();
+        this.setupSelectionRead();
+        this._selectionDebounceTimer = null;
+        this._speechQueue = [];
+    }
+
+    // ==================== ANIMAÇÃO DE FECHAMENTO DE MODAL ====================
+    animateModalClose(modal, after) {
+        try {
+            if (!modal) return;
+            if (getComputedStyle(modal).display === 'none') { if (typeof after === 'function') after(); return; }
+            const content = modal.querySelector('.modal-content');
+            if (content) content.classList.add('closing');
+            const onEnd = (e) => {
+                if (content && e.target !== content) return; // garante evento da content
+                if (content) content.removeEventListener('animationend', onEnd);
+                modal.style.display = 'none';
+                if (content) content.classList.remove('closing');
+                // Remove classe modal-open se não existir outro modal aberto
+                const anyOpen = Array.from(document.querySelectorAll('.modal')).some(m => m !== modal && getComputedStyle(m).display === 'block');
+                if (!anyOpen) document.body.classList.remove('modal-open');
+                if (typeof after === 'function') after();
+            };
+            if (content) {
+                content.addEventListener('animationend', onEnd);
+            } else {
+                setTimeout(onEnd, 350);
+            }
+        } catch (e) {
+            // Fallback silencioso
+            try { modal.style.display = 'none'; } catch(_) {}
+            const anyOpen = Array.from(document.querySelectorAll('.modal')).some(m => m !== modal && getComputedStyle(m).display === 'block');
+            if (!anyOpen) document.body.classList.remove('modal-open');
+            if (typeof after === 'function') after();
+        }
+    }
+
+    // ==================== AUTO-READ (Web Speech API) ====================
+    initSpeechVoices() {
+        if (!this.speech.supported) return;
+        const setVoice = () => {
+            const voices = window.speechSynthesis.getVoices();
+            // Prefer voice matching current language
+            const lang = (this.savedSettings.language || this.speech.lang);
+            const preferred = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.toLowerCase()))
+                || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('pt'))
+                || voices[0];
+            this.speech.voice = preferred || null;
+        };
+        setVoice();
+        if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+            window.speechSynthesis.onvoiceschanged = setVoice;
+        }
+    }
+
+    speak(text) {
+        if (!this.speech.supported || !this.savedSettings.autoRead || !text) return;
+        try {
+            this.stopSpeaking();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = (this.savedSettings.language || this.speech.lang);
+            if (this.speech.voice) u.voice = this.speech.voice;
+            // aplica rate/pitch das configurações
+            this.speech.rate = Number(this.savedSettings.speechRate || this.speech.rate || 1);
+            this.speech.pitch = Number(this.savedSettings.speechPitch || this.speech.pitch || 1);
+            u.rate = this.speech.rate;
+            u.pitch = this.speech.pitch;
+            u.onstart = () => { this.speech.speaking = true; };
+            u.onend = () => { this.speech.speaking = false; };
+            this.speech.utterance = u;
+            window.speechSynthesis.speak(u);
+        } catch(e) {
+            // Silencioso: alguns navegadores bloqueiam sem interação do usuário
+        }
+    }
+
+    stopSpeaking() {
+        try {
+            if (this.speech.supported) {
+                window.speechSynthesis.cancel();
+            }
+            this.speech.speaking = false;
+            this.speech.utterance = null;
+            this._speechQueue = [];
+        } catch(e) {}
+    }
+
+    // Fala uma sequência de sentenças, enfileirando-as
+    speakSequence(sentences) {
+        if (!this.speech.supported || !this.savedSettings.autoRead) return;
+        const items = (sentences || []).map(s => (s || '').trim()).filter(s => s.length);
+        if (!items.length) return;
+        this.stopSpeaking();
+        this._speechQueue = items.slice();
+        const next = () => {
+            const txt = this._speechQueue.shift();
+            if (!txt) return;
+            try {
+                const u = new SpeechSynthesisUtterance(txt);
+                u.lang = (this.savedSettings.language || this.speech.lang);
+                if (this.speech.voice) u.voice = this.speech.voice;
+                this.speech.rate = Number(this.savedSettings.speechRate || this.speech.rate || 1);
+                this.speech.pitch = Number(this.savedSettings.speechPitch || this.speech.pitch || 1);
+                u.rate = this.speech.rate;
+                u.pitch = this.speech.pitch;
+                u.onend = () => {
+                    this.speech.speaking = false;
+                    if (this._speechQueue.length) {
+                        next();
+                    }
+                };
+                u.onstart = () => { this.speech.speaking = true; };
+                this.speech.utterance = u;
+                window.speechSynthesis.speak(u);
+            } catch(e) {
+                // se falhar, tenta próximo
+                next();
+            }
+        };
+        next();
+    }
+
+    // Lê a palavra clicada quando autoRead está ativo
+    setupWordClickRead() {
+        this._handleWordClick = (e) => this.handleWordClick(e);
+        document.addEventListener('click', this._handleWordClick, true);
+    }
+
+    handleWordClick(e) {
+        try {
+            if (!this.savedSettings || !this.savedSettings.autoRead) return;
+            if (e.button !== 0) return; // apenas clique principal
+
+            const ignore = e.target.closest('button, a, input, textarea, select, [contenteditable], .toggle-button, .switch, .config-button, .action-button, .guide-option, .slider');
+            if (ignore) return;
+
+            // Evita falar ao fechar modais ou clicar no backdrop
+            if (e.target.classList && (e.target.classList.contains('modal') || e.target.classList.contains('modal-backdrop'))) return;
+
+            let node = null, offset = 0;
+            const x = e.clientX, y = e.clientY;
+            if (document.caretRangeFromPoint) {
+                const range = document.caretRangeFromPoint(x, y);
+                if (!range) return;
+                node = range.startContainer;
+                offset = range.startOffset;
+            } else if (document.caretPositionFromPoint) {
+                const pos = document.caretPositionFromPoint(x, y);
+                if (!pos) return;
+                node = pos.offsetNode;
+                offset = pos.offset;
+            } else {
+                return;
+            }
+
+            if (!node || node.nodeType !== Node.TEXT_NODE) return;
+            const text = node.textContent || '';
+            if (!text.trim()) return;
+
+            const word = this.extractWordAt(text, offset, this.savedSettings.language || 'pt-BR');
+            if (word) {
+                this.speak(word);
+            }
+        } catch(err) {
+            // silencioso
+        }
+    }
+
+    extractWordAt(text, offset, lang) {
+        // Tenta usar Intl.Segmenter para melhor suporte a idiomas
+        try {
+            if (window.Intl && typeof Intl.Segmenter === 'function') {
+                const seg = new Intl.Segmenter(lang || 'pt-BR', { granularity: 'word' });
+                const iterator = seg.segment(text);
+                for (const part of iterator) {
+                    const start = part.index;
+                    const end = start + part.segment.length;
+                    if (offset >= start && offset <= end) {
+                        if (part.isWordLike) {
+                            return part.segment.trim();
+                        } else {
+                            // Se clicou em espaço/pontuação, procura próxima parte com palavra
+                            // à esquerda e à direita
+                            const ahead = this._nextWordSegment(text, end, seg);
+                            if (ahead) return ahead;
+                            const back = this._prevWordSegment(text, start, seg);
+                            if (back) return back;
+                            return '';
+                        }
+                    }
+                }
+            }
+        } catch(_) {}
+
+        // Fallback regex unicode
+        const isWordChar = (ch) => /[\p{L}\p{N}'’_-]/u.test(ch);
+        let i = Math.max(0, Math.min(offset, text.length));
+        let start = i, end = i;
+        while (start > 0 && isWordChar(text[start-1])) start--;
+        while (end < text.length && isWordChar(text[end])) end++;
+        const w = text.slice(start, end).trim();
+        return w;
+    }
+
+    _nextWordSegment(text, fromIdx, seg) {
+        const iter = seg.segment(text);
+        for (const part of iter) {
+            if (part.index >= fromIdx && part.isWordLike) {
+                return part.segment.trim();
+            }
+        }
+        return '';
+    }
+
+    _prevWordSegment(text, fromIdx, seg) {
+        const parts = Array.from(seg.segment(text));
+        for (let k = parts.length - 1; k >= 0; k--) {
+            const part = parts[k];
+            if (part.index + part.segment.length <= fromIdx && part.isWordLike) {
+                return part.segment.trim();
+            }
+        }
+        return '';
+    }
+
+    // ==================== LEITURA POR SELEÇÃO (FRASE INTEIRA) ====================
+    setupSelectionRead() {
+        // Lê a frase inteira quando o usuário seleciona texto com o mouse (com debounce)
+        this._handleSelectionRead = (e) => this.handleSelectionRead(e);
+        document.addEventListener('mouseup', this._handleSelectionRead, true);
+        // Suporte básico a seleção por teclado (Shift+setas) com debounce
+        this._handleSelectionKey = (e) => {
+            if (!e) return;
+            if (e.key === 'Shift' || (typeof e.key === 'string' && e.key.startsWith('Arrow'))) {
+                this.handleSelectionRead(e);
+            }
+        };
+        document.addEventListener('keyup', this._handleSelectionKey, true);
+    }
+
+    handleSelectionRead(e) {
+        try {
+            if (!this.speech.supported || !this.savedSettings || !this.savedSettings.autoRead) return;
+
+            if (this._selectionDebounceTimer) {
+                clearTimeout(this._selectionDebounceTimer);
+                this._selectionDebounceTimer = null;
+            }
+
+            this._selectionDebounceTimer = setTimeout(() => {
+                const sel = window.getSelection ? window.getSelection() : null;
+                if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
+
+                const range = sel.getRangeAt(0);
+                // Evitar inputs, botões, links, áreas editáveis e backdrop/modal
+                const eventTarget = (e && e.target) ? e.target : null;
+                const containerEl = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+                    ? range.commonAncestorContainer
+                    : range.commonAncestorContainer.parentElement;
+                const targetForCheck = eventTarget || containerEl;
+                if (this._isInteractiveElement(targetForCheck)) return;
+
+                const selectedText = sel.toString().trim();
+                if (!selectedText) return;
+
+                // Encontrar contêiner de bloco para obter contexto de sentença(s)
+                const blockEl = this._closestBlockContainer(containerEl || document.body);
+                if (!blockEl || !blockEl.textContent) {
+                    // Sem contexto: lê o próprio texto selecionado
+                    this.speak(selectedText);
+                    return;
+                }
+
+                // Calcula offsets dentro do texto completo do bloco
+                const rStart = document.createRange();
+                rStart.setStart(blockEl, 0);
+                rStart.setEnd(range.startContainer, range.startOffset);
+                const startOffset = rStart.toString().length;
+
+                const rEnd = document.createRange();
+                rEnd.setStart(blockEl, 0);
+                rEnd.setEnd(range.endContainer, range.endOffset);
+                const endOffset = rEnd.toString().length;
+
+                const fullText = blockEl.textContent;
+                const lang = this.savedSettings.language || this.speech.lang || 'pt-BR';
+                const sentences = this._extractSentencesInRange(fullText, startOffset, endOffset, lang);
+                if (sentences && sentences.length > 1) {
+                    this.speakSequence(sentences);
+                } else {
+                    const sentence = sentences[0] || selectedText;
+                    if (sentence && sentence.trim()) this.speak(sentence.trim());
+                }
+            }, 250);
+        } catch(err) {
+            // silencioso
+        }
+    }
+
+    _extractSentencesInRange(text, startOffset, endOffset, lang) {
+        const out = [];
+        if (!text) return out;
+        // Intl.Segmenter por sentenças
+        try {
+            if (window.Intl && typeof Intl.Segmenter === 'function') {
+                const seg = new Intl.Segmenter(lang || 'pt-BR', { granularity: 'sentence' });
+                let capturing = false;
+                for (const part of seg.segment(text)) {
+                    const s = part.index;
+                    const e = s + part.segment.length;
+                    if (!capturing && startOffset >= s && startOffset < e) {
+                        out.push(part.segment.trim());
+                        capturing = endOffset > e;
+                        if (!capturing) break;
+                    } else if (capturing) {
+                        out.push(part.segment.trim());
+                        if (endOffset <= e) break;
+                    }
+                }
+                if (out.length) return out;
+            }
+        } catch(_) {}
+
+        // Fallback: cortar por pontuação comum e espaços
+        const pieces = text.split(/([\.\!\?…]+)/);
+        // Reconstituir mantendo pontuação
+        const sentences = [];
+        for (let i = 0; i < pieces.length; i += 2) {
+            const body = (pieces[i] || '').trim();
+            const punct = (pieces[i + 1] || '').trim();
+            const s = (body + (punct ? (' ' + punct) : '')).trim();
+            if (s) sentences.push(s);
+        }
+        // Mapear para offsets aproximados
+        let pos = 0;
+        const bounds = sentences.map(sn => {
+            const start = pos;
+            const end = pos + sn.length;
+            pos = end + 1; // considera espaço
+            return { start, end, text: sn };
+        });
+        const selected = [];
+        for (const b of bounds) {
+            if (startOffset < b.end && endOffset > b.start) {
+                selected.push(b.text);
+            }
+        }
+        return selected.length ? selected : [text.slice(startOffset, endOffset).trim()];
+    }
+
+    _isInteractiveElement(el) {
+        try {
+            const IGNORE_SEL = 'button, a, input, textarea, select, [contenteditable], .toggle-button, .switch, .config-button, .action-button, .guide-option, .slider, .modal, .modal-backdrop';
+            let node = el;
+            while (node && node !== document && node.nodeType === Node.ELEMENT_NODE) {
+                if (node.matches && node.matches(IGNORE_SEL)) return true;
+                node = node.parentElement;
+            }
+        } catch(_) {}
+        return false;
+    }
+
+    _closestBlockContainer(node) {
+        let el = node && (node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement);
+        const isBlockTag = (tag) => /^(P|DIV|LI|SECTION|ARTICLE|MAIN|ASIDE|NAV|H1|H2|H3|H4|H5|H6)$/i.test(tag);
+        while (el && el !== document.body) {
+            if (isBlockTag(el.tagName)) return el;
+            try {
+                const cs = window.getComputedStyle(el);
+                if (cs && (cs.display === 'block' || cs.display === 'list-item' || cs.display === 'table' || cs.display === 'table-row' || cs.display === 'table-cell')) {
+                    return el;
+                }
+            } catch(_) {}
+            el = el.parentElement;
+        }
+        return document.body;
+    }
+
+    _extractSentenceAt(text, startOffset, endOffset, lang) {
+        if (!text) return '';
+        // Usa Intl.Segmenter se disponível para segmentar por frases
+        try {
+            if (window.Intl && typeof Intl.Segmenter === 'function') {
+                const seg = new Intl.Segmenter(lang || 'pt-BR', { granularity: 'sentence' });
+                let collected = '';
+                let capturing = false;
+                for (const part of seg.segment(text)) {
+                    const s = part.index;
+                    const e = s + part.segment.length;
+                    if (!capturing && startOffset >= s && startOffset < e) {
+                        collected = part.segment;
+                        // Se a seleção ultrapassa o fim desta sentença, inclui próximas até cobrir o fim
+                        if (endOffset > e) {
+                            capturing = true;
+                        } else {
+                            return collected;
+                        }
+                    } else if (capturing) {
+                        collected += (collected && !/\s$/.test(collected) ? ' ' : '') + part.segment;
+                        if (endOffset <= e) return collected;
+                    }
+                }
+                if (collected) return collected;
+            }
+        } catch(_) {}
+
+        // Fallback: encontra limites de frase por pontuação comum
+        const len = text.length;
+        let start = Math.max(0, Math.min(startOffset, len - 1));
+        let end = Math.max(0, Math.min(endOffset, len));
+        const isSentEnd = (ch) => /[\.\!\?…]/.test(ch);
+        // recua até o início da frase
+        while (start > 0 && !isSentEnd(text[start - 1])) start--;
+        // avança até o fim da frase
+        while (end < len && !isSentEnd(text[end - 1] || '')) end++;
+        // expande para incluir aspas/fechamentos comuns
+        while (end < len && /["'”’)\]\s]/.test(text[end])) end++;
+        while (start > 0 && /[\s(“"'‘]/.test(text[start])) start--;
+        const slice = text.slice(start, end).trim();
+        // Se ainda estiver vazio, retorna seleção original aproximada
+        return slice || text.slice(startOffset, endOffset).trim();
     }
 
     setupToggles() {
@@ -179,6 +615,7 @@ class SettingsManager {
             if (!e.target.checked && this.savedSettings.alerts) {
                 e.target.checked = true;
                 alertsModal.style.display = 'block';
+                document.body.classList.add('modal-open');
             } else if (e.target.checked && !this.savedSettings.alerts) {
                 this.savedSettings.alerts = true;
                 this.unsavedChanges = true;
@@ -191,20 +628,21 @@ class SettingsManager {
             this.savedSettings.alerts = false;
             alertsToggle.checked = false;
             this.unsavedChanges = true;
-            alertsModal.style.display = 'none';
-            this.applyAlertsSettings();
-            this.showFinalAlertMessage('Alertas desativados! Você não receberá mais notificações do sistema.');
+            this.animateModalClose(alertsModal, () => {
+                this.applyAlertsSettings();
+                this.showFinalAlertMessage('Alertas desativados! Você não receberá mais notificações do sistema.');
+            });
         });
 
         cancelBtn.addEventListener('click', () => {
             alertsToggle.checked = true;
-            alertsModal.style.display = 'none';
+            this.animateModalClose(alertsModal);
         });
 
         window.addEventListener('click', (e) => {
             if (e.target === alertsModal) {
                 alertsToggle.checked = true;
-                alertsModal.style.display = 'none';
+                this.animateModalClose(alertsModal);
             }
         });
     }
@@ -284,12 +722,13 @@ class SettingsManager {
 
         openBtn.addEventListener('click', () => {
             modal.style.display = 'block';
+            document.body.classList.add('modal-open');
             langOptions.forEach(opt => {
                 opt.classList.toggle('selected', opt.dataset.lang === this.savedSettings.language);
             });
         });
-                    
-        closeBtn.addEventListener('click', () => modal.style.display = 'none');
+        
+        closeBtn.addEventListener('click', () => { this.animateModalClose(modal); });
 
         langOptions.forEach(option => {
             option.addEventListener('click', () => {
@@ -304,14 +743,28 @@ class SettingsManager {
             if (selectedOption) {
                 this.savedSettings.language = selectedOption.dataset.lang;
                 currentLangSpan.textContent = selectedOption.textContent;
-                this.updatePageTexts();
-                modal.style.display = 'none';
+                if (window.TranslationManager) {
+                    const p = TranslationManager.setLocale(this.savedSettings.language);
+                    if (p && typeof p.then === 'function') {
+                        p.then(() => {
+                            this.updatePageTexts();
+                            this.initSpeechVoices();
+                        });
+                    } else {
+                        // mesma localidade selecionada: apenas reaplica textos
+                        this.updatePageTexts();
+                        this.initSpeechVoices();
+                    }
+                } else {
+                    this.updatePageTexts();
+                }
+                this.animateModalClose(modal);
                 this.unsavedChanges = true;
             }
         });
 
         window.addEventListener('click', (event) => {
-            if (event.target === modal) modal.style.display = 'none';
+            if (event.target === modal) { this.animateModalClose(modal); }
         });
 
         const initialOption = document.querySelector(`[data-lang="${this.savedSettings.language}"]`);
@@ -330,6 +783,8 @@ class SettingsManager {
         const lineSpacingSelect = document.getElementById('lineSpacingSelect');
         const contrastToggle = document.getElementById('toggleContrast');
         const autoReadToggle = document.getElementById('toggleAutoRead');
+        const speechRateInput = document.getElementById('speechRateInput');
+        const speechPitchInput = document.getElementById('speechPitchInput');
         const warning = document.getElementById('accessibilityWarning');
 
         if (!modal || !openBtn || !closeBtn || !saveBtn) return;
@@ -338,6 +793,8 @@ class SettingsManager {
             fontSizeSelect.value = this.savedSettings.fontSize;
             fontTypeSelect.value = this.savedSettings.fontType;
             lineSpacingSelect.value = this.savedSettings.lineSpacing;
+            if (speechRateInput) speechRateInput.value = String(this.savedSettings.speechRate || '1');
+            if (speechPitchInput) speechPitchInput.value = String(this.savedSettings.speechPitch || '1');
             
             if (this.savedSettings.highContrast) {
                 contrastToggle.classList.add('active');
@@ -358,15 +815,20 @@ class SettingsManager {
 
         openBtn.addEventListener('click', () => {
             modal.style.display = 'block';
+            document.body.classList.add('modal-open');
             loadAccessibilitySettings();
             this.checkContrastConflict();
         });
 
-        closeBtn.addEventListener('click', () => modal.style.display = 'none');
+        closeBtn.addEventListener('click', () => {
+            this.animateModalClose(modal, () => this.stopSpeaking());
+        });
 
         fontSizeSelect.addEventListener('change', () => this.unsavedChanges = true);
         fontTypeSelect.addEventListener('change', () => this.unsavedChanges = true);
         lineSpacingSelect.addEventListener('change', () => this.unsavedChanges = true);
+        if (speechRateInput) speechRateInput.addEventListener('input', () => this.unsavedChanges = true);
+        if (speechPitchInput) speechPitchInput.addEventListener('input', () => this.unsavedChanges = true);
 
         contrastToggle.addEventListener('click', () => {
             contrastToggle.classList.toggle('active');
@@ -379,6 +841,11 @@ class SettingsManager {
             autoReadToggle.classList.toggle('active');
             autoReadToggle.textContent = autoReadToggle.classList.contains('active') ? 'Desativar' : 'Ativar';
             this.unsavedChanges = true;
+            // feedback por voz ao alternar usando i18n
+            if (window.TranslationManager) {
+                const key = autoReadToggle.classList.contains('active') ? 'speech.autoRead.on' : 'speech.autoRead.off';
+                this.speak(TranslationManager.t(key));
+            }
         });
 
         saveBtn.addEventListener('click', () => {
@@ -387,14 +854,20 @@ class SettingsManager {
             this.savedSettings.lineSpacing = lineSpacingSelect.value;
             this.savedSettings.highContrast = contrastToggle.classList.contains('active');
             this.savedSettings.autoRead = autoReadToggle.classList.contains('active');
+            this.savedSettings.speechRate = speechRateInput ? speechRateInput.value : (this.savedSettings.speechRate || '1');
+            this.savedSettings.speechPitch = speechPitchInput ? speechPitchInput.value : (this.savedSettings.speechPitch || '1');
             
             this.applyAccessibilitySettings();
-            modal.style.display = 'none';
+            this.animateModalClose(modal);
+            // anunciar mudança de acessibilidade principal via i18n
+            if (this.savedSettings.autoRead && window.TranslationManager) {
+                this.speak(TranslationManager.t('speech.accessibility.applied'));
+            }
             this.unsavedChanges = true;
         });
 
         window.addEventListener('click', (event) => {
-            if (event.target === modal) modal.style.display = 'none';
+            if (event.target === modal) { this.animateModalClose(modal); }
         });
 
         this.checkContrastConflict = () => {
@@ -465,6 +938,11 @@ class SettingsManager {
         if (this.checkContrastConflict) {
             this.checkContrastConflict();
         }
+        // feedback por voz ao alternar tema via i18n
+        if (this.savedSettings.autoRead && window.TranslationManager) {
+            const key = theme === 'dark' ? 'speech.theme.dark' : 'speech.theme.light';
+            this.speak(TranslationManager.t(key));
+        }
     }
 
     applyAccessibilitySettings() {
@@ -480,28 +958,26 @@ class SettingsManager {
         
         if (this.savedSettings.autoRead) {
             document.body.classList.add('auto-read');
+            // ler título da página ao ativar usando i18n
+            if (window.TranslationManager) {
+                const h1 = document.querySelector('h1');
+                const titleText = h1 ? h1.textContent.trim() : document.title;
+                this.speak(TranslationManager.t('pageIntro', { page: titleText }));
+            }
         } else {
             document.body.classList.remove('auto-read');
+            this.stopSpeaking();
         }
     }
 
     updatePageTexts() {
-        const translations = CONFIG.translations[this.savedSettings.language] || CONFIG.translations['pt-BR'];
-        document.title = translations.title;
-        
-        document.querySelectorAll('[data-translate]').forEach(element => {
-            const key = element.getAttribute('data-translate');
-            if (translations[key]) {
-                element.textContent = translations[key];
-            }
-        });
-        
-        // Atualiza textos do guia
+        if (!window.TranslationManager) return;
+        document.title = TranslationManager.t('title');
+        // Aplica tradução via data-i18n
+        TranslationManager.applyToDOM();
         const guideContent = document.getElementById('guideContent');
         if (guideContent) {
-            const lang = this.savedSettings.language;
-            const texts = GUIDE_TEXTS[lang] || GUIDE_TEXTS['pt-BR'];
-            guideContent.textContent = texts.intro;
+            guideContent.textContent = TranslationManager.t('guide_intro_config');
         }
     }
 
@@ -516,7 +992,9 @@ class SettingsManager {
             fontType: 'OpenDyslexic',
             lineSpacing: '1.5',
             highContrast: false,
-            autoRead: false
+            autoRead: false,
+            speechRate: '1',
+            speechPitch: '1'
         };
         
         this.applyAllSettings();
@@ -592,6 +1070,7 @@ window.showConfirm = function(message) {
 // ==================== SISTEMA DE GUIA (ESTILO INDEX.PHP) ====================
 function openGuide() {
     // Usa settings carregado, não localStorage
+    if (document.body.classList.contains('modal-open')) return; // bloqueado durante modal
     if (window.settingsManager && window.settingsManager.savedSettings && window.settingsManager.savedSettings.guide === false) return;
     
     const el = document.getElementById('guideSpeech');
@@ -618,6 +1097,7 @@ function closeGuide() {
 function toggleGuide() {
     const el = document.getElementById('guideSpeech');
     if (!el) return;
+    if (document.body.classList.contains('modal-open')) return; // não alterna enquanto modal aberto
     
     if (el.classList.contains('active')) {
         closeGuide();
@@ -667,32 +1147,63 @@ const GUIDE_TEXTS = {
 };
 
 function showGuideInfo(topic) {
-    let lang = 'pt-BR';
-    if (window.settingsManager && window.settingsManager.savedSettings && window.settingsManager.savedSettings.language) {
-        lang = window.settingsManager.savedSettings.language;
-    }
-    const texts = GUIDE_TEXTS[lang] || GUIDE_TEXTS['pt-BR'];
+    console.log('[GUIDE] showGuideInfo chamado, topic:', topic);
     const el = document.getElementById('guideContent');
-    if (!el) return;
+    if (!el) {
+        console.error('[GUIDE] Elemento guideContent não encontrado!');
+        return;
+    }
+    if (!window.TranslationManager) {
+        console.error('[GUIDE] TranslationManager não disponível!');
+        return;
+    }
     
-    const map = {
-        dark: texts.dark,
-        carousel: texts.carousel,
-        guide: texts.guide,
-        alerts: texts.alerts,
-        language: texts.language,
-        accessibility: texts.accessibility,
-        save: texts.save,
-        restore: texts.restore,
-        back: texts.back
+    console.log('[GUIDE] TranslationManager.loaded:', TranslationManager.loaded);
+    
+    const updateContent = () => {
+        console.log('[GUIDE] updateContent executando para topic:', topic);
+        const keyMap = {
+            dark: 'guide.info.dark',
+            carousel: 'guide.info.carousel',
+            guide: 'guide.info.guide',
+            alerts: 'guide.info.alerts',
+            language: 'guide.info.language',
+            accessibility: 'guide.info.accessibility',
+            save: 'guide.info.save',
+            restore: 'guide.info.restore',
+            back: 'guide.info.back'
+        };
+        const key = keyMap[topic] || 'guide_intro_config';
+        console.log('[GUIDE] Chave de tradução:', key);
+        const txt = TranslationManager.t(key);
+        console.log('[GUIDE] Texto traduzido:', txt);
+        el.textContent = txt === key ? TranslationManager.t('guide_intro_config') : txt;
+        console.log('[GUIDE] Conteúdo atualizado, abrindo guia...');
+        openGuide();
+        try {
+            if (window.settingsManager && window.settingsManager.savedSettings && window.settingsManager.savedSettings.autoRead) {
+                window.settingsManager.speak(el.textContent);
+            }
+        } catch(e) {
+            console.error('[GUIDE] Erro ao falar:', e);
+        }
     };
     
-    el.textContent = map[topic] || texts.intro;
-    openGuide();
+    // Se ainda não carregou, aguarda e depois atualiza
+    if (!TranslationManager.loaded) {
+        console.log('[GUIDE] Aguardando carregamento de i18n...');
+        document.addEventListener('i18n:loaded', updateContent, { once: true });
+        return;
+    }
+    
+    // Já carregado: atualiza imediatamente
+    console.log('[GUIDE] i18n já carregado, executando updateContent imediatamente');
+    updateContent();
 }
 
 // ==================== INICIALIZAÇÃO ====================
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('[CONFIG] DOMContentLoaded disparado');
     const alertsEnabled = localStorage.getItem('alertsEnabled') !== 'false';
     window.SITE_ALERTS_ENABLED = alertsEnabled;
     
@@ -709,142 +1220,32 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('alerts-disabled');
     }
     
-    new SettingsManager();
+    console.log('[CONFIG] Criando SettingsManager...');
+    window.settingsManager = new SettingsManager();
+    console.log('[CONFIG] SettingsManager criado e exposto:', window.settingsManager);
 
-    // Texto introdutório conforme idioma
+    // Texto introdutório conforme idioma via i18n (aguarda carregamento)
     const guideContent = document.getElementById('guideContent');
-    if (guideContent) {
-        const lang = localStorage.getItem('language') || 'pt-BR';
-        const texts = GUIDE_TEXTS[lang] || GUIDE_TEXTS['pt-BR'];
-        guideContent.textContent = texts.intro;
-    }
-});
-
-// ==================== TRADUÇÕES ====================
-const CONFIG = {
-    translations: {
-        'pt-BR': {
-            title: 'Configurações',
-            darkMode: 'Modo escuro',
-            carousel: 'Animação do carrossel',
-            guide: 'Guia',
-            guia: 'Guia',
-            alerts: 'Alertas',
-            language: 'Idioma',
-            accessibility: 'Fonte e Acessibilidade',
-            saveChanges: 'Salvar alterações',
-            restoreChanges: 'Voltar para os padrões iniciais',
-            backToMain: 'Retornar para o lobby',
-            selectLanguage: 'Selecione o idioma',
-            save: 'Salvar',
-            cancel: 'Cancelar',
-            fontAccessibilityTitle: 'Fonte e Acessibilidade',
-            fontSize: 'Tamanho da fonte:',
-            fontType: 'Tipo da fonte:',
-            lineSpacing: 'Espaçamento entre linhas:',
-            highContrast: 'Modo alto contraste:',
-            autoRead: 'Modo de leitura automática:',
-            alertsWarningTitle: '⚠️ Aviso Importante',
-            alertsWarningMessage: 'Ao desativar os alertas, você não receberá mais notificações importantes do sistema, incluindo:',
-            alertsWarningItem1: 'Avisos de segurança',
-            alertsWarningItem2: 'Notificações de erro',
-            alertsWarningItem3: 'Confirmações de ações importantes',
-            alertsWarningItem4: 'Mensagens de validação',
-            alertsWarningQuestion: 'Isso pode ser prejudicial para sua experiência no site. Tem certeza que deseja continuar?',
-            confirmDisable: 'Sim, desativar alertas',
-            guide_title: 'Hefélio, o Guia',
-            guide_intro_config: 'Olá! 👋 Aqui você pode configurar o tema, alertas, idioma e acessibilidade. Escolha um tópico abaixo para entender cada opção.',
-            guide_opt_dark: '🌓 Modo escuro',
-            guide_opt_carousel: '🎠 Carrossel',
-            guide_opt_guide: '🎓 Guia',
-            guide_opt_alerts: '🔔 Alertas',
-            guide_opt_language: '🌐 Idioma',
-            guide_opt_accessibility: '♿ Acessibilidade',
-            guide_opt_save: '💾 Salvar',
-            guide_opt_restore: '♻️ Restaurar',
-            guide_opt_back: '🏠 Voltar'
-        },
-        'en-US': {
-            title: 'Settings',
-            darkMode: 'Dark mode',
-            carousel: 'Carousel animation',
-            guide: 'Guide',
-            guia: 'Guide',
-            alerts: 'Alerts',
-            language: 'Language',
-            accessibility: 'Font and Accessibility',
-            saveChanges: 'Save changes',
-            restoreChanges: 'Restore to defaults',
-            backToMain: 'Return to lobby',
-            selectLanguage: 'Select language',
-            save: 'Save',
-            cancel: 'Cancel',
-            fontAccessibilityTitle: 'Font and Accessibility',
-            fontSize: 'Font size:',
-            fontType: 'Font type:',
-            lineSpacing: 'Line spacing:',
-            highContrast: 'High contrast mode:',
-            autoRead: 'Auto reading mode:',
-            alertsWarningTitle: '⚠️ Important Warning',
-            alertsWarningMessage: 'By disabling alerts, you will no longer receive important system notifications, including:',
-            alertsWarningItem1: 'Security warnings',
-            alertsWarningItem2: 'Error notifications',
-            alertsWarningItem3: 'Important action confirmations',
-            alertsWarningItem4: 'Validation messages',
-            alertsWarningQuestion: 'This can be harmful to your site experience. Are you sure you want to continue?',
-            confirmDisable: 'Yes, disable alerts',
-            guide_title: 'Hephélio, the Guide',
-            guide_intro_config: 'Hi! 👋 Configure theme, alerts, language and accessibility. Pick a topic below to learn more.',
-            guide_opt_dark: '🌓 Dark mode',
-            guide_opt_carousel: '🎠 Carousel',
-            guide_opt_guide: '🎓 Guide',
-            guide_opt_alerts: '🔔 Alerts',
-            guide_opt_language: '🌐 Language',
-            guide_opt_accessibility: '♿ Accessibility',
-            guide_opt_save: '💾 Save',
-            guide_opt_restore: '♻️ Restore',
-            guide_opt_back: '🏠 Back'
-        },
-        'es-ES': {
-            title: 'Ajustes',
-            darkMode: 'Modo oscuro',
-            carousel: 'Animación carrusel',
-            guide: 'Guía',
-            guia: 'Guía',
-            alerts: 'Alertas',
-            language: 'Idioma',
-            accessibility: 'Fuente y Accesibilidad',
-            saveChanges: 'Guardar cambios',
-            restoreChanges: 'Restaurar valores predeterminados',
-            backToMain: 'Volver al lobby',
-            selectLanguage: 'Selecciona el idioma',
-            save: 'Guardar',
-            cancel: 'Cancelar',
-            fontAccessibilityTitle: 'Fuente y Accesibilidad',
-            fontSize: 'Tamaño de fuente:',
-            fontType: 'Tipo de fuente:',
-            lineSpacing: 'Espaciado entre líneas:',
-            highContrast: 'Modo alto contraste:',
-            autoRead: 'Modo de lectura automática:',
-            alertsWarningTitle: '⚠️ Advertencia Importante',
-            alertsWarningMessage: 'Al desactivar las alertas, ya no recibirás notificaciones importantes del sistema, incluyendo:',
-            alertsWarningItem1: 'Advertencias de seguridad',
-            alertsWarningItem2: 'Notificaciones de error',
-            alertsWarningItem3: 'Confirmaciones de acciones importantes',
-            alertsWarningItem4: 'Mensajes de validación',
-            alertsWarningQuestion: 'Esto puede ser perjudicial para tu experiencia en el sitio. ¿Estás seguro de que quieres continuar?',
-            confirmDisable: 'Sí, desactivar alertas',
-            guide_title: 'Hefelio, el Guía',
-            guide_intro_config: '¡Hola! 👋 Configura tema, alertas, idioma y accesibilidad. Elige un tema abajo para saber más.',
-            guide_opt_dark: '🌓 Modo oscuro',
-            guide_opt_carousel: '🎠 Carrusel',
-            guide_opt_guide: '🎓 Guía',
-            guide_opt_alerts: '🔔 Alertas',
-            guide_opt_language: '🌐 Idioma',
-            guide_opt_accessibility: '♿ Accesibilidad',
-            guide_opt_save: '💾 Guardar',
-            guide_opt_restore: '♻️ Restaurar',
-            guide_opt_back: '🏠 Volver'
+    if (guideContent && window.TranslationManager) {
+        const applyIntro = () => { guideContent.textContent = TranslationManager.t('guide_intro_config'); };
+        if (TranslationManager.loaded) {
+            applyIntro();
+        } else {
+            document.addEventListener('i18n:loaded', applyIntro, { once: true });
         }
     }
-};
+
+    // Entrada animada do container principal e título
+    const mainBox = document.querySelector('.CaixaConfig');
+    const title = document.querySelector('h1');
+    [mainBox, title].forEach(el => {
+        if (!el) return;
+        el.classList.add('pre-enter');
+        // Próximo frame garante aplicação inicial antes da animação
+        requestAnimationFrame(() => {
+            el.classList.add('config-enter');
+        });
+    });
+});
+
+// Inline translation objects removed; using external locale JSON via TranslationManager.

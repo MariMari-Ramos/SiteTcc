@@ -1,6 +1,238 @@
 // ===== FEITICEIROS E MALDIÇÕES - SISTEMA DE FICHA MELHORADO =====
 // Estado da aplicação com todas as melhorias integradas
 
+// ===== SISTEMA DE TRADUÇÃO (i18n) =====
+const I18N = { dict: null, lang: 'pt-BR' };
+
+function normalizeLang(raw) {
+    const s = String(raw || localStorage.getItem('language') || 'pt-BR').toLowerCase();
+    if (s.startsWith('en')) return 'en-US';
+    if (s.startsWith('es')) return 'es-ES';
+    return 'pt-BR';
+}
+
+async function loadLocale(lang) {
+    try {
+        const res = await fetch(`../../locales/${lang}.json`, { cache: 'no-cache' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } catch (e) {
+        if (lang !== 'pt-BR') {
+            try {
+                const res = await fetch(`../../locales/pt-BR.json`, { cache: 'no-cache' });
+                if (res.ok) return await res.json();
+            } catch (_) {}
+        }
+        return null;
+    }
+}
+
+function applyI18nToElement(el, dict) {
+    if (!dict || !el) return;
+
+    const textKey = el.getAttribute('data-i18n');
+    const attrList = (el.getAttribute('data-i18n-attr') || '')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+
+    // Per-attribute keys
+    const attrs = ['title','alt','placeholder','aria-label'];
+    attrs.forEach(a => {
+        const k = el.getAttribute(`data-i18n-${a}`);
+        if (k && dict[k] != null) el.setAttribute(a, dict[k]);
+    });
+
+    // If there is a text key and a list of attributes, assign the same value to them
+    if (textKey && attrList.length && dict[textKey] != null) {
+        attrList.forEach(a => el.setAttribute(a, dict[textKey]));
+    }
+
+    // Apply text content (or document title) from textKey
+    if (textKey && dict[textKey] != null) {
+        const val = dict[textKey];
+        if (el.tagName.toLowerCase() === 'title') {
+            document.title = val;
+        } else if (!attrList.length) {
+            el.textContent = val;
+        }
+    }
+}
+
+function applyI18n(dict) {
+    if (!dict) return;
+    document.documentElement.lang = I18N.lang;
+    const sel = [
+        '[data-i18n]',
+        '[data-i18n-attr]',
+        '[data-i18n-title]',
+        '[data-i18n-alt]',
+        '[data-i18n-placeholder]',
+        '[data-i18n-aria-label]'
+    ].join(',');
+    document.querySelectorAll(sel).forEach(el => applyI18nToElement(el, dict));
+}
+
+async function initI18n() {
+    I18N.lang = normalizeLang(localStorage.getItem('language'));
+    I18N.dict = await loadLocale(I18N.lang);
+    applyI18n(I18N.dict);
+}
+
+const t = (key, fallback="") => (I18N.dict && I18N.dict[key]) || fallback;
+
+// ===== SISTEMA DE LEITURA AUTOMÁTICA =====
+const AutoRead = {
+    enabled: false,
+    synth: window.speechSynthesis,
+    currentUtterance: null,
+    selectionTimeout: null,
+
+    init() {
+        const autoReadEnabled = localStorage.getItem('autoRead') === 'true';
+        this.enabled = autoReadEnabled;
+        
+        if (this.enabled) {
+            this.setupListeners();
+        }
+
+        // Monitor mudanças no localStorage
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'autoRead') {
+                this.enabled = e.newValue === 'true';
+                if (this.enabled) {
+                    this.setupListeners();
+                } else {
+                    this.removeListeners();
+                    this.stop();
+                }
+            }
+        });
+    },
+
+    setupListeners() {
+        document.addEventListener('click', this.handleClick.bind(this));
+        document.addEventListener('mouseup', this.handleSelection.bind(this));
+    },
+
+    removeListeners() {
+        document.removeEventListener('click', this.handleClick.bind(this));
+        document.removeEventListener('mouseup', this.handleSelection.bind(this));
+    },
+
+    handleClick(e) {
+        if (!this.enabled) return;
+        
+        const target = e.target;
+        
+        // Ignorar cliques em inputs, botões, links
+        if (target.matches('input, textarea, select, button, a, [contenteditable="true"]')) {
+            return;
+        }
+
+        const text = this.getElementText(target);
+        if (text && text.length > 0 && text.length < 500) {
+            this.speak(text);
+        }
+    },
+
+    handleSelection() {
+        if (!this.enabled) return;
+
+        clearTimeout(this.selectionTimeout);
+        this.selectionTimeout = setTimeout(() => {
+            const selection = window.getSelection();
+            const text = selection.toString().trim();
+            
+            if (text && text.length > 0) {
+                this.speak(text);
+            }
+        }, 300);
+    },
+
+    getElementText(element) {
+        if (!element) return '';
+        
+        // Pegar texto direto do elemento, ignorando filhos com classes específicas
+        let text = '';
+        element.childNodes.forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                text += node.textContent.trim() + ' ';
+            } else if (node.nodeType === Node.ELEMENT_NODE && 
+                       !node.matches('script, style, button, input, select, textarea')) {
+                text += node.textContent.trim() + ' ';
+            }
+        });
+        
+        return text.trim();
+    },
+
+    speak(text) {
+        if (!text || !this.synth) return;
+
+        this.stop();
+
+        const sentences = this.extractSentences(text);
+        
+        if (sentences.length === 0) return;
+
+        this.speakQueue(sentences, 0);
+    },
+
+    extractSentences(text) {
+        // Usar Intl.Segmenter se disponível
+        if (Intl.Segmenter) {
+            const segmenter = new Intl.Segmenter(I18N.lang, { granularity: 'sentence' });
+            const segments = segmenter.segment(text);
+            return Array.from(segments).map(s => s.segment.trim()).filter(Boolean);
+        }
+        
+        // Fallback: split por pontuação
+        return text
+            .split(/[.!?]+/)
+            .map(s => s.trim())
+            .filter(s => s.length > 0);
+    },
+
+    speakQueue(sentences, index) {
+        if (index >= sentences.length) return;
+
+        const utterance = new SpeechSynthesisUtterance(sentences[index]);
+        
+        // Configurações de voz
+        const lang = I18N.lang || 'pt-BR';
+        utterance.lang = lang;
+        
+        const voices = this.synth.getVoices();
+        const voice = voices.find(v => v.lang.startsWith(lang.substring(0, 2))) || voices[0];
+        if (voice) utterance.voice = voice;
+
+        const rate = parseFloat(localStorage.getItem('speechRate')) || 1.0;
+        const pitch = parseFloat(localStorage.getItem('speechPitch')) || 1.0;
+        
+        utterance.rate = rate;
+        utterance.pitch = pitch;
+
+        utterance.onend = () => {
+            setTimeout(() => this.speakQueue(sentences, index + 1), 200);
+        };
+
+        utterance.onerror = (e) => {
+            console.error('Erro na síntese de fala:', e);
+        };
+
+        this.currentUtterance = utterance;
+        this.synth.speak(utterance);
+    },
+
+    stop() {
+        if (this.synth) {
+            this.synth.cancel();
+        }
+        this.currentUtterance = null;
+    }
+};
+
 // Listas de origens e especializações baseadas no sistema F&M
 const origens = [
     'Inato',
@@ -36,6 +268,8 @@ let diceHistory = [];
 // ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Sistema F&M carregado!');
+    initI18n(); // Inicializa tradução primeiro
+    AutoRead.init(); // Inicializa leitura automática
     fillSelectionBoxes();
     setupAttributeModifiers();
     setupArmorClass();

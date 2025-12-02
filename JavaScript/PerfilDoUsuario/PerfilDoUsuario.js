@@ -9,6 +9,90 @@ document.getElementById("formPerfil").addEventListener("submit", () => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // ===== Local i18n (page-scoped, no global dependency) =====
+    const LOCALES_BASE = "../../locales";
+    const I18N = { dict: null, lang: 'pt-BR' };
+
+    function normalizeLang(raw) {
+        const s = String(raw || localStorage.getItem('language') || 'pt-BR').toLowerCase();
+        if (s.startsWith('en')) return 'en-US';
+        if (s.startsWith('es')) return 'es-ES';
+        return 'pt-BR';
+    }
+
+    async function loadLocale(lang) {
+        try {
+            const res = await fetch(`${LOCALES_BASE}/${lang}.json`, { cache: 'no-cache' });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return await res.json();
+        } catch (e) {
+            if (lang !== 'pt-BR') {
+                try {
+                    const res = await fetch(`${LOCALES_BASE}/pt-BR.json`, { cache: 'no-cache' });
+                    if (res.ok) return await res.json();
+                } catch (_) {}
+            }
+            return null;
+        }
+    }
+
+    function applyI18nToElement(el, dict) {
+        if (!dict || !el) return;
+
+        const textKey = el.getAttribute('data-i18n');
+        const attrList = (el.getAttribute('data-i18n-attr') || '')
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean);
+
+        // Per-attribute keys
+        const attrs = ['title','alt','placeholder','aria-label'];
+        attrs.forEach(a => {
+            const k = el.getAttribute(`data-i18n-${a}`);
+            if (k && dict[k] != null) el.setAttribute(a, dict[k]);
+        });
+
+        // If there is a text key and a list of attributes, assign the same value to them
+        if (textKey && attrList.length && dict[textKey] != null) {
+            attrList.forEach(a => el.setAttribute(a, dict[textKey]));
+        }
+
+        // Apply text content (or document title) from textKey
+        if (textKey && dict[textKey] != null) {
+            const val = dict[textKey];
+            if (el.tagName.toLowerCase() === 'title') {
+                document.title = val;
+            } else if (!attrList.length) {
+                el.textContent = val;
+            }
+        }
+    }
+
+    function applyI18n(dict) {
+        if (!dict) return;
+        document.documentElement.lang = I18N.lang;
+        const sel = [
+            '[data-i18n]',
+            '[data-i18n-attr]',
+            '[data-i18n-title]',
+            '[data-i18n-alt]',
+            '[data-i18n-placeholder]',
+            '[data-i18n-aria-label]'
+        ].join(',');
+        document.querySelectorAll(sel).forEach(el => applyI18nToElement(el, dict));
+    }
+
+    async function initI18n() {
+        I18N.lang = normalizeLang(localStorage.getItem('language'));
+        I18N.dict = await loadLocale(I18N.lang);
+        applyI18n(I18N.dict);
+    }
+
+    // Initialize local i18n first
+    initI18n();
+
+    const t = (key, fallback="") => (I18N.dict && I18N.dict[key]) || fallback;
+
     const formPerfil = document.getElementById('formPerfil');
     const profilePhoto = document.getElementById('profilePhoto');
     const previewFoto = document.getElementById('previewFoto');
@@ -107,10 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnRemovePhoto) {
             btnRemovePhoto.addEventListener('click', () => {
                 if (!hasPhotoPresent()) {
-                    mostrarAlerta('Não há foto para remover.');
+                    mostrarAlerta(t('perfil_no_photo_to_remove','Não há foto para remover.'));
                     return;
                 }
-                mostrarAlerta('Deseja remover a foto de perfil?', () => {
+                mostrarAlerta(t('perfil_remove_photo_question','Deseja remover a foto de perfil?'), () => {
                     const removerInput = document.getElementById('removerFoto');
                     const tipoInput = document.getElementById('tipoFoto');
                     const avatarInput = document.getElementById('avatarSelecionado');
@@ -121,11 +205,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     fotoPreviewContainer.innerHTML = `
                         <div class="no-photo" id="noPhotoPlaceholder">
                             <i class="bi bi-person-circle"></i>
-                            <p>Sem foto</p>
+                            <p>${t('perfil_sem_foto','Sem foto')}</p>
                         </div>
                     `;
 
-                    mostrarAlerta('Foto removida! Clique em "Salvar alterações" para confirmar.');
+                    mostrarAlerta(t('perfil_photo_removed_notice','Foto removida! Clique em \"Salvar alterações\" para confirmar.'));
                 }, true);
             });
         }
@@ -142,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     fotoPreviewContainer.innerHTML = `
                         <img id="previewFoto" 
                              src="${event.target.result}" 
-                             alt="Foto de perfil">
+                             alt="${t('perfil_foto_alt','Foto de perfil')}">
                     `;
                     document.getElementById('tipoFoto').value = 'upload';
                     document.getElementById('avatarSelecionado').value = '';
@@ -209,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     fotoPreviewContainer.innerHTML = `
                         <div class="no-photo" id="noPhotoPlaceholder">
                             <i class="bi bi-person-circle"></i>
-                            <p>Sem foto</p>
+                            <p>${t('perfil_sem_foto','Sem foto')}</p>
                         </div>
                     `;
                     const rem = document.getElementById('removerFoto'); if(rem) rem.value = '1';
@@ -219,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     fotoPreviewContainer.innerHTML = `
                         <img id="previewFoto" 
                              src="${avatarSelecionado}" 
-                             alt="Foto de perfil">
+                             alt="${t('perfil_foto_alt','Foto de perfil')}">
                     `;
                     const avatarInput = document.getElementById('avatarSelecionado'); if(avatarInput) avatarInput.value = avatarSelecionado;
                     const rem = document.getElementById('removerFoto'); if(rem) rem.value = '0';
@@ -228,9 +312,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (profilePhoto) profilePhoto.value = '';
                 if (avatarModal) avatarModal.style.display = 'none';
                 isSettingsOpen = false;
-                mostrarAlerta('Avatar selecionado! Clique em "Salvar alterações" para confirmar.');
+                mostrarAlerta(t('perfil_avatar_selected_notice','Avatar selecionado! Clique em \"Salvar alterações\" para confirmar.'));
             } else {
-                mostrarAlerta('Por favor, selecione um avatar');
+                mostrarAlerta(t('perfil_select_avatar_prompt','Por favor, selecione um avatar'));
             }
         });
     }
@@ -259,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
             } catch (err) {
-                mostrarAlerta('Erro ao atualizar perfil: ' + err);
+                mostrarAlerta(t('perfil_update_error_prefix','Erro ao atualizar perfil: ') + err);
             }
         });
     }
@@ -267,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Botão Sair
     if(btnSair) {
         btnSair.addEventListener('click', () => {
-            mostrarAlerta('Deseja realmente sair da conta?', () => {
+            mostrarAlerta(t('perfil_logout_confirm','Deseja realmente sair da conta?'), () => {
                 window.location.href = 'Logout.php';
             }, true);
         });
@@ -276,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Botão Excluir Conta
     if(btnExcluirConta) {
         btnExcluirConta.addEventListener('click', () => {
-            mostrarAlerta('ATENÇÃO: Tem certeza que deseja excluir sua conta? Esta ação é IRREVERSÍVEL!', async () => {
+            mostrarAlerta(t('perfil_delete_account_confirm','ATENÇÃO: Tem certeza que deseja excluir sua conta? Esta ação é IRREVERSÍVEL!'), async () => {
                 try {
                     const response = await fetch('ExcluirConta.php', {
                         method: 'POST'
@@ -457,5 +541,204 @@ document.addEventListener('DOMContentLoaded', () => {
             const topic = btn.dataset.topic;
             showPerfilGuideTopic(topic);
         });
+    }
+
+    /* ===== Auto Read (leitura automática) - idêntico às outras telas ===== */
+    const AutoRead = (() => {
+        let enabled = false;
+        let currentUtterance = null;
+        let sentenceQueue = [];
+        let isSpeaking = false;
+        let lastSelection = '';
+        let selectionDebounceTimer = null;
+
+        function init() {
+            enabled = localStorage.getItem('autoRead') === 'true';
+            if (!enabled || typeof speechSynthesis === 'undefined') return;
+
+            document.body.classList.add('auto-read-enabled');
+            setupClickRead();
+            setupSelectionRead();
+        }
+
+        function getVoiceForLang(lang) {
+            const voices = speechSynthesis.getVoices();
+            if (!voices.length) return null;
+
+            const langPrefix = lang.toLowerCase().split('-')[0];
+            const exact = voices.find(v => v.lang.toLowerCase() === lang.toLowerCase());
+            if (exact) return exact;
+
+            const partial = voices.find(v => v.lang.toLowerCase().startsWith(langPrefix));
+            if (partial) return partial;
+
+            return voices[0];
+        }
+
+        function speak(text, lang = I18N.lang) {
+            if (!text || !enabled) return;
+
+            stop();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = parseFloat(localStorage.getItem('speechRate') || '1.0');
+            utterance.pitch = parseFloat(localStorage.getItem('speechPitch') || '1.0');
+
+            const voice = getVoiceForLang(lang);
+            if (voice) utterance.voice = voice;
+
+            currentUtterance = utterance;
+            speechSynthesis.speak(utterance);
+        }
+
+        function stop() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            currentUtterance = null;
+            sentenceQueue = [];
+            isSpeaking = false;
+        }
+
+        function setupClickRead() {
+            document.body.addEventListener('click', (e) => {
+                if (!enabled) return;
+
+                const target = e.target;
+                if (target.matches('input, textarea, button, a, select, [contenteditable]')) return;
+                if (target.closest('.guide-speech, .overlay, .avatar-modal, .modal')) return;
+
+                let text = '';
+                if (target.textContent && target.textContent.trim()) {
+                    text = target.textContent.trim();
+                } else if (target.getAttribute('aria-label')) {
+                    text = target.getAttribute('aria-label');
+                } else if (target.getAttribute('title')) {
+                    text = target.getAttribute('title');
+                }
+
+                if (text && text.length > 0 && text.length < 500) {
+                    speak(text);
+                }
+            });
+        }
+
+        function setupSelectionRead() {
+            document.addEventListener('selectionchange', () => {
+                if (!enabled) return;
+
+                clearTimeout(selectionDebounceTimer);
+                selectionDebounceTimer = setTimeout(() => {
+                    const selection = window.getSelection();
+                    const selectedText = selection.toString().trim();
+
+                    if (selectedText && selectedText !== lastSelection && selectedText.length > 3) {
+                        lastSelection = selectedText;
+                        handleSelectionRead(selectedText, selection);
+                    }
+                }, 300);
+            });
+        }
+
+        function handleSelectionRead(text, selection) {
+            if (text.length > 500) {
+                const sentences = extractSentencesInRange(selection);
+                if (sentences.length > 0) {
+                    sentenceQueue = sentences;
+                    speakSequence();
+                } else {
+                    speak(text.substring(0, 500));
+                }
+            } else {
+                speak(text);
+            }
+        }
+
+        function extractSentencesInRange(selection) {
+            const sentences = [];
+            try {
+                const range = selection.getRangeAt(0);
+                const container = range.commonAncestorContainer;
+                const containerEl = container.nodeType === Node.TEXT_NODE ? container.parentElement : container;
+
+                if (!containerEl) return sentences;
+
+                const fullText = containerEl.textContent || '';
+                const selectedText = selection.toString();
+
+                const segmenter = typeof Intl !== 'undefined' && Intl.Segmenter
+                    ? new Intl.Segmenter(I18N.lang, { granularity: 'sentence' })
+                    : null;
+
+                let parts = [];
+                if (segmenter) {
+                    const segments = segmenter.segment(fullText);
+                    parts = Array.from(segments).map(s => s.segment.trim()).filter(Boolean);
+                } else {
+                    parts = fullText.split(/(?<=[.!?])\s+/).map(s => s.trim()).filter(Boolean);
+                }
+
+                for (const sentence of parts) {
+                    if (selectedText.includes(sentence) || sentence.includes(selectedText.substring(0, 50))) {
+                        sentences.push(sentence);
+                    }
+                }
+
+                if (sentences.length === 0 && selectedText) {
+                    const fallback = selectedText.split(/(?<=[.!?])\s+/).map(s => s.trim()).filter(Boolean);
+                    sentences.push(...fallback);
+                }
+
+            } catch (err) {
+                console.warn('[AutoRead] Sentence extraction failed:', err);
+            }
+            return sentences;
+        }
+
+        function speakSequence() {
+            if (sentenceQueue.length === 0) {
+                isSpeaking = false;
+                return;
+            }
+
+            isSpeaking = true;
+            const sentence = sentenceQueue.shift();
+
+            const utterance = new SpeechSynthesisUtterance(sentence);
+            utterance.lang = I18N.lang;
+            utterance.rate = parseFloat(localStorage.getItem('speechRate') || '1.0');
+            utterance.pitch = parseFloat(localStorage.getItem('speechPitch') || '1.0');
+
+            const voice = getVoiceForLang(I18N.lang);
+            if (voice) utterance.voice = voice;
+
+            utterance.onend = () => {
+                if (sentenceQueue.length > 0) {
+                    setTimeout(() => speakSequence(), 200);
+                } else {
+                    isSpeaking = false;
+                }
+            };
+
+            utterance.onerror = () => {
+                isSpeaking = false;
+                sentenceQueue = [];
+            };
+
+            currentUtterance = utterance;
+            speechSynthesis.speak(utterance);
+        }
+
+        return { init, speak, stop };
+    })();
+
+    // Inicializa Auto Read
+    if (typeof speechSynthesis !== 'undefined') {
+        if (speechSynthesis.getVoices().length === 0) {
+            speechSynthesis.addEventListener('voiceschanged', () => AutoRead.init(), { once: true });
+        } else {
+            AutoRead.init();
+        }
     }
 });
