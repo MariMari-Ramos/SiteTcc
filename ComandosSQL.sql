@@ -41,6 +41,9 @@ CREATE TABLE configuracoes_principal (
     UNIQUE KEY (usuario_id)
 );
 
+/* Tabela para armazenar as configurações do usuário, que funciona no MySQL, porque essa bombinha é uma bomba    */
+
+
 CREATE TABLE Sis_RPG (
     id_sistema INT AUTO_INCREMENT PRIMARY KEY,
     nome_sistema VARCHAR(100) NOT NULL,
