@@ -102,7 +102,7 @@ $invocations = $dados['invocations'] ?? [];
 
         <!-- ===== PÁGINA 1: INFORMAÇÕES BÁSICAS ===== -->
         <div id="page-1" class="page active">
-            <h2 class="section-header" data-help="Nesta seção, preencha com o Nome do seu personagem, o nivel a origem e a especialização dentre as disponiveis. 
+            <h2 class="section-header" data-translate="fm.basic_info_header" data-help="Nesta seção, preencha com o Nome do seu personagem, o nivel a origem e a especialização dentre as disponiveis. 
             Sendo a origem representa de onde vem o poder do seu personagem, sendo a fonte
 da qual derivam suas capacidades e o motivo dele se destacar acima de um
 humano comum.
@@ -149,7 +149,7 @@ ou desenvolveu para enfrentar o perigo das maldições e se tornar poderoso.">�
                 </div>
             </div>
 
-            <h2 class="section-header" data-help="Os atributos representam os aspectos fisicos e caracteristivas variadas do seu personagem! O valor 10 é a média, e representa o padrão de um atributo, estando dentro do
+            <h2 class="section-header" data-translate="fm.attributes_header" data-help="Os atributos representam os aspectos fisicos e caracteristivas variadas do seu personagem! O valor 10 é a média, e representa o padrão de um atributo, estando dentro do
 comum. Valores inferiores a 10 começam a representar um déficit naquele
 aspecto, enquanto valores maiores significam uma maior aptidão,
 desenvolvimento e qualidade.">💪 Atributos</h2>
@@ -192,7 +192,7 @@ desenvolvimento e qualidade.">💪 Atributos</h2>
                 </div>
             </div>
 
-            <h2 class="section-header" data-help="A Classe de Armadura, possui um valor base é igual a 10 + modificador de
+            <h2 class="section-header" data-translate="fm.ac_header" data-help="A Classe de Armadura, possui um valor base é igual a 10 + modificador de
 destreza. Representa o quão difícil é acertar seu personagem.">🛡️ Classe de Armadura</h2>
 
             <div class="card section-border-teal">
@@ -239,7 +239,7 @@ destreza. Representa o quão difícil é acertar seu personagem.">🛡️ Classe
 
         <!-- ===== PÁGINA 2: PERÍCIAS ===== -->
         <div id="page-2" class="page">
-            <h2 class="section-header section-border-purple" data-help="As Perícias são habilidades específicas dos personagens, as quais são
+            <h2 class="section-header section-border-purple" data-translate="fm.skills_header" data-help="As Perícias são habilidades específicas dos personagens, as quais são
 influenciadas por atributos e englobam o que é essencial para as várias
 situações as quais um feiticeiro pode ser imposto.">🎯 Perícias</h2>
 
@@ -442,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- ===== PÁGINA 3: COMBATE ===== -->
         <div id="page-3" class="page">
-            <h2 class="section-header section-border-red" data-help="Os Valores de combate, compõe um conjunto de: 
+            <h2 class="section-header section-border-red" data-translate="fm.combat_values_header" data-help="Os Valores de combate, compõe um conjunto de: 
             Vida: Que mede os pontos de vida do seu personagem, definidos pela sua especialização e nivel.
             Energia Amaldiçoada: Que mede os pontos de energia, o combustivel de suas técnicas, definido pela sua especialização e nivel.
             Integridade da Alma: São como os pontos de vida, mas medem a vida da sua alma.
@@ -538,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- ===== PÁGINA 4: HABILIDADES ===== -->
         <div id="page-4" class="page">
-            <h2 class="section-header section-border-orange" data-help="São as habilidades concedidas pela especialização escolhida, anote todas aqui para que fique facil de se lembrar!">✨ Habilidades de Especialização</h2>
+            <h2 class="section-header section-border-orange" data-translate="fm.specialization_abilities_header" data-help="São as habilidades concedidas pela especialização escolhida, anote todas aqui para que fique facil de se lembrar!">✨ Habilidades de Especialização</h2>
 
             <div class="card section-border-orange">
                 <button type="button" class="btn-add" onclick="addAbility('abilities-list')">Adicionar Habilidade</button>
@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- ===== PÁGINA 5: PERFIL AMALDIÇOADO ===== -->
         <div id="page-5" class="page">
-            <h2 class="section-header section-border-indigo" data-help="Aqui você deve anotar seus talentos, que podem ser obtidos no lugar de habilidades de especialização ou
+            <h2 class="section-header section-border-indigo" data-translate="fm.cursed_profile_header" data-help="Aqui você deve anotar seus talentos, que podem ser obtidos no lugar de habilidades de especialização ou
 obtidos através de outras fontes, como origens ou treinamentos. Anotar seus niveis de aptidão sendo:
  Aptidões de Aura, que alteram as propriedades da própria energia do
 usuário, concedendo-a vários aspectos imbuídos na sua aura.
@@ -623,7 +623,7 @@ E por ultimo, os treinamentos que podem ser obtidos no livro na página 354 do l
 
         <!-- ===== PÁGINA 6: TÉCNICA AMALDIÇOADA ===== -->
         <div id="page-6" class="page">
-            <h2 class="section-header section-border-pink" data-help="Aqui você vai anotar, os aspectos da sua técnica amaldiçoada, que deve ser escolhida por você, no livro de técnicas!">🌀 Técnica Amaldiçoada</h2>
+            <h2 class="section-header section-border-pink" data-translate="fm.cursed_technique_header" data-help="Aqui você vai anotar, os aspectos da sua técnica amaldiçoada, que deve ser escolhida por você, no livro de técnicas!">🌀 Técnica Amaldiçoada</h2>
 
             <div class="card section-border-pink">
                 <div class="form-group">
@@ -748,7 +748,7 @@ document.addEventListener('DOMContentLoaded', renderAbilities);
 
         <!-- ===== PÁGINA 7: INVOCAÇÕES ===== -->
         <div id="page-7" class="page">
-            <h2 class="section-header section-border-cyan" data-help="Aqui você deve anotar, as invocações que você como Controlador ou como qualquer outra especialização, obter durante a campanha!">👹 Invocações / Shikigamis</h2>
+            <h2 class="section-header section-border-cyan" data-translate="fm.invocations_header" data-help="Aqui você deve anotar, as invocações que você como Controlador ou como qualquer outra especialização, obter durante a campanha!">👹 Invocações / Shikigamis</h2>
 
             <div class="card section-border-cyan">
                 <button type="button" class="btn-add" onclick="addInvocation()">Adicionar Invocação</button>

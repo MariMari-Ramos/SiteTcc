@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff2') format('woff2'),
+       url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.woff') format('woff'),
+       url('../../opendyslexic-0.91.12/compiled/OpenDyslexic-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 :root {
   /* Primitive Color Tokens */
   --color-white: rgba(255, 255, 255, 1);
@@ -67,8 +76,11 @@
   --color-border-secondary: rgba(var(--color-slate-500-rgb), 0.2);
   --color-select-caret: rgba(var(--color-slate-500-rgb), 0.8); /* Cor do ícone do select */
 
+  /* Header background tokens */
+  --header-bg: rgba(255, 255, 255, 0.85); /* claro, igual ao completo */
+
   /* Typography */
-  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-base: var(--global-font-family, 'OpenDyslexic', "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-size-xs: 11px;
   --font-size-sm: 12px;
@@ -141,6 +153,12 @@ body {
   padding: 0;
   background: var(--color-background); /* Usa o novo fundo claro */
   min-height: 100vh;
+  font-family: var(--font-family-base);
+}
+
+/* Garanta a fonte em todos os controles e botões */
+input, select, textarea, button, .btn, .form-control, .styled-select {
+  font-family: var(--font-family-base);
 }
 
 *,
@@ -166,7 +184,7 @@ h5 { font-size: var(--font-size-lg); }
 h6 { font-size: var(--font-size-md); }
 
 .header {
-  background: rgba(255, 255, 255, 0.85); /* Fundo branco para o header */
+  background: var(--header-bg); /* Usa variável para tema claro/escuro */
   backdrop-filter: blur(10px);
   border-bottom: 2px solid var(--color-primary);
   padding: var(--space-16) var(--space-24);
@@ -485,7 +503,7 @@ h6 { font-size: var(--font-size-md); }
   font-weight: var(--font-weight-bold);
   color: var(--color-primary); /* Cor padrão */
   margin: var(--space-24) 0;
-  font-family: 'Geist', 'Inter', 'Segoe UI', sans-serif;
+  font-family: var(--font-family-base);
   letter-spacing: 2px;
   animation: dice-flash 1.2s infinite alternate;
 }
@@ -575,6 +593,13 @@ h6 { font-size: var(--font-size-md); }
 @font-face {
     font-family: 'FKGroteskNeue';
     src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+}
+
+/* Tema escuro: ajusta o fundo do header para não ficar branco */
+/* Tema escuro: defina a variável e deixe o header consumir */
+html[data-theme="dark"]:root,
+body[data-theme="dark"]:root {
+  --header-bg: rgba(var(--color-slate-900-rgb), 0.85);
 }
 
 /* Responsivo */

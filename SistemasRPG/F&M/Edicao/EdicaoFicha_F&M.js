@@ -44,6 +44,17 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCharacter();
     setupAutoSave();
     initializeProgressBars();
+    // Aplica i18n aos elementos com data-i18n ou data-translate
+    try { if (window.TranslationManager) { window.TranslationManager.applyToDOM(document); } } catch(_) {}
+        // Anuncia a página atual pelo AutoRead, se disponível
+        try {
+            if (window.AutoRead && typeof window.AutoRead.speak === 'function') {
+                const h2 = document.querySelector(`#page-${currentPage} .section-header, #page-${currentPage} h2`);
+                if (h2 && h2.textContent) {
+                    window.AutoRead.speak(h2.textContent.trim());
+                }
+            }
+        } catch(_) {}
 });
 
 // ===== PREENCHER SELECT BOXES =====
@@ -166,6 +177,17 @@ function goToPage(pageNumber) {
     // Atualizar UI (pontos, etc.)
     updatePageDisplay(); 
     window.scrollTo(0, 0);
+    // Reaplica i18n após mudança de página
+    try { if (window.TranslationManager) { window.TranslationManager.applyToDOM(document); } } catch(_) {}
+        // Anuncia o título da nova página
+        try {
+            if (window.AutoRead && typeof window.AutoRead.speak === 'function') {
+                const h2 = newPageEl ? newPageEl.querySelector('.section-header, h2') : null;
+                if (h2 && h2.textContent) {
+                    window.AutoRead.speak(h2.textContent.trim());
+                }
+            }
+        } catch(_) {}
 }
 
 function previousPage() {
@@ -304,9 +326,16 @@ function showNotification(message) {
     toast.textContent = message;
     document.body.appendChild(toast);
 
+        // Fala o conteúdo do toast se leitura automática estiver ativa
+        try {
+            if (window.AutoRead && typeof window.AutoRead.speak === 'function') {
+                window.AutoRead.speak(String(message || ''));
+            }
+        } catch(_) {}
+
     setTimeout(() => {
-        toast.style.animation = 'slideOutDown 0.4s ease';
-        setTimeout(() => toast.remove(), 400);
+                toast.style.animation = 'slideOutDown 0.35s ease forwards';
+                setTimeout(() => toast.remove(), 380);
     }, 2500);
 }
 
@@ -345,6 +374,7 @@ function addAbility(containerId) {
     `;
     container.appendChild(abilityCard);
     saveCharacter();
+    try { if (window.TranslationManager) { window.TranslationManager.applyToDOM(abilityCard); } } catch(_) {}
 }
 
 // ===== ADICIONAR TALENTO =====
@@ -363,6 +393,7 @@ function addTalent() {
     `;
     container.appendChild(talentCard);
     saveCharacter();
+    try { if (window.TranslationManager) { window.TranslationManager.applyToDOM(talentCard); } } catch(_) {}
 }
 
 // ===== ADICIONAR INVOCAÇÃO =====
@@ -408,6 +439,7 @@ function addInvocation() {
     `;
     container.appendChild(invocationCard);
     saveCharacter();
+    try { if (window.TranslationManager) { window.TranslationManager.applyToDOM(invocationCard); } } catch(_) {}
 }
 
 // ===== ADICIONAR TREINAMENTO =====
@@ -426,6 +458,7 @@ function addTraining() {
     `;
     container.appendChild(trainingCard);
     saveCharacter();
+    try { if (window.TranslationManager) { window.TranslationManager.applyToDOM(trainingCard); } } catch(_) {}
 }
 
 // ===== BARRAS DE PROGRESSO =====
@@ -490,6 +523,15 @@ function rollD20() {
         setTimeout(function() {
             if (window.updateGlobalSettings) window.updateGlobalSettings();
         }, 10);
+
+        // Fala o resultado do dado
+        try {
+            if (window.AutoRead && typeof window.AutoRead.speak === 'function') {
+                const base = (window.I18N && I18N.dict && I18N.dict['3det_d20_resultado']) ? I18N.dict['3det_d20_resultado'] : '🎲 Resultado:';
+                const extra = result === 20 ? (I18N?.dict?.['3det_d20_critico'] || ' - CRÍTICO! 🎉') : (result === 1 ? (I18N?.dict?.['3det_d20_falha_critica'] || ' - Falha Crítica! 💀') : '');
+                window.AutoRead.speak(`${base} ${result}${extra}`);
+            }
+        } catch(_) {}
     }
 
 // ===== FECHAR MODAL DO D20 =====
@@ -627,6 +669,329 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   }
 });
+
+// ==================== AUTO READ (SPEECH SYNTHESIS) ====================
+// Replica da funcionalidade usada nas outras telas
+(function(global){
+    if (global.AutoRead) {
+        try {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => global.AutoRead.init && global.AutoRead.init());
+            } else {
+                global.AutoRead.init && global.AutoRead.init();
+            }
+        } catch(_) {}
+        return;
+    }
+
+    const AutoRead = {
+        speech: {
+            supported: 'speechSynthesis' in window,
+            utterance: null,
+            speaking: false,
+            voice: null,
+            rate: 1,
+            pitch: 1,
+            lang: (navigator.language || 'pt-BR')
+        },
+        _speechQueue: [],
+        _selectionDebounceTimer: null,
+        _handleSelectionRead: null,
+        _handleSelectionKey: null,
+
+        init() {
+            this.initSpeechVoices();
+            this.setupWordClickRead();
+        },
+
+        initSpeechVoices() {
+            const setVoice = () => {
+                if (!this.speech.supported) return;
+                const voices = window.speechSynthesis.getVoices();
+                const lang = localStorage.getItem('language') || localStorage.getItem('app_locale') || 'pt-BR';
+                this.speech.voice = voices.find(v => v.lang.startsWith((lang||'pt-BR').substring(0,2))) || voices[0] || null;
+            };
+            setVoice();
+            if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+                window.speechSynthesis.onvoiceschanged = setVoice;
+            }
+        },
+
+        speak(text) {
+            const autoReadEnabled = localStorage.getItem('autoRead') === 'true';
+            if (!this.speech.supported || !autoReadEnabled || !text) return;
+            try {
+                this.stopSpeaking();
+                const u = new SpeechSynthesisUtterance(text);
+                const lang = localStorage.getItem('language') || localStorage.getItem('app_locale') || 'pt-BR';
+                u.lang = lang;
+                if (this.speech.voice) u.voice = this.speech.voice;
+                this.speech.rate = Number(localStorage.getItem('speechRate') || 1);
+                this.speech.pitch = Number(localStorage.getItem('speechPitch') || 1);
+                u.rate = this.speech.rate;
+                u.pitch = this.speech.pitch;
+                u.onstart = () => { this.speech.speaking = true; };
+                u.onend = () => { this.speech.speaking = false; };
+                this.speech.utterance = u;
+                window.speechSynthesis.speak(u);
+            } catch(e) {}
+        },
+
+        stopSpeaking() {
+            try {
+                if (this.speech.supported) {
+                    window.speechSynthesis.cancel();
+                }
+                this.speech.speaking = false;
+                this.speech.utterance = null;
+                this._speechQueue = [];
+            } catch(e) {}
+        },
+
+        setupWordClickRead() {
+            document.addEventListener('click', (e) => this.handleWordClick(e), true);
+            this.setupSelectionRead();
+        },
+
+        setupSelectionRead() {
+            this._handleSelectionRead = (e) => this.handleSelectionRead(e);
+            document.addEventListener('mouseup', this._handleSelectionRead, true);
+            this._handleSelectionKey = (e) => {
+                if (!e) return;
+                if (e.key === 'Shift' || (typeof e.key === 'string' && e.key.startsWith('Arrow'))) {
+                    this.handleSelectionRead(e);
+                }
+            };
+            document.addEventListener('keyup', this._handleSelectionKey, true);
+        },
+
+        handleSelectionRead(e) {
+            try {
+                const autoReadEnabled = localStorage.getItem('autoRead') === 'true';
+                if (!this.speech.supported || !autoReadEnabled) return;
+
+                if (this._selectionDebounceTimer) {
+                    clearTimeout(this._selectionDebounceTimer);
+                    this._selectionDebounceTimer = null;
+                }
+
+                this._selectionDebounceTimer = setTimeout(() => {
+                    const sel = window.getSelection ? window.getSelection() : null;
+                    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
+
+                    const range = sel.getRangeAt(0);
+                    const eventTarget = (e && e.target) ? e.target : null;
+                    const containerEl = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+                        ? range.commonAncestorContainer
+                        : range.commonAncestorContainer.parentElement;
+                    const targetForCheck = eventTarget || containerEl;
+                    if (this._isInteractiveElement(targetForCheck)) return;
+
+                    const selectedText = sel.toString().trim();
+                    if (!selectedText) return;
+
+                    const blockEl = this._closestBlockContainer(containerEl || document.body);
+                    if (!blockEl || !blockEl.textContent) {
+                        this.speak(selectedText);
+                        return;
+                    }
+
+                    const rStart = document.createRange();
+                    rStart.setStart(blockEl, 0);
+                    rStart.setEnd(range.startContainer, range.startOffset);
+                    const startOffset = rStart.toString().length;
+
+                    const rEnd = document.createRange();
+                    rEnd.setStart(blockEl, 0);
+                    rEnd.setEnd(range.endContainer, range.endOffset);
+                    const endOffset = rEnd.toString().length;
+
+                    const fullText = blockEl.textContent;
+                    const lang = localStorage.getItem('language') || this.speech.lang || 'pt-BR';
+                    const sentences = this._extractSentencesInRange(fullText, startOffset, endOffset, lang);
+                    if (sentences && sentences.length > 1) {
+                        this.speakSequence(sentences);
+                    } else {
+                        const sentence = sentences[0] || selectedText;
+                        if (sentence && sentence.trim()) this.speak(sentence.trim());
+                    }
+                }, 250);
+            } catch(err) {}
+        },
+
+        _extractSentencesInRange(text, startOffset, endOffset, lang) {
+            const out = [];
+            if (!text) return out;
+            try {
+                if (window.Intl && typeof Intl.Segmenter === 'function') {
+                    const seg = new Intl.Segmenter(lang || 'pt-BR', { granularity: 'sentence' });
+                    let capturing = false;
+                    for (const part of seg.segment(text)) {
+                        const s = part.index;
+                        const e = s + part.segment.length;
+                        if (!capturing && startOffset >= s && startOffset < e) {
+                            out.push(part.segment.trim());
+                            capturing = endOffset > e;
+                            if (!capturing) break;
+                        } else if (capturing) {
+                            out.push(part.segment.trim());
+                            if (endOffset <= e) break;
+                        }
+                    }
+                    if (out.length) return out;
+                }
+            } catch(_) {}
+
+            const pieces = text.split(/([\.!\?…]+)/);
+            const sentences = [];
+            for (let i = 0; i < pieces.length; i += 2) {
+                const body = (pieces[i] || '').trim();
+                const punct = (pieces[i + 1] || '').trim();
+                const s = (body + (punct ? (' ' + punct) : '')).trim();
+                if (s) sentences.push(s);
+            }
+            let pos = 0;
+            const bounds = sentences.map(sn => {
+                const start = pos;
+                const end = pos + sn.length;
+                pos = end + 1;
+                return { start, end, text: sn };
+            });
+            const selected = [];
+            for (const b of bounds) {
+                if (startOffset < b.end && endOffset > b.start) {
+                    selected.push(b.text);
+                }
+            }
+            return selected.length ? selected : [text.slice(startOffset, endOffset).trim()];
+        },
+
+        _isInteractiveElement(el) {
+            try {
+                const IGNORE_SEL = 'button, a, input, textarea, select, [contenteditable], .toggle-button, .switch, .config-button, .action-button, .guide-option, .slider, .modal, .modal-backdrop, .ficha-chip, .has-hover-video';
+                let node = el;
+                while (node && node !== document && node.nodeType === Node.ELEMENT_NODE) {
+                    if (node.matches && node.matches(IGNORE_SEL)) return true;
+                    node = node.parentElement;
+                }
+            } catch(_) {}
+            return false;
+        },
+
+        _closestBlockContainer(node) {
+            let el = node && (node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement);
+            const isBlockTag = (tag) => /^(P|DIV|LI|SECTION|ARTICLE|MAIN|ASIDE|NAV|H1|H2|H3|H4|H5|H6)$/i.test(tag);
+            while (el && el !== document.body) {
+                if (isBlockTag(el.tagName)) return el;
+                try {
+                    const cs = window.getComputedStyle(el);
+                    if (cs && (cs.display === 'block' || cs.display === 'list-item' || cs.display === 'table' || cs.display === 'table-row' || cs.display === 'table-cell')) {
+                        return el;
+                    }
+                } catch(_) {}
+                el = el.parentElement;
+            }
+            return document.body;
+        },
+
+        speakSequence(sentences) {
+            if (!this.speech.supported || !sentences || sentences.length === 0) return;
+            if (this.speech.speaking) {
+                this.stopSpeaking();
+            }
+            this._speechQueue = sentences.slice();
+            this._speakNext();
+        },
+
+        _speakNext() {
+            if (this._speechQueue.length === 0) {
+                this.speech.speaking = false;
+                return;
+            }
+            const text = this._speechQueue.shift();
+            if (!text || !text.trim()) {
+                this._speakNext();
+                return;
+            }
+            this.speech.speaking = true;
+            this.speech.utterance = new SpeechSynthesisUtterance(text.trim());
+            this.speech.utterance.voice = this.speech.voice;
+            this.speech.utterance.rate = this.speech.rate;
+            this.speech.utterance.pitch = this.speech.pitch;
+            this.speech.utterance.lang = this.speech.lang;
+            this.speech.utterance.onend = () => {
+                this._speakNext();
+            };
+            this.speech.utterance.onerror = () => {
+                this.speech.speaking = false;
+                this._speechQueue = [];
+            };
+            try {
+                window.speechSynthesis.speak(this.speech.utterance);
+            } catch(err) {
+                this.speech.speaking = false;
+                this._speechQueue = [];
+            }
+        },
+
+        handleWordClick(e) {
+            try {
+                const autoReadEnabled = localStorage.getItem('autoRead') === 'true';
+                if (!autoReadEnabled) return;
+                if (e.button !== 0) return;
+
+                const ignore = e.target.closest('button, a, input, textarea, select, [contenteditable], .toggle-button, .switch, .ficha-chip, .guide-option');
+                if (ignore) return;
+
+                if (e.target.classList && (e.target.classList.contains('modal') || e.target.classList.contains('overlay'))) return;
+
+                let node = null, offset = 0;
+                const x = e.clientX, y = e.clientY;
+                if (document.caretRangeFromPoint) {
+                    const range = document.caretRangeFromPoint(x, y);
+                    if (!range) return;
+                    node = range.startContainer;
+                    offset = range.startOffset;
+                } else if (document.caretPositionFromPoint) {
+                    const pos = document.caretPositionFromPoint(x, y);
+                    if (!pos) return;
+                    node = pos.offsetNode;
+                    offset = pos.offset;
+                } else {
+                    return;
+                }
+
+                if (!node || node.nodeType !== Node.TEXT_NODE) return;
+                const text = node.textContent || '';
+                if (!text.trim()) return;
+
+                const word = this.extractWordAt(text, offset);
+                if (word) {
+                    this.speak(word);
+                }
+            } catch(err) {}
+        },
+
+        extractWordAt(text, offset) {
+            const isWordChar = (ch) => /[\p{L}\p{N}''_-]/u.test(ch);
+            let i = Math.max(0, Math.min(offset, text.length));
+            let start = i, end = i;
+            while (start > 0 && isWordChar(text[start-1])) start--;
+            while (end < text.length && isWordChar(text[end])) end++;
+            const word = text.substring(start, end).trim();
+            return word.length >= 2 ? word : '';
+        }
+    };
+
+    global.AutoRead = AutoRead;
+    try {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => AutoRead.init());
+        } else {
+            AutoRead.init();
+        }
+    } catch(_) {}
+})(window);
 
 
 

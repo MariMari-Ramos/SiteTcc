@@ -14,6 +14,32 @@
     box-sizing: border-box;
 }
 
+/* Garante que controles nativos herdem a tipografia da página */
+button, input, select, textarea {
+    font: inherit;
+    font-family: inherit;
+}
+
+/* Efeito de surgimento (reveal) com respeito a acessibilidade */
+.reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 400ms ease, transform 400ms ease;
+}
+
+.reveal.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        transition: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
 body {
     font-family: 'OpenDyslexic', Arial, sans-serif;
     background-color: #ffeee4;
@@ -23,10 +49,284 @@ body {
     flex-direction: column;
 }
 
+/* Tema escuro básico para a Home */
+body.dark-theme {
+    background-color: #0f172a; /* slate-900 aprox */
+    color: #e5e7eb; /* text-gray-200 */
+}
+
+body.dark-theme header {
+    background: linear-gradient(135deg, #1f2937, #111827);
+}
+
+body.dark-theme .tabs-container,
+body.dark-theme .feature-card,
+body.dark-theme .value-item,
+body.dark-theme .benefit-card,
+body.dark-theme .testimonial {
+    background: #111827;
+    border-color: #1f2937;
+}
+
+body.dark-theme .tab-button.active,
+body.dark-theme .feature-card h3 {
+    color: #ff8c42;
+}
+
+body.dark-theme .tabs-header { background-color: #0b1220; border-bottom-color: #2563eb; }
+body.dark-theme .tab-button { color: #cbd5e1; }
+body.dark-theme .tab-button:hover { background-color: #0f172a; color: #e5e7eb; }
+body.dark-theme .tab-button.active { border-bottom-color: #2563eb; color: #2563eb; }
+
+body.dark-theme footer { background-color: #0b1220; }
+body.dark-theme .footer-tagline { color: #ffb37a; }
+
+/* Botão Entrar em modo escuro: texto azul forte */
+body.dark-theme .btn-login {
+    color: #2563eb;
+}
+
+/* Em modo escuro: títulos e tópicos em azul, conteúdo em branco */
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme h4,
+body.dark-theme .feature-card h3,
+body.dark-theme .value-item h4,
+body.dark-theme .benefit-card h4,
+body.dark-theme .objectives-list li strong,
+body.dark-theme .features-list li strong,
+body.dark-theme .tab-text { color: #2563eb; /* stronger blue */ }
+
+body.dark-theme p,
+body.dark-theme li,
+body.dark-theme .intro-text,
+body.dark-theme .cookie-description { color: #ffffff; }
+body.dark-theme .logo-subtitle { color: #ffffff; }
+
+/* Ajustes de visibilidade em elementos no escuro */
+body.dark-theme .feature-card { border-color: #1f2937; }
+body.dark-theme .feature-card p { color: #e5e7eb; }
+body.dark-theme .value-item { border-color: #1f2937; }
+body.dark-theme .benefit-card { border-color: #1f2937; }
+body.dark-theme .testimonial { border-left-color: #3b82f6; }
+
+/* Listas e cards em modo escuro: evitar texto camuflado */
+body.dark-theme .objectives-list li,
+body.dark-theme .dyslexia-list li,
+body.dark-theme .features-list li {
+    background-color: #0f172a; /* fundo escuro consistente */
+    color: #ffffff;            /* texto claro */
+    border: 1px solid #1f2937; /* borda sutil */
+}
+body.dark-theme .objectives-list li strong,
+body.dark-theme .features-list li strong {
+    color: #3b82f6;            /* títulos/tópicos em azul */
+}
+
+/* Blocos informativos em modo escuro */
+body.dark-theme .accessibility-intro {
+    background-color: #0f172a;
+    color: #ffffff;
+    border: 1px solid #334155; /* slate-700 */
+    box-shadow: none;
+}
+body.dark-theme .important-note {
+    background-color: #1f2937; /* slate-800 */
+    color: #ffffff;
+    border-left-color: #fbbf24; /* amber-400 para destaque */
+}
+
+/* Logo em modo escuro (melhora contraste caso não haja versão clara) */
+body.dark-theme .logo-container img { filter: brightness(1.15) contrast(1.05); }
+
+/* Banner de cookies: título azul em modo escuro */
+body.dark-theme .cookie-title { color: #3b82f6; }
+
+/* Correções explícitas de cor em modo escuro */
+body.dark-theme .tab-pane h2 { color: #2563eb; }
+body.dark-theme .testimonial cite { color: #2563eb; }
+body.dark-theme .modal-header { border-bottom-color: #2563eb; }
+
+/* Alto contraste básico */
+body.high-contrast {
+    filter: contrast(1.15) saturate(1.05);
+}
+
+/* Alto contraste no tema claro: bordas pretas e textos mais fortes */
+body.high-contrast:not(.dark-theme) header {
+    border-bottom: 3px solid #000000;
+    /* Mantém o esquema de cores original do header (sem sobrescrever o gradiente) */
+}
+
+body.high-contrast:not(.dark-theme) .tabs-container {
+    border: 3px solid #000000;
+}
+
+body.high-contrast:not(.dark-theme) .tabs-header {
+    border-bottom: 3px solid #000000;
+    border-bottom-color: #ff4400;
+}
+
+body.high-contrast:not(.dark-theme) .tab-button {
+    border: 2px solid #000000;
+    font-weight: 700;
+}
+
+body.high-contrast:not(.dark-theme) .tab-button.active {
+    border-bottom: 3px solid #000000;
+    color: #ff4400;
+    border-bottom-color: #ff4400;
+}
+
+body.high-contrast:not(.dark-theme) .feature-card,
+body.high-contrast:not(.dark-theme) .value-item,
+body.high-contrast:not(.dark-theme) .benefit-card {
+    border: 3px solid #000000;
+}
+
+body.high-contrast:not(.dark-theme) .tab-pane h2,
+body.high-contrast:not(.dark-theme) .feature-card h3,
+body.high-contrast:not(.dark-theme) .value-item h4 {
+    color: #ff4400;
+}
+
+body.high-contrast:not(.dark-theme) .objectives-list li strong,
+body.high-contrast:not(.dark-theme) .features-list li strong {
+    color: #ff4400;
+}
+
+body.high-contrast:not(.dark-theme) .objectives-list li,
+body.high-contrast:not(.dark-theme) .dyslexia-list li,
+body.high-contrast:not(.dark-theme) .features-list li {
+    border-left-color: #ff4400;
+}
+
+body.high-contrast:not(.dark-theme) .important-note {
+    border-left-color: #ff4400;
+}
+
+/* Mantém cores originais do botão Entrar em alto contraste claro */
+/* Fundo branco e texto laranja como no tema claro padrão */
+
+body.high-contrast:not(.dark-theme) .cookie-btn.accept {
+    background: #ff4400;
+}
+
+body.high-contrast:not(.dark-theme) p,
+body.high-contrast:not(.dark-theme) li,
+body.high-contrast:not(.dark-theme) span {
+    font-weight: 600;
+}
+
+body.high-contrast:not(.dark-theme) .objectives-list li,
+body.high-contrast:not(.dark-theme) .dyslexia-list li,
+body.high-contrast:not(.dark-theme) .features-list li {
+    border: 2px solid #000000;
+}
+
+body.high-contrast:not(.dark-theme) .accessibility-intro,
+body.high-contrast:not(.dark-theme) .important-note {
+    border: 3px solid #000000;
+}
+
+body.high-contrast:not(.dark-theme) .testimonial {
+    border: 3px solid #000000;
+}
+
+body.high-contrast:not(.dark-theme) .faq-item {
+    border: 2px solid #000000;
+}
+
+/* Títulos dos tópicos de FAQ com laranja mais forte em alto contraste claro */
+body.high-contrast:not(.dark-theme) .faq-item h3 {
+    color: #ff4400;
+}
+
+body.high-contrast:not(.dark-theme) .btn-login,
+body.high-contrast:not(.dark-theme) .btn-cadastrar,
+body.high-contrast:not(.dark-theme) .btn-config {
+    border: 3px solid #000000;
+    font-weight: 700;
+}
+
+body.high-contrast:not(.dark-theme) .modal {
+    border: 3px solid #000000;
+}
+
+body.high-contrast:not(.dark-theme) .modal-header {
+    border-bottom: 3px solid #000000;
+}
+
+body.high-contrast:not(.dark-theme) .cookie-banner {
+    border: 3px solid #000000;
+}
+
+body.high-contrast:not(.dark-theme) .cookie-btn {
+    border: 2px solid #000000;
+    font-weight: 700;
+}
+
+/* Alto contraste claro: borda preta no botão Salvar */
+body.high-contrast:not(.dark-theme) .settings-btn {
+    border: 2px solid #000000;
+}
+
+body.high-contrast:not(.dark-theme) footer {
+    border-top: 3px solid #000000;
+}
+
+/* Alto contraste no tema escuro (mantém as regras existentes) */
+body.high-contrast .feature-card,
+body.high-contrast .value-item,
+body.high-contrast .benefit-card,
+body.high-contrast .testimonial,
+body.high-contrast .objectives-list li,
+body.high-contrast .dyslexia-list li,
+body.high-contrast .features-list li {
+    border-left-color: #000; /* reforça borda */
+    box-shadow: 0 0 0 2px #000 inset;
+}
+
+/* Alto contraste no tema escuro: bordas brancas em tudo possível */
+body.high-contrast.dark-theme header { border-bottom: 3px solid #ffffff; }
+body.high-contrast.dark-theme .tabs-container { border: 3px solid #ffffff; }
+body.high-contrast.dark-theme .tabs-header { border-bottom: 3px solid #ffffff; }
+body.high-contrast.dark-theme .tab-button { border: 2px solid #ffffff; }
+body.high-contrast.dark-theme .tab-button.active { border-bottom-color: #ffffff; }
+body.high-contrast.dark-theme .feature-card,
+body.high-contrast.dark-theme .value-item,
+body.high-contrast.dark-theme .benefit-card { border: 3px solid #ffffff; }
+body.high-contrast.dark-theme .objectives-list li,
+body.high-contrast.dark-theme .dyslexia-list li,
+body.high-contrast.dark-theme .features-list li { border: 2px solid #ffffff; }
+body.high-contrast.dark-theme .accessibility-intro,
+body.high-contrast.dark-theme .important-note { border: 3px solid #ffffff; }
+body.high-contrast.dark-theme .testimonial { border: 3px solid #ffffff; }
+body.high-contrast.dark-theme .faq-item { border: 2px solid #ffffff; }
+body.high-contrast.dark-theme .modal { border: 3px solid #ffffff; }
+body.high-contrast.dark-theme .modal-header { border-bottom: 3px solid #ffffff; }
+body.high-contrast.dark-theme .cookie-banner { border: 3px solid #ffffff; }
+body.high-contrast.dark-theme .cookie-btn { border: 2px solid #ffffff; }
+body.high-contrast.dark-theme .settings-btn { border: 2px solid #ffffff; }
+body.high-contrast.dark-theme .btn-login,
+body.high-contrast.dark-theme .btn-cadastrar { border: 2px solid #ffffff; }
+body.high-contrast.dark-theme footer { border-top: 3px solid #ffffff; }
+
+/* Texto maior para acessibilidade */
+body.larger-text {
+    font-size: 18px; /* ~112.5% */
+}
+
+/* Texto menor para acessibilidade */
+body.smaller-text {
+    font-size: 14px; /* ~87.5% */
+}
+
 /* Header */
 header {
     background: linear-gradient(135deg, #ff8c42, #ff7425);
-    padding: 20px;
+    padding: 20px 12px 20px 20px; /* aproxima mais do canto direito */
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
@@ -40,6 +340,11 @@ header {
     gap: 15px;
 }
 
+/* Garante que o título empurre os botões para a direita em qualquer largura */
+.header-content h1 {
+    margin-right: auto;
+}
+
 header h1 {
     color: white;
     font-size: 2rem;
@@ -47,7 +352,8 @@ header h1 {
 
 .header-buttons {
     display: flex;
-    gap: 15px;
+    gap: 12px;
+    margin-left: auto; /* garante grupo encostado à direita */
 }
 
 .btn-login,
@@ -81,6 +387,27 @@ header h1 {
 
 .btn-cadastrar:hover {
     background-color: #1b263b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Botão Configurações */
+.btn-config {
+    padding: 10px 20px;
+    border: 2px solid #415a77;
+    background-color: transparent;
+    color: #415a77;
+    border-radius: 8px;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-config:hover {
+    background-color: #415a77;
+    color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
@@ -408,6 +735,50 @@ main.container {
     font-size: 0.95rem;
 }
 
+/* FAQ Section */
+.faq-section {
+    margin: 30px 0;
+}
+
+.faq-item {
+    background: #f9f9f9;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 12px;
+    border-left: 4px solid #ff8c42;
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(255, 140, 66, 0.15);
+}
+
+.faq-item h3 {
+    color: #ff8c42;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+.faq-item p {
+    color: #555;
+    line-height: 1.7;
+}
+
+/* Dark theme for FAQ */
+body.dark-theme .faq-item {
+    background-color: #0f172a;
+    border-color: #3b82f6;
+}
+
+body.dark-theme .faq-item h3 {
+    color: #3b82f6;
+}
+
+body.dark-theme .faq-item p {
+    color: #ffffff;
+}
+
 /* Testimonial */
 .testimonial-section {
     margin: 40px 0;
@@ -456,11 +827,193 @@ footer {
     font-weight: 600;
 }
 
+/* Modal de Configurações (sem waves) */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 300ms ease;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: min(680px, 90vw);
+    max-height: 80vh;
+    overflow: auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    z-index: 1000;
+    outline: none;
+    opacity: 0;
+    transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.modal.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 3px solid #ff8c42;
+}
+
+.modal-header h3 {
+    color: #ff8c42;
+    font-size: 1.4rem;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #415a77;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* Modal em modo escuro */
+body.dark-theme .modal-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+body.dark-theme .modal {
+    background: #0b1220; /* fundo escuro próximo ao header/footer */
+    color: #e5e7eb; /* texto padrão claro */
+    border: 1px solid #1f2937;
+}
+body.dark-theme .modal-header {
+    border-bottom-color: #ff8c42;
+    background: #0f172a;
+}
+body.dark-theme .modal-header h3 {
+    color: #3b82f6; /* títulos/tópicos em azul */
+}
+body.dark-theme .modal-close {
+    color: #cbd5e1;
+}
+body.dark-theme .modal-body {
+    color: #ffffff; /* conteúdo em branco */
+}
+/* Inputs e labels dentro do modal em modo escuro */
+body.dark-theme .modal-body label { color: #ffffff; }
+body.dark-theme .modal-body input[type="radio"],
+body.dark-theme .modal-body input[type="checkbox"] { accent-color: #3b82f6; }
+body.dark-theme .settings-divider { background: #1f2937; }
+body.dark-theme .settings-btn { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
+/* Estilos simples para grupos/opções no modal inline */
+.settings-group { margin-bottom: 12px; }
+.settings-divider { border: none; height: 1px; background: #eee; margin: 12px 0; }
+.settings-option { padding: 8px 0; }
+.settings-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ff8c42, #ff7425);
+    color: #fff;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+}
+.modal-body .settings-btn { /* garante alinhamento à direita mesmo sem wrapper */
+    margin-left: auto;
+    display: inline-flex;
+    justify-content: center;
+}
+.settings-btn:hover { filter: brightness(1.05); }
+
+/* Banner de Cookies */
+.cookie-banner {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 32px); /* afasta do footer */
+    width: min(1000px, 92vw);
+    background: #ffffff;
+    color: #333;
+    border: 2px solid #ff8c42;
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+    padding: 14px 16px;
+    z-index: 1100;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cookie-text { flex: 1; line-height: 1.5; }
+
+.cookie-actions { display: flex; gap: 8px; }
+
+.cookie-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-family: 'OpenDyslexic', Arial, sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.cookie-btn.accept { background: #ff8c42; color: #fff; border-color: #ff8c42; }
+.cookie-btn.accept:hover { filter: brightness(1.05); }
+.cookie-btn.decline { background: #fff; color: #1b263b; border-color: #1b263b; }
+.cookie-btn.decline:hover { background: #f5f7fa; }
+.cookie-btn.info { background: #415a77; color: #fff; border-color: #415a77; }
+.cookie-btn.info:hover { filter: brightness(1.05); }
+
+body.dark-theme .cookie-banner { background: #0f172a; color: #e5e7eb; border-color: #3b82f6; }
+body.dark-theme .cookie-btn.accept { background: #3b82f6; border-color: #3b82f6; }
+body.dark-theme .cookie-btn.decline { background: transparent; color: #e5e7eb; border-color: #e5e7eb; }
+
+@media (max-width: 600px) {
+    .cookie-banner { flex-direction: column; align-items: stretch; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); }
+    .cookie-actions { justify-content: flex-end; }
+}
+
+/* Toast de feedback */
+.toast {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 90px; /* acima do banner de cookies */
+    background: #1b263b;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+    z-index: 1200;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 200ms ease;
+}
+.toast.show { opacity: 1; }
+body.dark-theme .toast { background: #0f172a; color: #e5e7eb; }
+
 /* Responsivo */
 @media (max-width: 768px) {
+    /* Mantém o título à esquerda e os botões à direita mesmo em telas menores */
     .header-content {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;
+        text-align: left;
     }
 
     .tabs-header {
@@ -519,5 +1072,10 @@ footer {
 
     .btn-cta {
         width: 100%;
+    }
+
+    .modal {
+        width: 95vw;
+        max-height: 85vh;
     }
 }

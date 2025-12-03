@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnVerSenha = document.getElementById("BtnVerSenha");
     const btnFecharModal = document.getElementById("fecharModal");
     const formLogin = document.getElementById("formLogin");
+    const lembrarCheckbox = document.getElementById('CBXLembrarSenha');
+    const emailInput = document.getElementById('email');
 
     if(!overlay || !textoModal || !btnEntrar || !btnVerSenha || !formLogin) {
         console.warn('[login.js] Alguns elementos não foram encontrados no DOM. Verifique IDs.');
@@ -28,6 +30,26 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadSettings() {
         const saved = localStorage.getItem('loginPageSettings');
         return saved ? JSON.parse(saved) : defaultSettings;
+    }
+
+    // ===== Cookie consent + Remember Me helpers =====
+    function getCookieConsent() {
+        try {
+            const raw = localStorage.getItem('cookieConsent');
+            return raw ? JSON.parse(raw) : null;
+        } catch { return null; }
+    }
+    function setRememberMe(data) {
+        localStorage.setItem('rememberMe', JSON.stringify({ ...data, ts: Date.now() }));
+    }
+    function getRememberMe() {
+        try {
+            const raw = localStorage.getItem('rememberMe');
+            return raw ? JSON.parse(raw) : null;
+        } catch { return null; }
+    }
+    function clearRememberMe() {
+        localStorage.removeItem('rememberMe');
     }
 
 
@@ -92,6 +114,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const json = JSON.parse(text);
                 if(json.status === 'success'){
                     mostrarAlerta(json.message || 'Login OK');
+                    // Persistência do Lembrar-me apenas com consentimento
+                    const consent = getCookieConsent();
+                    const consentValue = consent?.value;
+                    const shouldRemember = !!(document.getElementById("CBXLembrarSenha") || {}).checked;
+                    if (consentValue === 'accepted' && shouldRemember) {
+                        setRememberMe({ identifier: email.trim(), checked: true });
+                    } else {
+                        clearRememberMe();
+                    }
                     setTimeout(()=>location.href = json.redirect || '../A_TelaPrincipal/index.php', 1300);
                 } else {
                     mostrarAlerta(json.message || 'Credenciais inválidas');
@@ -704,4 +735,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (themeEl) themeEl.checked = true;
 
     applySettings(currentSettings);
+
+    // ===== Inicializa estado da checkbox de Lembrar-me conforme consentimento =====
+    (function initRememberMeConsent(){
+        const consent = getCookieConsent();
+        const consentValue = consent?.value;
+        if (!lembrarCheckbox) return;
+        if (consentValue === 'accepted') {
+            lembrarCheckbox.disabled = false;
+            const remembered = getRememberMe();
+            if (remembered && emailInput) {
+                emailInput.value = remembered.identifier || '';
+                lembrarCheckbox.checked = !!remembered.checked;
+            }
+        } else {
+            lembrarCheckbox.checked = false;
+            lembrarCheckbox.disabled = true;
+            clearRememberMe();
+        }
+    })();
 });

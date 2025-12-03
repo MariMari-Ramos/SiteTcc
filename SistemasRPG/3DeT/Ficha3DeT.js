@@ -77,14 +77,24 @@ const character = {
 	tricks: []
 };
 
+// Simple i18n helper for JS-generated strings
+function T(key) {
+	try {
+		return (window.I18N && I18N.dict && typeof I18N.dict[key] === 'string') ? I18N.dict[key] : key;
+	} catch (_) {
+		return key;
+	}
+}
+
 // ========== Initialize ========== 
 function init() {
 	// Populate archetypes
 	const select = document.getElementById('char-archetype');
-	gameData.archetypes.forEach(arch => {
+	gameData.archetypes.forEach((arch, index) => {
 		const option = document.createElement('option');
 		option.value = arch;
 		option.textContent = arch;
+		option.setAttribute('data-translate', `3det_arch_${index}`);
 		select.appendChild(option);
 	});
 
@@ -190,6 +200,11 @@ function init() {
 
 	// D20 roller
 	document.getElementById('d20-roller').addEventListener('click', rollD20);
+
+	// Apply i18n after dynamic content is created
+	if (window.applyI18n && window.I18N && I18N.dict) {
+		applyI18n(I18N.dict);
+	}
 }
 
 // ========== Functions ========== 
@@ -230,6 +245,17 @@ function goToPage(pageNum) {
 	if (pageNum === 7) {
 		updateSummary();
 	}
+
+	// Announce the current page heading via AutoRead (if enabled)
+	try {
+		if (window.AutoRead && typeof window.AutoRead.speak === 'function') {
+			const activePage = document.getElementById(`page-${pageNum}`);
+			const h2 = activePage ? activePage.querySelector('.card h2') : null;
+			if (h2 && h2.textContent) {
+				window.AutoRead.speak(h2.textContent.trim());
+			}
+		}
+	} catch(_) {}
 
 	// Scroll to top
 	window.scrollTo(0, 0);
@@ -279,53 +305,58 @@ function updateSummary() {
 	container.innerHTML = `
 		<div class="summary-grid">
 			<div class="summary-item">
-				<strong>Nome</strong>
-				${character.name || 'Não definido'}
+				<strong data-translate="3det_sum_nome">Nome</strong>
+				${character.name || '<span data-translate="3det_sum_nao_definido">Não definido</span>'}
 			</div>
 			<div class="summary-item">
-				<strong>Arquétipo</strong>
-				${character.archetype || 'Não definido'}
+				<strong data-translate="3det_sum_arquetipo">Arquétipo</strong>
+				${character.archetype || '<span data-translate="3det_sum_nao_definido">Não definido</span>'}
 			</div>
 			<div class="summary-item">
-				<strong>Poder</strong>
+				<strong data-translate="3det_sum_poder">Poder</strong>
 				${character.poder} (PA: ${pa})
 			</div>
 			<div class="summary-item">
-				<strong>Habilidade</strong>
+				<strong data-translate="3det_sum_habilidade">Habilidade</strong>
 				${character.habilidade} (PM: ${pm})
 			</div>
 			<div class="summary-item">
-				<strong>Resistência</strong>
+				<strong data-translate="3det_sum_resistencia">Resistência</strong>
 				${character.resistencia} (PV: ${pv})
 			</div>
 		</div>
         
-		<h3>Perícias Selecionadas (${character.skills.length})</h3>
-		<p>${character.skills.length > 0 ? character.skills.join(', ') : 'Nenhuma perícia selecionada'}</p>
+		<h3 data-translate="3det_sum_pericias_sel">Perícias Selecionadas</h3>
+		<p>${character.skills.length > 0 ? character.skills.join(', ') : '<span data-translate="3det_sum_nenhuma_pericia">Nenhuma perícia selecionada</span>'}</p>
         
-		<h3>Vantagens Ofensivas (${character.offensiveAdvantages.length})</h3>
-		<p>${character.offensiveAdvantages.length > 0 ? character.offensiveAdvantages.join(', ') : 'Nenhuma vantagem ofensiva selecionada'}</p>
+		<h3 data-translate="3det_sum_vant_ofensivas">Vantagens Ofensivas</h3>
+		<p>${character.offensiveAdvantages.length > 0 ? character.offensiveAdvantages.join(', ') : '<span data-translate="3det_sum_nenhuma_vant_ofensiva">Nenhuma vantagem ofensiva selecionada</span>'}</p>
         
-		<h3>Vantagens Defensivas (${character.defensiveAdvantages.length})</h3>
-		<p>${character.defensiveAdvantages.length > 0 ? character.defensiveAdvantages.join(', ') : 'Nenhuma vantagem defensiva selecionada'}</p>
+		<h3 data-translate="3det_sum_vant_defensivas">Vantagens Defensivas</h3>
+		<p>${character.defensiveAdvantages.length > 0 ? character.defensiveAdvantages.join(', ') : '<span data-translate="3det_sum_nenhuma_vant_defensiva">Nenhuma vantagem defensiva selecionada</span>'}</p>
         
-		<h3>Desvantagens (${character.disadvantages.length})</h3>
-		<p>${character.disadvantages.length > 0 ? character.disadvantages.join(', ') : 'Nenhuma desvantagem selecionada'}</p>
+		<h3 data-translate="3det_sum_desvantagens">Desvantagens</h3>
+		<p>${character.disadvantages.length > 0 ? character.disadvantages.join(', ') : '<span data-translate="3det_sum_nenhuma_desvantagem">Nenhuma desvantagem selecionada</span>'}</p>
         
-		<h3>Truques (${character.tricks.length})</h3>
-		<p>${character.tricks.length > 0 ? character.tricks.join(', ') : 'Nenhum truque selecionado'}</p>
+		<h3 data-translate="3det_sum_truques">Truques</h3>
+		<p>${character.tricks.length > 0 ? character.tricks.join(', ') : '<span data-translate="3det_sum_nenhum_truque">Nenhum truque selecionado</span>'}</p>
 	`;
+
+	// Translate the newly injected summary content
+	if (window.applyI18n && window.I18N && I18N.dict) {
+		applyI18n(I18N.dict);
+	}
 }
 
 function rollD20() {
 	const result = Math.floor(Math.random() * 20) + 1;
-	let message = `🎲 Resultado: ${result}`;
+	let message = `${T('3det_d20_resultado')} ${result}`;
 	let color = '#2196f3'; // blue for normal
 	if (result === 20) {
-		message += ' - CRÍTICO! 🎉';
+		message += T('3det_d20_critico');
 		color = '#43ea4a'; // green for critical
 	} else if (result === 1) {
-		message += ' - Falha Crítica! 💀';
+		message += T('3det_d20_falha_critica');
 		color = '#ff2d2d'; // red for failure
 	}
 	showToast(message, color);
@@ -340,6 +371,14 @@ function showToast(message, color) {
 		toast.style.background = '';
 	}
 	toast.classList.add('show');
+
+	// Speak the toast message if auto-read is enabled
+	try {
+		if (window.AutoRead && typeof window.AutoRead.speak === 'function') {
+			window.AutoRead.speak(String(message || ''));
+		}
+	} catch (_) {}
+
 	setTimeout(() => {
 		toast.classList.remove('show');
 		toast.style.background = '';
@@ -411,3 +450,335 @@ function toggleAttributesInfo() {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', init);
+
+// ==================== AUTO READ (SPEECH SYNTHESIS) ====================
+// Replica da funcionalidade usada nas outras telas (PrincipalTela)
+// Lê palavras ao clicar e sentenças ao selecionar texto; respeita localStorage 'autoRead'
+(function(global){
+	if (global.AutoRead) {
+		// Já existe (carregado por outra tela); apenas inicializa aqui
+		try {
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', () => global.AutoRead.init && global.AutoRead.init());
+			} else {
+				global.AutoRead.init && global.AutoRead.init();
+			}
+		} catch(_) {}
+		return;
+	}
+
+	const AutoRead = {
+		speech: {
+			supported: 'speechSynthesis' in window,
+			utterance: null,
+			speaking: false,
+			voice: null,
+			rate: 1,
+			pitch: 1,
+			lang: (navigator.language || 'pt-BR')
+		},
+		_speechQueue: [],
+		_selectionDebounceTimer: null,
+		_handleSelectionRead: null,
+		_handleSelectionKey: null,
+
+		init() {
+			this.initSpeechVoices();
+			this.setupWordClickRead();
+		},
+
+		initSpeechVoices() {
+			const setVoice = () => {
+				if (!this.speech.supported) return;
+				const voices = window.speechSynthesis.getVoices();
+				const lang = localStorage.getItem('language') || 'pt-BR';
+				this.speech.voice = voices.find(v => v.lang.startsWith(lang.substring(0,2))) || voices[0] || null;
+			};
+			setVoice();
+			if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+				window.speechSynthesis.onvoiceschanged = setVoice;
+			}
+		},
+
+		speak(text) {
+			const autoReadEnabled = localStorage.getItem('autoRead') === 'true';
+			if (!this.speech.supported || !autoReadEnabled || !text) return;
+			try {
+				this.stopSpeaking();
+				const u = new SpeechSynthesisUtterance(text);
+				const lang = localStorage.getItem('language') || localStorage.getItem('app_locale') || 'pt-BR';
+				u.lang = lang;
+				if (this.speech.voice) u.voice = this.speech.voice;
+				this.speech.rate = Number(localStorage.getItem('speechRate') || 1);
+				this.speech.pitch = Number(localStorage.getItem('speechPitch') || 1);
+				u.rate = this.speech.rate;
+				u.pitch = this.speech.pitch;
+				u.onstart = () => { this.speech.speaking = true; };
+				u.onend = () => { this.speech.speaking = false; };
+				this.speech.utterance = u;
+				window.speechSynthesis.speak(u);
+			} catch(e) {
+				// silencioso
+			}
+		},
+
+		stopSpeaking() {
+			try {
+				if (this.speech.supported) {
+					window.speechSynthesis.cancel();
+				}
+				this.speech.speaking = false;
+				this.speech.utterance = null;
+				this._speechQueue = [];
+			} catch(e) {}
+		},
+
+		setupWordClickRead() {
+			document.addEventListener('click', (e) => this.handleWordClick(e), true);
+			this.setupSelectionRead();
+		},
+
+		// ==================== LEITURA POR SELEÇÃO (FRASE INTEIRA) ====================
+		setupSelectionRead() {
+			this._handleSelectionRead = (e) => this.handleSelectionRead(e);
+			document.addEventListener('mouseup', this._handleSelectionRead, true);
+			this._handleSelectionKey = (e) => {
+				if (!e) return;
+				if (e.key === 'Shift' || (typeof e.key === 'string' && e.key.startsWith('Arrow'))) {
+					this.handleSelectionRead(e);
+				}
+			};
+			document.addEventListener('keyup', this._handleSelectionKey, true);
+		},
+
+		handleSelectionRead(e) {
+			try {
+				const autoReadEnabled = localStorage.getItem('autoRead') === 'true';
+				if (!this.speech.supported || !autoReadEnabled) return;
+
+				if (this._selectionDebounceTimer) {
+					clearTimeout(this._selectionDebounceTimer);
+					this._selectionDebounceTimer = null;
+				}
+
+				this._selectionDebounceTimer = setTimeout(() => {
+					const sel = window.getSelection ? window.getSelection() : null;
+					if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
+
+					const range = sel.getRangeAt(0);
+					const eventTarget = (e && e.target) ? e.target : null;
+					const containerEl = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+						? range.commonAncestorContainer
+						: range.commonAncestorContainer.parentElement;
+					const targetForCheck = eventTarget || containerEl;
+					if (this._isInteractiveElement(targetForCheck)) return;
+
+					const selectedText = sel.toString().trim();
+					if (!selectedText) return;
+
+					const blockEl = this._closestBlockContainer(containerEl || document.body);
+					if (!blockEl || !blockEl.textContent) {
+						this.speak(selectedText);
+						return;
+					}
+
+					const rStart = document.createRange();
+					rStart.setStart(blockEl, 0);
+					rStart.setEnd(range.startContainer, range.startOffset);
+					const startOffset = rStart.toString().length;
+
+					const rEnd = document.createRange();
+					rEnd.setStart(blockEl, 0);
+					rEnd.setEnd(range.endContainer, range.endOffset);
+					const endOffset = rEnd.toString().length;
+
+					const fullText = blockEl.textContent;
+					const lang = localStorage.getItem('language') || this.speech.lang || 'pt-BR';
+					const sentences = this._extractSentencesInRange(fullText, startOffset, endOffset, lang);
+					if (sentences && sentences.length > 1) {
+						this.speakSequence(sentences);
+					} else {
+						const sentence = sentences[0] || selectedText;
+						if (sentence && sentence.trim()) this.speak(sentence.trim());
+					}
+				}, 250);
+			} catch(err) {
+				// silencioso
+			}
+		},
+
+		_extractSentencesInRange(text, startOffset, endOffset, lang) {
+			const out = [];
+			if (!text) return out;
+			try {
+				if (window.Intl && typeof Intl.Segmenter === 'function') {
+					const seg = new Intl.Segmenter(lang || 'pt-BR', { granularity: 'sentence' });
+					let capturing = false;
+					for (const part of seg.segment(text)) {
+						const s = part.index;
+						const e = s + part.segment.length;
+						if (!capturing && startOffset >= s && startOffset < e) {
+							out.push(part.segment.trim());
+							capturing = endOffset > e;
+							if (!capturing) break;
+						} else if (capturing) {
+							out.push(part.segment.trim());
+							if (endOffset <= e) break;
+						}
+					}
+					if (out.length) return out;
+				}
+			} catch(_) {}
+
+			const pieces = text.split(/([\.!\?…]+)/);
+			const sentences = [];
+			for (let i = 0; i < pieces.length; i += 2) {
+				const body = (pieces[i] || '').trim();
+				const punct = (pieces[i + 1] || '').trim();
+				const s = (body + (punct ? (' ' + punct) : '')).trim();
+				if (s) sentences.push(s);
+			}
+			let pos = 0;
+			const bounds = sentences.map(sn => {
+				const start = pos;
+				const end = pos + sn.length;
+				pos = end + 1;
+				return { start, end, text: sn };
+			});
+			const selected = [];
+			for (const b of bounds) {
+				if (startOffset < b.end && endOffset > b.start) {
+					selected.push(b.text);
+				}
+			}
+			return selected.length ? selected : [text.slice(startOffset, endOffset).trim()];
+		},
+
+		_isInteractiveElement(el) {
+			try {
+				const IGNORE_SEL = 'button, a, input, textarea, select, [contenteditable], .toggle-button, .switch, .config-button, .action-button, .guide-option, .slider, .modal, .modal-backdrop, .ficha-chip, .has-hover-video';
+				let node = el;
+				while (node && node !== document && node.nodeType === Node.ELEMENT_NODE) {
+					if (node.matches && node.matches(IGNORE_SEL)) return true;
+					node = node.parentElement;
+				}
+			} catch(_) {}
+			return false;
+		},
+
+		_closestBlockContainer(node) {
+			let el = node && (node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement);
+			const isBlockTag = (tag) => /^(P|DIV|LI|SECTION|ARTICLE|MAIN|ASIDE|NAV|H1|H2|H3|H4|H5|H6)$/i.test(tag);
+			while (el && el !== document.body) {
+				if (isBlockTag(el.tagName)) return el;
+				try {
+					const cs = window.getComputedStyle(el);
+					if (cs && (cs.display === 'block' || cs.display === 'list-item' || cs.display === 'table' || cs.display === 'table-row' || cs.display === 'table-cell')) {
+						return el;
+					}
+				} catch(_) {}
+				el = el.parentElement;
+			}
+			return document.body;
+		},
+
+		speakSequence(sentences) {
+			if (!this.speech.supported || !sentences || sentences.length === 0) return;
+			if (this.speech.speaking) {
+				this.stopSpeaking();
+			}
+			this._speechQueue = sentences.slice();
+			this._speakNext();
+		},
+
+		_speakNext() {
+			if (this._speechQueue.length === 0) {
+				this.speech.speaking = false;
+				return;
+			}
+			const text = this._speechQueue.shift();
+			if (!text || !text.trim()) {
+				this._speakNext();
+				return;
+			}
+			this.speech.speaking = true;
+			this.speech.utterance = new SpeechSynthesisUtterance(text.trim());
+			this.speech.utterance.voice = this.speech.voice;
+			this.speech.utterance.rate = this.speech.rate;
+			this.speech.utterance.pitch = this.speech.pitch;
+			this.speech.utterance.lang = this.speech.lang;
+			this.speech.utterance.onend = () => {
+				this._speakNext();
+			};
+			this.speech.utterance.onerror = () => {
+				this.speech.speaking = false;
+				this._speechQueue = [];
+			};
+			try {
+				window.speechSynthesis.speak(this.speech.utterance);
+			} catch(err) {
+				this.speech.speaking = false;
+				this._speechQueue = [];
+			}
+		},
+
+		handleWordClick(e) {
+			try {
+				const autoReadEnabled = localStorage.getItem('autoRead') === 'true';
+				if (!autoReadEnabled) return;
+				if (e.button !== 0) return;
+
+				const ignore = e.target.closest('button, a, input, textarea, select, [contenteditable], .toggle-button, .switch, .ficha-chip, .guide-option');
+				if (ignore) return;
+
+				if (e.target.classList && (e.target.classList.contains('modal') || e.target.classList.contains('overlay'))) return;
+
+				let node = null, offset = 0;
+				const x = e.clientX, y = e.clientY;
+				if (document.caretRangeFromPoint) {
+					const range = document.caretRangeFromPoint(x, y);
+					if (!range) return;
+					node = range.startContainer;
+					offset = range.startOffset;
+				} else if (document.caretPositionFromPoint) {
+					const pos = document.caretPositionFromPoint(x, y);
+					if (!pos) return;
+					node = pos.offsetNode;
+					offset = pos.offset;
+				} else {
+					return;
+				}
+
+				if (!node || node.nodeType !== Node.TEXT_NODE) return;
+				const text = node.textContent || '';
+				if (!text.trim()) return;
+
+				const word = this.extractWordAt(text, offset);
+				if (word) {
+					this.speak(word);
+				}
+			} catch(err) {
+				// silencioso
+			}
+		},
+
+		extractWordAt(text, offset) {
+			const isWordChar = (ch) => /[\p{L}\p{N}''_-]/u.test(ch);
+			let i = Math.max(0, Math.min(offset, text.length));
+			let start = i, end = i;
+			while (start > 0 && isWordChar(text[start-1])) start--;
+			while (end < text.length && isWordChar(text[end])) end++;
+			const word = text.substring(start, end).trim();
+			return word.length >= 2 ? word : '';
+		}
+	};
+
+	global.AutoRead = AutoRead;
+	try {
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', () => AutoRead.init());
+		} else {
+			AutoRead.init();
+		}
+	} catch(_) {}
+})(window);
